@@ -22,13 +22,15 @@ export interface IsPausedHowResult {
   user: false | Dayjs;
   /** is paused for this chain */
   chain: boolean;
+  /** is paused sum */
+  sum: boolean;
 }
 
 export function IsPausedHow(
   user: User | null,
   currentChainUID: UID | undefined,
 ): IsPausedHowResult {
-  if (user === null) return { user: false, chain: false };
+  if (user === null) return { user: false, chain: false, sum: false };
 
   let userPaused = user.paused_until ? dayjs(user.paused_until) : false;
   if (userPaused && !userPaused.isAfter(dayjs())) userPaused = false;
@@ -39,5 +41,9 @@ export function IsPausedHow(
     if (uc && uc.is_paused) userChainPaused = true;
   }
 
-  return { user: userPaused, chain: userChainPaused };
+  return {
+    user: userPaused,
+    chain: userChainPaused,
+    sum: Boolean(userPaused) || userChainPaused,
+  };
 }
