@@ -1,46 +1,46 @@
 {
   "howDoesItWork": {
-    "title": "How does the Clothing Loop work?",
-    "content": "The Clothing Loop is an initiative that allows people to easily exchange clothes with others in their neighborhood. It's fun, free, and sustainable! The idea is simple: (large) bags full of clothes travel along a route with participants in a particular city or neighborhood. Have the bag taken home by the person in the Loop for you. And then it's time to shop! Take items you like and put something back that's in good condition but ready for a new owner. Share a photo of your latest find in the corresponding communication channel. Nice to see where your stuff ends up! Then you take the bag to the next person on the list."
+    "title": "Hur fungerar klädsloop?",
+    "content": "The Clothing Loop är ett initiativ som gör det möjligt för människor att enkelt byta kläder med andra i sitt närområde. Det är roligt, gratis och hållbart! Tanken är enkel: (stora) väskor fulla av kläder färdas längs en rutt med deltagare i en viss stad eller stadsdel. Har väskan tas hem av personen i loopen för dig. Och då är det dags att handla! Ta saker du gillar och sätta tillbaka något som är i gott skick men redo för en ny ägare. Dela ett foto av din senaste fynd i motsvarande kommunikationskanal. Trevligt att se var dina saker hamnar! Då tar du väskan till nästa person på listan."
   },
   "whereAreTheBags": {
-    "title": "Where are the bags?",
-    "content": "At the bottom of this screen you will see a bag icon. If you click on it you can indicate that a bag is in your home. Click on the bag when you received it and scroll down the list of names until you find your name. Also indicate the date you received the bag. This way we can make sure that we know where the bags are and if they are still well distributed along the route. An overview of the distribution of the bags you can see at the Route."
+    "title": "Var är påsarna?",
+    "content": "Längst ner på den här skärmen ser du en påse-ikon. Om du klickar på den kan du ange att en väska är i ditt hem. Klicka på påsen när du fått den och bläddra ner listan över namn tills du hittar ditt namn. Ange också vilket datum du fick bagaget. På så sätt kan vi se till att vi vet var väskorna är och om de fortfarande är väl fördelade längs vägen. En översikt över fördelningen av väskorna som du kan se på vägen."
   },
   "whoDoIGiveTheBagTo": {
-    "title": "Who do I pass the bag to?",
-    "content": "At the bottom of the screen you'll see a little bit of a house icon. Here you can see the route of the Loop. The bag goes to the person after you in the list. If you click on that name, you can find their address and contact details. Contact them and make an appointment about when to bring the bag. You can only see the details of the two participants before you and after you. Keep in mind that the route can always change due to the arrival of new participants. So always check the app before you pass the bag. This way we make sure that new participants are not missed and everyone is also meeting someone else. If you haven't received a response to your message from the person after two days, then feel free to contact the next list. So don't try to get this through the system. If someone doesn't respond to this, then give this to the host for a long time."
+    "title": "Vem passerar jag väskan till?",
+    "content": "Längst ner på skärmen ser du lite av en hus-ikon. Här kan du se rutten av Loopen. Väskan går till personen efter dig i listan. Om du klickar på det namnet kan du hitta deras adress och kontaktuppgifter. Kontakta dem och boka tid för när du ska ta med väskan. Du kan bara se detaljer om de två deltagarna före och efter dig. Tänk på att rutten alltid kan ändras på grund av ankomsten av nya deltagare. Kontrollera alltid appen innan du passerar väskan. På så sätt ser vi till att nya deltagare inte missas och att alla också träffar någon annan. Om du inte har fått något svar på ditt meddelande från personen efter två dagar, kontakta gärna nästa lista. Så försök inte att få igenom detta genom systemet. Om någon inte svarar på detta, ge då detta till värden under en lång tid."
   },
   "whatCanYouTakeFromTheBag": {
-    "title": "What can you get out of the bag?",
-    "content": "Feel free to take out the bag what you like and use. Don't be too modest! Experience teaches that it gets too full faster than it empties. So you don't have to put the same number of clothes in it when you're out of it. If you don't have any supplements, no problem, and be especially picky about what you put in the bag. Better a bag with a few pearls than a full bag of moderate quality. That only brings the level down! If you see clothes in the bag that you've already put in the bag, then you take care of them again. This way we make sure that clothes don't stay in the chain. And finally, if you see clothes in the bag that you think don't meet the chain, you don't wash them and bring this together, and then we can isolate them from the top of the bag and then we can do"
+    "title": "Vad kan man få ur väskan?",
+    "content": "Ta gärna ut påsen vad du gillar och använder. Var inte för blygsam! Erfarenheten lär att den blir för full snabbare än den tömmer. Så du behöver inte sätta samma antal kläder i det när du är ute ur det. Om du inte har några kosttillskott, inga problem, och vara särskilt kräsen om vad du lägger i påsen. Bättre en väska med några pärlor än en hel väska av måttlig kvalitet. Det är bara att sänka nivån! Om du ser kläder i väskan som du redan har lagt i väskan, då tar du hand om dem igen. På så sätt ser vi till att kläderna inte stannar i kedjan. Och slutligen, om du ser kläder i påsen som du tror inte uppfyller kedjan, du inte tvätta dem och föra detta tillsammans, och då kan vi isolera dem från toppen av påsen och sedan kan vi göra"
   },
   "whatCantYouTakeFromTheBag": {
-    "title": "What can't you put in the bag?",
-    "content": "Put only whole, clean and unwashed clothes in the bag. Be really critical! A good gradometer is to think about whether you would like to put it in the bag yourself. Old shoes, socks, underwear and pants can't be in the bag anyway. If the bag is full, don't put any extra clothes in and wait for the next bag. Also look at the season: thicker wool sweaters in don colors don't want anyone to have in the summer. And you don't have to do everything in one go. It's nice to spread clothes over the bags. Ornaments can be made in a separate bag or box. And accessories can be added. Clothing bags (if they're so hot) or bags can't be made in your home (if they're so hot) or bags (if they're not in your home) can't be"
+    "title": "Vad kan du inte sätta i väskan?",
+    "content": "Lägg bara hela, rena och otvättade kläder i väskan. Var riktigt kritisk! En bra gradometer är att tänka på om du vill sätta den i påsen själv. Gamla skor, strumpor, underkläder och byxor kan inte finnas i väskan i alla fall. Om påsen är full, inte sätta några extra kläder i och vänta på nästa väska. Titta också på säsongen: tjockare ylletröjor i don färger vill inte att någon ska ha på sommaren. Och du behöver inte göra allt på ett tag. Det är skönt att sprida kläder över väskorna. Ornament kan göras i en separat väska eller låda. Och tillbehör kan läggas till. Klädväskor (om de är så varma) eller väskor inte kan tillverkas i ditt hem (om de är så varma) eller väskor (om de inte är i ditt hem) kan inte vara"
   },
   "whatToDoWithBulkyItems": {
-    "title": "What about clothes that take up a lot of space in the bag (like a winter coat)?",
-    "content": "If something doesn't fit in the bag, click \"Overall bid\" at the bottom of the box, and place a photo of your item. Other participants can contact you directly to pick it up from there. If there are multiple bids, you can lock the item, split it, or give it to the first respondent."
+    "title": "Hur är det med kläder som tar upp mycket plats i väskan (som en vinterrock)?",
+    "content": "Om något inte passar i väskan, klicka på \"Totalt erbjudande\" längst ner i lådan, och placera ett foto av ditt objekt. Andra deltagare kan kontakta dig direkt för att hämta den därifrån. Om det finns flera bud kan du låsa objektet, dela upp det eller ge det till den första svarande."
   },
   "awayOrBusy": {
-    "title": "- On vacation or too busy?",
-    "content": "So, you can put yourself on a break for a while. You can do this at Info. You can put in a break for how long. The person who is on the route for you can skip you and contact the next person on the route."
+    "title": "- På semester eller för upptagen?",
+    "content": "Så, du kan sätta dig på en paus ett tag. Du kan göra detta på Info. Du kan lägga in en paus hur länge. Den som är på rutt för dig kan hoppa över dig och kontakta nästa person på rutten."
   },
   "foundSomethingYouLike": {
-    "title": "Sharing photos is fun!",
-    "content": "Show your finds! This is fun, especially for the previous owner of the clothing! It's also fun to show off which pearls you put in your own bags from time to time. Share your finds in the Loop group chat. If you find a really nice find with a good story, we'd love to hear it. Send an email to hello@clothingloop.org and maybe we'll share this story on our social media. This will inspire others to go out and exchange clothes, too."
+    "title": "Att dela bilder är kul!",
+    "content": "Visa dina fynd! Detta är kul, särskilt för den tidigare ägaren av kläderna! Det är också roligt att visa upp vilka pärlor du sätter i dina egna väskor då och då. Dela dina hittade i Loop-gruppens chatt. Om du hittar ett riktigt trevligt fynd med en bra historia, skulle vi gärna höra det. Skicka ett mail till hello@clothingloop. rg och kanske kommer vi att dela denna historia på våra sociala medier. Detta kommer att inspirera andra att gå ut och utbyta kläder också."
   },
   "newMembers": {
-    "title": "I know someone who wants to join us!",
-    "content": "The more the merrier! Everyone is welcome to join the Clothing Loop. Ask the future exchanges to search for a Loop at their address at www.clothingloop.org. If the person wants to join your Loop, you can also share a specific link to your Loop, which you can find at Info. "
+    "title": "Jag känner någon som vill vara med oss!",
+    "content": "Ju mer desto gladare! Alla är välkomna att gå med i klädsloop. Be framtida utbyten att söka efter en loop på deras adress på www. lothingloop.org. Om personen vill gå med i din loop kan du också dela en specifik länk till din loop, som du hittar på Info. "
   },
   "privacy": {
     "title": "Privacy",
-    "content": "How do we handle contact details and shared photos? All contact details, photos and other information are for use only within the Loop to which you sign up. They may not be shared outside the Loop without permission. By participating in the Clothing Loop you agree to share your contact details within the Loop. Only people who are allowed into the Loop have access to the app. New people can only participate if they have been added by the host. If you no longer participate, then leave the Loop (and pass this on to the host as well)."
+    "content": "Hur hanterar vi kontaktuppgifter och delade bilder? Alla kontaktuppgifter, foton och annan information är endast avsedda att användas i den Loop som du registrerar dig på. De får inte delas utanför loopen utan tillstånd. Genom att delta i Clothing Loop samtycker du till att dela dina kontaktuppgifter inom Loopen. Endast personer som får komma in i appen har tillgång till appen. Nya människor kan bara delta om de har lagts till av värden. Om du inte längre deltar, lämna sedan loopen (och vidarebefordra detta till värden också)."
   },
   "feedback": {
-    "title": "Feedback and suggestions",
-    "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
+    "title": "Återkoppling och förslag",
+    "content": "Om du har en idé eller ett förslag till din lokala loop, skicka värden ett meddelande. Om du har feedback eller förslag på den allmänna webbplatsen och organisationen, maila hello@clothingloop. rg. Vi skulle älska att höra från dig, eftersom vi tillsammans skapar detta projekt."
   }
 }
