@@ -1,46 +1,46 @@
 {
   "howDoesItWork": {
-    "title": "How does the Clothing Loop work?",
-    "content": "The Clothing Loop is an initiative that allows people to easily exchange clothes with others in their neighborhood. It's fun, free, and sustainable! The idea is simple: (large) bags full of clothes travel along a route with participants in a particular city or neighborhood. Have the bag taken home by the person in the Loop for you. And then it's time to shop! Take items you like and put something back that's in good condition but ready for a new owner. Share a photo of your latest find in the corresponding communication channel. Nice to see where your stuff ends up! Then you take the bag to the next person on the list."
+    "title": "Hvordan fungerer klesløkken?",
+    "content": "Klementløkken er et initiativ som gjør det mulig for folk å utveksle klær med andre i nabolaget. Det er morsomt, fritt og bærekraftig! Idéen er enkel: (stor) poser fulle av klær reiser langs veien med deltakere i en bestemt by eller nabolag. Får bagdelen hjem av personen i løkke for deg. Og så er det på tide å handle videre! Bruk ting som å sette noe tilbake i god stand, men klar for en ny eier. Del et bilde av det siste funnet i den tilsvarende kommunikasjonskanalen. Fint å se hvor tingene dine ender opp! Da tar du posen til neste person på listen."
   },
   "whereAreTheBags": {
-    "title": "Where are the bags?",
-    "content": "At the bottom of this screen you will see a bag icon. If you click on it you can indicate that a bag is in your home. Click on the bag when you received it and scroll down the list of names until you find your name. Also indicate the date you received the bag. This way we can make sure that we know where the bags are and if they are still well distributed along the route. An overview of the distribution of the bags you can see at the Route."
+    "title": "Hvor er posene?",
+    "content": "På bunnen av denne skjermen vil du se et bag ikon. Hvis du klikker på kan du indikere at en pose er i hjemmet ditt. Klikk på posen da du mottok den og rulle ned listen over navn inntil du finner navnet ditt. Indikerer også datoen du mottok i posen. På denne måten kan vi passe på at vi vet hvor sekkene er og om de fremdeles er godt fordelt på veien. En oversikt over fordelingen av sekkene du kan se på ruten."
   },
   "whoDoIGiveTheBagTo": {
-    "title": "Who do I pass the bag to?",
-    "content": "At the bottom of the screen you'll see a little bit of a house icon. Here you can see the route of the Loop. The bag goes to the person after you in the list. If you click on that name, you can find their address and contact details. Contact them and make an appointment about when to bring the bag. You can only see the details of the two participants before you and after you. Keep in mind that the route can always change due to the arrival of new participants. So always check the app before you pass the bag. This way we make sure that new participants are not missed and everyone is also meeting someone else. If you haven't received a response to your message from the person after two days, then feel free to contact the next list. So don't try to get this through the system. If someone doesn't respond to this, then give this to the host for a long time."
+    "title": "Hvem sender jeg kurven til?",
+    "content": "På bunnen av skjermen vil du se litt av et husikon. Her kan du se ruten på en løkke. Kurven går til personen etter deg i listen. Hvis du klikker på dette navnet, finner du adressen deres og kontaktdetaljene. Ta kontakt med dem og få en time med når du skal ta med posen. Du kan bare se detaljene i de to deltakerne før du og etter deg. Husk at ruten alltid kan endres pga. ankomst til nye deltakere. Så må du alltid kontrollere appen før du passerer handlekurven. På den måten sørger vi for at nye deltakere ikke blir savnet og at alle også møter noen andre. Hvis du ikke har mottatt noe svar på meldingen fra personen etter to dager, kan du kontakte den neste listen. Så ikke prøv å vise dette via systemet. Hvis noen ikke svarer på dette, gi dette til verten i lang tid."
   },
   "whatCanYouTakeFromTheBag": {
-    "title": "What can you get out of the bag?",
-    "content": "Feel free to take out the bag what you like and use. Don't be too modest! Experience teaches that it gets too full faster than it empties. So you don't have to put the same number of clothes in it when you're out of it. If you don't have any supplements, no problem, and be especially picky about what you put in the bag. Better a bag with a few pearls than a full bag of moderate quality. That only brings the level down! If you see clothes in the bag that you've already put in the bag, then you take care of them again. This way we make sure that clothes don't stay in the chain. And finally, if you see clothes in the bag that you think don't meet the chain, you don't wash them and bring this together, and then we can isolate them from the top of the bag and then we can do"
+    "title": "Hva kan du komme deg ut av handlekurven?",
+    "content": "Du er velkommen til å ta ut posen hva du vil og bruke. Ikke vær for beskjeden! Erfaring at den blir for full raskere enn den imøtekommer. Så du trenger ikke å legge samme antall klær i det når du er utgått av det. Hvis du ikke har noe tilskudd, ikke noe problem, og vær spesielt opptatt av hva du putter i posen. Bedre en pose med noen få perler enn en pose med moderat kvalitet. Det bringer bare nivået ned! Hvis du ser klær i posen som du allerede har puttet i posen, må du ta vare på dem igjen. På denne måten sørger vi for at klærne ikke blir i kjeden. Og endelig, hvis du ser klær i kurven som du tror ikke møter kjeden, du ikke vasker dem og bringer dette sammen, da kan vi isolere dem fra toppen av posen og så kan vi gjøre"
   },
   "whatCantYouTakeFromTheBag": {
-    "title": "What can't you put in the bag?",
-    "content": "Put only whole, clean and unwashed clothes in the bag. Be really critical! A good gradometer is to think about whether you would like to put it in the bag yourself. Old shoes, socks, underwear and pants can't be in the bag anyway. If the bag is full, don't put any extra clothes in and wait for the next bag. Also look at the season: thicker wool sweaters in don colors don't want anyone to have in the summer. And you don't have to do everything in one go. It's nice to spread clothes over the bags. Ornaments can be made in a separate bag or box. And accessories can be added. Clothing bags (if they're so hot) or bags can't be made in your home (if they're so hot) or bags (if they're not in your home) can't be"
+    "title": "Hva kan du ikke legge i posen?",
+    "content": "Sett kun hele, rene og uvaskede klær i posen. Være virkelig kritisk! En god gradometer er å tenke på om du ønsker å sette den i baggen selv. Gamle sko, sokker, undertøy og bukser kan ikke være i baggen likevel. Dersom posen er full, ikke legg noen ekstra klær inn og vent på neste pose. Se også sesongen: tykkere ull sverger i donorfarger vil ingen ha om sommeren. Og du trenger ikke å gjøre alt på en gang. Det er hyggelig å spenne klær over sekkene. Ornamenter kan lages i en egen pose eller i eske. Og tilbehør kan legges til. Klappposer (hvis de er så varmt) eller poser kan ikke lages i hjemmet ditt (hvis de er så varme) eller bagger (hvis de ikke er i hjemmet ditt), kan"
   },
   "whatToDoWithBulkyItems": {
-    "title": "What about clothes that take up a lot of space in the bag (like a winter coat)?",
-    "content": "If something doesn't fit in the bag, click \"Overall bid\" at the bottom of the box, and place a photo of your item. Other participants can contact you directly to pick it up from there. If there are multiple bids, you can lock the item, split it, or give it to the first respondent."
+    "title": "Hva med klær som tar opp mye plass i posen (som en vinterbelegg)",
+    "content": "Hvis noe ikke passer inn i posen, klikk \"Generelt bud\" nederst i boksen og legg inn et bilde av varen. Andre deltakere kan kontakte deg direkte for å hente det derfra. Hvis det er flere tilbud, kan du låse varen, dele den eller gi den til det første innklaget."
   },
   "awayOrBusy": {
-    "title": "- On vacation or too busy?",
-    "content": "So, you can put yourself on a break for a while. You can do this at Info. You can put in a break for how long. The person who is on the route for you can skip you and contact the next person on the route."
+    "title": "- På ferie eller for opptatt?",
+    "content": "Så du kan sette deg selv på en pause i en stund. Du kan gjøre dette hos Info. Du kan legge i en pause for hvor lenge. Personen som er på rute, kan hoppe over deg og kontakte neste person på rute."
   },
   "foundSomethingYouLike": {
-    "title": "Sharing photos is fun!",
-    "content": "Show your finds! This is fun, especially for the previous owner of the clothing! It's also fun to show off which pearls you put in your own bags from time to time. Share your finds in the Loop group chat. If you find a really nice find with a good story, we'd love to hear it. Send an email to hello@clothingloop.org and maybe we'll share this story on our social media. This will inspire others to go out and exchange clothes, too."
+    "title": "Deling av bilder er gøy!",
+    "content": "Vis dine funn! Dette er morsom, spesielt for forrige eier av klæren! Det er også morsomt å vise fram hvilke perler du putter i egne poser fra tid til annen. Del funnene dine i Loop-gruppen chatten. Hvis du finner et veldig fint funn med en god historie, vil vi gjerne høre det. Send en e-post til hello@clothingloop. rg og kanskje vi deler denne historien om våre sosiale medier. Dette vil inspirere andre til å gå ut og utveksle klær også."
   },
   "newMembers": {
-    "title": "I know someone who wants to join us!",
-    "content": "The more the merrier! Everyone is welcome to join the Clothing Loop. Ask the future exchanges to search for a Loop at their address at www.clothingloop.org. If the person wants to join your Loop, you can also share a specific link to your Loop, which you can find at Info. "
+    "title": "Jeg vet noen som vil bli med oss!",
+    "content": "Jo mer herrer! Alle er velkommen til å bli med i Clothing Loop. Be om fremtidige utvekslinger for å søke etter en løkke på adressen deres på www. lothingloop.org. Hvis personen ønsker å bli med i løkken din, kan du også dele en spesifikk kobling til løkke som du kan finne på Info. "
   },
   "privacy": {
     "title": "Personvern",
-    "content": "How do we handle contact details and shared photos? All contact details, photos and other information are for use only within the Loop to which you sign up. They may not be shared outside the Loop without permission. By participating in the Clothing Loop you agree to share your contact details within the Loop. Only people who are allowed into the Loop have access to the app. New people can only participate if they have been added by the host. If you no longer participate, then leave the Loop (and pass this on to the host as well)."
+    "content": "Hvordan håndterer vi kontaktopplysninger og delte bilder? Alle kontaktdetaljer, bilder og annen informasjon er bare til bruk i løkke du registrerer deg for. De kan ikke deles utenfor løkke uten tillatelse. Ved å delta i Clothing Loop samtykker du til å dele dine kontaktopplysninger i Løkken. Bare personer som tillates i løkke har tilgang til appen. Nye personer kan bare delta dersom de har blitt lagt til av verten. Hvis du ikke lenger deltar, forlater du løkken (og også gi dette videre til verten)."
   },
   "feedback": {
-    "title": "Feedback and suggestions",
-    "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
+    "title": "Tilbakemeldinger og forslag",
+    "content": "Hvis du har en ide eller forslag til din lokale løkke, send verten en melding. Hvis du har tilbakemeldinger eller forslag til det generelle nettstedet og organisasjonen, kan du sende en e-post til hello@clothingloop. Vi vil gjerne høre fra deg, fordi vi sammen lager dette prosjektet."
   }
 }
