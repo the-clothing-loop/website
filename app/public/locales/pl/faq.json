@@ -1,46 +1,46 @@
 {
   "howDoesItWork": {
-    "title": "How does the Clothing Loop work?",
-    "content": "The Clothing Loop is an initiative that allows people to easily exchange clothes with others in their neighborhood. It's fun, free, and sustainable! The idea is simple: (large) bags full of clothes travel along a route with participants in a particular city or neighborhood. Have the bag taken home by the person in the Loop for you. And then it's time to shop! Take items you like and put something back that's in good condition but ready for a new owner. Share a photo of your latest find in the corresponding communication channel. Nice to see where your stuff ends up! Then you take the bag to the next person on the list."
+    "title": "Jak działa pętla odzieżowa?",
+    "content": "Pętla odzieżowa to inicjatywa, która umożliwia ludziom łatwą wymianę ubrań z innymi w swoim sąsiedztwie. To zabawne, wolne i zrównoważone! Pomysł jest prosty: (duże) torby pełne ubrań przemieszczają się po drodze z uczestnikami w danym mieście lub sąsiedztwie. Czy worek został zabity do domu przez osobę w pętli dla Ciebie. A potem nadszedł czas na zakupy! Weź przedmioty lubicie i odłóż coś z powrotem w dobrym stanie, ale gotowy na nowego właściciela. Udostępnij zdjęcie swojego najnowszego znalezienia na odpowiednim kanale komunikacyjnym. Miło zobaczyć, gdzie kończą się twoje rzeczy! Wtedy zabierzesz torbę do następnej osoby na liście."
   },
   "whereAreTheBags": {
-    "title": "Where are the bags?",
-    "content": "At the bottom of this screen you will see a bag icon. If you click on it you can indicate that a bag is in your home. Click on the bag when you received it and scroll down the list of names until you find your name. Also indicate the date you received the bag. This way we can make sure that we know where the bags are and if they are still well distributed along the route. An overview of the distribution of the bags you can see at the Route."
+    "title": "Gdzie są torby?",
+    "content": "Na dole tego ekranu zobaczysz ikonę torby. Jeśli klikniesz na to możesz zaznaczyć, że torebka jest w domu. Kliknij na torbie po jej otrzymaniu i przewiń listę nazwisk aż znajdziesz swoje imię. Wskazać również datę otrzymania worka. W ten sposób możemy mieć pewność, że wiemy gdzie znajdują się torby i czy są one nadal dobrze rozmieszczone na drodze. Przegląd rozkładu torb, które możesz zobaczyć na drodze."
   },
   "whoDoIGiveTheBagTo": {
-    "title": "Who do I pass the bag to?",
-    "content": "At the bottom of the screen you'll see a little bit of a house icon. Here you can see the route of the Loop. The bag goes to the person after you in the list. If you click on that name, you can find their address and contact details. Contact them and make an appointment about when to bring the bag. You can only see the details of the two participants before you and after you. Keep in mind that the route can always change due to the arrival of new participants. So always check the app before you pass the bag. This way we make sure that new participants are not missed and everyone is also meeting someone else. If you haven't received a response to your message from the person after two days, then feel free to contact the next list. So don't try to get this through the system. If someone doesn't respond to this, then give this to the host for a long time."
+    "title": "Do kogo przekażę torbę?",
+    "content": "Na dole ekranu zobaczysz trochę ikony domu. Tutaj możesz zobaczyć drogę pętli. Torba trafia do osoby po wpisie na liście. Jeśli klikniesz na tę nazwę, znajdziesz jej adres i dane kontaktowe. Skontaktuj się z nimi i skontaktuj się z nim w celu dotarcia torby. Możesz zobaczyć tylko szczegóły dwóch uczestników przed Tobą i po Tobie. Należy pamiętać, że trasa może zawsze ulec zmianie ze względu na pojawienie się nowych uczestników. Więc zawsze sprawdź aplikację zanim przejdziesz torbę. W ten sposób upewniamy się, że nie przegapimy nowych uczestników, a wszyscy spotykają się również z kimś innym. Jeśli nie otrzymałeś odpowiedzi od tej osoby po dwóch dniach, skontaktuj się z następną listą. Więc nie próbuj przerobić tego przez system. Jeśli ktoś na to nie odpowie, daj to gospodarzowi przez długi czas."
   },
   "whatCanYouTakeFromTheBag": {
-    "title": "What can you get out of the bag?",
-    "content": "Feel free to take out the bag what you like and use. Don't be too modest! Experience teaches that it gets too full faster than it empties. So you don't have to put the same number of clothes in it when you're out of it. If you don't have any supplements, no problem, and be especially picky about what you put in the bag. Better a bag with a few pearls than a full bag of moderate quality. That only brings the level down! If you see clothes in the bag that you've already put in the bag, then you take care of them again. This way we make sure that clothes don't stay in the chain. And finally, if you see clothes in the bag that you think don't meet the chain, you don't wash them and bring this together, and then we can isolate them from the top of the bag and then we can do"
+    "title": "Co możesz wyjść z torby?",
+    "content": "Nie zapomnij zabrać woreczka, co lubisz. Nie bądź zbyt skromny! Doświadczenie uczy zbyt szybciej niż puste. Więc nie musisz umieszczać tej samej liczby ubrań, gdy jesteś poza tym. Jeśli nie masz żadnych uzupełnień, nie ma problemów i bądź szczególnie ciekawy z tego, co włożyłeś do torby. Lepiej worek z kilkoma perłami niż pełen worek o umiarkowanej jakości. To tylko obniża poziom! Jeśli widzisz ubrania w torebce, którą już włożyłeś do torebki, to znów się nimi zająłeś. W ten sposób upewniamy się, że ubrania nie pozostają w łańcuchu. I wreszcie, jeśli widzisz ubrania w torebce, które uważasz, że nie spełniają wymagań łańcucha, nie myjesz ich i zbierasz tego razem, a potem możemy odizolować je od górnej części torby, a potem możemy to zrobić"
   },
   "whatCantYouTakeFromTheBag": {
-    "title": "What can't you put in the bag?",
-    "content": "Put only whole, clean and unwashed clothes in the bag. Be really critical! A good gradometer is to think about whether you would like to put it in the bag yourself. Old shoes, socks, underwear and pants can't be in the bag anyway. If the bag is full, don't put any extra clothes in and wait for the next bag. Also look at the season: thicker wool sweaters in don colors don't want anyone to have in the summer. And you don't have to do everything in one go. It's nice to spread clothes over the bags. Ornaments can be made in a separate bag or box. And accessories can be added. Clothing bags (if they're so hot) or bags can't be made in your home (if they're so hot) or bags (if they're not in your home) can't be"
+    "title": "Czego nie możesz włożyć do torby?",
+    "content": "Umieścić w worku jedynie w całości, czyste i niezmyte ubrania. Bądź naprawdę krytyczny! Dobrym oceniającym jest zastanowienie się, czy chcesz umieścić go w torbie. Stare buty, skarpety, bielizna i spodnie nie mogą być w torebce. Jeśli worek jest pełny, nie wkładaj żadnych dodatkowych ubrań i poczekaj na następny worek. Przyjrzyjmy się również sezonowi: grubsze wełniane swetry w kolorach nie chcą, aby ktokolwiek miał lato. I nie musisz robić wszystkiego w jednym. Miło się roznosić ubrania przez torby. Ozdoby mogą być wykonane w osobnej torbie lub pudełku. Można też dodać akcesoria. Torby odzieżowe (jeśli są gorące) lub torby nie mogą być wykonane w Twoim domu (jeśli są gorące) lub torby (jeśli nie są w twoim domu) nie mogą być"
   },
   "whatToDoWithBulkyItems": {
-    "title": "What about clothes that take up a lot of space in the bag (like a winter coat)?",
-    "content": "If something doesn't fit in the bag, click \"Overall bid\" at the bottom of the box, and place a photo of your item. Other participants can contact you directly to pick it up from there. If there are multiple bids, you can lock the item, split it, or give it to the first respondent."
+    "title": "A co z ubraniami, które zajmują dużo miejsca w torebce (jak płaszcz zimowy)?",
+    "content": "Jeśli coś nie pasuje do koszyka, kliknij \"Całkowita oferta\" na dole pudełka i umieść zdjęcie swojego przedmiotu. Inni uczestnicy mogą skontaktować się z Tobą bezpośrednio, aby z niego skorzystać. Jeśli istnieje wiele ofert, możesz zablokować przedmiot, podzielić go lub przekazać pierwszemu respondentowi."
   },
   "awayOrBusy": {
-    "title": "- On vacation or too busy?",
-    "content": "So, you can put yourself on a break for a while. You can do this at Info. You can put in a break for how long. The person who is on the route for you can skip you and contact the next person on the route."
+    "title": "- Na wakacjach czy zbyt zajętych?",
+    "content": "Tak więc na jakiś czas możesz sobie postawić na przerwę. Możesz to zrobić w Info. Możesz włożyć przerwę na jak długi czas. Osoba znajdująca się na trasie może dla Ciebie pominąć i skontaktować się z następną osobą na trasie."
   },
   "foundSomethingYouLike": {
-    "title": "Sharing photos is fun!",
-    "content": "Show your finds! This is fun, especially for the previous owner of the clothing! It's also fun to show off which pearls you put in your own bags from time to time. Share your finds in the Loop group chat. If you find a really nice find with a good story, we'd love to hear it. Send an email to hello@clothingloop.org and maybe we'll share this story on our social media. This will inspire others to go out and exchange clothes, too."
+    "title": "Udostępnianie zdjęć jest zabawne!",
+    "content": "Pokaż swoje odkrycia! To jest zabawne, zwłaszcza dla poprzedniego właściciela odzieży! Zabawne jest również pokazanie, które perły umieszczasz w własnych torbach od czasu do czasu. Podziel się swoimi znalezieniami w czacie grupowym pętli. Jeśli znajdziesz naprawdę fajne znalezienie z dobrą historią, chcielibyśmy go usłyszeć. Wyślij wiadomość e-mail na hello@ubringloop. rg i być może dzielimy się tą opowieścią w naszych mediach społecznościowych. To zainspiruje innych do wychodzenia i wymiany ubrań."
   },
   "newMembers": {
-    "title": "I know someone who wants to join us!",
-    "content": "The more the merrier! Everyone is welcome to join the Clothing Loop. Ask the future exchanges to search for a Loop at their address at www.clothingloop.org. If the person wants to join your Loop, you can also share a specific link to your Loop, which you can find at Info. "
+    "title": "Znam kogoś, kto chce do nas dołączyć!",
+    "content": "Im więcej miłośnika! Każdy może dołączyć do pętli odzieżowej. Poproś przyszłe giełdy o wyszukanie pętli pod ich adresem w www. lothingloop.org. Jeśli dana osoba chce dołączyć do pętli, możesz również udostępnić konkretny link do pętli, który można znaleźć w Info. "
   },
   "privacy": {
     "title": "Privacy",
-    "content": "How do we handle contact details and shared photos? All contact details, photos and other information are for use only within the Loop to which you sign up. They may not be shared outside the Loop without permission. By participating in the Clothing Loop you agree to share your contact details within the Loop. Only people who are allowed into the Loop have access to the app. New people can only participate if they have been added by the host. If you no longer participate, then leave the Loop (and pass this on to the host as well)."
+    "content": "W jaki sposób obsługujemy dane kontaktowe i udostępniamy zdjęcia? Wszystkie dane kontaktowe, zdjęcia i inne informacje mogą być używane tylko w pętli, w której się rejestrujesz. Nie mogą być współdzielone poza pętlą bez uprawnień. Uczestnicząc w pętli odzieżowej, zgadzasz się udostępnić swoje dane kontaktowe w pętli. Tylko osoby, które są dozwolone do pętli mają dostęp do aplikacji. Nowi ludzie mogą uczestniczyć tylko wtedy, gdy zostali dodani przez gospodarza. Jeśli już nie bierzesz udziału, opuść pętlę (i przekaż to również gospodarzowi)."
   },
   "feedback": {
-    "title": "Feedback and suggestions",
-    "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
+    "title": "Opinie i sugestie",
+    "content": "Jeśli masz pomysł lub sugestię dla lokalnej pętli, wyślij wiadomość do hosta. Jeśli masz opinię lub sugestię dla ogólnej strony internetowej i organizacji, napisz na adres hello@clothingloop. rg. Chcielibyśmy usłyszeć od Ciebie, ponieważ wspólnie tworzymy ten projekt."
   }
 }
