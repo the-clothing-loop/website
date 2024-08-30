@@ -46,3 +46,20 @@ export function bagRemove(chainUID: UID, userUID: UID, bagID: number) {
     params: { chain_uid: chainUID, user_uid: userUID, bag_id: bagID },
   });
 }
+
+export interface BagHistoryItem {
+  id: number;
+  number: string;
+  color: string;
+  history: BagHistoryHistoryItem[];
+}
+export interface BagHistoryHistoryItem {
+  name: string;
+  date?: string;
+}
+
+export function bagHistory(chainUID: UID) {
+  return axios.get("/v2/bag/history", {
+    params: { chain_uid: chainUID },
+  });
+}

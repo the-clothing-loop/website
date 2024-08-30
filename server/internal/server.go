@@ -145,6 +145,7 @@ func Routes() *gin.Engine {
 	v2.GET("/bag/all", controllers.BagGetAll)
 	v2.PUT("/bag", controllers.BagPut)
 	v2.DELETE("/bag", controllers.BagRemove)
+	v2.GET("/bag/history", controllers.BagsHistory)
 
 	// bulky item
 	v2.GET("/bulky-item/all", controllers.BulkyGetAll)

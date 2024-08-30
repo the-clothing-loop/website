@@ -26,6 +26,7 @@ import {
   useIonAlert,
 } from "@ionic/react";
 import {
+  analyticsOutline,
   closeOutline,
   construct,
   ellipsisHorizontal,
@@ -62,6 +63,7 @@ import SelectUserModal from "../components/Bags/SelectUserModal";
 import { useDebounce } from "@uidotdev/usehooks";
 import dayjs from "../dayjs";
 import IsPaused from "../utils/is_paused";
+import BagAnalyticsModal from "../components/Bags/BagAnalyticsModal";
 
 type State = { bag_id?: number } | undefined;
 
@@ -348,6 +350,14 @@ export default function BagsList() {
                 </IonList>
               </IonContent>
             </IonModal>
+            {isChainAdmin ? (
+              <>
+                <IonButton id="sheet-bags-timeline">
+                  <IonIcon icon={analyticsOutline} />
+                </IonButton>
+                <BagAnalyticsModal />
+              </>
+            ) : null}
           </IonButtons>
 
           <IonTitle>{headerText}</IonTitle>

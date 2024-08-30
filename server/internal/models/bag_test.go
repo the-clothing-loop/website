@@ -56,3 +56,18 @@ func TestTextEllipsis2(t *testing.T) {
 	f("0 emoji", 0, 4, "")
 	f("1 and ellipsis", 2, 4, "👻...")
 }
+
+func TestBagStringMaxAppend(t *testing.T) {
+	f := func(name, inputList, inputStr, expected string) {
+		t.Helper()
+
+		output, _ := models.BagStringMaxAppend(inputList, inputStr)
+		assert.Equal(t, expected, output, name)
+	}
+
+	f("add to empty", "", "a", "a")
+	f("add to one", "a", "b", "a,b")
+	f("add to 3", "a,b,c", "d", "a,b,c,d")
+	f("add to 4", "a,b,c,d", "e", "b,c,d,e")
+	f("last is same as input", "a,b", "b", "a,b")
+}
