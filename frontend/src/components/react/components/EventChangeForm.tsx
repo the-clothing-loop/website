@@ -196,6 +196,7 @@ export default function EventChangeForm(props: {
 
     values.date_end = hasEndDate ? dateEnd : null;
     values.price_value = eventPriceValue;
+    values.price_type = eventPriceType;
     values.price_currency = eventPriceCurrency;
 
     props.onSubmit(values);
@@ -339,7 +340,7 @@ export default function EventChangeForm(props: {
                 <span className="label-text">{t("categories") + "*"}</span>
               </div>
               <CategoriesDropdown
-                className="w-full mr-4 md:mr-8 py-4 pb-2 md:py-0"
+                className="w-full me-4 md:me-8 py-4 pb-2 md:py-0"
                 selectedCategories={values.genders}
                 handleChange={(gs) => setValue("genders", gs)}
               />
@@ -474,7 +475,8 @@ export default function EventChangeForm(props: {
           <div className="flex justify-end">
             <button type="submit" className="btn btn-primary">
               {t("submit")}
-              <span className="icon-arrow-right me-4"></span>
+              <span className="icon-arrow-right ms-4 rtl:hidden"></span>
+              <span className="icon-arrow-left ms-4 ltr:hidden"></span>
             </button>
           </div>
         </div>
