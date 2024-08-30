@@ -221,7 +221,7 @@ export default function AddressForm(props: {
         <TextForm
           type="text"
           autoComplete="name"
-          label={t("name") + "*"}
+          label={t("fullName") + "*"}
           name="name"
           required
           min={3}
