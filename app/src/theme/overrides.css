@@ -49,6 +49,9 @@
 .ion-toggle-pause {
   --handle-background-checked: url(/icons/pause-small-outline.svg), #fff;
 }
+.ion-toggle-flag {
+  --handle-background-checked: url(/icons/flag-outline.svg), #fff;
+}
 
 ion-tab-button {
   display: block;

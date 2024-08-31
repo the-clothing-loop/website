@@ -693,3 +693,47 @@ func ChainGetUserNote(c *gin.Context) {
 	}
 	c.String(http.StatusOK, note)
 }
+
+func ChainChangeUserWarden(c *gin.Context) {
+	db := getDB(c)
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+		Warden   bool   `json:"warden"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	if !ok {
+		return
+	}
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	user.AddUserChainsToObject(db)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	ok, isUserChainAdmin := user.IsPartOfChain(body.ChainUID)
+	if !ok {
+		c.String(http.StatusBadRequest, "User is not a member of this loop")
+		return
+	}
+	if isUserChainAdmin {
+		c.String(http.StatusInternalServerError, "Hosts cannot be assigned wardens")
+		return
+	}
+
+	err = models.UserChainSetWarden(db, user.ID, chain.ID, body.Warden)
+	if err != nil {
+		slog.Error("Unable to change user warden", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user warden")
+		return
+	}
+}

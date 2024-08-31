@@ -17,12 +17,16 @@ import {
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
-import { StoreContext } from "../stores/Store";
+import { IsChainAdmin, IsChainWarden, StoreContext } from "../stores/Store";
 import { IsPausedHow } from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
 import AddressBagCard from "../components/Bags/AddressBagCard";
-import { chainChangeUserNote, chainGetUserNote } from "../api/chain";
+import {
+  chainChangeUserNote,
+  chainGetUserNote,
+  chainChangeUserWarden,
+} from "../api/chain";
 import { checkmarkCircle } from "ionicons/icons";
 import {
   IonTextareaCustomEvent,
@@ -51,6 +55,10 @@ export default function AddressItem({
   const isNoteEditable =
     isChainAdmin || authUser?.uid === user?.uid || authUser?.is_root_admin;
   const [note, setNote] = useState("");
+  const [isUserWarden, isUserAdmin] = useMemo(
+    () => [IsChainWarden(user, chain?.uid), IsChainAdmin(user, chain?.uid)],
+    [user, chain],
+  );
   useEffect(() => {
     if (!chain || !user) return;
     chainGetUserNote(chain.uid, user.uid).then((n) => {
@@ -59,6 +67,7 @@ export default function AddressItem({
       setNote(n);
     });
   }, [user?.uid]);
+
   function onChangeNoteInput(
     e: IonTextareaCustomEvent<TextareaInputEventDetail>,
   ) {
@@ -83,6 +92,15 @@ export default function AddressItem({
       chain_paused: !isUserPaused,
     }).catch((err) => console.error);
     await refresh("address");
+  }
+
+  function onChangeWarden(assign: boolean) {
+    if (!chain || !user) return;
+    chainChangeUserWarden(chain.uid, user.uid, assign)
+      .then(() => {
+        refresh("address");
+      })
+      .catch((error) => console.log(error));
   }
 
   return (
@@ -135,6 +153,27 @@ export default function AddressItem({
             </IonItem>
           </>
         ) : null}
+        {isChainAdmin && !isUserAdmin ? (
+          <IonItem
+            lines="none"
+            button
+            detail={false}
+            onClick={() => onChangeWarden(!isUserWarden)}
+          >
+            <IonLabel>
+              <h3 className="!tw-font-bold">{t("assignWardenTitle")}</h3>
+              <p>{t("assignWardenBody")}</p>
+            </IonLabel>
+            <IonToggle
+              slot="end"
+              className="ion-toggle-flag"
+              checked={isUserWarden}
+              color="primary"
+              justify="space-between"
+            ></IonToggle>
+          </IonItem>
+        ) : null}
+
         <IonGrid>
           <IonRow>
             {userBags.map((bag) => {
@@ -150,6 +189,7 @@ export default function AddressItem({
             })}
           </IonRow>
         </IonGrid>
+
         {note || isNoteEditable ? (
           <IonItem lines="none">
             <div className="tw-w-full tw-mt-2 tw-mb-4">

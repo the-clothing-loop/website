@@ -88,6 +88,7 @@ export default function RoutePrivacyExample(props: {
               isMe={i === meIndex}
               bags={[] as Bag[]}
               isHost={user.uid === "7"}
+              isWarden={false}
               isAddressPrivate={isPrivate}
               isUserPaused={user.paused_until !== null}
               number={i + 5}

@@ -552,6 +552,17 @@ export function IsChainAdmin(
   return userChain?.is_chain_admin || false;
 }
 
+export function IsChainWarden(
+  user: User | null,
+  chainUID: string | null | undefined,
+): boolean {
+  if (!chainUID || !user) return false;
+  return (
+    user.chains.find((uc) => uc.chain_uid === chainUID)?.is_chain_warden ||
+    false
+  );
+}
+
 function ChainReadHeaders(
   chain: Chain | null | undefined,
 ): ChainHeaders | undefined {

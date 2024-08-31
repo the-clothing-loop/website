@@ -7,7 +7,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonModal,
   IonPage,
@@ -115,6 +114,9 @@ export default function AddressList() {
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_admin || false;
 
+        const isWarden =
+          user.chains.find((uc) => uc.chain_uid === chain?.uid)
+            ?.is_chain_warden || false;
         const isPrivate = IsPrivate(user.email);
         const isAddressPrivate = IsPrivate(user.address);
         const isUserPaused = IsPaused(user, chain.uid);
@@ -124,6 +126,7 @@ export default function AddressList() {
           bags: userBags,
           isMe,
           isHost,
+          isWarden,
           isAddressPrivate,
           number: i + 1,
           isUserPaused,

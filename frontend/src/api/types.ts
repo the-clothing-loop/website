@@ -44,6 +44,7 @@ export interface UserChain {
   user_uid: UID;
   chain_uid: UID;
   is_chain_admin: boolean;
+  is_chain_warden: boolean;
   is_approved: boolean;
   created_at: string;
 }
