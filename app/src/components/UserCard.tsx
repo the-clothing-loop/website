@@ -84,7 +84,7 @@ export default function UserCard({
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
   const isPhonePrivate = !user.phone_number || IsPrivate(user.phone_number);
-  const [isUserAdmin, IsUserWarden] = useMemo(
+  const [isUserAdmin, isUserWarden] = useMemo(
     () => [IsChainAdmin(user, chain?.uid), IsChainWarden(user, chain?.uid)],
     [user, chain],
   );
