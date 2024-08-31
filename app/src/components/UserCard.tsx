@@ -21,7 +21,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Chain, User } from "../api/types";
 import IsPrivate from "../utils/is_private";
-import { IsChainAdmin } from "../stores/Store";
+import { IsChainAdmin, IsChainWarden } from "../stores/Store";
 import { useMemo, useRef, useState } from "react";
 import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";
@@ -84,13 +84,10 @@ export default function UserCard({
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
   const isPhonePrivate = !user.phone_number || IsPrivate(user.phone_number);
-  const isUserAdmin = useMemo(
-    () => IsChainAdmin(user, chain?.uid),
+  const [isUserAdmin, IsUserWarden] = useMemo(
+    () => [IsChainAdmin(user, chain?.uid), IsChainWarden(user, chain?.uid)],
     [user, chain],
   );
-  const isUserWarden =
-    user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_warden ||
-    false;
   const refAddressPopup = useRef<HTMLIonPopoverElement>(null);
   const refPhoneNumberPopup = useRef<HTMLIonPopoverElement>(null);
   const [isCapacitor] = useState(isPlatform("capacitor"));

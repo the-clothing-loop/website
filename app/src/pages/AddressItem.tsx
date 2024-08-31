@@ -17,7 +17,7 @@ import {
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
-import { StoreContext } from "../stores/Store";
+import { IsChainAdmin, IsChainWarden, StoreContext } from "../stores/Store";
 import { IsPausedHow } from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
@@ -55,8 +55,10 @@ export default function AddressItem({
   const isNoteEditable =
     isChainAdmin || authUser?.uid === user?.uid || authUser?.is_root_admin;
   const [note, setNote] = useState("");
-  const [isChainWarden, setIsChainWarden] = useState(false);
-  const [isChainHost, setIsChainHost] = useState(false);
+  const [isUserWarden, isUserAdmin] = useMemo(
+    () => [IsChainWarden(user, chain?.uid), IsChainAdmin(user, chain?.uid)],
+    [user, chain],
+  );
   useEffect(() => {
     if (!chain || !user) return;
     chainGetUserNote(chain.uid, user.uid).then((n) => {
@@ -65,19 +67,6 @@ export default function AddressItem({
       setNote(n);
     });
   }, [user?.uid]);
-
-  useEffect(() => {
-    if (!chain || !user) return;
-    const _isChainWarden =
-      user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_warden ||
-      false;
-
-    setIsChainWarden(_isChainWarden);
-    const _isChainHost =
-      user.chains.find((uc) => uc.chain_uid === chain?.uid)?.is_chain_admin ||
-      false;
-    setIsChainHost(_isChainHost);
-  }, []);
 
   function onChangeNoteInput(
     e: IonTextareaCustomEvent<TextareaInputEventDetail>,
@@ -110,7 +99,6 @@ export default function AddressItem({
     chainChangeUserWarden(chain.uid, user.uid, assign)
       .then(() => {
         refresh("address");
-        setIsChainWarden(assign);
       })
       .catch((error) => console.log(error));
   }
@@ -165,12 +153,12 @@ export default function AddressItem({
             </IonItem>
           </>
         ) : null}
-        {isChainAdmin && !isChainHost ? (
+        {isChainAdmin && !isUserAdmin ? (
           <IonItem
             lines="none"
             button
             detail={false}
-            onClick={() => onChangeWarden(!isChainWarden)}
+            onClick={() => onChangeWarden(!isUserWarden)}
           >
             <IonLabel>
               <h3 className="!tw-font-bold">{t("assignWardenTitle")}</h3>
@@ -179,7 +167,7 @@ export default function AddressItem({
             <IonToggle
               slot="end"
               className="ion-toggle-flag"
-              checked={isChainWarden}
+              checked={isUserWarden}
               color="primary"
               justify="space-between"
             ></IonToggle>
