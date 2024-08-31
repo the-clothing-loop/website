@@ -338,5 +338,7 @@
   "clickHereToRegister": "<1>Klikk her</1> for å registrere deg",
   "clickHereToLogin": "<1>Klikk her</1> for å logge inn",
   "mustBeRegistered": "Du må være registrert for å opprette en hendelse",
-  "userExists": "Bruker finnes allerede"
+  "userExists": "Bruker finnes allerede",
+  "assignWarden": "Tilordne adden",
+  "removeWarden": "Fjern advarsler"
 }
