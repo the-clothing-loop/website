@@ -141,9 +141,9 @@ export default function Login() {
                   <div className="text-white bg-green border-green w-full flex items-center justify-center font-semibold h-12 px-3 mt-6">
                     {t("submit")}
                     {loading ? (
-                      <span className="icon-loader animate-spin ml-4 rtl:ml-0 rtl:mr-4"></span>
+                      <span className="icon-loader animate-spin ms-4"></span>
                     ) : (
-                      <span className="icon-check ml-4 rtl:ml-0 rtl:mr-4"></span>
+                      <span className="icon-check ms-4"></span>
                     )}
                   </div>
                 ) : (

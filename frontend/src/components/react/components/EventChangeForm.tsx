@@ -196,6 +196,7 @@ export default function EventChangeForm(props: {
 
     values.date_end = hasEndDate ? dateEnd : null;
     values.price_value = eventPriceValue;
+    values.price_type = eventPriceType;
     values.price_currency = eventPriceCurrency;
 
     props.onSubmit(values);
@@ -282,7 +283,7 @@ export default function EventChangeForm(props: {
               <label className="inline-flex cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
                 <input
                   type="checkbox"
-                  className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
+                  className="checkbox checkbox-sm checkbox-secondary me-3"
                   checked={hasEndDate}
                   onChange={(e) => {
                     const checked = e.target.checked;
@@ -339,7 +340,7 @@ export default function EventChangeForm(props: {
                 <span className="label-text">{t("categories") + "*"}</span>
               </div>
               <CategoriesDropdown
-                className="w-full mr-4 md:mr-8 py-4 pb-2 md:py-0"
+                className="w-full me-4 md:me-8 py-4 pb-2 md:py-0"
                 selectedCategories={values.genders}
                 handleChange={(gs) => setValue("genders", gs)}
               />
@@ -452,7 +453,7 @@ export default function EventChangeForm(props: {
                   onClick={() => refFileInput.current?.click()}
                 >
                   {t("uploadImage")}
-                  <span className="icon-upload ltr:ml-4 rtl:mr-4"></span>
+                  <span className="icon-upload ms-4"></span>
                 </button>
               </div>
               {values.image_url ? (
@@ -474,7 +475,8 @@ export default function EventChangeForm(props: {
           <div className="flex justify-end">
             <button type="submit" className="btn btn-primary">
               {t("submit")}
-              <span className="icon-arrow-right ltr:ml-4 rtl:mr-4"></span>
+              <span className="icon-arrow-right ms-4 rtl:hidden"></span>
+              <span className="icon-arrow-left ms-4 ltr:hidden"></span>
             </button>
           </div>
         </div>

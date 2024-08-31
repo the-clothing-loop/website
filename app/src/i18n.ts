@@ -10,7 +10,7 @@ const i18n = i18next
   .init({
     load: "languageOnly",
     ns: ["translation", "faq"],
-    supportedLngs: ["en", "nl"],
+    supportedLngs: ["en", "nl", "de", "fr"],
     fallbackLng: "en",
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",

@@ -46,8 +46,7 @@ export default function AddressListItem({
             color={isMe ? undefined : "medium"}
             className="tw-absolute tw-top-1 tw-left-1 tw-w-4 tw-h-4 tw-m-0"
           />
-        ) : null}
-        {isWarden ? (
+        ) : isWarden ? (
           <IonIcon
             icon={flag}
             color={"medium"}

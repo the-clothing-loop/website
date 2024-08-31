@@ -330,11 +330,20 @@ export function StoreProvider({
         console.error("Invalid pause value", pause, onlyChainUID);
         return;
       }
-      await userUpdate({
-        user_uid: authUser.uid,
-        chain_uid: onlyChainUID,
-        chain_paused: pause,
-      });
+      if (pause) {
+        await userUpdate({
+          user_uid: authUser.uid,
+          chain_uid: onlyChainUID,
+          chain_paused: pause,
+        });
+      } else {
+        await userUpdate({
+          user_uid: authUser.uid,
+          chain_uid: onlyChainUID,
+          chain_paused: false,
+          paused_until: dayjs().add(-1, "week").format(),
+        });
+      }
     } else {
       let pauseUntil = dayjs();
       if (pause === true) {

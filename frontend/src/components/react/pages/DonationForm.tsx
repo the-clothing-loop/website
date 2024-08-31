@@ -167,7 +167,7 @@ function DonationFormContent() {
         <input
           type="radio"
           name="oneoff_radio"
-          className="radio radio-secondary mr-3 rtl:mr-0 rtl:ml-3"
+          className="radio radio-secondary me-3"
           defaultChecked={values.oneoff_radio === item.id}
           onChange={() => setValue("oneoff_radio", item.id)}
         />
@@ -182,7 +182,7 @@ function DonationFormContent() {
         <input
           type="radio"
           name="recurring_radio"
-          className="radio radio-secondary mr-3 rtl:mr-0 rtl:ml-3"
+          className="radio radio-secondary me-3"
           defaultChecked={values.recurring_radio === item.id}
           onChange={() => setValue("recurring_radio", item.id)}
         />
@@ -247,11 +247,11 @@ function DonationFormContent() {
               className="invisible -z-10 absolute"
             />
 
-            <span className="absolute ml-3 rtl:ml-0 rtl:mr-3">&euro;</span>
+            <span className="absolute ms-3">&euro;</span>
 
             <input
               name="oneoff_custom"
-              className={`input invalid:input-error w-full ltr:pl-8 rtl:pr-8 ${
+              className={`input invalid:input-error w-full ps-8 ${
                 error === "oneoff_custom" ? "input-error" : "input-secondary"
               } ${
                 values.oneoff_radio === "custom"

@@ -184,7 +184,7 @@ export default function EventDetails() {
                       href={localizePath("/events/edit/?event=" + event.uid)}
                       className="btn btn-secondary btn-outline sm:me-4"
                     >
-                      <span className="icon-pencil mr-3 rtl:mr-0 rtl:ml-3"></span>
+                      <span className="icon-pencil me-3"></span>
                       {t("edit")}
                     </a>
                     <button
@@ -202,7 +202,7 @@ export default function EventDetails() {
           </div>
           <div className="max-w-screen-xl mx-auto pt-6 px-6 md:px-20">
             <div className="flex flex-col md:flex-row-reverse">
-              <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20 rtl:ml-0 rtl:md:mr-12 rtl:lg:mr-20">
+              <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ms-0 md:ms-12 lg:ms-20">
                 <div className="relative">
                   <dl className="z-10 relative bg-white md:shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] md:py-10 md:px-8">
                     {date ? (
@@ -210,9 +210,9 @@ export default function EventDetails() {
                         <dt className="mb-2 font-bold font-sans text-xl text-teal">
                           {t("time") + ":"}
                         </dt>
-                        <dd className="mb-1 ltr:ml-4 rtl:mr-4">
+                        <dd className="mb-1 ms-4">
                           <span
-                            className="ltr:mr-2 rtl:ml-2 inline-block icon-clock"
+                            className="me-2 inline-block icon-clock"
                             aria-hidden
                           ></span>
                           {dateEnd ? (
@@ -222,7 +222,7 @@ export default function EventDetails() {
                                   {date?.format("LL")}
                                 </span>
                                 <br />
-                                <span className="font-sans text-lg ltr:ml-6 rtl:mr-6">
+                                <span className="font-sans text-lg ms-6">
                                   {date?.format("LT")}
                                 </span>
                                 <span
@@ -248,7 +248,7 @@ export default function EventDetails() {
                                   aria-hidden
                                 ></span>
                                 <span
-                                  className="ltr:mr-2 rtl:ml-2 inline-block icon-clock rotate-90"
+                                  className="me-2 inline-block icon-clock rotate-90"
                                   aria-hidden
                                 ></span>
                                 <span className="font-sans text-lg">
@@ -267,8 +267,8 @@ export default function EventDetails() {
                     <dt className="mb-2 font-bold font-sans text-xl text-teal">
                       {t("price") + ":"}
                     </dt>
-                    <dd className="mb-1 ltr:ml-4 rtl:mr-4">
-                      <span className="ltr:mr-2 rtl:ml-2 inline-block icon-tag"></span>
+                    <dd className="mb-1 ms-4">
+                      <span className="me-2 inline-block icon-tag"></span>
                       {event.price_currency ? (
                         <span className="font-sans text-lg" key="price">
                           {event.price_currency + " " + eventPriceValue}
@@ -287,9 +287,9 @@ export default function EventDetails() {
                         <dt className="mb-2 font-bold font-sans text-xl text-teal">
                           {t("location") + ":"}
                         </dt>
-                        <dd className="mb-1 ltr:ml-4 rtl:mr-4">
+                        <dd className="mb-1 ms-4">
                           <span
-                            className="ltr:mr-2 rtl:ml-2 icon-map-pin"
+                            className="me-2 icon-map-pin"
                             aria-hidden
                           ></span>
                           <address
@@ -312,7 +312,7 @@ export default function EventDetails() {
                       {t("categories") + ":"}
                     </dt>
 
-                    <dd className="mb-1 ltr:ml-4 rtl:mr-4 block">
+                    <dd className="mb-1 ms-4 block">
                       {event.genders?.length ? (
                         <SizeBadges g={event.genders} />
                       ) : null}
@@ -325,7 +325,7 @@ export default function EventDetails() {
                       {t("organizedBy") + ":"}
                     </dt>
                     <dd
-                      className={`mr-2 mb-1 ltr:ml-4 rtl:mr-4 ${
+                      className={`mr-2 mb-1 ms-4 ${
                         event.chain_uid || event.link ? "" : "hidden"
                       }`}
                     >
@@ -337,7 +337,7 @@ export default function EventDetails() {
                           key="loop"
                           className="group block mb-1"
                         >
-                          <span className="ltr:mr-2 rtl:ml-2 inline-block relative">
+                          <span className="me-2 inline-block relative">
                             <span
                               className="block icon-circle"
                               aria-hidden
@@ -360,7 +360,7 @@ export default function EventDetails() {
                           target="_blank"
                         >
                           <span
-                            className="ltr:mr-2 rtl:ml-2 inline-block icon-external-link"
+                            className="me-2 inline-block icon-external-link"
                             aria-hidden
                           ></span>
                           <span className="group-hover:underline">
@@ -369,7 +369,7 @@ export default function EventDetails() {
                         </a>
                       ) : null}
                     </dd>
-                    <dd className="mb-1 ltr:ml-4 rtl:mr-4"></dd>
+                    <dd className="mb-1 ms-4"></dd>
                   </dl>
 
                   <img
@@ -391,7 +391,7 @@ export default function EventDetails() {
                   }`}
                 >
                   <div
-                    className={`aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative transtion-[postion] mt-8
+                    className={`aspect-[4/3] mb-4 me-0 relative transtion-[postion] mt-8
                   ${
                     imageExpanded
                       ? "max-w-xl mt-8"
@@ -482,7 +482,7 @@ function EventDetailsLoading() {
       </div>
       <div className="max-w-screen-xl mx-auto pt-6 px-6 md:px-20">
         <div className="flex flex-col md:flex-row-reverse">
-          <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ml-0 md:ml-12 lg:ml-20 rtl:ml-0 rtl:md:mr-12 rtl:lg:mr-20">
+          <div className="w-full md:w-3/5 md:-mt-20 mb-4 md:mb-0 ms-0 md:ms-12 lg:ms-20">
             <div className="relative">
               <dl
                 className="z-10 relative bg-grey-light md:bg-white md:shadow-[2px_3px_3px_1px_rgba(66,66,66,0.2)] md:py-10 md:px-8 animate-pulse"
@@ -499,7 +499,7 @@ function EventDetailsLoading() {
           <div className="w-full animate-pulse">
             <div className="bg-turquoise/50 w-52 h-8 mb-4 px-0"></div>
 
-            <div className="aspect-[4/3] mb-4 ltr:mr-0 rtl:ml-0 relative transtion-[postion] mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4 bg-grey-light"></div>
+            <div className="aspect-[4/3] mb-4 me-0 relative transtion-[postion] mt-8 sm:w-64 sm:float-right rtl:sm:float-left sm:m-4 bg-grey-light"></div>
 
             {[60, 140, 140, 0, 60].map((v, i) => (
               <div className="bg-grey-light h-8" style={{ width: v }} key={i} />

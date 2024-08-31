@@ -72,6 +72,7 @@
   "home": "Home",
   "login": "Login",
   "name": "Name",
+  "fullName": "Imię i nazwisko",
   "newsletter": "Newsletter",
   "phoneNumber": "Phone number (incl. country code)",
   "page": "Page",

@@ -12,14 +12,13 @@ import {
   IonCol,
   IonTextarea,
   IonIcon,
-  IonButton,
   IonToggle,
 } from "@ionic/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
 import { StoreContext } from "../stores/Store";
-import IsPaused from "../utils/is_paused";
+import { IsPausedHow } from "../utils/is_paused";
 import { t } from "i18next";
 import Badges from "../components/SizeBadge";
 import AddressBagCard from "../components/Bags/AddressBagCard";
@@ -33,17 +32,18 @@ import {
   IonTextareaCustomEvent,
   TextareaInputEventDetail,
 } from "@ionic/core/dist/types/components";
+import { userUpdate } from "../api/user";
 
 export default function AddressItem({
   match,
 }: RouteComponentProps<{ uid: string }>) {
-  const { chainUsers, chain, isChainAdmin, bags, authUser, setChain } =
+  const { chainUsers, chain, isChainAdmin, bags, authUser, setChain, refresh } =
     useContext(StoreContext);
   const user = useMemo(() => {
     let userUID = match.params.uid;
     return chainUsers.find((u) => u.uid === userUID) || null;
   }, [match.params.uid, chainUsers]);
-  const isUserPaused = IsPaused(user, chain?.uid);
+  const isUserPaused = IsPausedHow(user, chain?.uid);
 
   const userBags = useMemo(() => {
     return bags.filter((b) => b.user_uid === user?.uid);
@@ -95,6 +95,15 @@ export default function AddressItem({
       }, 1300) as any,
     );
   }
+  async function handlePauseButton(isUserPaused: boolean) {
+    if (!user || !chain) return;
+    await userUpdate({
+      user_uid: user.uid,
+      chain_uid: chain.uid,
+      chain_paused: !isUserPaused,
+    }).catch((err) => console.error);
+    await refresh("address");
+  }
 
   function onChangeWarden(assign: boolean) {
     if (!chain || !user) return;
@@ -120,20 +129,41 @@ export default function AddressItem({
           <UserCard
             user={user}
             chain={chain}
-            isUserPaused={isUserPaused}
+            isUserPaused={isUserPaused.sum}
             showMessengers
           />
         ) : null}
 
         {isChainAdmin ? (
-          <IonItem lines="none" className="ion-align-items-start">
-            <IonLabel className="!tw-font-bold">
-              {t("interestedSizes")}
-            </IonLabel>
-            <div className="ion-margin-top ion-margin-bottom" slot="end">
-              {user ? <Badges categories={[]} sizes={user.sizes} /> : null}
-            </div>
-          </IonItem>
+          <>
+            <IonItem lines="none" className="ion-align-items-start">
+              <IonLabel className="!tw-font-bold">
+                {t("interestedSizes")}
+              </IonLabel>
+              <div className="ion-margin-top ion-margin-bottom" slot="end">
+                {user ? <Badges categories={[]} sizes={user.sizes} /> : null}
+              </div>
+            </IonItem>
+            <IonItem
+              lines="none"
+              onClick={() => handlePauseButton(isUserPaused.chain)}
+            >
+              <IonLabel className="ion-text-wrap">
+                <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
+                <p className="ion-no-wrap">{t("onlyForThisLoop")}</p>
+              </IonLabel>
+              <IonToggle
+                slot="end"
+                className="ion-toggle-pause"
+                color="medium"
+                // disabled={Boolean(isUserPaused.user)}
+                checked={isUserPaused.chain}
+                onIonChange={(e) => {
+                  e.target.checked = !e.detail.checked;
+                }}
+              />
+            </IonItem>
+          </>
         ) : null}
         <IonGrid>
           <IonRow>

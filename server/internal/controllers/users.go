@@ -206,7 +206,7 @@ func UserUpdate(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	ok, user, authUser, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
 	if !ok {
 		return
 	}
@@ -241,6 +241,9 @@ func UserUpdate(c *gin.Context) {
 				userChanges["paused_until"] = body.PausedUntil
 			} else {
 				userChanges["paused_until"] = null.Time{}
+				if authUser.ID == user.ID {
+					db.Exec(`UPDATE user_chains SET is_paused = FALSE WHERE user_id = ?`, user.ID)
+				}
 			}
 		}
 		if body.ChainPaused != nil && chain != nil {

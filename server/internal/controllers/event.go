@@ -9,7 +9,6 @@ import (
 
 	ics "github.com/arran4/golang-ical"
 	"github.com/gin-gonic/gin"
-	"github.com/samber/lo"
 	uuid "github.com/satori/go.uuid"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
@@ -337,14 +336,10 @@ func EventUpdate(c *gin.Context) {
 			event.ImageDeleteUrl = *(body.ImageDeleteUrl)
 		}
 	}
+	if body.PriceType != nil {
+		event.PriceType = models.NewNullEventPriceType(body.PriceType)
+	}
 	if body.PriceCurrency != nil && body.PriceValue != nil {
-		if body.PriceType == nil {
-			if *body.PriceCurrency == "" {
-				body.PriceType = lo.ToPtr(models.EventPriceTypeEntrance)
-			} else {
-				body.PriceType = lo.ToPtr(models.EventPriceTypeFree)
-			}
-		}
 		if *body.PriceCurrency == "" {
 			event.PriceCurrency = zero.String{}
 			event.PriceValue = 0

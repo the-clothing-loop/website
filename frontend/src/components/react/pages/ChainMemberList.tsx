@@ -680,10 +680,7 @@ export default function ChainMemberList() {
                       href={localizePath("/loops/edit/?chain=" + chainUID)}
                     >
                       {t("editLoop")}
-                      <span
-                        className="ltr:ml-2 rtl:mr-2 icon-pencil-2"
-                        aria-hidden
-                      />
+                      <span className="ms-2 icon-pencil-2" aria-hidden />
                     </a>
 
                     <button
@@ -692,10 +689,7 @@ export default function ChainMemberList() {
                       onClick={handleClickDeleteLoop}
                     >
                       {t("deleteLoop")}
-                      <span
-                        className="ltr:ml-2 rtl:mr-2 icon-trash"
-                        aria-hidden
-                      />
+                      <span className="ms-2 icon-trash" aria-hidden />
                     </button>
                   </div>
                 </>
@@ -748,7 +742,7 @@ export default function ChainMemberList() {
                   onChange={() => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-3 rtl:pl-3 ltr:mr-3 rtl:ml-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black pe-3 me-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("route")}
                   <span className="skew-x-6 rtl:-skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2 rtl:right-auto rtl:-left-2"></span>
                 </div>
@@ -781,7 +775,7 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none ltr:pl-3 rtl:pr-3 ltr:ml-3 rtl:mr-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
+                  className={`relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none ps-3 ms-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
                     unapprovedUsers.length
                       ? "text-black"
                       : "text-base-300 cursor-not-allowed"
@@ -1404,7 +1398,7 @@ function ParticipantsTable(props: {
                   <span>{t("name")}</span>
                   <SortButton
                     isSelected={props.sortBy === "name"}
-                    className="ml-1"
+                    className="ms-1"
                     onClick={() => toggleSortBy("name")}
                   />
                 </th>
@@ -1415,7 +1409,7 @@ function ParticipantsTable(props: {
                   <span>{t("email")}</span>
                   <SortButton
                     isSelected={props.sortBy === "email"}
-                    className="ml-1"
+                    className="ms-1"
                     onClick={() => toggleSortBy("email")}
                   />
                 </th>
@@ -1425,7 +1419,7 @@ function ParticipantsTable(props: {
                   <span>{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={props.sortBy === "date"}
-                    className="ml-1"
+                    className="ms-1"
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>
