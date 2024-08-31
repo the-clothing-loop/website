@@ -706,32 +706,34 @@ func ChainChangeUserWarden(c *gin.Context) {
 		return
 	}
 
-	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
-
-	userChain := &models.UserChain{}
-	if ok {
-		db.Raw(`
-		SELECT * FROM user_chains
-		WHERE user_id = ? AND chain_id = ?
-		LIMIT 1
-		`, user.ID, chain.ID).Scan(userChain)
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	if !ok {
+		return
 	}
-
-	if userChain.IsChainAdmin {
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	user.AddUserChainsToObject(db)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	ok, isUserChainAdmin := user.IsPartOfChain(body.ChainUID)
+	if !ok {
+		c.String(http.StatusBadRequest, "User is not a member of this loop")
+		return
+	}
+	if isUserChainAdmin {
 		c.String(http.StatusInternalServerError, "Hosts cannot be assigned wardens")
 		return
 	}
 
-	if !ok {
-		return
-	}
-
-	err := models.UserChainSetWarden(db, user.ID, chain.ID, body.Warden)
-
+	err = models.UserChainSetWarden(db, user.ID, chain.ID, body.Warden)
 	if err != nil {
 		slog.Error("Unable to change user warden", "error", err)
 		c.String(http.StatusInternalServerError, "Unable to change user warden")
 		return
 	}
-
 }
