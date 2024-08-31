@@ -338,5 +338,7 @@
   "clickHereToRegister": "<1>Klik hier</1> om te registreren",
   "clickHereToLogin": "<1>Klik hier</1> om in te loggen",
   "mustBeRegistered": "Je moet geregistreerd zijn om een evenement aan te maken",
-  "userExists": "Gebruiker bestaat al"
+  "userExists": "Gebruiker bestaat al",
+  "assignWarden": "Wijs Warden toe",
+  "removeWarden": "Verwijder Warden"
 }
