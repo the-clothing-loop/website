@@ -37,7 +37,7 @@ import { userUpdate } from "../api/user";
 export default function AddressItem({
   match,
 }: RouteComponentProps<{ uid: string }>) {
-  const { chainUsers, chain, isChainAdmin, bags, authUser, setChain, refresh } =
+  const { chainUsers, chain, isChainAdmin, bags, authUser, refresh } =
     useContext(StoreContext);
   const user = useMemo(() => {
     let userUID = match.params.uid;
@@ -109,7 +109,7 @@ export default function AddressItem({
     if (!chain || !user) return;
     chainChangeUserWarden(chain.uid, user.uid, assign)
       .then(() => {
-        setChain(chain?.uid, authUser);
+        refresh("address");
         setIsChainWarden(assign);
       })
       .catch((error) => console.log(error));
@@ -165,6 +165,26 @@ export default function AddressItem({
             </IonItem>
           </>
         ) : null}
+        {isChainAdmin && !isChainHost ? (
+          <IonItem
+            lines="none"
+            button
+            detail={false}
+            onClick={() => onChangeWarden(!isChainWarden)}
+          >
+            <IonLabel>
+              <h3 className="!tw-font-bold">{t("assignWardenTitle")}</h3>
+              <p>{t("assignWardenBody")}</p>
+            </IonLabel>
+            <IonToggle
+              slot="end"
+              checked={isChainWarden}
+              color="primary"
+              justify="space-between"
+            ></IonToggle>
+          </IonItem>
+        ) : null}
+
         <IonGrid>
           <IonRow>
             {userBags.map((bag) => {
@@ -180,25 +200,6 @@ export default function AddressItem({
             })}
           </IonRow>
         </IonGrid>
-        {isChainAdmin && !isChainHost ? (
-          <IonItem
-            lines="none"
-            button
-            detail={false}
-            onClick={() => onChangeWarden(!isChainWarden)}
-          >
-            <IonLabel>
-              <h3 className="!tw-font-bold">{t("assignWarden")}</h3>
-              <IonToggle
-                checked={isChainWarden}
-                color="primary"
-                justify="space-between"
-              >
-                {isChainWarden ? t("removeWarden") : t("assignWarden")}
-              </IonToggle>
-            </IonLabel>
-          </IonItem>
-        ) : null}
 
         {note || isNoteEditable ? (
           <IonItem lines="none">
