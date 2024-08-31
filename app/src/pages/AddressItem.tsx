@@ -178,6 +178,7 @@ export default function AddressItem({
             </IonLabel>
             <IonToggle
               slot="end"
+              className="ion-toggle-flag"
               checked={isChainWarden}
               color="primary"
               justify="space-between"
