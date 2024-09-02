@@ -26,7 +26,7 @@ import {
   chainGetUserNote,
   chainChangeUserWarden,
 } from "../api/chain";
-import { checkmarkCircle } from "ionicons/icons";
+import { checkmarkCircle, flag } from "ionicons/icons";
 import {
   IonTextareaCustomEvent,
   TextareaInputEventDetail,
@@ -172,6 +172,14 @@ export default function AddressItem({
               color="primary"
               justify="space-between"
             ></IonToggle>
+          </IonItem>
+        ) : isUserWarden ? (
+          <IonItem lines="none">
+            <IonLabel>
+              <h3 className="!tw-font-bold">{t("assignWardenTitle")}</h3>
+              <p>{t("assignWardenBody")}</p>
+            </IonLabel>
+            <IonIcon slot="end" icon={flag} color="primary" />
           </IonItem>
         ) : null}
 
