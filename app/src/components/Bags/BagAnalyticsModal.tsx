@@ -12,7 +12,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import dayjs from "dayjs";
+import dayjs from "../../dayjs";
 import { useContext, useRef, useState, useTransition } from "react";
 import { bagHistory, BagHistoryItem } from "../../api/bag";
 import { StoreContext } from "../../stores/Store";

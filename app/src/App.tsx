@@ -4,10 +4,15 @@ import { useTranslation } from "react-i18next";
 import { StoreProvider } from "./stores/Store";
 import Routes from "./Routes";
 import { logout } from "./api/login";
+import { useEffect } from "react";
+import dayjs from "./dayjs";
 
 export default function App() {
   const [presentAlert] = useIonAlert();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  useEffect(() => {
+    dayjs.locale(i18n.language);
+  }, [i18n.language]);
 
   function handleIsOffline(err: any) {
     presentAlert({
