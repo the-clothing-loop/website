@@ -338,7 +338,5 @@
   "clickHereToRegister": "<1>انقر هنا </1> للتسجيل",
   "clickHereToLogin": "<1>انقر هنا </1> لتسجيل الدخول",
   "mustBeRegistered": "يجب عليك التسجيل لإنشاء حدث",
-  "userExists": "المستخدم موجود مسبقاً",
-  "assignWarden": "تعيين أمين",
-  "removeWarden": "إزالة الوصي"
+  "userExists": "المستخدم موجود مسبقاً"
 }
