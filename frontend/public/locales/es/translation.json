@@ -338,7 +338,5 @@
   "clickHereToRegister": "<1>Haz clic aquí</1> para registrarte",
   "clickHereToLogin": "<1>Haz clic aquí</1> para registrarte",
   "mustBeRegistered": "Debes estar registrado para crear un evento",
-  "userExists": "El usuario ya existe",
-  "assignWarden": "Asignar Guardián",
-  "removeWarden": "Quitar Guardián"
+  "userExists": "El usuario ya existe"
 }
