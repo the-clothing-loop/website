@@ -13,7 +13,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import dayjs from "../../dayjs";
-import { useContext, useRef, useState, useTransition } from "react";
+import { useContext, useRef, useState } from "react";
 import { bagHistory, BagHistoryItem } from "../../api/bag";
 import { StoreContext } from "../../stores/Store";
 import { useTranslation } from "react-i18next";
@@ -174,7 +174,7 @@ export default function BagAnalyticsModal() {
     >
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Bag Analytics</IonTitle>
+          <IonTitle>{t("bagAnalytics")}</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => onClose()}>{t("close")}</IonButton>
           </IonButtons>
@@ -198,8 +198,8 @@ export default function BagAnalyticsModal() {
               <IonLabel>
                 <h3>{item.number}</h3>
                 <p className="tw-pb-2 tw-flex tw-justify-between">
-                  <span>History:</span>
-                  <span className="tw-text-medium">Date received</span>
+                  <span>{t("history")}:</span>
+                  <span className="tw-text-medium">{t("dateReceived")}</span>
                 </p>
                 <IonList>
                   {item.history.map((histItem, i) => (
