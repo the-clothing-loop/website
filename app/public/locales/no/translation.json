@@ -103,6 +103,8 @@
   "routePrivacyDescription_zero": "Deltakerne vil ikke få tilgang til andre deltakeres data på ruten.",
   "routePrivacyDescriptionAll": "Deltakerne vil få tilgang til hver deltakers data på ruten.",
   "nAddress": "{{name}}sin adresse",
+  "assignWardenTitle": "Kvalitetskontrollpunkt",
+  "assignWardenBody": "Ansvarlig for ekstra kvalitetskontroll",
   "example": "Eksempel",
   "customLoopRules": "Egendefinerte loop-regler",
   "createNewRule": "Opprett ny regel",
