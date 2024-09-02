@@ -103,6 +103,8 @@
   "routePrivacyDescription_zero": "Participants will not be able to access other participant's data in the route.",
   "routePrivacyDescriptionAll": "Participants will be able to access every participant's data in the route.",
   "nAddress": "{{name}}'s address",
+  "assignWardenTitle": "Checkpoint de qualidade",
+  "assignWardenBody": "Responsável pelo controle de qualidade extra",
   "example": "Example",
   "customLoopRules": "Custom Loop rules",
   "createNewRule": "Create new rule",

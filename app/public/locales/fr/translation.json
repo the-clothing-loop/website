@@ -103,6 +103,8 @@
   "routePrivacyDescription_zero": "Les participants ne pourront pas accéder aux données d'autres participants sur le parcours.",
   "routePrivacyDescriptionAll": "Les participants pourront accéder aux données de chaque participant sur le parcours.",
   "nAddress": "Adresse de {{name}}",
+  "assignWardenTitle": "Point de contrôle qualité",
+  "assignWardenBody": "Responsable du contrôle qualité supplémentaire",
   "example": "Exemple",
   "customLoopRules": "Règles personnalisées",
   "createNewRule": "Créer une nouvelle règle",
