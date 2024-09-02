@@ -177,11 +177,11 @@ export default function AddressList() {
                       onIonInput={(e) => setSearch(e.detail.value as string)}
                       onIonClear={() => setSearch("")}
                       value={search}
-                      placeholder="Search"
+                      placeholder={t("search")}
                     ></IonSearchbar>
                   </IonItem>
                   <IonItem lines="full" color="light">
-                    <p className="tw-font-bold">Sort</p>
+                    <p className="tw-font-bold">{t("sort")}</p>
                   </IonItem>
                   <IonRadioGroup
                     value={routeListView}
