@@ -31,7 +31,7 @@ export default function App() {
           },
         },
         {
-          text: "Try Again",
+          text: t("tryAgain"),
           role: "confirm",
           cssClass: "tw-font-bold",
           handler: () => {
