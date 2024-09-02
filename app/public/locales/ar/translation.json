@@ -103,6 +103,8 @@
   "routePrivacyDescription_zero": "ولن يتمكن المشاركون من الوصول إلى بيانات المشاركين الآخرين في الطريق.",
   "routePrivacyDescriptionAll": "وسيتمكن المشاركون من الوصول إلى بيانات كل مشارك على الطريق.",
   "nAddress": "عنوان {{name}}",
+  "assignWardenTitle": "نقطة فحص الجودة",
+  "assignWardenBody": "مسؤول عن مراقبة الجودة الإضافية",
   "example": "مثال",
   "customLoopRules": "قواعد الحلقة المخصصة",
   "createNewRule": "إنشاء قاعدة جديدة",
