@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sort"
 	"strings"
 	"time"
 
@@ -104,6 +105,21 @@ func BagPut(c *gin.Context) {
 		}
 	}
 
+	holder := struct {
+		UserChainID uint
+		Email       string
+	}{}
+	db.Raw(`
+SELECT uc.id AS user_chain_id, u.email AS email FROM user_chains AS uc
+LEFT JOIN users AS u ON u.id = uc.user_id
+WHERE u.uid = ? AND uc.chain_id = ?
+LIMIT 1
+	`, body.HolderUID, chain.ID).Scan(&holder)
+	if holder.UserChainID == 0 {
+		c.String(http.StatusExpectationFailed, "Bag holder does not exist")
+		return
+	}
+
 	// set default values
 	if body.Number != nil {
 		bag.Number = *(body.Number)
@@ -115,20 +131,9 @@ func BagPut(c *gin.Context) {
 		bag.UpdatedAt = *(body.UpdatedAt)
 	}
 	bag.LastNotifiedAt = zero.Time{}
-	bag.AddLastUserEmailToUpdateFifo(authUser.Email.String)
+	bag.AddLastUserEmailToUpdateFifo(holder.Email)
 
-	ucID := uint(0)
-	db.Raw(`
-SELECT uc.id FROM user_chains AS uc
-LEFT JOIN users AS u ON u.id = uc.user_id
-WHERE u.uid = ? AND uc.chain_id = ?
-LIMIT 1
-	`, body.HolderUID, chain.ID).Scan(&ucID)
-	if ucID == 0 {
-		c.String(http.StatusExpectationFailed, "Bag holder does not exist")
-		return
-	}
-	bag.UserChainID = ucID
+	bag.UserChainID = holder.UserChainID
 
 	var err error
 	if bag.ID == 0 {
@@ -197,9 +202,10 @@ type BagsHistoryResponseBag struct {
 	History []BagsHistoryResponseBagHistory `json:"history"`
 }
 type BagsHistoryResponseBagHistory struct {
-	Name  string `json:"name"`
-	Email string `json:"-"`
-	Date  string `json:"date,omitempty"`
+	Name  string    `json:"name"`
+	Email string    `json:"-"`
+	Date  string    `json:"date,omitempty"`
+	_Date time.Time `json:"-"`
 }
 
 func BagsHistory(c *gin.Context) {
@@ -245,10 +251,8 @@ WHERE user_chain_id IN (
 		lastUserEmailToUpdate := strings.Split(bag.LastUserEmailToUpdate, ",")
 		lastUserDateToUpdate := strings.Split(bag.LastUserDateToUpdate, ",")
 		for i, email := range lastUserEmailToUpdate {
-			date, err := lo.Nth(lastUserDateToUpdate, i)
-			if err != nil {
-				date = ""
-			}
+			date, _ := lo.Nth(lastUserDateToUpdate, i)
+			_date, _ := time.Parse(time.RFC3339, date)
 
 			user, found := lo.Find(chainUsers, func(u models.UserContactData) bool {
 				if !u.Email.Valid {
@@ -261,14 +265,19 @@ WHERE user_chain_id IN (
 					Name:  user.Name,
 					Email: email,
 					Date:  date,
+					_Date: _date,
 				})
 			} else {
 				resBag.History = append(resBag.History, BagsHistoryResponseBagHistory{
 					Name:  "***",
 					Email: email,
 					Date:  date,
+					_Date: _date,
 				})
 			}
+			sort.Slice(resBag.History, func(a, b int) bool {
+				return resBag.History[a]._Date.Before(resBag.History[b]._Date)
+			})
 		}
 		res = append(res, resBag)
 	}
