@@ -11,17 +11,18 @@ import {
   IonToolbar,
   useIonLoading,
 } from "@ionic/react";
-import { t } from "i18next";
 import { Chain, User } from "../../api/types";
 import { useEffect, useRef, useState } from "react";
 import { addOutline, eyeOffOutline, removeOutline } from "ionicons/icons";
 import RoutePrivacyExample from "./RoutePrivacyExample";
+import { useTranslation } from "react-i18next";
 
 export default function RoutePrivacyInput(props: {
   chain: Chain;
   authUser: User;
   onChange: (rp: number) => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const [routePrivacy, setRoutePrivacy] = useState(
     props.chain.route_privacy || 2,
   );

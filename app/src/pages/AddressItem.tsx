@@ -19,7 +19,6 @@ import { RouteComponentProps } from "react-router";
 import UserCard from "../components/UserCard";
 import { IsChainAdmin, IsChainWarden, StoreContext } from "../stores/Store";
 import { IsPausedHow } from "../utils/is_paused";
-import { t } from "i18next";
 import Badges from "../components/SizeBadge";
 import AddressBagCard from "../components/Bags/AddressBagCard";
 import {
@@ -33,10 +32,12 @@ import {
   TextareaInputEventDetail,
 } from "@ionic/core/dist/types/components";
 import { userUpdate } from "../api/user";
+import { useTranslation } from "react-i18next";
 
 export default function AddressItem({
   match,
 }: RouteComponentProps<{ uid: string }>) {
+  const { t } = useTranslation();
   const { chainUsers, chain, isChainAdmin, bags, authUser, refresh } =
     useContext(StoreContext);
   const user = useMemo(() => {

@@ -13,10 +13,10 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import dayjs from "dayjs";
-import { t } from "i18next";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useTransition } from "react";
 import { bagHistory, BagHistoryItem } from "../../api/bag";
 import { StoreContext } from "../../stores/Store";
+import { useTranslation } from "react-i18next";
 
 // type ListBags = {
 //   type: "bags";
@@ -65,6 +65,7 @@ import { StoreContext } from "../../stores/Store";
 // }
 
 export default function BagAnalyticsModal() {
+  const { t } = useTranslation();
   const { chain } = useContext(StoreContext);
   const ref = useRef<HTMLIonModalElement>(null);
   // const [segmentType, setSegmentType] = useState<"bags" | "members">("bags");

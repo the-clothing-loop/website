@@ -7,10 +7,11 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { t } from "i18next";
 import { cloudOfflineOutline } from "ionicons/icons";
+import { useTranslation } from "react-i18next";
 
 export default function Offline() {
+  const { t } = useTranslation();
   const handleClickRefresh = () => window.location.reload();
 
   return (

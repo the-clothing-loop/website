@@ -196,10 +196,6 @@ export default function BagsList() {
     let bagID = state?.bag_id;
     if (!bagID) return;
 
-    let idPrefix = "bag-list-";
-    if (bagListView === "card") {
-      idPrefix = "bag-card-";
-    }
     const el =
       document.getElementById("bag-card-" + state?.bag_id) ||
       document.getElementById("bag-list-" + state?.bag_id);
