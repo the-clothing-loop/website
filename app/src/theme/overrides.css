@@ -9,7 +9,7 @@
   width: 375px;
   height: 812px;
 }
-.plt-desktop:not(.plt-hybrid) ion-modal {
+.plt-desktop:not(.plt-hybrid) ion-modal:not(.ion-datetime-button-overlay) {
   --width: 375px !important;
   --height: 812px !important;
 }
