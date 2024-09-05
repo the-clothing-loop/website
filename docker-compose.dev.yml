@@ -19,7 +19,7 @@ services:
     working_dir: /app
     command: sh -c 'npm i; npm run start:lan'
   server:
-    image: golang:1.22-alpine
+    image: golang:1.22.3-alpine
     depends_on:
       - db
       - mailpit
@@ -73,7 +73,7 @@ services:
       - mattermost_prev_config:/mm/mattermost/config
       - mattermost_prev_data:/mm/mattermost-data
   mattermost_mail:
-    image: golang:alpine
+    image: golang:1.22.3-alpine
     ports:
       - 2525:2525
     depends_on:
