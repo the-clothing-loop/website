@@ -104,7 +104,7 @@
   "routePrivacyDescriptionAll": "Die Teilnehmer werden auf die Daten jedes Teilnehmers auf der Strecke zugreifen können.",
   "nAddress": "Adresse von {{name}}",
   "assignWardenTitle": "Qualitätskontrollpunkt",
-  "assignWardenBody": "Verantwortlich für zusätzliche Qualitätskontrolle",
+  "assignWardenBody": "Diese(r) Teilnehmer*in ist für die zusätzliche Qualitätskontrolle der Tasche verantwortlich",
   "example": "Beispiel",
   "customLoopRules": "Anpassungsregeln für Loop",
   "createNewRule": "Erstellen Sie eine neue Regel",
