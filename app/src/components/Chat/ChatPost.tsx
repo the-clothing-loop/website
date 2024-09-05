@@ -100,7 +100,7 @@ export default function ChatPost(props: ChatPostProps) {
           {...(props.isChainAdmin ? longPress : {})}
         >
           <div
-            className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-inline-block tw-ms-4 tw-relative".concat(
+            className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-inline-block tw-mx-4 tw-relative".concat(
               isMe ? " tw-bg-purple-shade" : " tw-bg-light",
             )}
           >
@@ -120,8 +120,9 @@ export default function ChatPost(props: ChatPostProps) {
             <IonItem
               lines="none"
               routerLink={"/address/" + props.authUser?.uid}
-              className="tw-my-0 -tw-mx-4 tw-px-2"
+              className="tw-my-0 tw-ps-2"
               color="background"
+              style={{ "--padding-start": "0" }}
             >
               <div className="tw-py-2">
                 <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
@@ -200,7 +201,7 @@ export default function ChatPost(props: ChatPostProps) {
       {...(props.isChainAdmin ? longPress : {})}
     >
       <div
-        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-ms-4".concat(
+        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-mx-4".concat(
           isMe ? " tw-bg-purple-shade" : " tw-bg-light",
         )}
       >

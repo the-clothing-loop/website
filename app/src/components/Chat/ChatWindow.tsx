@@ -180,7 +180,7 @@ export default function ChatWindow(props: Props) {
 
   return (
     <div className="tw-relative tw-h-full tw-flex tw-flex-col">
-      <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-y-auto tw-bg-[#f4f1f9]">
+      <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-[#f4f1f9]">
         {chainChannels.map((cr, i) => {
           const initials = cr.display_name
             .split(" ")
