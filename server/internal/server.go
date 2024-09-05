@@ -144,6 +144,7 @@ func Routes() *gin.Engine {
 	v2.GET("/chain/near", controllers.ChainGetNear)
 	v2.PATCH("/chain/user/note", controllers.ChainChangeUserNote)
 	v2.GET("/chain/user/note", controllers.ChainGetUserNote)
+	v2.PATCH("/chain/user/warden", controllers.ChainChangeUserWarden)
 
 	// chat
 	v2.PATCH("/chat/user", controllers.ChatPatchUser)
@@ -155,6 +156,7 @@ func Routes() *gin.Engine {
 	v2.GET("/bag/all", controllers.BagGetAll)
 	v2.PUT("/bag", controllers.BagPut)
 	v2.DELETE("/bag", controllers.BagRemove)
+	v2.GET("/bag/history", controllers.BagsHistory)
 
 	// bulky item
 	v2.GET("/bulky-item/all", controllers.BulkyGetAll)

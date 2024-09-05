@@ -1,7 +1,6 @@
 {
   "genericError": "אירעה שגיאה לא ידועה",
   "removeFromLoop": "הסרה מלולאה",
-  "allowHostsToKnowYourEmailDuringDelete": "Allow hosts to know your email during deletion",
   "leave": "עזוב",
   "leaveLoop": "עזוב לולאה",
   "areYouSureLeaveLoop": "האם אתם בטוחים שברצונכם “{{ name }}” לעזוב “{{ chain }}” לולאה?",
@@ -73,6 +72,7 @@
   "home": "בית",
   "login": "התחברות",
   "name": "שם",
+  "fullName": "Full name",
   "newsletter": "ניוזלטר",
   "phoneNumber": "Phone number (incl. country code)",
   "page": "עמוד",

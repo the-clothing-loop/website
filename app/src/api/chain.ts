@@ -128,3 +128,15 @@ export function chainChangeUserNote(chainUID: UID, userUID: UID, note: string) {
     note,
   });
 }
+
+export function chainChangeUserWarden(
+  chainUID: UID,
+  userUID: UID,
+  warden: boolean,
+) {
+  return axios.patch<never>("v2/chain/user/warden", {
+    user_uid: userUID,
+    chain_uid: chainUID,
+    warden,
+  });
+}

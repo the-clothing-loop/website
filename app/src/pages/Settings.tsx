@@ -34,7 +34,14 @@ import {
   IonModalCustomEvent,
   OverlayEventDetail,
 } from "@ionic/core";
-import { RefObject, useContext, useEffect, useRef, useState } from "react";
+import {
+  RefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StoreContext } from "../stores/Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
@@ -48,13 +55,14 @@ import {
   lockClosedOutline,
   logoAndroid,
   logoApple,
+  notificationsOutline,
   openOutline,
   shareOutline,
   sparkles,
   warningOutline,
 } from "ionicons/icons";
 import dayjs from "../dayjs";
-import IsPaused from "../utils/is_paused";
+import IsPaused, { IsPausedHow } from "../utils/is_paused";
 import Badges from "../components/SizeBadge";
 import { Share } from "@capacitor/share";
 import { Clipboard } from "@capacitor/clipboard";
@@ -65,6 +73,11 @@ import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 import RoutePrivacyInput from "../components/Settings/RoutePrivacyInput";
 import { chainUpdate } from "../api/chain";
+import { el } from "@faker-js/faker";
+import {
+  OneSignalCheckPermissions,
+  OneSignalRequestPermissions,
+} from "../onesignal";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -94,11 +107,26 @@ export default function Settings() {
   const [isCapacitor] = useState(isPlatform("capacitor"));
   const [isIos] = useState(isPlatform("ios"));
   const [expandedDescription, setExpandedDescription] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState<
+    null | boolean
+  >(null);
+
+  // Check notification permissions every 3 seconds
+  useEffect(() => {
+    let n = setInterval(() => {
+      OneSignalCheckPermissions().then(setNotificationPermission);
+    }, 3000);
+    return () => {
+      clearInterval(n);
+    };
+  }, []);
+
   useEffect(() => {
     if (!authUser) return;
     if (!chain || state?.openChainSelect) {
       refChainSelect.current?.open();
     }
+    OneSignalCheckPermissions().then(setNotificationPermission);
   }, [authUser, state]);
 
   const longPressSubHeader = useLongPress(() => {
@@ -121,6 +149,11 @@ export default function Settings() {
     const c = listOfChains.find((c) => c.uid === chainUID) || null;
 
     setChain(c?.uid, authUser);
+  }
+  function handleEnableNotifications() {
+    OneSignalRequestPermissions().finally(() => {
+      OneSignalCheckPermissions().then(setNotificationPermission);
+    });
   }
 
   function handlePauseButton(isUserPaused: boolean) {
@@ -202,30 +235,34 @@ export default function Settings() {
     Share.share({ url });
   }
 
-  let isUserPaused = IsPaused(authUser, chain?.uid);
-  let pausedDayjs = isUserPaused ? dayjs(authUser!.paused_until) : null;
-  let showExpandButton = (chain?.description.length || 0) > 200;
-  let emptyDescription = (chain?.description.length || 0) == 0;
   let pausedFromNow = "";
-  {
-    const now = dayjs();
-    if (pausedDayjs) {
-      if (pausedDayjs.year() < now.add(20, "year").year()) {
+  const isUserPausedHow = IsPausedHow(authUser, chain?.uid);
+  const isUserPaused = isUserPausedHow.chain || Boolean(isUserPausedHow.user);
+  if (authUser && isUserPaused) {
+    let pausedDayjs = dayjs(authUser.paused_until);
+
+    if (isUserPausedHow.chain) {
+      pausedFromNow = t("onlyForThisLoop");
+    } else if (isUserPausedHow.user) {
+      const now = dayjs();
+      if (isUserPausedHow.user.year() < now.add(20, "year").year()) {
         if (pausedDayjs.isBefore(now.add(7, "day"))) {
-          pausedFromNow = t("day", { count: pausedDayjs.diff(now, "day") + 1 });
+          pausedFromNow = t("day", {
+            count: pausedDayjs.diff(now, "day") + 1,
+          });
         } else {
           pausedFromNow = t("week", {
             count: pausedDayjs.diff(now, "week"),
           });
         }
-      }
-      if (authUser?.paused_until === null) {
-        pausedFromNow = t("onlyForThisLoop");
       } else {
         pausedFromNow = t("untilITurnItBackOn");
       }
     }
   }
+
+  let showExpandButton = (chain?.description.length || 0) > 200;
+  let emptyDescription = (chain?.description.length || 0) == 0;
 
   return (
     <IonPage>
@@ -315,6 +352,20 @@ export default function Settings() {
               modal={refSelectPauseExpiryModal}
               submit={(d) => setPause(d)}
             />
+            {notificationPermission === false ? (
+              <IonItem
+                onClick={handleEnableNotifications}
+                lines="none"
+                detail={false}
+              >
+                <IonLabel>{t("enableNotifications")}</IonLabel>
+                <IonIcon
+                  slot="end"
+                  icon={notificationsOutline}
+                  color="primary"
+                />
+              </IonItem>
+            ) : null}
           </IonList>
         </IonCard>
         <IonList style={{ "--ion-item-background": "transparent" }}>
@@ -347,16 +398,20 @@ export default function Settings() {
             color="background"
           >
             <IonList>
+              <IonItemDivider className="tw-bg-transparent tw-font-normal tw-text-sm tw-pb-0 -tw-mb-9">
+                {t("selectALoop")}
+              </IonItemDivider>
               <IonItem lines="none">
                 <IonSelect
                   ref={refChainSelect}
                   aria-label={t("selectALoop")}
-                  className="tw-text-2xl"
+                  className="tw-text-2xl tw-relative tw-z-10 tw-mt-5"
                   labelPlacement="floating"
                   justify="space-between"
                   value={chain?.uid || ""}
                   onIonChange={handleChainSelect}
                   interface="action-sheet"
+                  interfaceOptions={{ header: t("selectALoop") }}
                 >
                   {listOfChains.map((c) => {
                     return (
@@ -387,8 +442,8 @@ export default function Settings() {
                         !chain.published
                           ? "warning"
                           : !chain.is_app_disabled
-                          ? "medium"
-                          : "danger"
+                            ? "medium"
+                            : "danger"
                       }
                     >
                       {!chain.open_to_new_members ? (

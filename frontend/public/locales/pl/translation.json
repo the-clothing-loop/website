@@ -1,7 +1,6 @@
 {
   "genericError": "Unknown error occurred",
   "removeFromLoop": "Remove From Loop",
-  "allowHostsToKnowYourEmailDuringDelete": "Pozwól hostom na poznanie Twojego adresu e-mail podczas usuwania",
   "leave": "Leave",
   "leaveLoop": "Leave Loop",
   "areYouSureLeaveLoop": "Are you sure you want “{{ name }}” to leave “{{ chain }}” Loop?",
@@ -73,6 +72,7 @@
   "home": "Home",
   "login": "Login",
   "name": "Name",
+  "fullName": "Imię i nazwisko",
   "newsletter": "Newsletter",
   "phoneNumber": "Phone number (incl. country code)",
   "page": "Page",

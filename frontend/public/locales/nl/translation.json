@@ -1,7 +1,6 @@
 {
   "genericError": "Er is een onbekende fout opgetreden",
   "removeFromLoop": "Verwijder uit Loop",
-  "allowHostsToKnowYourEmailDuringDelete": "Sta hosts toe om je e-mail te weten tijdens het verwijderen",
   "leave": "Verlaat",
   "leaveLoop": "Loop verlaten",
   "areYouSureLeaveLoop": "Weet je zeker dat je “{{ name }}” uit \"{{ chain }}\" Loop wilt verwijderen?",
@@ -73,6 +72,7 @@
   "home": "Hoofdpagina",
   "login": "Inloggen",
   "name": "Naam",
+  "fullName": "Volledige naam",
   "newsletter": "Nieuwsbrief",
   "phoneNumber": "Telefoonnummer (inclusief landcode)",
   "page": "Pagina",

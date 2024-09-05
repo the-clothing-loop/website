@@ -48,7 +48,7 @@ export default function CategoriesDropdown({
       >
         <span className="truncate">{btnLabel}</span>
         <span
-          className={`pl-2 rtl:pl-0 rtl:pr-2 ${
+          className={`ps-2 ${
             dropdown.open ? "icon-arrow-up" : "icon-arrow-down"
           }`}
         ></span>

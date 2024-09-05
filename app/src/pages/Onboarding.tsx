@@ -29,7 +29,7 @@ export function OnboardingPageOne() {
         </div>
 
         <h1
-          className="tw-z-10 tw-block tw-absolute tw-inset-x tw-top-[55%] -tw-mt-20 tw-text-secondary dark:tw-text-dark tw-font-serif tw-font-bold tw-text-accent tw-text-7xl rtl:tw-text-end"
+          className="tw-z-10 tw-block tw-absolute tw-inset-x tw-top-[55%] -tw-mt-20 tw-px-4 tw-text-secondary dark:tw-text-dark tw-font-serif tw-font-bold tw-text-accent tw-text-7xl rtl:tw-text-end"
           dir="ltr"
         >
           Swap, <br />

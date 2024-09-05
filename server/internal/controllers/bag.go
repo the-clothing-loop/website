@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/OneSignal/onesignal-go-api"
+	"github.com/samber/lo"
 
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -102,6 +105,21 @@ func BagPut(c *gin.Context) {
 		}
 	}
 
+	holder := struct {
+		UserChainID uint
+		Email       string
+	}{}
+	db.Raw(`
+SELECT uc.id AS user_chain_id, u.email AS email FROM user_chains AS uc
+LEFT JOIN users AS u ON u.id = uc.user_id
+WHERE u.uid = ? AND uc.chain_id = ?
+LIMIT 1
+	`, body.HolderUID, chain.ID).Scan(&holder)
+	if holder.UserChainID == 0 {
+		c.String(http.StatusExpectationFailed, "Bag holder does not exist")
+		return
+	}
+
 	// set default values
 	if body.Number != nil {
 		bag.Number = *(body.Number)
@@ -113,20 +131,9 @@ func BagPut(c *gin.Context) {
 		bag.UpdatedAt = *(body.UpdatedAt)
 	}
 	bag.LastNotifiedAt = zero.Time{}
-	bag.LastUserEmailToUpdate = authUser.Email
+	bag.AddLastUserEmailToUpdateFifo(holder.Email)
 
-	ucID := uint(0)
-	db.Raw(`
-SELECT uc.id FROM user_chains AS uc
-LEFT JOIN users AS u ON u.id = uc.user_id
-WHERE u.uid = ? AND uc.chain_id = ?
-LIMIT 1
-	`, body.HolderUID, chain.ID).Scan(&ucID)
-	if ucID == 0 {
-		c.String(http.StatusExpectationFailed, "Bag holder does not exist")
-		return
-	}
-	bag.UserChainID = ucID
+	bag.UserChainID = holder.UserChainID
 
 	var err error
 	if bag.ID == 0 {
@@ -146,8 +153,10 @@ LIMIT 1
 
 	if body.UserUID != body.HolderUID {
 		err := app.OneSignalCreateNotification(db, []string{body.HolderUID},
-			*views.Notifications["bagHasBeenAssignedToYouTitle"],
-			onesignal.StringMap{},
+			*views.Notifications[views.NotificationEnumTitleBagAssignedYou],
+			onesignal.StringMap{
+				En: onesignal.PtrString(bag.Number),
+			},
 		)
 		if err != nil {
 			slog.Error("Notification creation failed", "err", err)
@@ -184,4 +193,94 @@ WHERE id = ? AND user_chain_id IN (
 		c.String(http.StatusInternalServerError, "Bag could not be removed")
 		return
 	}
+}
+
+type BagsHistoryResponseBag struct {
+	ID      uint                            `json:"id"`
+	Number  string                          `json:"number"`
+	Color   string                          `json:"color"`
+	History []BagsHistoryResponseBagHistory `json:"history"`
+}
+type BagsHistoryResponseBagHistory struct {
+	Name  string    `json:"name"`
+	Email string    `json:"-"`
+	Date  string    `json:"date,omitempty"`
+	_Date time.Time `json:"-"`
+}
+
+func BagsHistory(c *gin.Context) {
+	db := getDB(c)
+	var query struct {
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, query.ChainUID)
+	if !ok {
+		return
+	}
+
+	// Get bags of current chain
+	bags := []models.Bag{}
+	err := db.Raw(`
+SELECT id, number, color, last_user_email_to_update, last_user_date_to_update
+FROM bags
+WHERE user_chain_id IN (
+	SELECT id FROM user_chains WHERE chain_id = ?
+)
+	`, chain.ID).Scan(&bags).Error
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	chainUsers, err := chain.GetUserContactData(db)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	res := []*BagsHistoryResponseBag{}
+	for _, bag := range bags {
+		resBag := &BagsHistoryResponseBag{
+			ID:     bag.ID,
+			Number: bag.Number,
+			Color:  bag.Color,
+		}
+		lastUserEmailToUpdate := strings.Split(bag.LastUserEmailToUpdate, ",")
+		lastUserDateToUpdate := strings.Split(bag.LastUserDateToUpdate, ",")
+		for i, email := range lastUserEmailToUpdate {
+			date, _ := lo.Nth(lastUserDateToUpdate, i)
+			_date, _ := time.Parse(time.RFC3339, date)
+
+			user, found := lo.Find(chainUsers, func(u models.UserContactData) bool {
+				if !u.Email.Valid {
+					return false
+				}
+				return u.Email.String == email
+			})
+			if found {
+				resBag.History = append(resBag.History, BagsHistoryResponseBagHistory{
+					Name:  user.Name,
+					Email: email,
+					Date:  date,
+					_Date: _date,
+				})
+			} else {
+				resBag.History = append(resBag.History, BagsHistoryResponseBagHistory{
+					Name:  "***",
+					Email: email,
+					Date:  date,
+					_Date: _date,
+				})
+			}
+			sort.Slice(resBag.History, func(a, b int) bool {
+				return resBag.History[a]._Date.Before(resBag.History[b]._Date)
+			})
+		}
+		res = append(res, resBag)
+	}
+
+	c.JSON(http.StatusOK, res)
 }

@@ -56,7 +56,7 @@ export default function HelpItem({
       return json[index] || faqItemTranslationOption.defaultValue;
     }
 
-    return t(faqListKeys[index], faqItemTranslationOption);
+    return t(faqListKeys[index], faqItemTranslationOption as string);
   }, [match.params.index, chain]);
 
   return (

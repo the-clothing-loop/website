@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from "../../dayjs";
 import { Bag, User } from "../../api/types";
 
 export function useBagTooOld(

@@ -1,0 +1,15 @@
+meta {
+  name: history
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base}}/v2/bag/history?chain_uid={{chainUID}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  chain_uid: {{chainUID}}
+}

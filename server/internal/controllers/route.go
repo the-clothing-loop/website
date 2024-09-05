@@ -190,7 +190,7 @@ func (a *ArrTspCityWithIsPaused) FilterOutIsPausedToKeys(me string) []string {
 func retrieveChainUsersAsTspCities(db *gorm.DB, chainID uint) *ArrTspCityWithIsPaused {
 	allUserChains := ArrTspCityWithIsPaused{}
 
-	err := db.Debug().Raw(fmt.Sprintf(`
+	err := db.Raw(fmt.Sprintf(`
 	SELECT
 		users.uid AS %skey%s,
 		users.latitude AS latitude,

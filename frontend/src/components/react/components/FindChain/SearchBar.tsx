@@ -181,7 +181,7 @@ export default function SearchBar(props: Props) {
             />
           </div>
 
-          <div className="w-36 sm:w-48 pr-0 sm:pr-4 rtl:sm:pl-4">
+          <div className="w-36 sm:w-48 pr-0 sm:pe-4">
             <SizesDropdown
               className="max-xs:dropdown-end"
               filteredCategory={

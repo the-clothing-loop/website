@@ -50,7 +50,7 @@ func mailHandler(origin net.Addr, from string, to []string, data []byte) error {
 			return nil
 		}
 
-		err = app.OneSignalCreateNotification(db, []string{user.UID}, *views.Notifications["newChatNotification"], onesignal.StringMap{})
+		err = app.OneSignalCreateNotification(db, []string{user.UID}, *views.Notifications[views.NotificationEnumTitleChatMessage], onesignal.StringMap{})
 		if err != nil {
 			slog.Error("Unable to send notification", "err", err)
 		}

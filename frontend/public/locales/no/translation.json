@@ -1,7 +1,6 @@
 {
   "genericError": "Ukjent feil oppstod",
   "removeFromLoop": "Fjern fra gjentakelse",
-  "allowHostsToKnowYourEmailDuringDelete": "Tillat verter å vite e-post under sletting",
   "leave": "Forlat",
   "leaveLoop": "Forlat sløyfe",
   "areYouSureLeaveLoop": "Er du sikker på at du vil “{{ name }}” legge igjen “{{ chain }}” løkke?",
@@ -73,6 +72,7 @@
   "home": "Hjem",
   "login": "Innlogging",
   "name": "Navn",
+  "fullName": "Fullt navn",
   "newsletter": "Nyhetsbrev",
   "phoneNumber": "Telefonnummer (inkl. landskode)",
   "page": "Side",

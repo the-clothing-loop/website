@@ -1,7 +1,6 @@
 {
   "genericError": "Okänt fel har inträffat",
   "removeFromLoop": "Ta bort från Loop",
-  "allowHostsToKnowYourEmailDuringDelete": "Tillåt värdar att veta din e-post under radering",
   "leave": "Lämna",
   "leaveLoop": "Lämna Loop",
   "areYouSureLeaveLoop": "Är du säkert du vill ta bort \"{{ name }}\" från “{{ chain }}” Loop?",
@@ -73,6 +72,7 @@
   "home": "Hemma",
   "login": "Logga in",
   "name": "Namn",
+  "fullName": "Fullständigt namn",
   "newsletter": "Nyhetsbrev",
   "phoneNumber": "Phone number (incl. country code)",
   "page": "Sida",

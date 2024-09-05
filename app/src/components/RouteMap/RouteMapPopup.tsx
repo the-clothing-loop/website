@@ -50,7 +50,7 @@ export default function RouteMapPopup(props: {
         <IonToolbar>
           <IonTitle>{t("route")}</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={() => onClose()}>Close</IonButton>
+            <IonButton onClick={() => onClose()}>{t("close")}</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

@@ -73,7 +73,7 @@
   "arrHosts": {
     "0": {
       "question": "How do I start a Loop?",
-      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
+      "answer": "We got you covered! We wrote a simple manual with all the instructions that can be found in our <a class='font-semibold' target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Please benefit from the lessons we learned in the many years we have been doing this!"
     },
     "1": {
       "question": "How to find people to join my Loop?",
@@ -81,7 +81,7 @@
     },
     "2": {
       "question": "How much time will hosting a Loop cost me?",
-      "answer": "Our volunteers say they spend on average <strong>1&#189; hours per month</strong> on hosting the Loop."
+      "answer": "Our volunteers say they spend on average <strong>4 hours per month</strong> on hosting the Loop."
     },
     "3": {
       "question": "How do I sign up a new Loop?",

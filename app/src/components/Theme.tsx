@@ -66,7 +66,7 @@ export default function Theme() {
             {t("reset")}
           </IonButton>
         </IonButtons>
-        <IonTitle>Theme</IonTitle>
+        <IonTitle>{t("theme")}</IonTitle>
         <IonButtons slot="end">
           <IonButton onClick={() => changeTheme(selectedTheme)}>
             {t("change")}

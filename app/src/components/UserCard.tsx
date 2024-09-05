@@ -16,11 +16,12 @@ import {
   pauseCircleSharp,
   shareOutline,
   shield,
+  flag,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { Chain, User } from "../api/types";
 import IsPrivate from "../utils/is_private";
-import { IsChainAdmin } from "../stores/Store";
+import { IsChainAdmin, IsChainWarden } from "../stores/Store";
 import { useMemo, useRef, useState } from "react";
 import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";
@@ -83,8 +84,8 @@ export default function UserCard({
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
   const isPhonePrivate = !user.phone_number || IsPrivate(user.phone_number);
-  const isUserAdmin = useMemo(
-    () => IsChainAdmin(user, chain?.uid),
+  const [isUserAdmin, isUserWarden] = useMemo(
+    () => [IsChainAdmin(user, chain?.uid), IsChainWarden(user, chain?.uid)],
     [user, chain],
   );
   const refAddressPopup = useRef<HTMLIonPopoverElement>(null);
@@ -142,6 +143,12 @@ export default function UserCard({
             {isUserAdmin ? (
               <IonIcon
                 icon={shield}
+                color="primary"
+                className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
+              />
+            ) : isUserWarden ? (
+              <IonIcon
+                icon={flag}
                 color="primary"
                 className="tw-w-[18px] tw-h-[18px] tw-m-0 tw-ml-[5px] tw-align-text-top"
               />

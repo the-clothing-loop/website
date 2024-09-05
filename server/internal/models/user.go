@@ -306,6 +306,10 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 		return users, nil
 	}
 
+	if len(users) == 0 {
+		return users, nil
+	}
+
 	// slog.Info("Hide out of bounds information")
 	userIDsWithBulkyItems := []uint{}
 	db.Raw(`
@@ -334,7 +338,7 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 			isCurrentlyPaused = u.PausedUntil.Time.After(time.Now())
 		}
 		if !isCurrentlyPaused {
-			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID })
+			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID && uc.ChainID == chain.ID })
 			if ok && uc.IsPaused {
 				isCurrentlyPaused = true
 			}
@@ -345,9 +349,13 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 	})
 
 	route := []uint{}
+	if len(routeUIDs) != len(users) {
+		slog.Info("missmatch length between route uid list and chain users list", "routeUID", routeUIDs, "users", lo.Map(users, func(u User, i int) string { return u.UID }))
+	}
 	for _, uid := range routeUIDs {
 		user, ok := lo.Find(users, func(u User) bool { return u.UID == uid })
 		if !ok {
+			slog.Warn("missmatch between route uid list and chain users list", "routeUID", uid, "users", lo.Map(users, func(u User, i int) string { return u.UID }))
 			continue
 		}
 		route = append(route, user.ID)
@@ -362,13 +370,18 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 	routeWithoutPausedUsers := lo.Filter(route, func(item uint, i int) bool {
 		return !lo.Contains(userIDsPaused, item)
 	})
-	r := ring_ext.NewWithValues(routeWithoutPausedUsers)
-	userIDsCloseBy := ring_ext.GetSurroundingValues(r, authUserID, chain.RoutePrivacy)
+	userIDsCloseBy := []uint{}
+	if len(routeWithoutPausedUsers) > 0 {
+		r := ring_ext.NewWithValues(routeWithoutPausedUsers)
+		userIDsCloseBy = ring_ext.GetSurroundingValues(r, authUserID, chain.RoutePrivacy)
+	}
 
 	slog.Info("User IDs",
 		"bulkyItems", userIDsWithBulkyItems,
 		"closeBy", userIDsCloseBy,
 		"chainAdmin", userIDsChainAdmin,
+		"pausedUsers", userIDsPaused,
+		"routeIDs", route,
 	)
 
 	for i := range users {

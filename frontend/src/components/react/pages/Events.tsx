@@ -222,7 +222,7 @@ export default function Events() {
                   href={localizePath("/events/create")}
                   className="btn btn-primary"
                 >
-                  <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
+                  <span className="pe-2 icon-plus" />
                   {t("createEvent")}
                 </a>
               ) : (
@@ -252,7 +252,7 @@ export default function Events() {
                     })
                   }
                 >
-                  <span className="pr-2 rtl:pr-0 rtl:pl-2 icon-plus" />
+                  <span className="pe-2 icon-plus" />
                   {t("createEvent")}
                 </div>
               )}
@@ -467,7 +467,7 @@ function EventItem({ event }: { event: Event }) {
         </h2>
       </div>
       <div className="flex-grow mx-4 mb-2">
-        <span className="icon-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+        <span className="icon-map-pin me-2"></span>
         <address className="inline">{event.address}</address>
       </div>
       <div className="m-4 mt-0">
@@ -494,7 +494,7 @@ function EventItemLoading() {
         <div className="h-[26px] w-44 bg-teal animate-pulse"></div>
       </div>
       <div className="flex-grow mx-4 mb-8">
-        <span className="icon-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+        <span className="icon-map-pin me-2"></span>
         <span
           className="inline-block w-8 bg-grey animate-pulse"
           style={{ height: "21px" }}
@@ -580,7 +580,7 @@ function EventItemInstagram({ event }: { event: Event }) {
       <img
         className="w-24"
         alt="clothing loop logo"
-        src="https://images.clothingloop.org/original/the_clothing_loop_logo.png"
+        src="https://images.clothingloop.org/192x/the_clothing_loop_logo_v2.png"
       />
     </article>
   );

@@ -235,6 +235,8 @@ export default function CreateUpdateBag({
             <IonSelect
               label={t("bagHolder") || ""}
               labelPlacement="stacked"
+              cancelText={t("cancel")}
+              okText={t("change")}
               className="!tw-font-bold"
               placeholder={t("selectTheNewBagHolder") || ""}
               value={bagHolder}

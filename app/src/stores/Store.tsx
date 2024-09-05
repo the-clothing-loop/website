@@ -148,7 +148,7 @@ export function StoreProvider({
   }
 
   async function logout() {
-    window.plugins?.OneSignal?.removeExternalUserId();
+    window.plugins?.OneSignal?.logout();
     await logoutApi().catch((err: any) => {
       console.warn(err);
     });
@@ -237,7 +237,10 @@ export function StoreProvider({
       return _isAuthenticated;
     }
 
-    window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
+    // at this point it is safe to assume _isAuthenticated is LoggedIn
+
+    window.plugins?.OneSignal?.login(_authUser.uid);
+
     let chainUID: string | null = null;
     try {
       chainUID = await storage.get("chain_uid");
@@ -336,11 +339,20 @@ export function StoreProvider({
         console.error("Invalid pause value", pause, onlyChainUID);
         return;
       }
-      await userUpdate({
-        user_uid: authUser.uid,
-        chain_uid: onlyChainUID,
-        chain_paused: pause,
-      });
+      if (pause) {
+        await userUpdate({
+          user_uid: authUser.uid,
+          chain_uid: onlyChainUID,
+          chain_paused: pause,
+        });
+      } else {
+        await userUpdate({
+          user_uid: authUser.uid,
+          chain_uid: onlyChainUID,
+          chain_paused: false,
+          paused_until: dayjs().add(-1, "week").format(),
+        });
+      }
     } else {
       let pauseUntil = dayjs();
       if (pause === true) {
@@ -549,6 +561,17 @@ export function IsChainAdmin(
     ? user?.chains.find((uc) => uc.chain_uid === chainUID)
     : undefined;
   return userChain?.is_chain_admin || false;
+}
+
+export function IsChainWarden(
+  user: User | null,
+  chainUID: string | null | undefined,
+): boolean {
+  if (!chainUID || !user) return false;
+  return (
+    user.chains.find((uc) => uc.chain_uid === chainUID)?.is_chain_warden ||
+    false
+  );
 }
 
 function ChainReadHeaders(

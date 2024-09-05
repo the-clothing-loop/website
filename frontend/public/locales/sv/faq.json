@@ -73,7 +73,7 @@
   "arrHosts": {
     "0": {
       "question": "Hur kan jag börja använda appen?",
-      "answer": "Du kan kopiera appen och använda den inom din grupp. Du behöver bara fylla i adresslistan i vår nedladdningsbara mall. Det är superlätt! Vi skapade en videohandledning och ett bildspel för att hjälpa dig komma igång. Hör av dig här om du fortfarande stöter på problem!"
+      "answer": "Vi fick dig överdragen! Vi skrev en enkel manual med alla instruktioner som finns i vår <a class='font-semibold' target='_blank' href='https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27'>Toolkit</a>. Var snäll och dra nytta av de lärdomar vi har lärt oss under de många år vi har gjort detta!"
     },
     "1": {
       "question": "Finns det grafiska mallar vi kan använda?",
@@ -81,7 +81,7 @@
     },
     "2": {
       "question": "Starta med en \"spökryttare\" i slingan",
-      "answer": "När din slingan har pågått ett tag kanske du vill ändra på saker och ting lite! Du kan sedan introducera en \"spökryttare\"-väska som åker åt andra hållet, så helt plötsligt har du andra människor före dig på rutten, och även andra stilar i väskan. Om du gör det, vänligen gör folk medvetna om att de inte ska lägga några plagg i \"spökryttare\"-väskan som de tidigare har tagit ur en vanlig väska. Och håll antalet \"spökryttare\"-väskor begränsat till 1 eller 2, för att hålla det speciellt och även enkelt."
+      "answer": "Våra volontärer säger att de spenderar i genomsnitt <strong>4 timmar i månaden</strong> på att vara värd för loopen."
     },
     "3": {
       "question": "Hur hanterar man en stor grupp människor i kommunikationskanalen?",

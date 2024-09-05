@@ -1,7 +1,6 @@
 {
   "genericError": "حدث خطأ غير معروف",
   "removeFromLoop": "إزالة من الحلقة",
-  "allowHostsToKnowYourEmailDuringDelete": "السماح للمستضيفين بمعرفة بريدك الإلكتروني أثناء الحذف",
   "leave": "المغادرة",
   "leaveLoop": "ترك الحلقة",
   "areYouSureLeaveLoop": "هل أنت متأكد من أنك تريد \"{{ name }}\" أن تترك \"{{ chain }}\" حلقة ؟",
@@ -73,6 +72,7 @@
   "home": "المنزل",
   "login": "تسجيل الدخول",
   "name": "الاسم",
+  "fullName": "الاسم الكامل",
   "newsletter": "النشرة الإخبارية",
   "phoneNumber": "رقم الهاتف (شامل رمز البلد)",
   "page": "الصفحة",

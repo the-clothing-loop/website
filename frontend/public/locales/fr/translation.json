@@ -1,7 +1,6 @@
 {
   "genericError": "Une erreur inconnue est survenue",
   "removeFromLoop": "Supprimer du Loop",
-  "allowHostsToKnowYourEmailDuringDelete": "Permettre aux hôtes de connaître votre e-mail lors de la suppression",
   "leave": "Quitter",
   "leaveLoop": "Quitter le Loop",
   "areYouSureLeaveLoop": "Vous êtes sûr que vous voulez que \"{{ name }}\" quitte le Loop \"{{ chain }}\" ?",
@@ -73,6 +72,7 @@
   "home": "Page d’accueil",
   "login": "Connexion",
   "name": "Nom",
+  "fullName": "Nom complet",
   "newsletter": "Newsletter",
   "phoneNumber": "Phone number (incl. country code)",
   "page": "Page",

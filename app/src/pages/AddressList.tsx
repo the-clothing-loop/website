@@ -7,7 +7,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonModal,
   IonPage,
@@ -115,6 +114,9 @@ export default function AddressList() {
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_admin || false;
 
+        const isWarden =
+          user.chains.find((uc) => uc.chain_uid === chain?.uid)
+            ?.is_chain_warden || false;
         const isPrivate = IsPrivate(user.email);
         const isAddressPrivate = IsPrivate(user.address);
         const isUserPaused = IsPaused(user, chain.uid);
@@ -124,6 +126,7 @@ export default function AddressList() {
           bags: userBags,
           isMe,
           isHost,
+          isWarden,
           isAddressPrivate,
           number: i + 1,
           isUserPaused,
@@ -174,41 +177,36 @@ export default function AddressList() {
                       onIonInput={(e) => setSearch(e.detail.value as string)}
                       onIonClear={() => setSearch("")}
                       value={search}
-                      placeholder="Search"
+                      placeholder={t("search")}
                     ></IonSearchbar>
                   </IonItem>
                   <IonItem lines="full" color="light">
-                    <p className="tw-font-bold">Sort</p>
+                    <p className="tw-font-bold">{t("sort")}</p>
                   </IonItem>
                   <IonRadioGroup
                     value={routeListView}
                     onIonChange={(e: any) => setRouteListView(e.detail.value)}
                   >
                     <IonItem lines="full">
-                      <IonLabel>
-                        <h2
-                          className={`tw-text-lg ${
-                            routeListView === "dynamic"
-                              ? "!tw-font-semibold"
-                              : ""
-                          }`}
-                        >
-                          {t("automatic")}
-                        </h2>
-                      </IonLabel>
-                      <IonRadio slot="end" value="dynamic" />
+                      <IonRadio
+                        value="dynamic"
+                        labelPlacement="start"
+                        className={`tw-text-lg ${
+                          routeListView === "dynamic" ? "!tw-font-semibold" : ""
+                        }`}
+                      >
+                        {t("automatic")}
+                      </IonRadio>
                     </IonItem>
                     <IonItem lines="full">
-                      <IonLabel>
-                        <h2
-                          className={`tw-text-lg ${
-                            routeListView === "list" ? "!tw-font-semibold" : ""
-                          }`}
-                        >
-                          {t("routeOrder")}
-                        </h2>
-                      </IonLabel>
-                      <IonRadio slot="end" value="list" />
+                      <IonRadio
+                        className={`tw-text-lg ${
+                          routeListView === "list" ? "!tw-font-semibold" : ""
+                        }`}
+                        value="list"
+                      >
+                        {t("routeOrder")}
+                      </IonRadio>
                     </IonItem>
                   </IonRadioGroup>
                 </IonList>

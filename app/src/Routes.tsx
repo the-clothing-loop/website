@@ -15,6 +15,7 @@ import {
   IonTabs,
   getPlatforms,
   setupIonicReact,
+  useIonToast,
 } from "@ionic/react";
 import { SplashScreen } from "@capacitor/splash-screen";
 import {
@@ -71,6 +72,7 @@ import OpenSource from "./pages/OpenSource";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import BagSVG from "./components/Bags/Svg";
 import IsPaused from "./utils/is_paused";
+import toastError from "../toastError";
 
 SplashScreen.show({
   autoHide: true,
@@ -85,6 +87,7 @@ export default function Routes() {
     useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
+  const [present] = useIonToast();
 
   // initialize one signal, run initial calls and capture error events
   useEffect(() => {
@@ -93,6 +96,7 @@ export default function Routes() {
       if (platforms.includes("capacitor")) {
         await OneSignalInitCap().catch((err) => {
           console.error(err);
+          toastError(present, err, "Notification service is broken");
         });
       }
       await auth();

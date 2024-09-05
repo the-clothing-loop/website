@@ -53,13 +53,18 @@ var Config struct {
 	MM_SMTP_PORT            string `yaml:"mattermost_smtp_port" env:"MM_SMTP_PORT"`
 }
 
-func ConfigInit(path string, files ...string) {
+func ConfigInit(pwd string, files ...string) {
 	fFile := flag.String("c", "", "config file")
 	flag.Parse()
 	if *fFile != "" {
 		files = append(files, *fFile)
 	}
-	err := configor.Load(&Config, files...)
+	if os.Getenv("ENV") == EnvEnumTesting {
+		files = append(files, "config.test.yml")
+	}
+	congor := configor.New(nil)
+	congor.FS = os.DirFS(pwd)
+	err := congor.Load(&Config, files...)
 	if err != nil {
 		slog.Error("Unable to set config", "err", err)
 		os.Exit(1)
@@ -82,7 +87,7 @@ func ConfigInit(path string, files ...string) {
 }
 
 func ConfigTestInit(path string) {
-	os.Setenv("SERVER_ENV", EnvEnumTesting)
+	os.Setenv("ENV", EnvEnumTesting)
 	os.Setenv("SERVER_NO_MIGRATE", "true")
 	ConfigInit(path, "config.test.yml")
 }
