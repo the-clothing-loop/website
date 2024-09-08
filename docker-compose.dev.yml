@@ -3,8 +3,8 @@ name: cl-dev
 services:
   app:
     image: node:20-alpine
-    ports:
-      - 127.0.0.1:8081:8081
+    # ports:
+      # - 127.0.0.1:8081:8081
     #   - 5173:5173
     volumes:
       - ./app:/app
@@ -88,9 +88,15 @@ services:
     build:
       context: ./frontend/
       dockerfile: dev.Dockerfile
+    depends_on:
+      - app
+      - frontend
+      - server
+      - mailpit
     ports:
       # website
       - 127.0.0.1:8080:80
+      - 127.0.0.1:8081:81
 volumes:
   mysql:
   mattermost_prev_db:
