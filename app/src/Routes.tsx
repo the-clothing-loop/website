@@ -59,7 +59,6 @@ import Settings from "./pages/Settings";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import BagsList from "./pages/BagsList";
-import BulkyList from "./pages/BulkyList";
 import Chat from "./pages/Chat";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
@@ -205,7 +204,6 @@ function AppRoute() {
         <Route exact path="/address" component={AddressList}></Route>
         <Route path="/address/:uid" component={AddressItem}></Route>
         <Route exact path="/bags" component={BagsList}></Route>
-        <Route exact path="/bulky-items" component={BulkyList}></Route>
         <Route exact path="/chat" component={Chat}></Route>
         <Route exact path="/settings" component={Settings}></Route>
         <Route

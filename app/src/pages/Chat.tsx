@@ -7,7 +7,7 @@ import {
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
 import { MmData, StoreContext } from "../stores/Store";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as apiChat from "../api/chat";
 import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
 import { PaginatedPostList, Post } from "@mattermost/types/posts";
@@ -16,12 +16,18 @@ import { Channel } from "@mattermost/types/channels";
 import ChatWindow from "../components/Chat/ChatWindow";
 import Loading from "../components/PrivateRoute/Loading";
 import { UserProfile } from "@mattermost/types/users";
+import ChatRoomSelect from "../components/Chat/ChatRoomSelect";
+import { useIntersectionObserver } from "@uidotdev/usehooks";
+import ChatInput from "../components/Chat/ChatInput";
+import ChatPost from "../components/Chat/ChatPost";
+import ChatPostList from "../components/Chat/ChatPostList";
+import BulkyList from "../components/Chat/BulkyList";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
 export type OnSendMessageWithImage = (
   message: string,
-  file: File | string,
+  file: string,
 ) => Promise<void>;
 
 type WebSocketMessagePosted = WebSocketMessage<{
@@ -43,6 +49,7 @@ export default function Chat() {
   const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
+  const [selectedOldBulkyItems, setSelectedOldBulkyItems] = useState(false);
   const [mmUser, setMmUser] = useState<Record<string, UserProfile>>({});
   const [mmClient, setMmClient] = useState<Client4 | null | undefined>(
     undefined,
@@ -57,6 +64,11 @@ export default function Chat() {
   });
   const [loadingPostList, setLoadingPostList] = useState(false);
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
+  const refScrollRoot = useRef<HTMLDivElement>(null);
+  const [refScrollTop, entry] = useIntersectionObserver({
+    root: refScrollRoot.current,
+  });
+  const scrollTop = () => refScrollRoot.current?.scrollTo({ top: 0 });
 
   useEffect(() => {
     if (!chain || !mmData) return;
@@ -143,6 +155,12 @@ export default function Chat() {
     };
   }, [selectedChannel]);
 
+  const chainChannels = useMemo(() => {
+    if (!chain || !chain.chat_room_ids) return [];
+    console.log("chainChannels", channels);
+    return channels.sort((a, b) => (a.create_at > b.create_at ? 1 : 0));
+  }, [channels, chain]);
+
   /** Sets the channels state and return it too */
   async function getChannels(
     _mmClient: Client4,
@@ -161,11 +179,12 @@ export default function Chat() {
     _channels.sort((a, b) => (a.create_at > b.create_at ? 1 : 0));
 
     // if no channels are selected select the oldest
-    if (!selectedChannel) {
+    const _selectedChannel = selectedChannel;
+    if (!_selectedChannel) {
       const _selectedChannel = _channels.at(0) || null;
-      console.log("selectedChannel", _selectedChannel?.display_name);
-      setSelectedChannel(_selectedChannel);
+      if (_selectedChannel) onSelectChannel(_selectedChannel);
     }
+    if (!_selectedChannel) onSelectOldBulkyItems();
 
     setChannels(_channels);
     return _channels;
@@ -254,6 +273,7 @@ export default function Chat() {
   }
 
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
+    setSelectedOldBulkyItems(false);
     setSelectedChannel(channel);
 
     _mmClient = _mmClient || mmClient!;
@@ -325,33 +345,37 @@ export default function Chat() {
     return fileUrl.toString();
   }
 
-  async function onSendMessageWithImage(
+  function onSendMessageWithImage(
     message: string,
     image: File | string,
   ): Promise<void> {
-    if (!selectedChannel || !mmClient) return;
-    console.log("reqPostList", selectedChannel.id);
+    return (async () => {
+      if (!selectedChannel || !mmClient) return;
+      console.log("reqPostList", selectedChannel.id);
 
-    const formData = new FormData();
-    formData.append("channel_id", selectedChannel.id);
-    formData.append("files", image);
+      const formData = new FormData();
+      formData.append("channel_id", selectedChannel.id);
+      formData.append("files", image);
 
-    try {
-      const res = await mmClient.uploadFile(formData);
-      const file_id = res.file_infos[0].id;
-      await mmClient.createPost({
-        channel_id: selectedChannel.id,
-        message: message,
-        file_ids: [file_id],
-      } as Partial<Post> as Post);
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+      try {
+        const res = await mmClient.uploadFile(formData);
+        const file_id = res.file_infos[0].id;
+        await mmClient.createPost({
+          channel_id: selectedChannel.id,
+          message: message,
+          file_ids: [file_id],
+        } as Partial<Post> as Post);
+      } catch (err) {
+        console.error(err);
+        throw err;
+      }
 
-    if (!selectedChannel || !mmClient) return;
+      if (!selectedChannel || !mmClient) return;
 
-    await reqPostList(mmClient, selectedChannel, "");
+      await reqPostList(mmClient, selectedChannel, "");
+    })().then(() => {
+      scrollTop();
+    });
   }
 
   async function onSendMessage(message: string) {
@@ -363,6 +387,7 @@ export default function Chat() {
     } as Partial<Post> as Post);
 
     await reqPostList(mmClient, selectedChannel, "");
+    scrollTop();
   }
 
   function onClickEnableChat() {
@@ -383,7 +408,20 @@ export default function Chat() {
     return res;
   }
 
-  if (mmClient === undefined || !authUser) {
+  function onSelectOldBulkyItems() {
+    setSelectedChannel(null);
+    setSelectedOldBulkyItems(true);
+  }
+  function onDeleteChannelSubmit() {
+    if (!selectedChannel) return;
+    if (selectedChannel) onDeleteChannel(selectedChannel.id);
+  }
+  function onRenameChannelSubmit(name: string) {
+    if (!selectedChannel) return;
+    onRenameChannel(selectedChannel, name);
+  }
+
+  if (!authUser) {
     return <Loading />;
   }
 
@@ -400,31 +438,50 @@ export default function Chat() {
         fullscreen
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
-        {mmClient === null ? (
-          <RoomNotReady
+        <div className="tw-relative tw-h-full tw-flex tw-flex-col">
+          <ChatRoomSelect
+            chainChannels={chainChannels}
+            selectedChannel={selectedChannel}
             isChainAdmin={isChainAdmin}
-            onClickEnable={onClickEnableChat}
+            onSelectChannel={onSelectChannel}
+            onCreateChannel={onCreateChannel}
+            onDeleteChannelSubmit={onDeleteChannelSubmit}
+            onRenameChannelSubmit={onRenameChannelSubmit}
+            selectedOldBulkyItems={selectedOldBulkyItems}
+            onSelectOldBulkyItems={onSelectOldBulkyItems}
           />
-        ) : (
-          <>
-            <ChatWindow
-              getMmUser={getMmUser}
-              channels={channels}
-              selectedChannel={selectedChannel}
-              onCreateChannel={onCreateChannel}
-              onSelectChannel={onSelectChannel}
-              onRenameChannel={onRenameChannel}
-              onDeleteChannel={onDeleteChannel}
-              onDeletePost={onDeletePost}
-              getFile={getFile}
-              onSendMessage={onSendMessage}
-              onSendMessageWithImage={onSendMessageWithImage}
-              onScrollTop={onScrollTop}
-              postList={postList}
-              authUser={authUser}
-            />
-          </>
-        )}
+          <div
+            ref={refScrollRoot}
+            className={"tw-flex-grow tw-flex tw-overflow-y-auto".concat(
+              selectedOldBulkyItems ? "" : " tw-flex-col-reverse",
+            )}
+          >
+            {selectedOldBulkyItems ? (
+              <BulkyList />
+            ) : mmClient ? (
+              <ChatPostList
+                isChainAdmin={isChainAdmin}
+                authUser={authUser}
+                getMmUser={getMmUser}
+                getFile={getFile}
+                postList={postList}
+                chainUsers={chainUsers}
+                onDeletePost={onDeletePost}
+              />
+            ) : (
+              <RoomNotReady
+                isChainAdmin={isChainAdmin}
+                onClickEnable={onClickEnableChat}
+              />
+            )}
+            <span key="top" ref={refScrollTop}></span>
+          </div>
+          <ChatInput
+            isOldBulkyItems={selectedOldBulkyItems}
+            onSendMessage={onSendMessage}
+            onSendMessageWithImage={onSendMessageWithImage}
+          />
+        </div>
       </IonContent>
     </IonPage>
   );
