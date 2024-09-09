@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/GGP1/atoll"
-	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -17,127 +16,105 @@ import (
 )
 
 // Checks if the user is registered on the matrix server if not they are registered
-func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *models.User) error {
-	var mmUser *model.User
-	var err error
+func ChatPatchUser(db *gorm.DB, ctx context.Context, user *models.User) error {
 	// check if user exists properly
 	if user.ChatUserID.Valid {
 		// get the chat user
-		mmUser, _, err = app.ChatClient.GetUser(ctx, user.ChatUserID.String, "")
-		if err == nil {
-			slog.Info("chat user exists", "id", mmUser.Id)
-		}
-	}
-
-	if mmUser == nil {
-		slog.Info("create Chat user if does not exist")
-
-		username := user.UID
-		p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Upper})
-		password := string(p)
-		mmUser, _, err = app.ChatClient.CreateUser(ctx, &model.User{
-			Nickname: user.Name,
-			Username: username,
-			Password: password,
-			Email:    user.Email.String,
-		})
+		res, err := app.ChatClient.Users(ctx, user.ChatUserID.String)
 		if err != nil {
+			slog.Info("chat user should exists but doesn't", "expected id", user.ChatUserID.String)
 			return err
 		}
-
-		_, _, err = app.ChatClient.AddTeamMember(ctx, mmTeamId, mmUser.Id)
+		_, err = lo.Nth(res.Users, 0)
 		if err != nil {
+			slog.Info("chat user should exists but doesn't", "expected id", user.ChatUserID.String)
 			return err
 		}
-
-		// Update database
-		user.ChatUserID = null.StringFrom(mmUser.Id)
-		user.ChatPass = null.StringFrom(password)
-		db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`,
-			user.ChatUserID.String,
-			user.ChatPass.String,
-			user.ID)
+		return nil
 	}
 
-	return nil
-}
+	slog.Info("create Chat user if does not exist")
 
-func ChatCreateChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmUserId, name string) (*model.Channel, error) {
-	newChannel := &model.Channel{
-		TeamId:      app.ChatTeamId,
-		Name:        fmt.Sprintf("%dr%d%s", chain.ID, len(chain.ChatRoomIDs)+1, lo.RandomString(5, lo.LowerCaseLettersCharset)),
-		DisplayName: name,
-		Type:        model.ChannelTypePrivate,
-	}
-
-	newChannel, _, err := app.ChatClient.CreateChannel(ctx, newChannel)
-	if err != nil {
-		return nil, err
-	}
-
-	err = chatChannelAddUser(ctx, newChannel.Id, mmUserId, true)
-	if err != nil {
-		return nil, err
-	}
-
-	chain.ChatRoomIDs = append(chain.ChatRoomIDs, newChannel.Id)
-	err = chain.SaveChannelIDs(db)
-	if err != nil {
-		return nil, err
-	}
-	return newChannel, nil
-}
-
-func ChatDeleteChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmChannelID string) error {
-	_, err := app.ChatClient.DeleteChannel(ctx, mmChannelID)
+	p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Upper})
+	password := string(p)
+	ctx2 := context.Background()
+	chatClient2 := app.ChatCreateClient()
+	err := chatClient2.AuthenticateEmail(ctx2, user.Email.String, password, true, user.Name)
 	if err != nil {
 		return err
 	}
+	chatClient2.LinkEmail(ctx2, user.Email.String, password)
+
+	res, err := chatClient2.Account(ctx2)
+	if err != nil {
+		return err
+	}
+	mmUser := res.User
+
+	chatClient2.SessionLogout(ctx2)
+
+	// Update database
+	user.ChatUserID = null.StringFrom(mmUser.Id)
+	user.ChatPass = null.StringFrom(password)
+	return db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`,
+		user.ChatUserID.String,
+		user.ChatPass.String,
+		user.ID).Error
+}
+
+func ChatCreateChannel(db *gorm.DB, chain *models.Chain, mmChannelID string) error {
+
+	// group, err := app.ChatClient.CreateGroup(ctx, &nakama.CreateGroupRequest{
+	// 	Name:        name,
+	// 	Description: "",
+	// 	LangTag:     "",
+	// 	AvatarUrl:   "",
+	// 	Open:        false,
+	// 	MaxCount:    0,
+	// })
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// err = app.ChatClient.AddGroupUsers(ctx, group.Id, mmUserId)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	chain.ChatRoomIDs = append(chain.ChatRoomIDs, mmChannelID)
+	return chain.SaveChannelIDs(db)
+}
+
+func ChatDeleteChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmChannelID string) error {
+	// err := app.ChatClient.DeleteGroup(ctx, mmChannelID)
+	// if err != nil {
+	// 	return err
+	// }
 
 	chain.ChatRoomIDs = lo.Filter(chain.ChatRoomIDs, func(roomID string, _ int) bool {
 		return roomID != mmChannelID
 	})
-	err = chain.SaveChannelIDs(db)
-	if err != nil {
-		return err
-	}
-	return nil
+	return chain.SaveChannelIDs(db)
 }
 
-func chatChannelAddUser(ctx context.Context, mmChannelId string, mmUserId string, setRoleAdmin bool) error {
-	member, _, err := app.ChatClient.AddChannelMember(ctx, mmChannelId, mmUserId)
-	if err != nil {
-		return err
-	}
-	err = chatChannelSetMemberRole(ctx, mmChannelId, member, setRoleAdmin)
-	if err != nil {
-		return err
-	}
+// func chatChannelAddUser(ctx context.Context, mmChannelId string, mmUserId string, setRoleAdmin bool) error {
+// 	err := app.ChatClient.AddGroupUsers(ctx, mmChannelId, mmUserId)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return chatChannelSetMemberRole(ctx, mmChannelId, mmUserId, setRoleAdmin)
+// }
 
-func chatChannelSetMemberRole(ctx context.Context, mmChannelId string, member *model.ChannelMember, setRoleAdmin bool) error {
-	slog.Info("chatChannelSetMemberRole", "roles", member.Roles)
-	roles := strings.Split(member.Roles, " ")
-
-	isRolesContainsAdmin := lo.Contains(roles, model.ChannelAdminRoleId)
-	shouldUpdateRoles := isRolesContainsAdmin != setRoleAdmin
-	if shouldUpdateRoles {
-		if setRoleAdmin {
-			roles = append(roles, model.ChannelAdminRoleId)
-		} else {
-			roles = lo.Filter(roles, func(r string, i int) bool {
-				return r != model.ChannelAdminRoleId
-			})
-		}
-		_, err := app.ChatClient.UpdateChannelRoles(ctx, mmChannelId, member.UserId, strings.Join(roles, " "))
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
+// func chatChannelSetMemberRole(ctx context.Context, mmChannelId, mmUserId string, setRoleAdmin bool) error {
+// 	var err error
+// 	if setRoleAdmin {
+// 		err = app.ChatClient.PromoteGroupUsers(ctx, mmChannelId, mmUserId)
+// 	} else {
+// 		err = app.ChatClient.DemoteGroupUsers(ctx, mmChannelId, mmUserId)
+// 	}
+// 	return err
+// }
 
 func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user *models.User, isChainAdmin bool, mmChannelId string) error {
 	if user.ChatUserID.String == "" {
@@ -149,21 +126,18 @@ func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user
 	}
 
 	// Check if room already contains user
-	mmChannelMembers, _, _ := app.ChatClient.GetChannelMembersByIds(ctx, mmChannelId, []string{user.ChatUserID.String})
-	if len(mmChannelMembers) != 0 {
-		member, ok := lo.Find(mmChannelMembers, func(member model.ChannelMember) bool {
-			return member.UserId == user.ChatUserID.String
-		})
-		if ok {
-			chatChannelSetMemberRole(ctx, mmChannelId, &member, isChainAdmin)
-			return nil
-		}
-	}
-
-	// Add user if not already added to chat room
-	err := chatChannelAddUser(ctx, mmChannelId, user.ChatUserID.String, isChainAdmin)
+	client2 := app.ChatCreateClient()
+	ctx2 := context.Background()
+	err := client2.AuthenticateEmail(ctx, user.Email.String, user.ChatPass.String, false, user.Name)
 	if err != nil {
 		return err
+	}
+	client2.JoinGroup(ctx2, mmChannelId)
+	if isChainAdmin {
+		err = app.ChatClient.PromoteGroupUsers(ctx, mmChannelId, user.ChatUserID.String)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

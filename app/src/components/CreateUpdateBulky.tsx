@@ -90,7 +90,7 @@ export default function CreateBulky({
     }
 
     try {
-      await onSendBulkyItem(`${bulkyTitle}\n\n${bulkyMessage}`, imageData);
+      await onSendBulkyItem(bulkyTitle, bulkyMessage, imageData);
 
       refScrollRoot.current?.scrollTo({
         top: 0,

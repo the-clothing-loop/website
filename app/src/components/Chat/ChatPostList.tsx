@@ -2,16 +2,16 @@ import { PaginatedPostList } from "@mattermost/types/posts";
 import ChatPost from "./ChatPost";
 import { User } from "../../api/types";
 import { useState } from "react";
-import { UserProfile } from "@mattermost/types/users";
 import { IonActionSheet, useIonAlert } from "@ionic/react";
 import { useTranslation } from "react-i18next";
+import { ChannelMessageList, User as UserProfile } from "@heroiclabs/nakama-js";
 
 interface Props {
-  postList: PaginatedPostList;
+  postList: ChannelMessageList;
   isChainAdmin: boolean;
   authUser: User | null | undefined;
   getMmUser: (id: string) => Promise<UserProfile>;
-  getFile: (fileId: string, timestamp: number) => void;
+  // getFile: (fileId: string, timestamp: number) => void;
   chainUsers: User[];
   onDeletePost: (id: string) => void;
 }
@@ -45,8 +45,7 @@ export default function ChatPostList(props: Props) {
 
   return (
     <>
-      {props.postList.order.map((postID, i) => {
-        const post = props.postList.posts[postID];
+      {props.postList.messages?.map((post, i) => {
         // const prevPostID = props.postList.order[i + 1];
         // const prevPost = prevPostID ? props.postList.posts[prevPostID] : null;
         return (
@@ -56,8 +55,8 @@ export default function ChatPostList(props: Props) {
             onLongPress={(id) => setIsPostActionSheetOpen(id)}
             post={post}
             getMmUser={props.getMmUser}
-            getFile={props.getFile}
-            key={post.id}
+            // getFile={props.getFile}
+            key={post.message_id}
             users={props.chainUsers}
           />
         );

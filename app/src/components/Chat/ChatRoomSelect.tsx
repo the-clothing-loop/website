@@ -5,12 +5,13 @@ import { useLongPress } from "use-long-press";
 import { addOutline, build as buildFilled } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
+import { Group } from "@heroiclabs/nakama-js";
 
 interface Props {
-  chainChannels: Channel[];
-  selectedChannel: Channel | null;
+  chainChannels: Group[];
+  selectedChannel: Group | null;
   isChainAdmin: boolean;
-  onSelectChannel: (cr: Channel) => void;
+  onSelectChannel: (cr: Group) => void;
   onCreateChannel: (name: string) => void;
   onDeleteChannelSubmit: () => void;
   onRenameChannelSubmit: (name: string) => void;
@@ -76,7 +77,7 @@ export default function ChatRoomSelect(props: Props) {
         ],
         inputs: [
           {
-            placeholder: props.selectedChannel?.display_name,
+            placeholder: props.selectedChannel?.description!,
             name: "newChannelName",
           },
         ],
@@ -87,15 +88,15 @@ export default function ChatRoomSelect(props: Props) {
   return (
     <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-purple-shade">
       {props.chainChannels.map((cr, i) => {
-        const initials = cr.display_name
-          .split(" ")
+        const initials = cr
+          .description!.split(" ")
           .map((word) => word[0])
           .join("");
         const isSelected = cr.id === props.selectedChannel?.id;
         return (
           <button
             className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
-              isSelected ? " tw-bg-light" : "",
+              isSelected ? " tw-bg-[#fff]/20" : "",
             )}
             key={cr.id}
             {...(isSelected
@@ -107,7 +108,7 @@ export default function ChatRoomSelect(props: Props) {
                 })}
           >
             <div
-              className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple-shade tw-flex tw-items-center tw-justify-center tw-ring  group-hover:tw-ring-purple tw-transition-colors".concat(
+              className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple tw-flex tw-items-center tw-justify-center tw-ring  group-hover:tw-ring-purple tw-transition-colors".concat(
                 isSelected
                   ? " tw-ring-purple tw-ring-1"
                   : " tw-ring-transparent",
@@ -125,14 +126,14 @@ export default function ChatRoomSelect(props: Props) {
                 isSelected ? " tw-font-bold" : "",
               )}
             >
-              {cr.display_name}
+              {cr.description!}
             </div>
           </button>
         );
       })}
       <button
         className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
-          props.selectedOldBulkyItems ? " tw-bg-light" : "",
+          props.selectedOldBulkyItems ? " tw-bg-[#fff]/20" : "",
         )}
         key="oldBulkyItems"
         onClick={props.onSelectOldBulkyItems}

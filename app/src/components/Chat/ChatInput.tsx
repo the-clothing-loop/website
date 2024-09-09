@@ -28,7 +28,11 @@ export enum SendingMsgState {
 interface Props {
   isOldBulkyItems: boolean;
   onSendMessage: (msg: string) => Promise<void>;
-  onSendMessageWithImage: (msg: string, image: File | string) => Promise<void>;
+  onSendMessageWithImage: (
+    title: string,
+    msg: string,
+    image: string,
+  ) => Promise<void>;
 }
 
 // This follows the controller / view component pattern
@@ -39,6 +43,7 @@ export default function ChatInput(props: Props) {
   const modal = useRef<HTMLIonModalElement>(null);
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const { refresh } = useContext(StoreContext);
+  const refChatInput = useRef<HTMLIonInputElement>(null);
 
   async function sendMessage() {
     setStatus(SendingMsgState.SENDING);
@@ -57,6 +62,12 @@ export default function ChatInput(props: Props) {
   function onSubmit(e: any) {
     e.preventDefault();
     sendMessage();
+    setTimeout(() => {
+      const el = refChatInput.current?.querySelector("input") as any;
+
+      console.log("focus back", el);
+      el?.focus();
+    }, 100);
   }
 
   function handleClickPlus(e: MouseEvent) {
@@ -136,6 +147,7 @@ export default function ChatInput(props: Props) {
               disabled={status == SendingMsgState.SENDING}
             >
               <IonInput
+                ref={refChatInput}
                 placeholder="Send Message"
                 value={message}
                 disabled={status == SendingMsgState.SENDING}
@@ -157,7 +169,8 @@ export default function ChatInput(props: Props) {
                   "--color-focused": "var(--ion-color-base-light)",
                   "--color-activated": "var(--ion-color-base-light)",
                 }}
-                type="submit"
+                type="button"
+                onClick={onSubmit}
               >
                 <IonIcon icon={sendOutline} className="tw-text-2xl" />
               </IonFabButton>

@@ -25,6 +25,9 @@ app-restart:
 server-restart:
 	docker compose -f docker-compose.dev.yml restart server
 
+caddy-rebuild:
+	docker compose -f docker-compose.dev.yml up -d caddy --build
+
 .PHONY: test
 test:
 	cd ./server && make test

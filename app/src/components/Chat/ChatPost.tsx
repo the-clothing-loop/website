@@ -1,18 +1,18 @@
 import { Post } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { UserProfile } from "@mattermost/types/users";
 import { useLongPress } from "use-long-press";
 import { IonButton, IonIcon, IonItem, IonModal, IonText } from "@ionic/react";
 import { ellipsisVertical } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
+import { ChannelMessage, User as UserProfile } from "@heroiclabs/nakama-js";
 
 export interface ChatPostProps {
-  post: Post;
+  post: ChannelMessage;
   users: User[];
   authUser: User | null | undefined;
   getMmUser: (id: string) => Promise<UserProfile>;
-  getFile: (fileId: string, timestamp: number) => void;
+  // getFile: (fileId: string, timestamp: number) => void;
   isChainAdmin: boolean;
   onLongPress: (id: string) => void;
 }
@@ -21,7 +21,7 @@ export default function ChatPost(props: ChatPostProps) {
   const { t } = useTranslation();
 
   const longPress = useLongPress((e) => {
-    props.onLongPress(props.post.id);
+    props.onLongPress(props.post.message_id!);
   });
   const [username, setUsername] = useState("");
   const [isMe, setIsMe] = useState(false);
@@ -29,40 +29,40 @@ export default function ChatPost(props: ChatPostProps) {
   const refModalDesc = useRef<HTMLIonModalElement>(null);
   //const [user, setUser] = useState(User)
   const message = useMemo(() => {
-    props.getMmUser(props.post.user_id).then((res) => {
+    props.getMmUser(props.post.sender_id!).then((res) => {
       const user = props.users.find((u) => res.username === u.uid);
-      setUsername(user ? user.name : res.username);
+      setUsername(user ? user.name : res.username || "Unknown");
       setIsMe(user?.uid === props.authUser?.uid);
     });
-    let message = props.post.message;
+    let message = (props.post.content as any).message as string;
     for (let user of props.users) {
       message = message.replaceAll(user.uid, user.name);
     }
     return message;
   }, [props.users, props.post]);
 
-  useEffect(() => {
-    fetchPostImage()
-      .then((im) => {
-        if (im) setImageURL(im);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [props.users, props.post]);
+  // useEffect(() => {
+  //   fetchPostImage()
+  //     .then((im) => {
+  //       if (im) setImageURL(im);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // }, [props.users, props.post]);
 
-  async function fetchPostImage() {
-    if (!props.post.file_ids) return;
-    const fileid = props.post.file_ids[0];
-    const timestamp = props.post.create_at;
-    try {
-      const _image = await props.getFile(fileid, timestamp);
-      return _image as unknown as string;
-    } catch (err) {
-      console.error("Error retrieving image from post", err);
-      throw err;
-    }
-  }
+  // async function fetchPostImage() {
+  //   if (!props.post.file_ids) return;
+  //   const fileid = props.post.file_ids[0];
+  //   const timestamp = props.post.create_at;
+  //   try {
+  //     const _image = await props.getFile(fileid, timestamp);
+  //     return _image as unknown as string;
+  //   } catch (err) {
+  //     console.error("Error retrieving image from post", err);
+  //     throw err;
+  //   }
+  // }
 
   function handleClickReadMore() {
     refModalDesc.current?.present();
@@ -79,7 +79,7 @@ export default function ChatPost(props: ChatPostProps) {
       ? message.substring(message.indexOf("\n")).trim()
       : "";
 
-  if (props.post.type != "") {
+  if (props.post.code !== 0) {
     return (
       <div className="tw-flex tw-justify-center">
         <div
@@ -166,7 +166,7 @@ export default function ChatPost(props: ChatPostProps) {
           </div>
           {props.isChainAdmin ? (
             <IonButton
-              onClick={() => props.onLongPress(props.post.id)}
+              onClick={() => props.onLongPress(props.post.message_id!)}
               color="transparent"
               className="tw-sticky tw-top-0 tw-opacity-70"
               size="small"
@@ -214,7 +214,7 @@ export default function ChatPost(props: ChatPostProps) {
       </div>
       {props.isChainAdmin ? (
         <IonButton
-          onClick={() => props.onLongPress(props.post.id)}
+          onClick={() => props.onLongPress(props.post.message_id!)}
           color="transparent"
           className="tw-sticky tw-top-0 tw-opacity-70"
           size="small"

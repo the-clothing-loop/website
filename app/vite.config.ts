@@ -17,14 +17,6 @@ export default defineConfig((mode) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
-        "/mm": {
-          target: IS_DOCKER
-            ? "http://mattermost:8065"
-            : "http://127.0.0.1:8065",
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/mm/, ""),
-          ws: true,
-        },
       },
     },
     build: { outDir: "build" },
