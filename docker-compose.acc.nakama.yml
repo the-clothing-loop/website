@@ -8,14 +8,7 @@ services:
       - "-ecx"
       - >
           /nakama/nakama migrate up --database.address $NAKAMA_DB &&
-          exec /nakama/nakama --name nakama1 --database.address $NAKAMA_DB --logger.level DEBUG \
-          --console.username admin \
-          --console.password $NAKAMA_CONSOLE_PW \
-          --console.signing_key $NAKAMA_CONSOLE_SK \
-          --socket.server_key $NAKAMA_SERVERKEY \
-          --session.encryption_key $NAKAMA_SESSION_EK \
-          --session.refresh_encryption_key $NAKAMA_SESSION_REK \
-          --session.token_expiry_sec 7200          
+          exec /nakama/nakama --name nakama1 --database.address $NAKAMA_DB --logger.level DEBUG --config /nakama/data/config.yml
     restart: always
     volumes:
       - nakama_data:/nakama/data
