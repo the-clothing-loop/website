@@ -85,7 +85,7 @@ export default function Chat() {
           window.nSession = await window.nClient.authenticateEmail(
             authUser.email,
             _mmData.pass,
-            false,
+            true,
           );
           _mmData.userId = window.nSession.user_id;
 
