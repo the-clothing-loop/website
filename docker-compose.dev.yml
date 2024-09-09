@@ -79,6 +79,7 @@ services:
         condition: service_healthy
     volumes:
       - nakama_data:/nakama/data
+      # - ./nakama:/nakama/data/modules/
     ports:
       - "7349:7349"
       - "7350:7350"
