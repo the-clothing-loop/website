@@ -62,9 +62,10 @@ export default function CreateBulky({
   const [present] = useIonToast();
   const refScrollRoot = useRef<HTMLDivElement>(null);
 
-  function modalInit() {
-    setBulkyTitle("");
-    setBulkyMessage("");
+  function modalPresent() {
+    setBulkyTitle(bulky?.title || "");
+    setBulkyMessage(bulky?.message || "");
+    setImageData(bulky?.image_url);
     setLoadingUpload(State.idle);
   }
 
@@ -89,7 +90,7 @@ export default function CreateBulky({
     }
 
     try {
-      await onSendBulkyItem(`${bulkyTitle}\n\n${bulkyMessage}`, imageData);
+      await onSendBulkyItem(bulkyTitle, bulkyMessage, imageData);
 
       refScrollRoot.current?.scrollTo({
         top: 0,
@@ -169,7 +170,7 @@ export default function CreateBulky({
   return (
     <IonModal
       ref={modal}
-      onIonModalWillPresent={modalInit}
+      onIonModalWillPresent={modalPresent}
       onIonModalDidDismiss={didDismiss}
     >
       <IonHeader>

@@ -15,3 +15,7 @@
       reverse_proxy frontend:3000
    }
 }
+
+:81 {
+	reverse_proxy app:8081
+}
