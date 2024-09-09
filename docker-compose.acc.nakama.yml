@@ -10,9 +10,6 @@ services:
           /nakama/nakama migrate up --database.address $NAKAMA_DB &&
           exec /nakama/nakama --name nakama1 --database.address $NAKAMA_DB --logger.level DEBUG --session.token_expiry_sec 7200          
     restart: always
-    depends_on:
-      n8c8wg80ogogggwgos0k0wko:
-        condition: service_healthy
     volumes:
       - nakama_data:/nakama/data
     # ports:
