@@ -9,6 +9,7 @@ services:
       - >
           /nakama/nakama migrate up --database.address $NAKAMA_DB &&
           exec /nakama/nakama --name nakama1 --database.address $NAKAMA_DB --logger.level DEBUG \
+          --console.username admin \
           --console.password $NAKAMA_CONSOLE_PW \
           --console.signing_key $NAKAMA_CONSOLE_SK \
           --socket.server_key $NAKAMA_SERVERKEY \
