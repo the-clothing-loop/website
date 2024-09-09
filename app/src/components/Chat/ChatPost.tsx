@@ -25,18 +25,18 @@ export default function ChatPost(props: ChatPostProps) {
   });
   const [username, setUsername] = useState("");
   const [isMe, setIsMe] = useState(false);
-  const [imageURL, setImageURL] = useState("");
   const refModalDesc = useRef<HTMLIonModalElement>(null);
   //const [user, setUser] = useState(User)
   const message = useMemo(() => {
+    if (props.post?.code !== 0) return "";
     props.getMmUser(props.post.sender_id!).then((res) => {
       const user = props.users.find((u) => res.username === u.uid);
       setUsername(user ? user.name : res.username || "Unknown");
       setIsMe(user?.uid === props.authUser?.uid);
     });
-    let message = (props.post.content as any).message as string;
+    let message = (props.post.content as any).message || "";
     for (let user of props.users) {
-      message = message.replaceAll(user.uid, user.name);
+      if (user) message = message.replaceAll(user.uid, user.name);
     }
     return message;
   }, [props.users, props.post]);
@@ -69,15 +69,9 @@ export default function ChatPost(props: ChatPostProps) {
   }
 
   let shouldExpandText = message.length > 150 || message.split("\n").length > 4;
-
-  const bulkyTitle =
-    message.indexOf("\n") != -1
-      ? message.substring(0, message.indexOf("\n")).trim()
-      : "";
-  const bulkyMessage =
-    message.indexOf("\n") != -1
-      ? message.substring(message.indexOf("\n")).trim()
-      : "";
+  if (!message) {
+    return null;
+  }
 
   if (props.post.code !== 0) {
     return (
@@ -92,108 +86,117 @@ export default function ChatPost(props: ChatPostProps) {
     );
   }
 
-  if (imageURL) {
-    return (
-      <>
-        <div
-          className="tw-mb-2 tw-flex tw-flex-row"
-          {...(props.isChainAdmin ? longPress : {})}
-        >
-          <div
-            className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-inline-block tw-mx-4 tw-relative".concat(
-              isMe ? " tw-bg-purple-shade" : " tw-bg-light",
-            )}
-          >
-            <div className="tw-my-1 tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-text-xs tw-font-bold tw-px-2 tw-text-white">
-              {username}
-            </div>
-            <img
-              className="-tw-px-2 tw-inline-block tw-max-h-60"
-              src={imageURL}
-              alt={bulkyTitle}
-            ></img>
-            {username ? (
-              <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-top-56 tw-text-white">
-                {bulkyTitle}
-              </div>
-            ) : null}
-            <IonItem
-              lines="none"
-              routerLink={"/address/" + props.authUser?.uid}
-              className="tw-my-0 tw-ps-2"
-              color="background"
-              style={{ "--padding-start": "0" }}
-            >
-              <div className="tw-py-2">
-                <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
-                  {t("address")}
-                </h3>
-                <p className="ion-text-wrap tw-opacity-60 tw-text-xs">
-                  {props.authUser?.address}
-                </p>
-              </div>
-            </IonItem>
-            {bulkyMessage == "" ? null : (
-              <IonItem
-                color="background"
-                lines="none"
-                className={`tw-my-0 -tw-mx-4 tw-px-2 ${
-                  shouldExpandText ? "-tw-mb-3" : "tw-mb-2"
-                } `}
-              >
-                <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
-                  {t("description")}
-                </h3>
-                <p
-                  className={`ion-text-wrap tw-opacity-60 tw-text-xs tw-overflow-hidden ${
-                    shouldExpandText ? "tw-max-h-[48px]" : ""
-                  }`}
-                >
-                  {bulkyMessage}
-                </p>
-              </IonItem>
-            )}
-            {shouldExpandText ? (
-              <IonText
-                onClick={
-                  shouldExpandText ? () => handleClickReadMore() : undefined
-                }
-                className="tw-pt-2 tw-ml-2 2 tw-h-9 tw-align-middle tw-text-xs tw-leading-5 tw-font-semibold tw-block tw-text-primary"
-              >
-                {t("readMore")}
-              </IonText>
-            ) : null}
-          </div>
-          {props.isChainAdmin ? (
-            <IonButton
-              onClick={() => props.onLongPress(props.post.message_id!)}
-              color="transparent"
-              className="tw-sticky tw-top-0 tw-opacity-70"
-              size="small"
-              type="button"
-            >
-              <IonIcon
-                slot="icon-only"
-                size="small"
-                color="dark"
-                icon={ellipsisVertical}
-              />
-            </IonButton>
-          ) : null}
-        </div>
-        <IonModal
-          ref={refModalDesc}
-          initialBreakpoint={0.6}
-          breakpoints={[0, 0.6, 1]}
-        >
-          <div className="ion-padding tw-text-lg tw-leading-6">
-            <h1 className="tw-mt-0">{bulkyTitle}</h1>
-            {bulkyMessage}
-          </div>
-        </IonModal>
-      </>
-    );
-  }
+  // if (imageURL) {
+  //   const bulkyTitle =
+  //     message.indexOf("\n") != -1
+  //       ? message.substring(0, message.indexOf("\n")).trim()
+  //       : "";
+  //   const bulkyMessage =
+  //     message.indexOf("\n") != -1
+  //       ? message.substring(message.indexOf("\n")).trim()
+  //       : "";
+
+  //   return (
+  //     <>
+  //       <div
+  //         className="tw-mb-2 tw-flex tw-flex-row"
+  //         {...(props.isChainAdmin ? longPress : {})}
+  //       >
+  //         <div
+  //           className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-inline-block tw-mx-4 tw-relative".concat(
+  //             isMe ? " tw-bg-purple-shade" : " tw-bg-light",
+  //           )}
+  //         >
+  //           <div className="tw-my-1 tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-text-xs tw-font-bold tw-px-2 tw-text-white">
+  //             {username}
+  //           </div>
+  //           <img
+  //             className="-tw-px-2 tw-inline-block tw-max-h-60"
+  //             src={imageURL}
+  //             alt={bulkyTitle}
+  //           ></img>
+  //           {username ? (
+  //             <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-top-56 tw-text-white">
+  //               {bulkyTitle}
+  //             </div>
+  //           ) : null}
+  //           <IonItem
+  //             lines="none"
+  //             routerLink={"/address/" + props.authUser?.uid}
+  //             className="tw-my-0 tw-ps-2"
+  //             color="background"
+  //             style={{ "--padding-start": "0" }}
+  //           >
+  //             <div className="tw-py-2">
+  //               <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
+  //                 {t("address")}
+  //               </h3>
+  //               <p className="ion-text-wrap tw-opacity-60 tw-text-xs">
+  //                 {props.authUser?.address}
+  //               </p>
+  //             </div>
+  //           </IonItem>
+  //           {bulkyMessage == "" ? null : (
+  //             <IonItem
+  //               color="background"
+  //               lines="none"
+  //               className={`tw-my-0 -tw-mx-4 tw-px-2 ${
+  //                 shouldExpandText ? "-tw-mb-3" : "tw-mb-2"
+  //               } `}
+  //             >
+  //               <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
+  //                 {t("description")}
+  //               </h3>
+  //               <p
+  //                 className={`ion-text-wrap tw-opacity-60 tw-text-xs tw-overflow-hidden ${
+  //                   shouldExpandText ? "tw-max-h-[48px]" : ""
+  //                 }`}
+  //               >
+  //                 {bulkyMessage}
+  //               </p>
+  //             </IonItem>
+  //           )}
+  //           {shouldExpandText ? (
+  //             <IonText
+  //               onClick={
+  //                 shouldExpandText ? () => handleClickReadMore() : undefined
+  //               }
+  //               className="tw-pt-2 tw-ml-2 2 tw-h-9 tw-align-middle tw-text-xs tw-leading-5 tw-font-semibold tw-block tw-text-primary"
+  //             >
+  //               {t("readMore")}
+  //             </IonText>
+  //           ) : null}
+  //         </div>
+  //         {props.isChainAdmin ? (
+  //           <IonButton
+  //             onClick={() => props.onLongPress(props.post.message_id!)}
+  //             color="transparent"
+  //             className="tw-sticky tw-top-0 tw-opacity-70"
+  //             size="small"
+  //             type="button"
+  //           >
+  //             <IonIcon
+  //               slot="icon-only"
+  //               size="small"
+  //               color="dark"
+  //               icon={ellipsisVertical}
+  //             />
+  //           </IonButton>
+  //         ) : null}
+  //       </div>
+  //       <IonModal
+  //         ref={refModalDesc}
+  //         initialBreakpoint={0.6}
+  //         breakpoints={[0, 0.6, 1]}
+  //       >
+  //         <div className="ion-padding tw-text-lg tw-leading-6">
+  //           <h1 className="tw-mt-0">{bulkyTitle}</h1>
+  //           {bulkyMessage}
+  //         </div>
+  //       </IonModal>
+  //     </>
+  //   );
+  // }
 
   return (
     <div

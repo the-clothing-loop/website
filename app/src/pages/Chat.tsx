@@ -86,6 +86,7 @@ export default function Chat() {
             authUser.email,
             _mmData.pass,
             true,
+            authUser.uid,
           );
           _mmData.userId = window.nSession.user_id;
 
@@ -144,9 +145,33 @@ export default function Chat() {
         if (!res.user_groups) return [];
         return res.user_groups;
       });
-    for (const ch of _mygroups) {
-      if (chatRoomIDs?.includes(ch.group!.id!)) {
-        _groups.push(ch.group!);
+
+    const joinedGroupIds = [];
+    for (const chatRoomID of chatRoomIDs) {
+      let foundGroup = _mygroups.find((g) => g.group!.id === chatRoomID);
+      if (foundGroup) {
+        _groups.push(foundGroup.group!);
+      } else {
+        const ok = await window.nClient
+          .joinGroup(window.nSession, chatRoomID)
+          .catch((e) => console.error("unable to find group", chatRoomID, e));
+        if (ok) {
+          joinedGroupIds.push(chatRoomID);
+        }
+      }
+    }
+    if (joinedGroupIds.length) {
+      const _moreGroups = await window.nClient
+        .listUserGroups(window.nSession, _mmData.userId)
+        .then((res) => {
+          console.log("listUserGroups", res);
+          if (!res.user_groups) return [];
+          return res.user_groups;
+        });
+      for (const group of _moreGroups) {
+        if (joinedGroupIds.indexOf(group!.group!.id!) === -1) {
+          _groups.push(group!.group!);
+        }
       }
     }
     _groups.sort((a, b) =>
