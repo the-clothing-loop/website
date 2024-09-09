@@ -75,6 +75,7 @@ export const StoreContext = createContext({
   shouldBlur: false,
   mmData: {} as MmData,
   setMmData: (d: MmData) => {},
+  toggleChainAllowMap: () => Promise.resolve(),
 });
 
 const errLoopMustBeSelected =
@@ -140,11 +141,6 @@ export function StoreProvider({
       await _storage.set("version", 1);
     }
     setBagListView((await _storage.get("bag_list_view")) || "dynamic");
-    let _mmToken = (await _storage.get("mm_token")) || "";
-    setMmData((s) => {
-      s.chat_token = _mmToken;
-      return { ...s };
-    });
     _setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     _setBagSort((await _storage.get("bag_sort")) || "aToZ");
     _setRouteListView((await _storage.get("route_list_view")) || "dynamic");
@@ -152,7 +148,7 @@ export function StoreProvider({
   }
 
   async function logout() {
-    window.plugins?.OneSignal?.removeExternalUserId();
+    window.plugins?.OneSignal?.logout();
     await logoutApi().catch((err: any) => {
       console.warn(err);
     });
@@ -241,7 +237,10 @@ export function StoreProvider({
       return _isAuthenticated;
     }
 
-    window.plugins?.OneSignal?.setExternalUserId(_authUser.uid);
+    // at this point it is safe to assume _isAuthenticated is LoggedIn
+
+    window.plugins?.OneSignal?.login(_authUser.uid);
+
     let chainUID: string | null = null;
     try {
       chainUID = await storage.get("chain_uid");
@@ -340,11 +339,20 @@ export function StoreProvider({
         console.error("Invalid pause value", pause, onlyChainUID);
         return;
       }
-      await userUpdate({
-        user_uid: authUser.uid,
-        chain_uid: onlyChainUID,
-        chain_paused: pause,
-      });
+      if (pause) {
+        await userUpdate({
+          user_uid: authUser.uid,
+          chain_uid: onlyChainUID,
+          chain_paused: pause,
+        });
+      } else {
+        await userUpdate({
+          user_uid: authUser.uid,
+          chain_uid: onlyChainUID,
+          chain_paused: false,
+          paused_until: dayjs().add(-1, "week").format(),
+        });
+      }
     } else {
       let pauseUntil = dayjs();
       if (pause === true) {
@@ -441,6 +449,21 @@ export function StoreProvider({
     }
   }
 
+  async function toggleChainAllowMap() {
+    if (!chain) return;
+    await chainUpdate({
+      uid: chain.uid,
+      allow_map: !chain.allow_map,
+    });
+    _setChain((s) => {
+      if (!s) return null;
+      return {
+        ...s,
+        allow_map: !chain.allow_map,
+      };
+    });
+  }
+
   function closeOverlay(sTo: OverlayState) {
     setOverlayState((s) => {
       let newTo = s + sTo;
@@ -522,6 +545,7 @@ export function StoreProvider({
         shouldBlur,
         mmData,
         setMmData,
+        toggleChainAllowMap,
       }}
     >
       {children}
@@ -537,6 +561,17 @@ export function IsChainAdmin(
     ? user?.chains.find((uc) => uc.chain_uid === chainUID)
     : undefined;
   return userChain?.is_chain_admin || false;
+}
+
+export function IsChainWarden(
+  user: User | null,
+  chainUID: string | null | undefined,
+): boolean {
+  if (!chainUID || !user) return false;
+  return (
+    user.chains.find((uc) => uc.chain_uid === chainUID)?.is_chain_warden ||
+    false
+  );
 }
 
 function ChainReadHeaders(

@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"time"
 
@@ -14,6 +15,10 @@ import (
 var Cache *cache.Cache
 
 func DatabaseInit() *gorm.DB {
+	if Config.DB_HOST == "" {
+		panic(fmt.Errorf("database is not specified in config"))
+	}
+
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", Config.DB_USER, Config.DB_PASS, Config.DB_HOST, Config.DB_PORT, Config.DB_NAME)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -30,8 +35,26 @@ func DatabaseInit() *gorm.DB {
 	return db
 }
 
+func CacheFindOrUpdate[V any](key string, duration time.Duration, update func() (*V, error)) (*V, error) {
+	if c, found := Cache.Get(key); found {
+		d, ok := c.(V)
+		if ok {
+			return &d, nil
+		}
+	}
+
+	d, err := update()
+	if err != nil {
+		return nil, err
+	}
+	Cache.Add(key, *d, duration)
+	return d, nil
+}
+
 func DatabaseAutoMigrate(db *gorm.DB) {
 	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
+	hadEventPriceTypeColumn := db.Migrator().HasColumn(&models.Event{}, "price_type")
+	hadAllowMapColumn := db.Migrator().HasColumn(&models.Chain{}, "allow_map")
 
 	// User Tokens
 	if db.Migrator().HasTable("user_tokens") {
@@ -114,6 +137,16 @@ ADD CONSTRAINT uci_user_id_chain_id
 UNIQUE (user_id, chain_id)
 		`)
 	}
+	if !hadEventPriceTypeColumn {
+		slog.Info("Migration run: create event price type")
+		db.Exec(`
+UPDATE events SET price_type = CASE
+	WHEN price_value = 0 THEN "free"
+	ELSE "entrance"
+END
+WHERE price_type IS NULL
+		`)
+	}
 	if !hadIsApprovedColumn {
 		db.Exec(`
 UPDATE user_chains SET is_approved = TRUE WHERE id IN (
@@ -130,5 +163,9 @@ UPDATE user_chains SET is_approved = FALSE WHERE id IN (
 	WHERE u.is_email_verified = FALSE && uc.is_approved IS NULL 
 )
 		`)
+	}
+	if !hadAllowMapColumn {
+		slog.Info("Migration run: set new allow_map column to true")
+		db.Exec("UPDATE chains SET allow_map = 1")
 	}
 }

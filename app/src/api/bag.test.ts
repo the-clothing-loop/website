@@ -1,4 +1,4 @@
-import { describe, test } from "vitest";
+import { describe, test, expect } from "vitest";
 import { Bag } from "./types";
 import { faker } from "@faker-js/faker";
 import { sortBags } from "./bag";

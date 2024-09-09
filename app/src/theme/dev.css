@@ -2,7 +2,7 @@
 ion-tab-bar {
   padding-bottom: 15px;
 }
-.ion-ce.plt-desktop:not(.plt-hybrid) ion-tab-bar::before {
+.plt-desktop:not(.plt-hybrid) ion-tab-bar::before {
   display: block;
   background-color: var(--ion-text-color);
   width: 100px;

@@ -53,6 +53,10 @@ import { loginSuperAsGenerateLink } from "../../../api/login";
 import ChainDescription from "../components/FindChain/ChainDescription";
 import { useLegal } from "../util/user.hooks";
 import QrCode from "../components/LoopMembers/QrCode";
+import ChainMemberListLoading from "../components/LoopMembers/LoopMembersLoading";
+import { uploadImageFile } from "../../../api/imgbb";
+import { EVENT_IMAGE_EXPIRATION } from "../../../api/event";
+import OriginalImageToProxy from "../util/image_proxy";
 const RouteMapPopup = lazy(
   () => import("../components/RouteMap/RouteMapPopup"),
 );
@@ -73,6 +77,7 @@ export default function ChainMemberList() {
   const localizePath = useLocalizePath(i18n);
   const [chainUID] = getQuery("chain");
   const authUser = useStore($authUser);
+  const refFileInput = useRef<HTMLInputElement>(null);
 
   const [hostChains, setHostChains] = useState<Chain[]>([]);
   const [loadingTransfer] = useState(LoadingState.idle);
@@ -93,7 +98,6 @@ export default function ChainMemberList() {
   const [error, setError] = useState("");
   const [selectedTable, setSelectedTable] = useState<SelectedTable>("route");
   const addCopyAttributes = useToClipboard();
-  const refQrCode = useRef<HTMLCanvasElement>(null);
   const refQrCodeDialog = useRef<HTMLDialogElement>(null);
   const [openQrCode, setOpenQrCode] = useState(false);
 
@@ -246,6 +250,35 @@ export default function ChainMemberList() {
       });
   }
 
+  async function onImageUpload(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!chain) return;
+
+    try {
+      const res = await uploadImageFile(file, 800, EVENT_IMAGE_EXPIRATION);
+      await chainUpdate({
+        uid: chain.uid,
+        image: res.data.image,
+      });
+      setChain((s) => ({ ...(s as Chain), image: res.data.image }));
+    } catch (err: any) {
+      addToastError(GinParseErrors(t, err));
+    }
+  }
+  async function onImageDelete() {
+    if (!chain) return;
+
+    try {
+      await chainUpdate({
+        uid: chain.uid,
+        image: "",
+      });
+      setChain((s) => ({ ...(s as Chain), image: undefined }));
+    } catch (err: any) {
+      addToastError(GinParseErrors(t, err));
+    }
+  }
   function goToEditTableItem(uid: UID) {
     setSelectedTable("participants");
     setTimeout(() => {
@@ -432,12 +465,11 @@ export default function ChainMemberList() {
   if (authUser === null) {
     console.info("Please redirect to /users/login", authUser);
     window.location.href = localizePath("/users/login");
-    return null;
   }
 
-  if (!(chain && users && unapprovedUsers && route && bags)) {
+  if (!(authUser && chain && users && unapprovedUsers && route && bags)) {
     // console.log(chain, users, unapprovedUsers, route, bags);
-    return null;
+    return <ChainMemberListLoading />;
   }
 
   const shareLink = PUBLIC_BASE_URL + "/loops/users/signup/?chain=" + chainUID;
@@ -456,6 +488,7 @@ export default function ChainMemberList() {
     default:
       classSubmitTransfer += " btn-primary";
   }
+  const chainImage = OriginalImageToProxy(chain.image, "288x288");
 
   return (
     <>
@@ -525,18 +558,64 @@ export default function ChainMemberList() {
               </h1>
               <ChainDescription description={chain.description} />
 
-              <dl>
-                <dt className="font-bold mb-1">{t("sizes")}</dt>
-                <dd className="mb-2">
-                  {chain?.sizes ? (
-                    <SizeBadges s={chain.sizes} g={chain.genders} />
-                  ) : null}
-                </dd>
-                <dt className="font-bold mb-2">{t("participants")}</dt>
-                <dd className="text-sm mb-1">
-                  {t("peopleWithCount", { count: users.length })}
-                </dd>
-              </dl>
+              <div className="flex flex-row justify-between">
+                <dl>
+                  <dt className="font-bold mb-1">{t("sizes")}</dt>
+                  <dd className="mb-2">
+                    {chain?.sizes ? (
+                      <SizeBadges s={chain.sizes} g={chain.genders} />
+                    ) : null}
+                  </dd>
+                  <dt className="font-bold mb-2">{t("participants")}</dt>
+                  <dd className="text-sm mb-1">
+                    {t("peopleWithCount", { count: users.length })}
+                  </dd>
+                </dl>
+
+                <div
+                  className={`relative self-start bg-white border-2 border-teal aspect-square w-36 ${
+                    isUserAdmin || authUser.is_root_admin || chain.image
+                      ? ""
+                      : "hidden"
+                  }`}
+                >
+                  <div className="absolute top-0 right-0 -mr-0.5 -mt-0.5">
+                    {chain.image ? (
+                      <button
+                        key="delete"
+                        type="button"
+                        className="btn btn-sm btn-square btn-error"
+                        onClick={onImageDelete}
+                      >
+                        <span className="icon-trash" />
+                      </button>
+                    ) : null}
+                    <button
+                      type="button"
+                      key="upload"
+                      className="btn btn-sm btn-square bg-white/80 btn-outline border-2 btn-secondary icon-upload"
+                      onClick={() => refFileInput.current?.click()}
+                    ></button>
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={onImageUpload}
+                      ref={refFileInput}
+                    />
+                  </div>
+                  {chainImage ? (
+                    <img
+                      src={chainImage}
+                      className={chainImage ? "" : "hidden"}
+                      alt="Loop promational image"
+                    />
+                  ) : (
+                    <div className="flex justify-center h-full items-center">
+                      <div className="icon-image text-3xl text-grey"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
 
               {isUserAdmin || authUser?.is_root_admin ? (
                 <>
@@ -601,10 +680,7 @@ export default function ChainMemberList() {
                       href={localizePath("/loops/edit/?chain=" + chainUID)}
                     >
                       {t("editLoop")}
-                      <span
-                        className="ltr:ml-2 rtl:mr-2 icon-pencil-2"
-                        aria-hidden
-                      />
+                      <span className="ms-2 icon-pencil-2" aria-hidden />
                     </a>
 
                     <button
@@ -613,10 +689,7 @@ export default function ChainMemberList() {
                       onClick={handleClickDeleteLoop}
                     >
                       {t("deleteLoop")}
-                      <span
-                        className="ltr:ml-2 rtl:mr-2 icon-trash"
-                        aria-hidden
-                      />
+                      <span className="ms-2 icon-trash" aria-hidden />
                     </button>
                   </div>
                 </>
@@ -669,7 +742,7 @@ export default function ChainMemberList() {
                   onChange={() => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black ltr:pr-3 rtl:pl-3 ltr:mr-3 rtl:ml-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black pe-3 me-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("route")}
                   <span className="skew-x-6 rtl:-skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2 rtl:right-auto rtl:-left-2"></span>
                 </div>
@@ -702,7 +775,7 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none ltr:pl-3 rtl:pr-3 ltr:ml-3 rtl:mr-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
+                  className={`relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none ps-3 ms-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
                     unapprovedUsers.length
                       ? "text-black"
                       : "text-base-300 cursor-not-allowed"
@@ -1325,7 +1398,7 @@ function ParticipantsTable(props: {
                   <span>{t("name")}</span>
                   <SortButton
                     isSelected={props.sortBy === "name"}
-                    className="ml-1"
+                    className="ms-1"
                     onClick={() => toggleSortBy("name")}
                   />
                 </th>
@@ -1336,7 +1409,7 @@ function ParticipantsTable(props: {
                   <span>{t("email")}</span>
                   <SortButton
                     isSelected={props.sortBy === "email"}
-                    className="ml-1"
+                    className="ms-1"
                     onClick={() => toggleSortBy("email")}
                   />
                 </th>
@@ -1346,7 +1419,7 @@ function ParticipantsTable(props: {
                   <span>{t("signedUpOn")}</span>
                   <SortButton
                     isSelected={props.sortBy === "date"}
-                    className="ml-1"
+                    className="ms-1"
                     onClick={() => toggleSortBy("date")}
                   />
                 </th>

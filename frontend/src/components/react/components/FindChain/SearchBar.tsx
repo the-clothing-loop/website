@@ -176,15 +176,15 @@ export default function SearchBar(props: Props) {
         <div className="flex">
           <div className="w-36 sm:w-48 pr-0 sm:pr-4">
             <CategoriesDropdown
-              selectedGenders={values.genders}
+              selectedCategories={values.genders}
               handleChange={(gs) => setValue("genders", gs)}
             />
           </div>
 
-          <div className="w-36 sm:w-48 pr-0 sm:pr-4 rtl:sm:pl-4">
+          <div className="w-36 sm:w-48 pr-0 sm:pe-4">
             <SizesDropdown
               className="max-xs:dropdown-end"
-              filteredGenders={
+              filteredCategory={
                 values.genders.length ? values.genders : Object.keys(categories)
               }
               selectedSizes={values.sizes}

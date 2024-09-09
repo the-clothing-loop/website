@@ -5,7 +5,6 @@ import { useStore } from "@nanostores/react";
 import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 import ToastManager from "../layout/ToastManager";
-import PopupForm from "./PopupForm";
 
 function Navbar(props: { pathname: string }) {
   const { t, i18n } = useTranslation();
@@ -22,7 +21,6 @@ function Navbar(props: { pathname: string }) {
   return (
     <>
       <ToastManager />
-      <PopupForm />
       <div className="container mx-auto z-50 bg-white flex flex-row justify-between lg:justify-start items-center md:px-20 shadow-none">
         <a
           aria-label="Clothing Loop logo"
@@ -30,7 +28,7 @@ function Navbar(props: { pathname: string }) {
           className="bg-center w-32 md:w-40 h-20 md:h-28 bg-no-repeat relative z-[60] bg-[auto_120px] md:bg-[auto_139px]"
           style={{
             backgroundImage:
-              "url('https://images.clothingloop.org/x139/the_clothing_loop_logo.png')",
+              "url('https://images.clothingloop.org/x278/the_clothing_loop_logo_v2.png')",
           }}
         ></a>
         <input type="checkbox" className="hidden peer" id="header-hamburger" />
@@ -121,14 +119,14 @@ function Navbar(props: { pathname: string }) {
             -1 ? (
               <a
                 href={localizePath("/loops/new/users/signup")}
-                className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
+                className="me-4 btn btn-primary btn-outline"
               >
                 {t("startNewLoop")}
               </a>
             ) : (
               <a
                 href={localizePath("/loops/find")}
-                className="ltr:mr-4 rtl:ml-4 btn btn-primary btn-outline"
+                className="me-4 btn btn-primary btn-outline"
               >
                 {t("findLoops")}
                 <span className="icon-arrow-right ml-4 rtl:hidden"></span>
@@ -180,10 +178,7 @@ function Navbar(props: { pathname: string }) {
               {t("about")}
             </a>
 
-            <LanguageSwitcher
-              pathname={props.pathname}
-              className="ltr:ml-4 rtl:mr-4"
-            />
+            <LanguageSwitcher pathname={props.pathname} className="ms-4" />
           </nav>
         </div>
       </div>

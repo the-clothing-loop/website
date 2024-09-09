@@ -49,6 +49,10 @@ const colors = {
     light: "#d2e2b3",
     DEFAULT: "#a6c665",
   },
+  mint: {
+    light: "#ceeee2",
+    DEFAULT: "#80d2af",
+  },
   green: {
     lighter: "#e8efe9",
     light: "#b1c8b6",
@@ -67,7 +71,7 @@ const colors = {
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx,astro,html}"],
-  safelist: ["list-none"],
+  safelist: ["list-none", "font-semibold"],
   theme: {
     screens: {
       xs: "481px",

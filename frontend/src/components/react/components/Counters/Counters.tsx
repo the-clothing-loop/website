@@ -60,7 +60,10 @@ export default function Counters() {
         <div>
           <div className="h-20 text-5xl font-serif text-stroke-base-100">
             {isVisible ? (
-              <SingleCounter end={info ? info.total_users * 2 : 0} step={397} />
+              <SingleCounter
+                end={info ? Math.floor(info.total_users * 1.79) : 0}
+                step={397}
+              />
             ) : (
               "0"
             )}

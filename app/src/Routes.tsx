@@ -15,15 +15,16 @@ import {
   IonTabs,
   getPlatforms,
   setupIonicReact,
+  useIonToast,
 } from "@ionic/react";
 import { SplashScreen } from "@capacitor/splash-screen";
 import {
   bookOutline,
   homeOutline,
-  bagHandleOutline,
   cubeOutline,
   peopleCircleOutline,
   chatbubblesOutline,
+  pauseCircleOutline,
 } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
@@ -58,7 +59,6 @@ import Settings from "./pages/Settings";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import BagsList from "./pages/BagsList";
-import BulkyList from "./pages/BulkyList";
 import Chat from "./pages/Chat";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
@@ -70,6 +70,8 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import OpenSource from "./pages/OpenSource";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import BagSVG from "./components/Bags/Svg";
+import IsPaused from "./utils/is_paused";
+import toastError from "../toastError";
 
 SplashScreen.show({
   autoHide: true,
@@ -84,6 +86,7 @@ export default function Routes() {
     useContext(StoreContext);
   const history = useHistory();
   let location = useLocation();
+  const [present] = useIonToast();
 
   // initialize one signal, run initial calls and capture error events
   useEffect(() => {
@@ -92,6 +95,7 @@ export default function Routes() {
       if (platforms.includes("capacitor")) {
         await OneSignalInitCap().catch((err) => {
           console.error(err);
+          toastError(present, err, "Notification service is broken");
         });
       }
       await auth();
@@ -163,6 +167,7 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 function AppRoute() {
   const { t } = useTranslation();
   const { refresh, bags, authUser, chain } = useContext(StoreContext);
+  const isPaused = IsPaused(authUser, chain?.uid);
 
   const hasBagTooOldMe = useMemo(() => {
     let hasBagTooOldMe = false;
@@ -199,7 +204,6 @@ function AppRoute() {
         <Route exact path="/address" component={AddressList}></Route>
         <Route path="/address/:uid" component={AddressItem}></Route>
         <Route exact path="/bags" component={BagsList}></Route>
-        <Route exact path="/bulky-items" component={BulkyList}></Route>
         <Route exact path="/chat" component={Chat}></Route>
         <Route exact path="/settings" component={Settings}></Route>
         <Route
@@ -219,7 +223,15 @@ function AppRoute() {
           <IonLabel>{t("rules")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="address" href="/address" disabled={!chain}>
-          <IonIcon aria-hidden="true" icon={homeOutline} />
+          {isPaused ? (
+            <IonIcon
+              aria-hidden="true"
+              icon={pauseCircleOutline}
+              color="medium"
+            />
+          ) : (
+            <IonIcon aria-hidden="true" icon={homeOutline} />
+          )}
           <IonLabel>{t("route")}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="bags" href="/bags" disabled={!chain}>
@@ -227,7 +239,7 @@ function AppRoute() {
             <BagSVG bag={{ number: "", color: "currentColor" }} isList />
           </div>
           {hasBagTooOldMe ? (
-            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-bg-danger"></div>
+            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
           ) : null}
           <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
         </IonTabButton>

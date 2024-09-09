@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -10,22 +11,40 @@ import (
 )
 
 type UserChain struct {
-	ID                         uint        `json:"-"`
-	UserID                     uint        `json:"-" gorm:"index"`
-	UserUID                    string      `json:"user_uid" gorm:"-:migration;<-:false"`
-	ChainID                    uint        `json:"-"`
-	ChainUID                   string      `json:"chain_uid" gorm:"-:migration;<-:false"`
-	IsChainAdmin               bool        `json:"is_chain_admin"`
-	CreatedAt                  time.Time   `json:"created_at"`
-	IsApproved                 bool        `json:"is_approved"`
-	LastNotifiedIsUnapprovedAt zero.Time   `json:"-"`
-	RouteOrder                 int         `json:"-"`
-	IsPaused                   bool        `json:"is_paused"`
-	Bags                       []Bag       `json:"-"`
-	Bulky                      []BulkyItem `json:"-"`
+	ID                         uint           `json:"-"`
+	UserID                     uint           `json:"-" gorm:"index"`
+	UserUID                    string         `json:"user_uid" gorm:"-:migration;<-:false"`
+	ChainID                    uint           `json:"-"`
+	ChainUID                   string         `json:"chain_uid" gorm:"-:migration;<-:false"`
+	IsChainAdmin               bool           `json:"is_chain_admin"`
+	IsChainWarden              bool           `json:"is_chain_warden"`
+	CreatedAt                  time.Time      `json:"created_at"`
+	IsApproved                 bool           `json:"is_approved"`
+	LastNotifiedIsUnapprovedAt zero.Time      `json:"-"`
+	RouteOrder                 int            `json:"-"`
+	IsPaused                   bool           `json:"is_paused"`
+	Note                       sql.NullString `json:"-" gorm:"->:false;<-:create"`
+	Bags                       []Bag          `json:"-"`
+	Bulky                      []BulkyItem    `json:"-"`
 }
 
 var ErrRouteInvalid = errors.New("Invalid route")
+
+func UserChainSetNote(db *gorm.DB, userID, chainID uint, note string) error {
+	return db.Exec(`UPDATE user_chains SET note = ? WHERE user_id = ? AND chain_id = ?`, sql.NullString{Valid: note != "", String: note}, userID, chainID).Error
+}
+func UserChainGetNote(db *gorm.DB, userID, chainID uint) (string, error) {
+	note := sql.NullString{}
+	err := db.Raw(`SELECT note FROM user_chains WHERE user_id = ? AND chain_id = ?`, userID, chainID).Pluck("note", &note).Error
+	if err != nil {
+		return "", err
+	}
+	return note.String, nil
+}
+
+func UserChainSetWarden(db *gorm.DB, userID, chainID uint, warden bool) error {
+	return db.Exec(`UPDATE user_chains SET is_chain_warden = ? WHERE user_id = ? AND chain_id = ?`, warden, userID, chainID).Error
+}
 
 func ValidateAllRouteUserUIDs(db *gorm.DB, chainID uint, userUIDs []string) bool {
 	lengthIn := len(userUIDs)
@@ -127,6 +146,7 @@ func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error)
 		user_chains.user_id        AS user_id,
 		users.uid                  AS user_uid,
 		user_chains.is_chain_admin AS is_chain_admin,
+		user_chains.is_chain_warden AS is_chain_warden,
 		user_chains.created_at     AS created_at,
 		user_chains.is_paused      AS is_paused,
 		user_chains.is_approved    AS is_approved

@@ -10,19 +10,12 @@ export default defineConfig((mode) => {
   return {
     plugins: [react(), VitePWA({ registerType: "autoUpdate" })],
     server: {
+      port: IS_DOCKER ? 8081 : 5173,
       proxy: {
         "/api": {
           target: IS_DOCKER ? "http://server:8084" : "http://127.0.0.1:8084",
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
-        },
-        "/mm": {
-          target: IS_DOCKER
-            ? "http://mattermost:8065"
-            : "http://127.0.0.1:8065",
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/mm/, ""),
-          ws: true,
         },
       },
     },

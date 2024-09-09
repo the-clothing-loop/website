@@ -134,3 +134,23 @@
 - Fix automatic listing of addresses
 - Fix sms button on missing phonenumber
 - Add version to login page
+
+# 2.6
+
+- Add notes
+- Emoji bags get a different look in the route page
+- Map is available from the a route page
+
+# 2.7
+
+- Fix paused status when only paused in another loop
+- Add pause icon to navigation
+- Update to latest ionic version
+
+# 2.8
+
+- New default rules to app
+- New flag for people who do extra bag quality control
+- Hosts can pause you on that Loop
+- Show hosts bag history
+- Add german language

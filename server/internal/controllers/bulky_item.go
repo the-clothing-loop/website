@@ -1,14 +1,15 @@
 package controllers
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/OneSignal/onesignal-go-api"
+	"github.com/cdfmlr/ellipsis"
 	"github.com/gin-gonic/gin"
-	"github.com/golang/glog"
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
 )
@@ -50,7 +51,7 @@ WHERE user_chain_id IN (
 )
 	`, chain.ID).Scan(&bulkyItems).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to find bulky items: %v", err)
+		slog.Error("Unable to find bulky items", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to find bulky items")
 		return
 	}
@@ -86,16 +87,19 @@ func BulkyPut(c *gin.Context) {
 			FROM users AS u
 			JOIN user_chains AS uc ON uc.user_id = u.id
 			JOIN chains AS c ON c.id = uc.chain_id
-			WHERE c.uid = ? AND u.uid != ?`, body.ChainUID, body.UserUID).Scan(&userUIDs)
+			WHERE c.uid = ? AND u.uid != ? AND uc.is_approved = TRUE`, body.ChainUID, body.UserUID).Scan(&userUIDs)
 
 		if len(userUIDs) > 0 {
+			title := lo.FromPtrOr(body.Title, "...")
+			title = ellipsis.Ending(title, 20)
+
 			err := app.OneSignalCreateNotification(db, userUIDs,
-				*views.Notifications["newBulkyItemHasBeenCreatedTitle"],
+				*views.Notifications[views.NotificationEnumTitleNewBulkyCreated],
 				onesignal.StringMap{
-					En: body.Title,
+					En: onesignal.PtrString(title),
 				})
 			if err != nil {
-				glog.Error(err)
+				slog.Error(err.Error())
 			}
 		}
 	}
@@ -135,7 +139,7 @@ LIMIT 1
 		err = db.Updates(*bulkyItem).Error
 	}
 	if err != nil {
-		goscope.Log.Errorf("Unable to create or update bulky item: %v", err)
+		slog.Error("Unable to create or update bulky item", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to create or update bulky item")
 		return
 	}
@@ -166,7 +170,7 @@ WHERE id = ? AND user_chain_id IN (
 )
 	`, query.ID, chain.ID).Error
 	if err != nil {
-		goscope.Log.Errorf("Bulky Item could not be removed: %v", err)
+		slog.Error("Bulky Item could not be removed", "err", err)
 		c.String(http.StatusInternalServerError, "Bulky Item could not be removed")
 		return
 	}

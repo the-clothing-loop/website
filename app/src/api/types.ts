@@ -42,6 +42,7 @@ export interface UserChain {
   user_uid: UID;
   chain_uid: UID;
   is_chain_admin: boolean;
+  is_chain_warden: boolean;
   is_approved: boolean;
   is_paused: boolean;
   created_at: string;
@@ -59,9 +60,11 @@ export interface Chain {
   sizes: string[] | null;
   published: boolean;
   open_to_new_members: boolean;
+  image?: string;
   total_members?: number;
   total_hosts?: number;
   route_privacy?: number;
+  allow_map?: boolean;
   rules_override?: string;
   headers_override?: string;
   theme?: string;

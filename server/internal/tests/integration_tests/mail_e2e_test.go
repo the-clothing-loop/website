@@ -34,7 +34,7 @@ func TestMailSend(t *testing.T) {
 	app.MailSend(db, m)
 }
 
-var languages = []string{"en", "nl", "de", "fr", "es", "sv", "he"}
+var languages = []string{"en", "nl", "de", "fr", "es", "it", "sv", "he"}
 
 func runOnAllLanguages(t *testing.T, run func(t *testing.T, c *gin.Context, lng string)) {
 	for i := range languages {
@@ -252,6 +252,7 @@ func TestEmailSomeoneLeftLoop(t *testing.T) {
 			faker.Person().Contact().Email,
 			faker.Company().Name(),
 			faker.Person().Name(),
+			faker.Person().Contact().Email,
 		)
 		assert.Nil(t, err)
 	})

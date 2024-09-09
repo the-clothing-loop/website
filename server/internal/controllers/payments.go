@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 
 	"github.com/gin-gonic/gin"
@@ -79,7 +79,7 @@ func PaymentsInitiate(c *gin.Context) {
 
 	session, err := stripe_session.New(checkout)
 	if err != nil {
-		goscope.Log.Warningf("Something went wrong when processing your checkout request: %v", err)
+		slog.Warn("Something went wrong when processing your checkout request", "err", err)
 		c.String(http.StatusUnavailableForLegalReasons, "Something went wrong when processing your checkout request...")
 		return
 	}
@@ -91,7 +91,7 @@ func PaymentsInitiate(c *gin.Context) {
 		SessionStripeID: zero.StringFrom(session.ID),
 		Status:          string(session.Status),
 	}).Error; err != nil {
-		goscope.Log.Warningf("Unable to add payment to database: %v", err)
+		slog.Warn("Unable to add payment to database", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to add payment to database")
 		return
 	}
@@ -109,18 +109,18 @@ func PaymentsWebhook(c *gin.Context) {
 	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, MaxBodyBytes)
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		goscope.Log.Warningf("Body does not exist: %v", err)
+		slog.Warn("Body does not exist", "err", err)
 		c.String(400, "Body does not exist")
 		return
 	}
 	event, err := stripe_webhook.ConstructEvent(body, signature, app.Config.STRIPE_WEBHOOK)
 	if err != nil {
-		goscope.Log.Warningf("Webhook Error: %v", err)
+		slog.Warn("Webhook Error", "err", err)
 		c.String(400, fmt.Sprintf("Webhook Error: %s", err))
 		return
 	}
 
-	goscope.Log.Infof("event.Type: %+v", event.Type)
+	slog.Info(fmt.Sprintf("event.Type: %+v", event.Type))
 
 	switch event.Type {
 	case "checkout.session.completed":
@@ -136,7 +136,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	session := new(stripe.CheckoutSession)
 	err := json.Unmarshal(event.Data.Raw, session)
 	if err != nil {
-		goscope.Log.Warningf("Incorrect response from stripe: %v", err)
+		slog.Warn("Incorrect response from stripe", "err", err)
 		c.String(http.StatusInternalServerError, "Incorrect response from stripe")
 		return
 	}
@@ -146,7 +146,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 		Email:  session.CustomerEmail,
 	}).Error
 	if err != nil {
-		goscope.Log.Warningf("Unable to update payment in database: %v", err)
+		slog.Warn("Unable to update payment in database", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to update payment in database")
 		return
 	}

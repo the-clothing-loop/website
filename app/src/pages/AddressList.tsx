@@ -2,23 +2,27 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
   IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonModal,
   IonPage,
   IonRadio,
   IonRadioGroup,
+  IonRefresher,
+  IonRefresherContent,
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  RefresherEventDetail,
 } from "@ionic/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
-import { openOutline, searchOutline } from "ionicons/icons";
+import { mapOutline, openOutline, searchOutline, shield } from "ionicons/icons";
 import IsPrivate from "../utils/is_private";
 import OverlayPaused from "../components/OverlayPaused";
 import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
@@ -30,6 +34,8 @@ import AddressListItem, {
 import wrapIndex from "../utils/wrap_index";
 import { useDebounce } from "@uidotdev/usehooks";
 import IsPaused from "../utils/is_paused";
+import { Sleep } from "../utils/sleep";
+import RouteMapPopup from "../components/RouteMap/RouteMapPopup";
 
 export default function AddressList() {
   const {
@@ -48,6 +54,7 @@ export default function AddressList() {
   } = useContext(StoreContext);
   const { t } = useTranslation();
   const headerSheetModal = useRef<HTMLIonModalElement>(null);
+  const refRouteMapPopup = useRef<HTMLIonModalElement>(null);
 
   const headerKey = "addressList";
 
@@ -107,6 +114,9 @@ export default function AddressList() {
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_admin || false;
 
+        const isWarden =
+          user.chains.find((uc) => uc.chain_uid === chain?.uid)
+            ?.is_chain_warden || false;
         const isPrivate = IsPrivate(user.email);
         const isAddressPrivate = IsPrivate(user.address);
         const isUserPaused = IsPaused(user, chain.uid);
@@ -116,6 +126,7 @@ export default function AddressList() {
           bags: userBags,
           isMe,
           isHost,
+          isWarden,
           isAddressPrivate,
           number: i + 1,
           isUserPaused,
@@ -128,6 +139,18 @@ export default function AddressList() {
     } while (i !== topRouteIndex);
     return arr;
   }, [route, chainUsers, routeListView, slowSearch]);
+
+  function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
+    const refreshPromise = setChain(chain?.uid, authUser);
+    const sleepPromise = Sleep(500);
+    Promise.all([refreshPromise, sleepPromise]).then(() => {
+      e.detail.complete();
+    });
+  }
+
+  function onClickFab() {
+    refRouteMapPopup.current?.present();
+  }
 
   return (
     <IonPage>
@@ -154,41 +177,36 @@ export default function AddressList() {
                       onIonInput={(e) => setSearch(e.detail.value as string)}
                       onIonClear={() => setSearch("")}
                       value={search}
-                      placeholder="Search"
+                      placeholder={t("search")}
                     ></IonSearchbar>
                   </IonItem>
                   <IonItem lines="full" color="light">
-                    <p className="tw-font-bold">Sort</p>
+                    <p className="tw-font-bold">{t("sort")}</p>
                   </IonItem>
                   <IonRadioGroup
                     value={routeListView}
                     onIonChange={(e: any) => setRouteListView(e.detail.value)}
                   >
                     <IonItem lines="full">
-                      <IonLabel>
-                        <h2
-                          className={`tw-text-lg ${
-                            routeListView === "dynamic"
-                              ? "!tw-font-semibold"
-                              : ""
-                          }`}
-                        >
-                          {t("automatic")}
-                        </h2>
-                      </IonLabel>
-                      <IonRadio slot="end" value="dynamic" />
+                      <IonRadio
+                        value="dynamic"
+                        labelPlacement="start"
+                        className={`tw-text-lg ${
+                          routeListView === "dynamic" ? "!tw-font-semibold" : ""
+                        }`}
+                      >
+                        {t("automatic")}
+                      </IonRadio>
                     </IonItem>
                     <IonItem lines="full">
-                      <IonLabel>
-                        <h2
-                          className={`tw-text-lg ${
-                            routeListView === "list" ? "!tw-font-semibold" : ""
-                          }`}
-                        >
-                          {t("routeOrder")}
-                        </h2>
-                      </IonLabel>
-                      <IonRadio slot="end" value="list" />
+                      <IonRadio
+                        className={`tw-text-lg ${
+                          routeListView === "list" ? "!tw-font-semibold" : ""
+                        }`}
+                        value="list"
+                      >
+                        {t("routeOrder")}
+                      </IonRadio>
                     </IonItem>
                   </IonRadioGroup>
                 </IonList>
@@ -222,6 +240,13 @@ export default function AddressList() {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        <IonRefresher
+          slot="fixed"
+          onIonRefresh={handleRefresh}
+          className="tw-z-0"
+        >
+          <IonRefresherContent />
+        </IonRefresher>
         <div className="tw-relative tw-min-h-full tw-flex tw-flex-col">
           <IonHeader collapse="condense">
             <IonToolbar>
@@ -244,6 +269,14 @@ export default function AddressList() {
               return <AddressListItem {...props} key={props.number} />;
             })}
           </IonList>
+          {chain && authUser ? (
+            <RouteMapPopup
+              chain={chain}
+              modal={refRouteMapPopup}
+              authUserUID={authUser.uid}
+              isChainAdmin={isChainAdmin}
+            />
+          ) : null}
           {isChainAdmin ? (
             <EditHeaders
               modal={headerSheetModal}
@@ -259,6 +292,25 @@ export default function AddressList() {
             className="tw-w-full -tw-mb-2 tw-invert-[60%] tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
           />
         </div>
+        {isChainAdmin || chain?.allow_map ? (
+          <IonFab slot="fixed" horizontal="end" vertical="bottom">
+            <IonFabButton
+              color={chain?.allow_map && isThemeDefault ? "danger" : ""}
+              onClick={onClickFab}
+              style={
+                chain?.allow_map
+                  ? {}
+                  : {
+                      "--background": "var(--ion-color-blue-contrast)",
+                      "--background-hover": "var(--ion-color-light-shade)",
+                      "--color": "var(--ion-color-blue)",
+                    }
+              }
+            >
+              <IonIcon icon={mapOutline} />
+            </IonFabButton>
+          </IonFab>
+        ) : null}
       </IonContent>
     </IonPage>
   );

@@ -27,8 +27,9 @@ export interface RouteCoordinate {
   route_order: number;
 }
 
-export function routeCoordinates(chainUID: UID) {
-  return axios.get<RouteCoordinate[]>("/v2/route/coordinates", {
-    params: { chain_uid: chainUID },
-  });
+// user uid will be used for participants to anonymise the route
+export function routeCoordinates(chainUID: UID, userUID?: UID) {
+  const params: any = { chain_uid: chainUID };
+  if (userUID) params.user_uid = userUID;
+  return axios.get<RouteCoordinate[]>("/v2/route/coordinates", { params });
 }

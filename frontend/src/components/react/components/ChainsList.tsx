@@ -215,11 +215,11 @@ export default function ChainsList({ chains, setChains }: Props) {
                       {userChain?.is_approved ||
                       (!userChain && authUser?.is_root_admin) ? (
                         chain.published ? (
-                          <div className="tooltip" data-tip="published">
+                          <div className="tooltip" data-tip={t("published")}>
                             <span className="icon-eye text-lg text-green" />
                           </div>
                         ) : (
-                          <div className="tooltip" data-tip="draft">
+                          <div className="tooltip" data-tip={t("draft")}>
                             <span className="icon-eye-off text-lg text-red" />
                           </div>
                         )
@@ -252,7 +252,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                             ) : null}
                           </a>
                         ) : null}
-                        <div className="dropdown dropdown-left">
+                        <div className="dropdown ltr:dropdown-left rtl:!dropdown-right">
                           <label
                             tabIndex={0}
                             className={`btn btn-ghost max-xs:btn-sm ${
@@ -319,7 +319,7 @@ export default function ChainsList({ chains, setChains }: Props) {
                                       <span className="opacity-50">
                                         {t("remindHost")}
                                       </span>
-                                      <i className="icon-slash ml-1 rtl:ml-0 rtl:mr-1"></i>
+                                      <i className="icon-slash ms-1"></i>
                                     </span>
                                     <span
                                       className="text-xs"

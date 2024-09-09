@@ -26,6 +26,7 @@ import {
   useIonAlert,
 } from "@ionic/react";
 import {
+  analyticsOutline,
   closeOutline,
   construct,
   ellipsisHorizontal,
@@ -62,6 +63,7 @@ import SelectUserModal from "../components/Bags/SelectUserModal";
 import { useDebounce } from "@uidotdev/usehooks";
 import dayjs from "../dayjs";
 import IsPaused from "../utils/is_paused";
+import BagAnalyticsModal from "../components/Bags/BagAnalyticsModal";
 
 type State = { bag_id?: number } | undefined;
 
@@ -194,10 +196,6 @@ export default function BagsList() {
     let bagID = state?.bag_id;
     if (!bagID) return;
 
-    let idPrefix = "bag-list-";
-    if (bagListView === "card") {
-      idPrefix = "bag-card-";
-    }
     const el =
       document.getElementById("bag-card-" + state?.bag_id) ||
       document.getElementById("bag-list-" + state?.bag_id);
@@ -304,16 +302,14 @@ export default function BagsList() {
                   >
                     {["dynamic", "list", "card"].map((v) => (
                       <IonItem lines="full" key={v}>
-                        <IonLabel>
-                          <h2
-                            className={`tw-text-lg ${
-                              bagListView === v ? "!tw-font-semibold" : ""
-                            }`}
-                          >
-                            {v === "dynamic" ? t("automatic") : t(v)}
-                          </h2>
-                        </IonLabel>
-                        <IonRadio slot="end" value={v} />
+                        <IonRadio
+                          className={`tw-text-lg ${
+                            bagListView === v ? "!tw-font-semibold" : ""
+                          }`}
+                          value={v}
+                        >
+                          {v === "dynamic" ? t("automatic") : t(v)}
+                        </IonRadio>
                       </IonItem>
                     ))}
                   </IonRadioGroup>
@@ -336,22 +332,28 @@ export default function BagsList() {
                       ] as BagSort[]
                     ).map((v) => (
                       <IonItem lines="full" key={v}>
-                        <IonLabel>
-                          <h2
-                            className={`tw-text-lg ${
-                              bagSort === v ? "!tw-font-semibold" : ""
-                            }`}
-                          >
-                            {t(v)}
-                          </h2>
-                        </IonLabel>
-                        <IonRadio slot="end" value={v} />
+                        <IonRadio
+                          className={`tw-text-lg ${
+                            bagSort === v ? "!tw-font-semibold" : ""
+                          }`}
+                          value={v}
+                        >
+                          {t(v)}
+                        </IonRadio>
                       </IonItem>
                     ))}
                   </IonRadioGroup>
                 </IonList>
               </IonContent>
             </IonModal>
+            {isChainAdmin ? (
+              <>
+                <IonButton id="sheet-bags-timeline">
+                  <IonIcon icon={analyticsOutline} />
+                </IonButton>
+                <BagAnalyticsModal />
+              </>
+            ) : null}
           </IonButtons>
 
           <IonTitle>{headerText}</IonTitle>

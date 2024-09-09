@@ -23,6 +23,7 @@ type Chain struct {
 	Description                   string
 	Address                       string
 	CountryCode                   string
+	Image                         *string
 	Latitude                      float64
 	Longitude                     float64
 	Radius                        float32
@@ -30,6 +31,7 @@ type Chain struct {
 	OpenToNewMembers              bool
 	RulesOverride                 string
 	HeadersOverride               string
+	AllowMap                      bool
 	Sizes                         []string `gorm:"serializer:json"`
 	Genders                       []string `gorm:"serializer:json"`
 	UserChains                    []UserChain
@@ -49,6 +51,7 @@ type ChainResponse struct {
 	Name             string   `json:"name" gorm:"chains.name"`
 	Description      string   `json:"description" gorm:"chains.description"`
 	Address          string   `json:"address" gorm:"chains.address"`
+	Image            *string  `json:"image" gorm:"chains.image"`
 	Latitude         float64  `json:"latitude" gorm:"chains.latitude"`
 	Longitude        float64  `json:"longitude" gorm:"chains.longitude"`
 	Radius           float32  `json:"radius" gorm:"chains.radius"`
@@ -64,6 +67,7 @@ type ChainResponse struct {
 	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
 	RoutePrivacy     *int     `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
 	ChatRoomIDs      []string `json:"chat_room_ids,omitempty" gorm:"chains.chat_room_ids"`
+	AllowMap         *bool    `json:"allow_map,omitempty" gorm:"chains.allow_map"`
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
@@ -72,6 +76,7 @@ chains.uid,
 chains.name,
 chains.description,
 chains.address,
+chains.image,
 chains.latitude,
 chains.longitude,
 chains.radius,

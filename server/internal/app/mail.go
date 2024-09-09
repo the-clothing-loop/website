@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/mail"
 	"os"
 
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
 
@@ -53,7 +53,7 @@ func MailSend(db *gorm.DB, m *models.Mail) error {
 		err = mailSendBySmtp(m)
 	}
 	if err != nil {
-		goscope.Log.Errorf("Unable to send email: %v", err)
+		slog.Error("Unable to send email", "err", err)
 
 		// Ensure that the email is not sent infinitely by the retry mechanism
 		if m.NextRetryAttempt == 0 && m.MaxRetryAttempts > models.MAIL_RETRY_NEVER {
@@ -67,12 +67,12 @@ func MailSend(db *gorm.DB, m *models.Mail) error {
 	return nil
 }
 
-func MailRemoveAllEmails() {
+func MailpitRemoveAllEmails() {
 	url := fmt.Sprintf("http://%s:8025/api/v1/messages", Config.SMTP_HOST)
 	req, _ := http.NewRequest(http.MethodDelete, url, nil)
 	_, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Printf("Error: %v", err)
+		slog.Error("Unable to remove emails mailpit", "err", err)
 		os.Exit(1)
 		return
 	}

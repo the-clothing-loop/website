@@ -102,7 +102,7 @@ export default function Contribute() {
           </h2>
         </div>
         <div className="flex-grow mx-4 mb-2">
-          <span className="icon-map-pin mr-2 rtl:mr-0 rtl:ml-2"></span>
+          <span className="icon-map-pin me-2"></span>
           <address className="inline">{event.address}</address>
         </div>
         <div className="m-4 mt-0">

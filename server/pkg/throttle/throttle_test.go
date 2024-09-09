@@ -119,7 +119,7 @@ func testResponseToExpectation(t *testing.T, r *gin.Engine, expectation *Expecta
 	if expectation.RateLimitReset != 0 {
 		resetTime, err := strconv.ParseInt(rateLimitReset[0], 10, 64)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		expectApproximateTimestamp(t, resetTime, expectation.RateLimitReset)
 	}

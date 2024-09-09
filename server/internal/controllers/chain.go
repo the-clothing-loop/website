@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
 
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/app/goscope"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
@@ -91,13 +91,13 @@ func ChainCreate(c *gin.Context) {
 		RoutePrivacy: 2, // default route_privacy
 	}
 	if err := db.Create(&chain).Error; err != nil {
-		goscope.Log.Warningf("Unable to create chain: %v", err)
+		slog.Warn("Unable to create chain", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to create chain")
 		return
 	}
 
 	if err := user.AcceptLegal(db); err != nil {
-		goscope.Log.Errorf("Unable to set toh to true, during chain creation: %v", err)
+		slog.Error("Unable to set toh to true, during chain creation", "err", err)
 	}
 
 	c.Status(200)
@@ -132,7 +132,8 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddTheme {
 		sql += `,
-		chains.theme`
+		chains.theme,
+		chains.allow_map`
 	}
 	if query.AddIsAppDisabled {
 		sql += `,
@@ -155,6 +156,7 @@ func ChainGet(c *gin.Context) {
 		Name:             chain.Name,
 		Description:      chain.Description,
 		Address:          chain.Address,
+		Image:            chain.Image,
 		Latitude:         chain.Latitude,
 		Longitude:        chain.Longitude,
 		Radius:           chain.Radius,
@@ -170,8 +172,10 @@ func ChainGet(c *gin.Context) {
 	if query.AddHeaders {
 		body.HeadersOverride = &chain.HeadersOverride
 	}
+	// this is used on all app requests
 	if query.AddTheme {
 		body.Theme = &chain.Theme
+		body.AllowMap = &chain.AllowMap
 	}
 	if query.AddTotals {
 		result := chain.GetTotals(db)
@@ -259,7 +263,7 @@ func ChainGetAll(c *gin.Context) {
 		sql = fmt.Sprintf("%s WHERE %s", sql, strings.Join(whereOrSql, " OR "))
 	}
 	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
-		goscope.Log.Warningf("Chain not found: %v", err)
+		slog.Warn("Chain not found", "err", err)
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
@@ -288,7 +292,7 @@ func ChainGetNear(c *gin.Context) {
 	args = append(args, query.Latitude, query.Longitude, query.Radius)
 
 	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
-		goscope.Log.Warningf("Chain not found: %v", err)
+		slog.Warn("Chain not found", "err", err)
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
@@ -313,6 +317,7 @@ func ChainUpdate(c *gin.Context) {
 		Name             *string   `json:"name,omitempty"`
 		Description      *string   `json:"description,omitempty"`
 		Address          *string   `json:"address,omitempty"`
+		Image            *string   `json:"image,omitempty"`
 		CountryCode      *string   `json:"country_code,omitempty"`
 		Latitude         *float32  `json:"latitude,omitempty"`
 		Longitude        *float32  `json:"longitude,omitempty"`
@@ -325,6 +330,7 @@ func ChainUpdate(c *gin.Context) {
 		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
 		Theme            *string   `json:"theme,omitempty"`
 		RoutePrivacy     *int      `json:"route_privacy"`
+		AllowMap         *bool     `json:"allow_map,omitempty"`
 		IsAppDisabled    *bool     `json:"is_app_disabled,omitempty"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -360,6 +366,10 @@ func ChainUpdate(c *gin.Context) {
 	if body.Address != nil {
 		valuesToUpdate["address"] = *(body.Address)
 	}
+	if body.Image != nil {
+		image := *(body.Image)
+		valuesToUpdate["image"] = sql.NullString{String: image, Valid: image != ""}
+	}
 	if body.CountryCode != nil {
 		valuesToUpdate["country_code"] = *(body.CountryCode)
 	}
@@ -371,6 +381,9 @@ func ChainUpdate(c *gin.Context) {
 	}
 	if body.Radius != nil {
 		valuesToUpdate["radius"] = *(body.Radius)
+	}
+	if body.AllowMap != nil {
+		valuesToUpdate["allow_map"] = *(body.AllowMap)
 	}
 	if body.Sizes != nil {
 		j, _ := json.Marshal(body.Sizes)
@@ -409,7 +422,7 @@ func ChainUpdate(c *gin.Context) {
 	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {
-		goscope.Log.Errorf("Unable to update loop values: %v", err)
+		slog.Error("Unable to update loop values", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to update loop values")
 	}
 }
@@ -500,13 +513,13 @@ LIMIT 1
 			ChainID:      chain.ID,
 			IsChainAdmin: false,
 		}).Error; err != nil {
-			goscope.Log.Errorf("User could not be added to chain: %v", err)
+			slog.Error("User could not be added to chain", "err", err)
 			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
 			return
 		}
 		err := services.EmailLoopAdminsOnUserJoin(db, user, chain.ID)
 		if err != nil {
-			goscope.Log.Errorf("Unable to send email to associated loop admins: %v", err)
+			slog.Error("Unable to send email to associated loop admins", "err", err)
 			c.String(http.StatusInternalServerError, err.Error())
 			return
 		}
@@ -537,7 +550,7 @@ func ChainRemoveUser(c *gin.Context) {
 			err := db.Raw(`SELECT COUNT(*) FROM user_chains WHERE chain_id = ? AND is_chain_admin = TRUE`, chain.ID).Scan(&amountChainAdmins).Error
 
 			if amountChainAdmins == 1 {
-				goscope.Log.Warningf("Unable to remove last host of loop: %v", err)
+				slog.Warn("Unable to remove last host of loop", "err", err)
 				c.String(http.StatusConflict, "Unable to remove last host of loop")
 				return
 			}
@@ -546,20 +559,20 @@ func ChainRemoveUser(c *gin.Context) {
 
 	err := chain.RemoveUser(db, user.ID)
 	if err != nil {
-		goscope.Log.Errorf("User could not be removed from chain: %v", err)
+		slog.Error("User could not be removed from chain", "err", err)
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
 		return
 	}
 
 	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 
-	// if the user is removed by an admin, do not send an email to this one
-	var excludedEmail string
-	if _, isChainAdmin := authUser.IsPartOfChain(chain.UID); isChainAdmin {
-		excludedEmail = authUser.Email.String
-	}
 	// send email to chain admins
-	services.EmailLoopAdminsOnUserLeft(db, user.Name, user.Email.String, excludedEmail, chain.ID)
+	services.EmailLoopAdminsOnUserLeft(db,
+		user.Name,
+		user.Email.String,
+		user.Email.String,
+		chain.ID,
+	)
 }
 
 func ChainApproveUser(c *gin.Context) {
@@ -589,7 +602,7 @@ WHERE user_id = ? AND chain_id = ?
 
 	// Given a ChainID and the UID of the new user returns the list of UserUIDs of the chain considering the addition of the new user
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
-	newRoute, _ := tsp.RunAddOptimalOrderNewCity[string](cities, user.UID)
+	newRoute, _ := tsp.RunAddOptimalOrderNewCity(cities.ToTspCities(), user.UID)
 	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
 	if user.Email.Valid {
@@ -616,7 +629,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 
 	err := chain.RemoveUserUnapproved(db, user.ID)
 	if err != nil {
-		goscope.Log.Errorf("User could not be removed from chain: %v", err)
+		slog.Error("User could not be removed from chain", "err", err)
 		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
 		return
 	}
@@ -626,5 +639,103 @@ func ChainDeleteUnapproved(c *gin.Context) {
 	if user.Email.Valid {
 		views.EmailAnAdminDeniedYourJoinRequest(db, user.I18n, user.Name, user.Email.String, chain.Name,
 			query.Reason)
+	}
+}
+
+func ChainChangeUserNote(c *gin.Context) {
+	db := getDB(c)
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+		Note     string `json:"note"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, user, _, chain := auth.AuthenticateUserOfChain(c, db, body.ChainUID, body.UserUID)
+	if !ok {
+		return
+	}
+
+	err := models.UserChainSetNote(db, user.ID, chain.ID, body.Note)
+	if err != nil {
+		slog.Error("Unable to change user note", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user note")
+		return
+	}
+}
+func ChainGetUserNote(c *gin.Context) {
+	db := getDB(c)
+	var query struct {
+		UserUID  string `form:"user_uid" binding:"required,uuid"`
+		ChainUID string `form:"chain_uid" binding:"required,uuid"`
+	}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, query.ChainUID)
+	if !ok {
+		return
+	}
+	user, err := models.UserGetByUID(db, query.UserUID, true)
+	if err != nil {
+		c.String(http.StatusExpectationFailed, "Could not get user")
+		return
+	}
+
+	note, err := models.UserChainGetNote(db, user.ID, chain.ID)
+	if err != nil {
+		slog.Error("Unable to change user note", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user note")
+		return
+	}
+	c.String(http.StatusOK, note)
+}
+
+func ChainChangeUserWarden(c *gin.Context) {
+	db := getDB(c)
+	var body struct {
+		UserUID  string `json:"user_uid" binding:"required,uuid"`
+		ChainUID string `json:"chain_uid" binding:"required,uuid"`
+		Warden   bool   `json:"warden"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	if !ok {
+		return
+	}
+	user, err := models.UserGetByUID(db, body.UserUID, true)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	user.AddUserChainsToObject(db)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	ok, isUserChainAdmin := user.IsPartOfChain(body.ChainUID)
+	if !ok {
+		c.String(http.StatusBadRequest, "User is not a member of this loop")
+		return
+	}
+	if isUserChainAdmin {
+		c.String(http.StatusInternalServerError, "Hosts cannot be assigned wardens")
+		return
+	}
+
+	err = models.UserChainSetWarden(db, user.ID, chain.ID, body.Warden)
+	if err != nil {
+		slog.Error("Unable to change user warden", "error", err)
+		c.String(http.StatusInternalServerError, "Unable to change user warden")
+		return
 	}
 }

@@ -1,16 +1,18 @@
 import type { TFunction } from "i18next";
 
 import {
-  GenderI18nKeys,
-  Genders,
+  CatI18nKeys,
+  Categories,
   SizeI18nKeys,
   Sizes,
 } from "../../../api/enums";
 import categories from "../util/categories";
 import { useTranslation } from "react-i18next";
 
-export const SizeLetters: Record<Sizes | string, string> = {
-  "1": "Baby",
+export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
+  t,
+) => ({
+  "1": t("baby"),
   "2": "≤4",
   "3": "5-12",
   "4": "(X)S",
@@ -21,63 +23,99 @@ export const SizeLetters: Record<Sizes | string, string> = {
   "9": "M",
   A: "(X)L",
   B: "XL≤",
-};
+  C: t("womenMaternity"),
+});
 
 export function SizeBadges({
   s,
   g,
+  categoryOnly,
 }: {
   s?: Array<string | Sizes> | null;
-  g?: Array<string | Genders> | null;
+  g?: Array<string | Categories> | null;
+  categoryOnly?: boolean;
 }) {
   const { t } = useTranslation();
 
-  const children =
-    s
-      ?.filter((a) => categories[Genders.children].includes(a as Sizes))
-      .sort((a, z) => a.localeCompare(z)) || [];
-  const women =
-    s
-      ?.filter((a) => categories[Genders.women].includes(a as Sizes))
-      .sort((a, z) => a.localeCompare(z)) || [];
-  const men =
-    s
-      ?.filter((a) => categories[Genders.men].includes(a as Sizes))
-      .sort((a, z) => a.localeCompare(z)) || [];
+  let children: string[] = [];
+  let women: string[] = [];
+  let men: string[] = [];
+  if (!categoryOnly) {
+    children =
+      s
+        ?.filter((a) => categories[Categories.children].includes(a as Sizes))
+        .sort((a, z) => a.localeCompare(z)) || [];
+    women =
+      s
+        ?.filter((a) => categories[Categories.women].includes(a as Sizes))
+        .sort((a, z) => a.localeCompare(z)) || [];
 
+    men =
+      s
+        ?.filter((a) => categories[Categories.men].includes(a as Sizes))
+        .sort((a, z) => a.localeCompare(z)) || [];
+  }
   return (
-    <ul className={`flex ${!!s ? "flex-col" : "flex-row"} items-start`}>
-      {women.length || g?.includes(Genders.women) ? (
+    <ul className={`flex ${!!s ? "flex-col" : "flex-row"} items-start gap-1`}>
+      {women.length || g?.includes(Categories.women) ? (
         <SizeCatBadges
           t={t}
           key="women"
-          gender={Genders.women}
+          category={Categories.women}
           sizes={women as Sizes[]}
           icon="/images/categories/woman-50.png"
           color="bg-orange-light"
         />
       ) : null}
-      {men.length || g?.includes(Genders.men) ? (
+      {men.length || g?.includes(Categories.men) ? (
         <SizeCatBadges
           t={t}
           key="men"
-          gender={Genders.men}
+          category={Categories.men}
           sizes={men as Sizes[]}
           icon="/images/categories/man-50.png"
           color="bg-purple-lighter"
         />
       ) : null}
-      {children.length || g?.includes(Genders.children) ? (
+      {children.length || g?.includes(Categories.children) ? (
         <SizeCatBadges
           t={t}
           key="children"
-          gender={Genders.children}
+          category={Categories.children}
           sizes={children as Sizes[]}
           icon="/images/categories/baby-50.png"
           color="bg-leafGreen-light"
         />
       ) : null}
+      {g?.includes(Categories.toys) ? (
+        <SizeCatBadges
+          t={t}
+          key="toys"
+          text={categoryOnly ? undefined : (t("toys") as string)}
+          category={Categories.toys}
+          sizes={[]}
+          icon="/images/categories/toys-50.png"
+          color="bg-skyBlue-light"
+        />
+      ) : null}
+      {g?.includes(Categories.books) ? (
+        <SizeCatBadges
+          t={t}
+          key="books"
+          text={categoryOnly ? undefined : (t("books") as string)}
+          category={Categories.books}
+          sizes={[]}
+          icon="/images/categories/books-50.png"
+          color="bg-pink-light"
+        />
+      ) : null}
     </ul>
+  );
+}
+
+export function SizeBadgeLoading() {
+  return (
+    <div className="inline-flex flex-row rounded-full w-9 h-7 px-2 bg-orange-light"></div>
   );
 }
 
@@ -86,22 +124,33 @@ function SizeCatBadges({
   ...props
 }: {
   t: TFunction;
-  gender: Genders;
+  category: Categories;
   sizes: Sizes[];
+  text?: string;
   icon: string;
   color: string;
 }) {
+  const sizeLetters = SizeLetters(t);
+  const tooltipClass = props.text ? "" : "tooltip tooltip-top before:text-xs";
+  const tooltipText = props.text
+    ? undefined
+    : t(CatI18nKeys[props.category as string]);
   return (
     <li
-      className={`inline-flex flex-row mb-1 mr-1 rtl:mr-0 rtl:ml-1 rounded-full px-2 ${props.color}`}
+      className={`inline-flex flex-row mb-1 me-1 rounded-full px-2 ${props.color}`}
     >
       <div
-        className="tooltip tooltip-top before:text-xs font-semibold"
-        data-tip={t(GenderI18nKeys[props.gender as string])}
+        className={`flex-shrink-0 ${tooltipClass} font-semibold`}
+        data-tip={tooltipText}
       >
         <img src={props.icon} className="h-5 my-1" />
       </div>
       <ul className="font-semibold flex flex-row text-sm cursor-default">
+        {props.text ? (
+          <li key="text" className="ml-1 py-1">
+            {props.text}
+          </li>
+        ) : null}
         {props.sizes.map((s) => {
           return (
             <li
@@ -109,11 +158,50 @@ function SizeCatBadges({
               data-tip={t(SizeI18nKeys[s])}
               key={s}
             >
-              {SizeLetters[s]}
+              {sizeLetters[s]}
             </li>
           );
         })}
       </ul>
     </li>
   );
+}
+
+export function BadgesEventInstagram(genders: string[]) {
+  return genders?.map((gender) => {
+    let src = "";
+    let alt = "";
+    switch (gender) {
+      case Categories.children:
+        src = "/images/categories/baby-50.png";
+        alt = "Baby";
+        break;
+      case Categories.women:
+        src = "/images/categories/woman-50.png";
+        alt = "Woman";
+        break;
+      case Categories.men:
+        alt = "Men";
+        src = "/images/categories/man-50.png";
+        break;
+      case Categories.toys:
+        alt = "Toys";
+        src = "/images/categories/toys-50.png";
+        break;
+      case Categories.books:
+        alt = "Books";
+        src = "/images/categories/books-50.png";
+    }
+    return (
+      <div className="h-9 p-1 relative">
+        <div className="absolute inset-0 rounded-full bg-white" />
+        <img
+          key={gender}
+          src={src}
+          alt={alt}
+          className="relative z-10 h-full"
+        />
+      </div>
+    );
+  });
 }

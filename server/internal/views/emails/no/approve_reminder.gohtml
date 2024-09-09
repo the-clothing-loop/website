@@ -1,0 +1,51 @@
+<p>Hi {{ .Name }},</p>
+
+<p>We wanted to let you know that we have closed your Loop given that there are participant(s) who have been waiting for more than 2 months.</p>
+
+<p>These participants are waiting to be accepted and receive further information on how to join your Loop.<br/>We would like you to ask to contact them.</p>
+
+<table class="table">
+<thead>
+<tr>
+<th>navn</th>
+<th>Loop</th>
+</tr>
+</thead>
+<tbody>
+{{ range .Approvals }}
+<tr>
+<td>{{ .Name }}</td>
+<td>{{ .ChainName }}</td>
+</tr>
+{{ else }}
+<tr>
+<td colspan=2>Error {{ .Approvals }}</td>
+</tr>
+{{ end }}
+</tbody>
+</table>
+
+
+<p>If you are too busy or the Loop is full, please Deny the participant’s request to join and write in the Loop’s bio if the reason and if the Loop will open up again in the future.</p>
+
+<p>For å godta eller nekte nye deltakere og gjøre løkken din tilgjengelig på nettsiden, velg:</p>
+
+<ol>
+<li>Logg inn på kontoen din på <a href="{{ .BaseURL }}/users/login">www.clothingloop.org</a> (ingen passord kreves, så kan du logge inn med en verifiseringskode sendt til e-postadressen din!)</li>
+<li>besøker løkkens kontoside.</li>
+<li>"Godkjenn" eller "Nei" de ventende deltakerne i "Ny" </li>
+<li>Select the "Open to New Participants" checkbox to reopen your Loop.</li>
+</ol>
+
+<p>Hvis løkken din er lukket, men fortsatt aktiv, ber vi deg om å publisere løkken din på nytt. Vær oppmerksom på at en lukket, publisert løkke fortsatt er synlig på nettsiden, selv om nye deltakere ikke kan registrere seg. Det er viktig å holde en løkke som er publisert, som en løkke som ikke har blitt publisert før flere måneder vil bli slettet. For å gjøre dette, vennligst følg disse trinnene:</p>
+
+<ol>
+<li>Logg på din konto på <a href="{{ .BaseURL }}/users/login">www.clothingloop.org.</a></li>
+<li>Gå til løkkens kontoside</li>
+<li>Velg "Publisert" avmerkingsboksen for å gjøre løkken din synlig på nettstedet.</li>
+</ol>
+
+<p>Hvis du har noen av disse trinnene, vennligst gi oss beskjed.</p>
+
+
+

@@ -1,38 +1,38 @@
 import * as React from "react";
 
 import categories from "../util/categories";
-import { GenderI18nKeys, Genders } from "../../../api/enums";
+import { CatI18nKeys, Categories } from "../../../api/enums";
 import { useDropdownCheckBox } from "../util/dropdown.hooks";
 import { useTranslation } from "react-i18next";
 
 interface IProps {
-  selectedGenders: Array<Genders | string>;
-  handleChange: (genders: Array<Genders | string>) => void;
+  selectedCategories: Array<Categories | string>;
+  handleChange: (c: Array<Categories | string>) => void;
   className?: string;
 }
 
 export default function CategoriesDropdown({
   className,
-  selectedGenders,
+  selectedCategories,
   handleChange,
 }: IProps) {
   const { t } = useTranslation();
 
   const dropdown = useDropdownCheckBox({
-    selected: selectedGenders,
+    selected: selectedCategories,
     handleChange,
   });
 
   let btnLabel = React.useMemo(() => {
-    if (selectedGenders.length) {
-      return [...selectedGenders]
+    if (selectedCategories.length) {
+      return [...selectedCategories]
         .sort()
-        .map((g) => t(GenderI18nKeys[g]))
+        .map((g) => t(CatI18nKeys[g]))
         .join(", ");
     } else {
       return t("categories");
     }
-  }, [t, selectedGenders]);
+  }, [t, selectedCategories]);
 
   return (
     <div
@@ -48,7 +48,7 @@ export default function CategoriesDropdown({
       >
         <span className="truncate">{btnLabel}</span>
         <span
-          className={`pl-2 rtl:pl-0 rtl:pr-2 ${
+          className={`ps-2 ${
             dropdown.open ? "icon-arrow-up" : "icon-arrow-down"
           }`}
         ></span>
@@ -57,19 +57,20 @@ export default function CategoriesDropdown({
         className="dropdown-content menu bg-white shadow w-44 sm:w-full"
         tabIndex={0}
       >
-        {Object.keys(categories).map((gender: string | Genders) => {
-          let checked = selectedGenders.includes(gender);
+        {Object.keys(categories).map((c: string | Categories) => {
+          let checked = selectedCategories.includes(c);
+
           return (
-            <li key={gender}>
+            <li key={c}>
               <label>
                 <input
                   name="genders"
                   type="checkbox"
                   checked={checked}
                   className="checkbox"
-                  onChange={() => dropdown.change(gender)}
+                  onChange={() => dropdown.change(c)}
                 />
-                {t(GenderI18nKeys[gender])}
+                {t(CatI18nKeys[c])}
               </label>
             </li>
           );

@@ -2,12 +2,13 @@ package models
 
 import (
 	"errors"
+	"log/slog"
+
 	// "log/slog"
 	"time"
 
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/pkg/ring_ext"
-	"golang.design/x/go2generics/ring"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/guregu/null.v3/zero"
 
@@ -136,6 +137,20 @@ func (u *User) IsAnyChainAdmin() (isAnyChainAdmin bool) {
 	}
 
 	return isAnyChainAdmin
+}
+
+func (u *User) CountAttachedBags(db *gorm.DB) (int, error) {
+	userChainIDs := []uint{}
+	for _, uc := range u.Chains {
+		userChainIDs = append(userChainIDs, uc.ID)
+	}
+
+	count := 0
+	err := db.Raw(`SELECT COUNT(*) FROM bags WHERE user_chain_id IN ?`, userChainIDs).Scan(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 func (u *User) LastPokeTooRecent() bool {
@@ -291,6 +306,10 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 		return users, nil
 	}
 
+	if len(users) == 0 {
+		return users, nil
+	}
+
 	// slog.Info("Hide out of bounds information")
 	userIDsWithBulkyItems := []uint{}
 	db.Raw(`
@@ -319,7 +338,7 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 			isCurrentlyPaused = u.PausedUntil.Time.After(time.Now())
 		}
 		if !isCurrentlyPaused {
-			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID })
+			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID && uc.ChainID == chain.ID })
 			if ok && uc.IsPaused {
 				isCurrentlyPaused = true
 			}
@@ -330,16 +349,17 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 	})
 
 	route := []uint{}
+	if len(routeUIDs) != len(users) {
+		slog.Info("missmatch length between route uid list and chain users list", "routeUID", routeUIDs, "users", lo.Map(users, func(u User, i int) string { return u.UID }))
+	}
 	for _, uid := range routeUIDs {
 		user, ok := lo.Find(users, func(u User) bool { return u.UID == uid })
 		if !ok {
+			slog.Warn("missmatch between route uid list and chain users list", "routeUID", uid, "users", lo.Map(users, func(u User, i int) string { return u.UID }))
 			continue
 		}
 		route = append(route, user.ID)
 	}
-
-	r := ring_ext.NewWithValues(route)
-	// slog.Info("ring", "length", r.Len())
 
 	// Iterates over the noderoute and returns early for each user that matches:
 	// 1. the current user
@@ -347,25 +367,22 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 	// 3. users close by with a max distance defined by the route privacy
 	//    paused users are skipped
 
-	userIDsCloseBy := []uint{}
-	ring_ext.Each(r, func(p *ring.Ring[uint]) {
-		if lo.Contains(userIDsPaused, p.Value) {
-			return
-		}
-
-		distance := findCloseBy(p, authUserID, userIDsPaused, routePrivacy)
-		if distance == -1 {
-			return
-		}
-
-		userIDsCloseBy = append(userIDsCloseBy, p.Value)
+	routeWithoutPausedUsers := lo.Filter(route, func(item uint, i int) bool {
+		return !lo.Contains(userIDsPaused, item)
 	})
+	userIDsCloseBy := []uint{}
+	if len(routeWithoutPausedUsers) > 0 {
+		r := ring_ext.NewWithValues(routeWithoutPausedUsers)
+		userIDsCloseBy = ring_ext.GetSurroundingValues(r, authUserID, chain.RoutePrivacy)
+	}
 
-	// slog.Info("User IDs",
-	// 	"bulkyItems", userIDsWithBulkyItems,
-	// 	"closeBy", userIDsCloseBy,
-	// 	"chainAdmin", userIDsChainAdmin,
-	// )
+	slog.Info("User IDs",
+		"bulkyItems", userIDsWithBulkyItems,
+		"closeBy", userIDsCloseBy,
+		"chainAdmin", userIDsChainAdmin,
+		"pausedUsers", userIDsPaused,
+		"routeIDs", route,
+	)
 
 	for i := range users {
 		uID := users[i].ID
@@ -392,32 +409,4 @@ func hideUserInformation(isChainAdmin bool, user *User) {
 		user.PhoneNumber = "***"
 	}
 	user.Address = "***"
-}
-
-func findCloseBy(r *ring.Ring[uint], needle uint, pausedIDs []uint, routePrivacy int) int {
-	i := 0
-	distance := -1
-
-	f := func(v uint) bool {
-		if i >= routePrivacy {
-			return true
-		}
-		if !lo.Contains(pausedIDs, v) {
-			i++
-		}
-		if needle == v {
-			distance = i
-			return true
-		}
-
-		return false
-	}
-
-	ring_ext.SomeNext(r, f)
-	if distance == -1 {
-		i = 0
-		ring_ext.SomePrev(r, f)
-	}
-
-	return distance
 }

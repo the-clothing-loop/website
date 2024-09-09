@@ -1,12 +1,15 @@
-import { IonBadge, IonIcon, IonImg } from "@ionic/react";
-import { Chain } from "../api/types";
+import { IonBadge, IonImg } from "@ionic/react";
+import { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 
-type ICategories = Record<Genders, Sizes[]>;
+type ICategories = Record<Categories, Sizes[]>;
 
-export enum Genders {
+export enum Categories {
   children = "1",
   women = "2",
   men = "3",
+  toys = "4",
+  books = "5",
 }
 export enum Sizes {
   baby = "1",
@@ -20,28 +23,34 @@ export enum Sizes {
   menMedium = "9",
   menLarge = "A",
   menPlusSize = "B",
+  womenMaternity = "C",
 }
 const categories: ICategories = {
-  [Genders.children]: [
+  [Categories.children]: [
     Sizes["baby"],
     Sizes["1To4YearsOld"],
     Sizes["5To12YearsOld"],
   ],
-  [Genders.women]: [
+  [Categories.women]: [
     Sizes["womenSmall"],
     Sizes["womenMedium"],
     Sizes["womenLarge"],
     Sizes["womenPlusSize"],
+    Sizes["womenMaternity"],
   ],
-  [Genders.men]: [
+  [Categories.men]: [
     Sizes["menSmall"],
     Sizes["menMedium"],
     Sizes["menLarge"],
     Sizes["menPlusSize"],
   ],
+  [Categories.toys]: [],
+  [Categories.books]: [],
 };
-export const SizeLetters: Record<Sizes | string, string> = {
-  "1": "Baby",
+export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
+  t,
+) => ({
+  "1": t("baby"),
   "2": "≤4",
   "3": "5-12",
   "4": "(X)S",
@@ -52,15 +61,42 @@ export const SizeLetters: Record<Sizes | string, string> = {
   "9": "M",
   A: "(X)L",
   B: "XL≤",
-};
-function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
+  C: t("womenMaternity"),
+});
+function BadgeItem({
+  sizes,
+  icon,
+  t,
+}: {
+  sizes: string[];
+  icon: string;
+  t: TFunction;
+}) {
+  const sizeLetters = SizeLetters(t);
   return (
     <IonBadge color="light" className="tw-flex-row tw-flex">
-      {sizes.map((s) => (
-        <span className="tw-m-0.5" key={s}>
-          {SizeLetters[s]}
+      <div className="tw-flex tw-flex-row tw-flex-wrap tw-justify-end tw-max-w-[120px]">
+        {sizes.map((s) => (
+          <span className="tw-m-0.5" key={s}>
+            {sizeLetters[s]}
+          </span>
+        ))}
+      </div>
+      <IonImg
+        src={`/categories/${icon}-50.png`}
+        className="dark:tw-invert-1 tw-w-4 tw-h-4"
+      />
+    </IonBadge>
+  );
+}
+function BadgeItemSingle({ icon, text }: { icon: string; text: string }) {
+  return (
+    <IonBadge color="light" className="tw-flex-row tw-flex">
+      {text ? (
+        <span className="tw-m-0.5 tw-me-1" key="text">
+          {text}
         </span>
-      ))}
+      ) : null}
       <IonImg
         src={`/categories/${icon}-50.png`}
         className="dark:tw-invert-1 tw-w-4 tw-h-4"
@@ -71,31 +107,38 @@ function BadgeItem({ sizes, icon }: { sizes: string[]; icon: string }) {
 
 export default function Badges(props: {
   sizes: string[] | null;
-  genders: string[] | null;
+  categories: string[] | null;
 }) {
+  const { t } = useTranslation();
   const children =
     props.sizes
-      ?.filter((a) => categories[Genders.children].includes(a as Sizes))
+      ?.filter((a) => categories[Categories.children].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
   const women =
     props.sizes
-      ?.filter((a) => categories[Genders.women].includes(a as Sizes))
+      ?.filter((a) => categories[Categories.women].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
   const men =
     props.sizes
-      ?.filter((a) => categories[Genders.men].includes(a as Sizes))
+      ?.filter((a) => categories[Categories.men].includes(a as Sizes))
       .sort((a, z) => a.localeCompare(z)) || [];
 
   return (
     <div className="tw-flex tw-flex-col tw-items-end tw-gap-1">
-      {women?.length || props.genders?.includes(Genders.women) ? (
-        <BadgeItem sizes={women} icon="woman" key="women" />
+      {women?.length || props.categories?.includes(Categories.women) ? (
+        <BadgeItem t={t} sizes={women} icon="woman" key="women" />
       ) : null}
-      {men?.length || props.genders?.includes(Genders.men) ? (
-        <BadgeItem sizes={men} icon="man" key="men" />
+      {men?.length || props.categories?.includes(Categories.men) ? (
+        <BadgeItem t={t} sizes={men} icon="man" key="men" />
       ) : null}
-      {children?.length || props.genders?.includes(Genders.children) ? (
-        <BadgeItem sizes={children} icon="baby" key="children" />
+      {children?.length || props.categories?.includes(Categories.children) ? (
+        <BadgeItem t={t} sizes={children} icon="baby" key="children" />
+      ) : null}
+      {props.categories?.includes(Categories.toys) ? (
+        <BadgeItemSingle text={t("toys")} icon="toys" key="toys" />
+      ) : null}
+      {props.categories?.includes(Categories.books) ? (
+        <BadgeItemSingle text={t("books")} icon="books" key="books" />
       ) : null}
     </div>
   );

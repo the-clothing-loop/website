@@ -1,0 +1,73 @@
+services:
+  acc_app:
+    build:
+      context: ./app/
+      args:
+        - ENV=acceptance
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  acc_frontend:
+    build:
+      context: ./frontend/
+      args:
+        - ENV=acceptance
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    environment:
+      - MAILPIT_PASS=$MAILPIT_PASS
+  acc_server:
+    build: ./server/
+    depends_on:
+      - acc_mailpit
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/ping || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - images_dir:/images/
+    environment:
+      - ENV=acceptance
+      - HOST=0.0.0.0
+      - PORT=80
+      - SITE_BASE_URL_API=https://acc.clothingloop.org/api
+      - SITE_BASE_URL_FE=https://acc.clothingloop.org
+      - COOKIE_DOMAIN=clothingloop.org
+      - COOKIE_HTTPS_ONLY=true
+      - JWT_SECRET=$JWT_SECRET
+      - STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
+      - STRIPE_WEBHOOK=$STRIPE_WEBHOOK
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - SMTP_HOST=acc_mailpit
+      - SMTP_PORT=1025
+      - SMTP_SENDER=$SMTP_SENDER
+      - SMTP_USER=$SMTP_USER
+      - SMTP_PASS=$SMTP_PASS
+      - GOSCOPE2_USER=$GOSCOPE2_USER
+      - GOSCOPE2_PASS=$GOSCOPE2_PASS
+      - SENDINBLUE_API_KEY=$SENDINBLUE_API_KEY
+      - IMGBB_KEY=$IMGBB_KEY
+      - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
+      - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
+      - APPSTORE_REVIEWER_EMAIL=$APPSTORE_REVIEWER_EMAIL
+      - IMAGES_DIR=/images
+  acc_mailpit:
+    image: axllent/mailpit
+    environment:
+      - "MP_SMTP_AUTH_ACCEPT_ANY=true"
+      - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
+      - "MP_WEBROOT=/mailpit/"
+
+volumes:
+  images_dir:
+    external: true

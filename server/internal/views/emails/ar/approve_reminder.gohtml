@@ -1,0 +1,51 @@
+<p>Hi {{ .Name }},</p>
+
+<p>We wanted to let you know that we have closed your Loop given that there are participant(s) who have been waiting for more than 2 months.</p>
+
+<p>These participants are waiting to be accepted and receive further information on how to join your Loop.<br/>We would like you to ask to contact them.</p>
+
+<table class="table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Loop</th>
+</tr>
+</thead>
+<tbody>
+{{ range .Approvals }}
+<tr>
+<td>{{ .Name }}</td>
+<td>{{ .ChainName }}</td>
+</tr>
+{{ else }}
+<tr>
+<td colspan=2>Error {{ .Approvals }}</td>
+</tr>
+{{ end }}
+</tbody>
+</table>
+
+
+<p>If you are too busy or the Loop is full, please Deny the participant’s request to join and write in the Loop’s bio if the reason and if the Loop will open up again in the future.</p>
+
+<p>To Accept or Deny new participants and make your Loop available on the website, please:</p>
+
+<ol>
+<li>قم بتسجيل الدخول إلى حسابك على <a href="{{ .BaseURL }}/users/login">www.clothingloop.org</a> (لا حاجة لكلمة المرور، يمكنك تسجيل الدخول بواسطة رمز التحقق المرسل إلى بريدك الإلكتروني!)</li>
+<li>زيارة صفحة حساب الحلقة الخاصة بك.</li>
+<li>"موافقة" أو "ثنائي الفينيل" المشاركين المعلقة في "جديد" </li>
+<li>حدد مربع الاختيار "افتح للمشاركين الجدد" لإعادة فتح دورتك.</li>
+</ol>
+
+<p>If your Loop is closed, but still active, we ask you to re-publish your Loop. يرجى ملاحظة أن حلقة مغلقة منشورة تظل مرئية على الموقع، على الرغم من أن المشاركين الجدد لن يتمكنوا من التسجيل. من الأهمية بمكان إبقاء الحلقة الخاصة بك منشورة، حيث سيتم حذف حلقة لم تنشر لعدة أشهر. للقيام بذلك، يرجى اتباع الخطوات التالية:</p>
+
+<ol>
+<li>Log in to your account on <a href="{{ .BaseURL }}/users/login">www.clothingloop.org.</a></li>
+<li>Go to your Loop’s Account page</li>
+<li>حدد مربع الاختيار "المنشور" لجعل دورتك مرئية على الموقع.</li>
+</ol>
+
+<p>If you have any questions with any of these steps, please let us know.</p>
+
+
+

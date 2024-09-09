@@ -1,14 +1,14 @@
 import { IonItem, IonText, IonIcon } from "@ionic/react";
-import { t } from "i18next";
-import { shield, pauseCircleSharp, bag } from "ionicons/icons";
+import { shield, pauseCircleSharp, flag } from "ionicons/icons";
 import { Bag, User } from "../../api/types";
-import BagSVG from "../Bags/Svg";
+import TinyBagSvg from "./TinyBagSvg";
 
 export interface AddressListItemProps {
   user: User;
   bags: Bag[];
   isMe: boolean;
   isHost: boolean;
+  isWarden: boolean;
   isAddressPrivate: boolean;
   number: number;
   routerLink: string | undefined;
@@ -20,6 +20,7 @@ export default function AddressListItem({
   isMe,
   bags,
   isHost,
+  isWarden,
   isAddressPrivate,
   number,
   routerLink,
@@ -30,6 +31,7 @@ export default function AddressListItem({
     <IonItem
       lines="full"
       routerLink={routerLink}
+      detail={routerLink !== undefined}
       color={isMe ? "primary" : isUserPaused ? "light" : undefined}
       id={"ali-" + user.uid}
     >
@@ -42,6 +44,13 @@ export default function AddressListItem({
           <IonIcon
             icon={shield}
             color={isMe ? undefined : "medium"}
+            className="tw-absolute tw-top-1 tw-left-1 tw-w-4 tw-h-4 tw-m-0"
+          />
+        ) : null}
+        {isWarden ? (
+          <IonIcon
+            icon={flag}
+            color={"medium"}
             className="tw-absolute tw-top-1 tw-left-1 tw-w-4 tw-h-4 tw-m-0"
           />
         ) : null}
@@ -73,7 +82,7 @@ export default function AddressListItem({
             )}
           >
             {isUserPaused ? (
-              isChainAdmin ? (
+              isChainAdmin || isMe ? (
                 <span>{user.address}</span>
               ) : null
             ) : isAddressPrivate ? null : (
@@ -99,7 +108,7 @@ export default function AddressListItem({
                 key={b.id}
               >
                 <div className="-tw-translate-y-px">
-                  <BagSVG bag={{ number: "", color: b.color }} isList />
+                  <TinyBagSvg bag={b} />
                 </div>
               </div>
             ))}

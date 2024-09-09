@@ -1,3 +1,5 @@
+import type { EventPriceType } from "./event";
+
 export type UID = string;
 
 export interface User {
@@ -42,6 +44,7 @@ export interface UserChain {
   user_uid: UID;
   chain_uid: UID;
   is_chain_admin: boolean;
+  is_chain_warden: boolean;
   is_approved: boolean;
   created_at: string;
 }
@@ -51,6 +54,7 @@ export interface Chain {
   name: string;
   description: string;
   address: string;
+  image?: string;
   latitude: number;
   longitude: number;
   radius: number;
@@ -73,6 +77,7 @@ export interface Event {
   description: string;
   price_currency: string | null;
   price_value: number;
+  price_type: EventPriceType;
   link: string;
   address: string;
   latitude: number;

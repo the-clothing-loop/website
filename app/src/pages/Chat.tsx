@@ -6,338 +6,391 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
-import { MmData, StoreContext } from "../stores/Store";
-import { useContext, useEffect, useState } from "react";
+import { StoreContext } from "../stores/Store";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as apiChat from "../api/chat";
-import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
-import { PaginatedPostList, Post } from "@mattermost/types/posts";
 import RoomNotReady from "../components/Chat/RoomNotReady";
-import { Channel } from "@mattermost/types/channels";
-import ChatWindow from "../components/Chat/ChatWindow";
 import Loading from "../components/PrivateRoute/Loading";
-import { UserProfile } from "@mattermost/types/users";
+import ChatRoomSelect from "../components/Chat/ChatRoomSelect";
+import { useIntersectionObserver } from "@uidotdev/usehooks";
+import ChatInput from "../components/Chat/ChatInput";
+import ChatPostList from "../components/Chat/ChatPostList";
+import BulkyList from "../components/Chat/BulkyList";
 
-const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
+import {
+  Client,
+  Session,
+  Socket,
+  Group,
+  ChannelMessageList,
+  User,
+  Channel,
+} from "@heroiclabs/nakama-js";
 
-type WebSocketMessagePosted = WebSocketMessage<{
-  channel_display_name: string;
-  channel_name: string;
-  channel_type: string;
-  post: string;
-  sender_name: string;
-  team_id: string;
-  set_online: true;
-}>;
+import { uploadImage } from "../api/imgbb";
+import { bulkyItemPut } from "../api/bulky";
+
+const VITE_CHAT_HOST = import.meta.env.VITE_CHAT_HOST;
+const VITE_CHAT_PORT = import.meta.env.VITE_CHAT_PORT;
+const VITE_CHAT_SERVER_KEY = import.meta.env.VITE_CHAT_SERVER_KEY;
+const VITE_CHAT_SSL = import.meta.env.VITE_CHAT_SSL == "true";
+
+const IS_GROUP_OPEN = true;
+
+export type OnSendMessageWithImage = (
+  title: string,
+  message: string,
+  file: string,
+) => Promise<void>;
+
+type MmData = { userId: string; pass: string };
 
 // This follows the controller / view component pattern
 export default function Chat() {
   const { t } = useTranslation();
-  const { chain, setChain, mmData, setMmData, isThemeDefault } =
-    useContext(StoreContext);
+  const { chain, setChain, isThemeDefault } = useContext(StoreContext);
 
-  const [mmWsClient, setMmWsClient] = useState<WebSocketClient | null>(null);
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-  const [mmUser, setMmUser] = useState<Record<string, UserProfile>>({});
-  const [mmClient, setMmClient] = useState<Client4 | null | undefined>(
-    undefined,
-  );
-  const [postList, setPostList] = useState<PaginatedPostList>({
-    order: [],
-    posts: {},
-    next_post_id: "",
-    prev_post_id: "",
-    first_inaccessible_post_time: 0,
-    has_next: true,
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [selectedOldBulkyItems, setSelectedOldBulkyItems] = useState(false);
+  const [postList, setPostList] = useState<ChannelMessageList>({
+    messages: [],
   });
+  const [mmData, setMmData] = useState<MmData>();
+  const [mmUsers, setMmUsers] = useState<Record<string, User>>({});
   const [loadingPostList, setLoadingPostList] = useState(false);
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
+  const refScrollRoot = useRef<HTMLDivElement>(null);
+  const [refScrollTop, entry] = useIntersectionObserver({
+    root: refScrollRoot.current,
+  });
+  const scrollTop = () => refScrollRoot.current?.scrollTo({ top: 0 });
 
   useEffect(() => {
-    if (!chain || !mmData) return;
-    let _mmData = mmData;
-    let _mmClient = mmClient;
-    if (chain && !_mmClient) {
+    if (!chain || mmData) return;
+    if (chain && authUser && !window.nClient) {
       apiChat
-        .chatPatchUser(chain.uid)
+        .chatPatchUser()
         .then(async (resp) => {
-          console.log(
-            "chat token:\n\tNew: %s\n\tOld: %s\n",
-            resp.data.chat_pass,
-            mmData.chat_pass,
-          );
-
-          _mmData = resp.data;
-          console.log("chat token", _mmData.chat_pass);
-          if (!_mmData.chat_pass || !_mmData.chat_user)
-            throw new Error("mmData not found");
+          const _mmData: Partial<MmData> = { pass: resp.data.chat_pass };
+          console.log("chat token", _mmData.pass);
+          if (!_mmData.pass) throw new Error("mmData not found");
           // Start client
-          _mmClient = new Client4();
-          _mmClient.setUrl("http://localhost:5173/mm");
-          await _mmClient.loginById(_mmData.chat_user, _mmData.chat_pass);
-          let me = await _mmClient.getMe();
-          console.log("me", me);
+          window.nClient = new Client(
+            VITE_CHAT_SERVER_KEY,
+            VITE_CHAT_HOST,
+            VITE_CHAT_PORT,
+            VITE_CHAT_SSL,
+          );
+          window.nSession = await window.nClient.authenticateEmail(
+            authUser.email,
+            _mmData.pass,
+            false,
+          );
+          _mmData.userId = window.nSession.user_id;
 
           // Join channels
-          await apiChat.chatJoinChannels(chain.uid);
+          // await apiChat.chatJoinChannels(chain.uid);
 
-          // Start websocket
-          let _mmWsClient = new WebSocketClient();
-          let url = _mmClient.getWebSocketUrl().replace("http", "ws");
-          _mmWsClient.initialize(url, _mmClient.getToken());
-
-          setMmClient(_mmClient);
-          setMmWsClient(_mmWsClient);
-          setMmData(_mmData);
-          if (chain.chat_room_ids?.length) {
-            console.log("get channels");
-            await getChannels(_mmClient, _mmData, chain.chat_room_ids);
+          setMmData(_mmData as MmData);
+          let chatRoomIds = chain.chat_room_ids || [];
+          if (!chain.chat_room_ids?.length) {
+            // console.log("create first channel");
+            // const group = await window.nClient.createGroup(window.nSession, {
+            //   name: crypto.randomUUID().toString(),
+            //   description: "General",
+            //   open: true,
+            // });
+            // await apiChat.chatCreateChannel(chain.uid, group.id!);
+            // console.log("create channel", group.id!);
+            // chatRoomIds.push(group.id!);
           }
+          await getGroups(_mmData as MmData, chatRoomIds);
         })
         .catch((err) => {
-          console.error("error mmclient", err);
-          setMmClient(null);
+          console.error("error window.nClient", err);
+          window.nClient = undefined;
         });
     }
 
-    if (_mmClient && chain) {
+    if (window.nClient && chain) {
       console.log("client");
     }
   }, [mmData, chain]);
 
-  useEffect(() => {
-    console.log("selected channel", selectedChannel);
-    if (!selectedChannel || !mmClient) return;
-
-    reqPostList(mmClient, selectedChannel, "");
-
-    // _mmWsClient.addMessageListener((msg) => {
-    //   console.log("message listen:", msg);
-    //   if (msg.event === "posted") {
-    //     console.log(
-    //       "posted",
-    //       "selectedChannel",
-    //       selectedChannel,
-    //       "posted channel",
-    //       msg.data.channel_id,
-    //     );
-    //     if (
-    //       mmClient &&
-    //       selectedChannel &&
-    //       msg.data.channel_name === selectedChannel?.name
-    //     ) {
-    //       reqPostList(mmClient, selectedChannel, "");
-    //     }
-    //     // handlePostedMessage(_mmClient!, _mmData, msg);
-    //   }
-    // });
-  }, [selectedChannel]);
+  const chainChannels = useMemo(() => {
+    if (!chain || !chain.chat_room_ids) return [];
+    console.log("chainChannels", groups);
+    return groups.sort((a, b) =>
+      Date.parse(a.create_time!) > Date.parse(b.create_time!) ? 1 : 0,
+    );
+  }, [groups, chain]);
 
   /** Sets the channels state and return it too */
-  async function getChannels(
-    _mmClient: Client4,
+  async function getGroups(
     _mmData: MmData,
     chatRoomIDs: string[],
-  ): Promise<Channel[]> {
-    if (!_mmData.chat_team) throw "Not logged in to chat";
+  ): Promise<Group[]> {
+    console.log("getChannels start", chatRoomIDs);
+    if (!window.nClient) throw "nClient is not available";
+    if (!window.nSession) throw "nSession is not available";
+    if (!_mmData.userId) throw "Not logged in to chat";
 
-    const _channels: Channel[] = [];
-    const _mychannels = await _mmClient.getMyChannels(_mmData.chat_team, false);
-    for (const ch of _mychannels) {
-      if (chatRoomIDs?.includes(ch.id)) {
-        _channels.push(ch);
+    const _groups: Group[] = [];
+    const _mygroups = await window.nClient
+      .listUserGroups(window.nSession, _mmData.userId)
+      .then((res) => {
+        console.log("listUserGroups", res);
+        if (!res.user_groups) return [];
+        return res.user_groups;
+      });
+    for (const ch of _mygroups) {
+      if (chatRoomIDs?.includes(ch.group!.id!)) {
+        _groups.push(ch.group!);
       }
     }
-    _channels.sort((a, b) => (a.create_at > b.create_at ? 1 : 0));
+    _groups.sort((a, b) =>
+      Date.parse(a.create_time!) > Date.parse(b.create_time!) ? 1 : 0,
+    );
 
     // if no channels are selected select the oldest
-    if (!selectedChannel) {
-      const _selectedChannel = _channels.at(0) || null;
-      console.log("selectedChannel", _selectedChannel?.display_name);
-      setSelectedChannel(_selectedChannel);
+    let _selectedGroup = selectedGroup;
+    if (!_selectedGroup) {
+      _selectedGroup = _groups.at(0) || null;
+      if (_selectedGroup) {
+        await onSelectGroup(_selectedGroup);
+      }
     }
+    if (!_selectedGroup) onSelectOldBulkyItems();
 
-    setChannels(_channels);
-    return _channels;
+    setGroups(_groups);
+    return _groups;
   }
 
   async function onCreateChannel(name: string) {
-    if (!chain || !mmClient) {
+    if (!chain || !window.nClient || !window.nSession || !mmData) {
       if (!chain) console.error("chain not found");
-      if (!mmClient) console.error("mmClient not found");
+      if (!window.nClient) console.error("nClient not found");
+      if (!window.nSession) console.error("nSession not found");
+      if (!mmData) console.error("mmData not found");
       return;
     }
     try {
       console.info("Creating channel", name);
-      const res = await apiChat.chatCreateChannel(chain.uid, name);
-      const id = res.data.chat_channel;
-      const _channels = await getChannels(mmClient, mmData, [
+      const group = await window.nClient.createGroup(window.nSession, {
+        name: crypto.randomUUID().toString(),
+        description: name,
+        open: IS_GROUP_OPEN,
+      });
+      await apiChat.chatCreateChannel(chain.uid, group.id!);
+      const _groups = await getGroups(mmData, [
         ...(chain.chat_room_ids || []),
-        id,
+        group.id!,
       ]);
-      const _channel = _channels.find((c) => c.id == id) || null;
+      const _group = _groups.find((c) => c.id == group.id!) || null;
 
-      setChannels(_channels);
-      setSelectedChannel(_channel);
       // update chain object from server to update chain.room_ids value
       await setChain(chain.uid, authUser);
-      if (!_channel) return;
-      reqPostList(mmClient, _channel, "");
+      if (!_group) {
+        onSelectOldBulkyItems();
+      } else {
+        await onSelectGroup(_group);
+      }
+      if (!_group) return;
     } catch (err) {
       console.error(err);
     }
   }
 
-  async function onRenameChannel(channel: Channel, name: string) {
-    if (!chain || !mmClient) {
+  async function onRenameChannel(channel: Group, name: string) {
+    if (!chain || !window.nClient || !window.nSession || !mmData) {
       if (!chain) console.error("chain not found");
-      if (!mmClient) console.error("mmClient not found");
+      if (!window.nClient) console.error("window.nClient not found");
+      if (!window.nSession) console.error("window.nSession not found");
+      if (!mmData) console.error("mmData not found");
       return;
     }
     try {
       console.info("Updating channel name", name);
-      channel.display_name = name;
-      await mmClient.updateChannel(channel);
-      const _channels = await getChannels(
-        mmClient,
-        mmData,
-        chain?.chat_room_ids || [],
-      );
-      setChannels(_channels);
+      await window.nClient.updateGroup(window.nSession, channel.id!, {
+        description: name,
+      });
+      const _channels = await getGroups(mmData, chain?.chat_room_ids || []);
+      setGroups(_channels);
     } catch (err) {
       console.error(err);
     }
   }
 
   async function onDeleteChannel(channelID: string) {
-    console.log(selectedChannel);
-    if (!chain || !mmClient) {
+    console.log(selectedGroup);
+    if (!chain || !window.nClient) {
       if (!chain) console.error("chain not found");
-      if (!mmClient) console.error("mmClient not found");
+      if (!window.nClient) console.error("window.nClient not found");
+      if (!window.nSession) console.error("window.nSession not found");
       return;
     }
     try {
       console.info("Deleting channel", channelID);
       await apiChat.chatDeleteChannel(chain.uid, channelID);
 
-      const _channels = channels.filter((c) => c.id != channelID);
+      const _channels = groups.filter((c) => c.id != channelID);
       const _channel = _channels.at(-1) || null;
 
-      setChannels(_channels);
-      setSelectedChannel(_channel);
+      setGroups(_channels);
+      setSelectedGroup(_channel);
       // update chain object from server to update chain.room_ids value
       await setChain(chain.uid, authUser);
       if (!_channel) return;
-      reqPostList(mmClient, _channel, "");
+      reqPostList("current");
     } catch (err) {
       console.error(err);
     }
   }
 
   function onDeletePost(postID: string) {
-    if (!mmClient) return;
+    if (!window.nClient || !window.nSocket || !selectedGroup) return;
 
     console.info("deleting post", postID);
-    return mmClient.deletePost(postID).finally(() => {
-      reqPostList(mmClient, selectedChannel!, "");
-    });
+    window.nSocket
+      ?.removeChatMessage(window.nChannel!.id!, postID)
+      .finally(() => {
+        reqPostList("current");
+      });
   }
 
-  function onSelectChannel(channel: Channel, _mmClient?: Client4) {
-    setSelectedChannel(channel);
+  async function onSelectGroup(group: Group) {
+    if (window.nSocket && selectedGroup)
+      window.nSocket.leaveChat(selectedGroup.id!);
 
-    reqPostList(_mmClient || mmClient!, channel, "");
+    setSelectedOldBulkyItems(false);
+    setSelectedGroup(group);
+    console.log("selected group", group.id);
+    if (!group || !window.nClient || !window.nSession) return;
+    if (!window.nSocket) {
+      window.nSocket = window.nClient.createSocket(VITE_CHAT_SSL);
+      await window.nSocket.connect(window.nSession, true);
+    }
+    window.nChannel = await window.nSocket?.joinChat(group.id!, 3, true, false);
+
+    window.nSocket.onchannelmessage = (msg) => {
+      console.log("channel message", msg);
+      if (msg.channel_id == window.nChannel?.id) reqPostList("current");
+    };
+    reqPostList("current");
   }
 
-  async function reqPostList(
-    _mmClient: Client4,
-    _selectedChannel: Channel,
-    lastPostId: string,
-  ) {
-    console.log(
-      "reqPostList",
-      _selectedChannel.id,
-      "next",
-      postList.next_post_id,
-    );
+  async function reqPostList(cursor: "previous" | "current") {
+    console.log("reqPostList", window.nChannel!.id, window.nChannel);
     if (loadingPostList) return;
     // Don't ask for more posts than the last post
-    if (postList.prev_post_id === "" && lastPostId !== "") return;
+    if (cursor == "previous" && !postList.next_cursor) return;
     setLoadingPostList(true);
+    if (!window.nClient || !window.nSession) return;
 
-    const newPosts = (await _mmClient.getPostsBefore(
-      _selectedChannel.id,
-      lastPostId,
-      0,
-      20,
+    const newPosts = await window.nClient.listChannelMessages(
+      window.nSession,
+      window.nChannel!.id!,
+      100,
       false,
-      false,
-    )) as PaginatedPostList;
+      cursor == "previous" ? postList.next_cursor : undefined,
+    );
 
-    if (lastPostId === "") {
-      const newPosts = (await _mmClient.getPosts(
-        _selectedChannel.id,
-        0,
-        40,
-        false,
-        false,
-        false,
-      )) as PaginatedPostList;
-      setPostList(newPosts);
-    } else {
-      console.log("reqPostList merge", "next post id: ", lastPostId);
-
-      // merge postlists
+    if (cursor == "previous") {
       setPostList((s) => ({
-        order: [...s.order, ...newPosts.order],
-        posts: {
-          ...newPosts.posts,
-          ...s.posts,
-        },
-        next_post_id: s.next_post_id,
-        prev_post_id: newPosts.prev_post_id,
-        first_inaccessible_post_time: newPosts.first_inaccessible_post_time,
-        has_next: newPosts.has_next,
+        cacheable_cursor: newPosts.cacheable_cursor,
+        messages: [...s.messages!, ...newPosts.messages!],
+        next_cursor: newPosts.next_cursor,
+        prev_cursor: s.prev_cursor,
       }));
+    } else {
+      setPostList(newPosts);
     }
     setLoadingPostList(false);
   }
 
   function onScrollTop(lastPostId: string) {
-    if (!mmClient || !selectedChannel) return;
-    reqPostList(mmClient, selectedChannel, lastPostId);
+    reqPostList("previous");
+  }
+  // async function getFile(fileId: string, timestamp: number) {
+  //   if (!selectedChannel || !window.nClient) return;
+  //   const fileUrl = await window.nClient.getFileUrl(fileId, timestamp);
+  //   return fileUrl.toString();
+  // }
+
+  function onSendMessageWithImage(
+    title: string,
+    message: string,
+    image: string,
+  ): Promise<void> {
+    return (async () => {
+      if (!selectedOldBulkyItems) {
+        console.log("Images not supported yet in chat");
+        return;
+      }
+
+      if (selectedOldBulkyItems) {
+        if (!authUser || !chain) return;
+        const res = await uploadImage(image, 800);
+        res.data.image;
+        bulkyItemPut({
+          chain_uid: chain.uid,
+          user_uid: authUser.uid,
+          title,
+          message,
+        });
+      } else {
+        await reqPostList("current");
+      }
+    })().then(() => {
+      scrollTop();
+    });
   }
 
-  async function onSendMessage(message: string, callback: Function) {
-    if (!selectedChannel || !mmClient) return;
-    console.log("reqPostList", selectedChannel.id);
-    await mmClient.createPost({
-      channel_id: selectedChannel.id,
-      message: message,
-    } as Partial<Post> as Post);
+  async function onSendMessage(message: string) {
+    if (!selectedGroup || !window.nSocket || !window.nClient) return;
+    console.log("reqPostList", selectedGroup.id);
+    await window.nSocket.writeChatMessage(window.nChannel!.id!, { message });
 
-    reqPostList(mmClient, selectedChannel, "").then(() => callback());
+    await reqPostList("current");
+    scrollTop();
   }
 
   function onClickEnableChat() {
-    if (!chain) return;
-    apiChat.chatPatchUser(chain.uid);
+    apiChat.chatPatchUser();
   }
 
-  async function getMmUser(mmUserID: string): Promise<UserProfile> {
-    const found = mmUser[mmUserID];
+  async function getMmUser(mmUserID: string): Promise<User> {
+    const found = mmUsers[mmUserID];
     if (found) return found;
+    if (!window.nSession) throw "No session";
 
-    const res = await mmClient?.getUser(mmUserID);
-    if (!res) throw "Unable to find user";
-    setMmUser((s) => ({
-      [res.id]: res,
+    const res = await window.nClient?.getUsers(window.nSession, [mmUserID]);
+    if (!res?.users?.length) throw "Unable to find user";
+    const firstUser = res.users[0];
+    setMmUsers((s) => ({
+      [firstUser.id!]: firstUser,
       ...s,
     }));
-    return res;
+    return firstUser;
   }
 
-  if (mmClient === undefined || !authUser) {
+  function onSelectOldBulkyItems() {
+    setSelectedGroup(null);
+    setSelectedOldBulkyItems(true);
+    if (window.nChannel && window.nSocket)
+      window.nSocket.leaveChat(window.nChannel.id!);
+  }
+  function onDeleteChannelSubmit() {
+    if (!selectedGroup) return;
+    if (selectedGroup) onDeleteChannel(selectedGroup.id!);
+  }
+  function onRenameChannelSubmit(name: string) {
+    if (!selectedGroup) return;
+    onRenameChannel(selectedGroup, name);
+  }
+
+  if (!authUser) {
     return <Loading />;
   }
 
@@ -354,27 +407,50 @@ export default function Chat() {
         fullscreen
         class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
       >
-        {mmClient === null ? (
-          <RoomNotReady
+        <div className="tw-relative tw-h-full tw-flex tw-flex-col">
+          <ChatRoomSelect
+            chainChannels={chainChannels}
+            selectedChannel={selectedGroup}
             isChainAdmin={isChainAdmin}
-            onClickEnable={onClickEnableChat}
-          />
-        ) : (
-          <ChatWindow
-            getMmUser={getMmUser}
-            channels={channels}
-            selectedChannel={selectedChannel}
+            onSelectChannel={onSelectGroup}
             onCreateChannel={onCreateChannel}
-            onSelectChannel={onSelectChannel}
-            onRenameChannel={onRenameChannel}
-            onDeleteChannel={onDeleteChannel}
-            onDeletePost={onDeletePost}
-            onSendMessage={onSendMessage}
-            onScrollTop={onScrollTop}
-            postList={postList}
-            authUser={authUser}
+            onDeleteChannelSubmit={onDeleteChannelSubmit}
+            onRenameChannelSubmit={onRenameChannelSubmit}
+            selectedOldBulkyItems={selectedOldBulkyItems}
+            onSelectOldBulkyItems={onSelectOldBulkyItems}
           />
-        )}
+          <div
+            ref={refScrollRoot}
+            className={"tw-flex-grow tw-flex tw-overflow-y-auto".concat(
+              selectedOldBulkyItems ? "" : " tw-flex-col-reverse",
+            )}
+          >
+            {selectedOldBulkyItems ? (
+              <BulkyList />
+            ) : window.nClient ? (
+              <ChatPostList
+                isChainAdmin={isChainAdmin}
+                authUser={authUser}
+                getMmUser={getMmUser}
+                // getFile={getFile}
+                postList={postList}
+                chainUsers={chainUsers}
+                onDeletePost={onDeletePost}
+              />
+            ) : (
+              <RoomNotReady
+                isChainAdmin={isChainAdmin}
+                onClickEnable={onClickEnableChat}
+              />
+            )}
+            <span key="top" ref={refScrollTop}></span>
+          </div>
+          <ChatInput
+            isOldBulkyItems={selectedOldBulkyItems}
+            onSendMessage={onSendMessage}
+            onSendMessageWithImage={onSendMessageWithImage}
+          />
+        </div>
       </IonContent>
     </IonPage>
   );

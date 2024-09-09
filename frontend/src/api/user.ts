@@ -52,7 +52,9 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
 
 export function userPurge(userUID: string) {
   return axios.delete<never>("v2/user/purge", {
-    params: { user_uid: userUID },
+    params: {
+      user_uid: userUID,
+    },
   });
 }
 

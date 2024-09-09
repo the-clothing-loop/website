@@ -190,7 +190,7 @@ export default function CreateUpdateBag({
             />
           </IonItem>
           <IonItem lines="none" className="-tw-mt-5">
-            {["👻", "🐰", "👟"].map((emoji, i) => (
+            {["👻", "🐰", "👟", "📖"].map((emoji, i) => (
               <IonFabButton
                 key={i}
                 size="small"
@@ -235,6 +235,8 @@ export default function CreateUpdateBag({
             <IonSelect
               label={t("bagHolder") || ""}
               labelPlacement="stacked"
+              cancelText={t("cancel")}
+              okText={t("change")}
               className="!tw-font-bold"
               placeholder={t("selectTheNewBagHolder") || ""}
               value={bagHolder}

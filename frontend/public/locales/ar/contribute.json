@@ -1,0 +1,18 @@
+{
+  "howToContribute": "المساهمة في حلقة الملابس",
+  "startALoop": "ابدأ التكرار!",
+  "startALoopDesc": "النظر في بدء حلقة كمضيف. حلقة الملابس هي <strong>مجانية للاستخدام وطريقة رائعة للاتصال بالناس</strong>. إذا كنت ترغب في الانضمام إلى حلقة وليس هناك واحدة بالفعل في منطقتك ، لا تخشى أن تبدأ حلقة واحدة!",
+  "shareSwapStory": "مشاركة حلقة تبديل الملابس الخاصة بك",
+  "shareSwapStoryDesc": "إذا كان لديك تجربة إيجابية مع حلقة الملابس وترغب في نشر الكلمة، ضع علامة على وسائل التواصل الاجتماعي. نحن على <aInstagram>Instagram</aInstagram>و <aFacebook>Facebook</aFacebook>و <aLinkedin>Linkedin</aLinkedin> <strong>نود أن نسمع كيف أن حلقة الملابس قد أثرت عليك!</strong>",
+  "crowdin": "ساعدنا في الترجمة مع <aCrowdin>كرودن</aCrowdin>",
+  "crowdinDesc": "يمكن لتطبيق الويب الخاص بنا الوصول إليكِ في <strong>ثماني لغات مختلفة</strong> بسبب نوع الأشخاص الذين يأخذون الوقت إلى <strong>يترجمونه باستخدام <aCrowdin>Crowdin</aCrowdin></strong>. نحن نحب أن تكون حلقة الملابس متاحة لأكبر عدد ممكن من الناس، وإذا كنت متعدد اللغات وترغب في المساهمة في حلقة الملابس، فكر في إضافة ترجمات على كراودن.",
+  "swap": "خطة حدث مبادلة الملابس!",
+  "swapDesc": "A swap party is a great way to trade clothes and get the chance to meet up with friends and neighbors and swap clothes! Also, <strong>check out <aEvents>upcoming events</aEvents> on our calendar.</strong>",
+  "feedback": "أرسل لنا ملاحظات",
+  "feedbackDesc": "ونحن دائما متحمسون لسماع كيف أن حلقة الملابس قد أثرت على أعضائنا أو كيف يمكننا أن نتحسن. إذا كان لديك <strong>اقتراحات تحسين</strong> أو تريد أن تشارك <strong>كيف أن حلقة الملابس أثرت عليك</strong>، أرجو ألا تتردد في مشاركة أفكارك معنا!",
+  "website": "المساهمة في موقعنا",
+  "websiteDesc": "<strong>هل الكود البرمجي؟</strong> حلقة الملابس هي <strong>موقع مفتوح المصدر</strong>. انقر فوق <aGithub>هنا</aGithub> لرؤية مهامنا المفتوحة على GitHub. بينما نحن في الغالب نتواصل عبر Slack، <aEmail>مراسلتنا بالبريد الإلكتروني</aEmail> إذا كنت مهتما بالتطوع بمهاراتك البرمجية والانضمام إلى اجتماعات المطورين الأسبوعية.",
+  "donate": "تبرع",
+  "donateDesc": "All <aDonate>donations</aDonate> to the Clothing Loop are greatly appreciated to help offset costs to keep the Clothing Loop <strong>free and available for all users!</strong>",
+  "WhereToFindUs": "أين نبحث عننا"
+}

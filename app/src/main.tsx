@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./i18n";
@@ -10,7 +10,8 @@ axois.defaults.withCredentials = IS_WEB;
 const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+  // StrictMode runs a refresh making debugging difficult
+  // <StrictMode>
+  <App />,
+  // </StrictMode>,
 );

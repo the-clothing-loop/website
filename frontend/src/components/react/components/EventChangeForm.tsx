@@ -1,6 +1,7 @@
 import {
   type EventCreateBody,
   EVENT_IMAGE_EXPIRATION,
+  type EventPriceType,
 } from "../../../api/event";
 import { TextForm } from "./FormFields";
 import useForm from "../util/form.hooks";
@@ -33,8 +34,9 @@ const defaultValues: EventCreateBody = {
   latitude: 0,
   longitude: 0,
   address: "",
-  price_currency: "€",
+  price_currency: "",
   price_value: 0,
+  price_type: "free",
   link: "",
   date: dayjs().minute(0).second(0).format(),
   date_end: null,
@@ -88,6 +90,14 @@ const currencies = [
   "₫",
 ];
 
+const priceType: EventPriceType[] = ["free", "entrance", "donation", "perswap"];
+export const PRICE_TYPE_I18N: Record<EventPriceType, string> = {
+  free: "priceFree",
+  entrance: "entranceFee",
+  donation: "donation",
+  perswap: "perSwap",
+};
+
 export default function EventChangeForm(props: {
   initialValues?: EventCreateBody;
   onSubmit: (v: EventCreateBody) => void;
@@ -124,6 +134,9 @@ export default function EventChangeForm(props: {
   const [eventPriceCurrency, _setEventPriceCurrency] = useState(
     () => values.price_currency || defaultValues.price_currency!,
   );
+  const [eventPriceType, _setEventPriceType] = useState<EventPriceType>(
+    () => values.price_type || defaultValues.price_type!,
+  );
   const isValidPrice = useMemo(
     () => validatePrice(eventPriceText),
     [eventPriceText],
@@ -141,13 +154,24 @@ export default function EventChangeForm(props: {
 
     if (v === "") {
       _setEventPriceCurrency("");
+      _setEventPriceType("free");
       setEventPriceText("0");
       return;
-    } else if (eventPriceValue === 0) {
-      setEventPriceText("1");
     }
 
     _setEventPriceCurrency(v);
+  }
+  function setEventPriceType(e: ChangeEvent<HTMLSelectElement>) {
+    const v = e.target.value as EventPriceType;
+
+    if (v === "free") {
+      _setEventPriceCurrency("");
+      setEventPriceText("0");
+    } else if (eventPriceType === "free") {
+      _setEventPriceCurrency("€");
+    }
+
+    _setEventPriceType(v);
   }
 
   async function onImageUpload(e: ChangeEvent<HTMLInputElement>) {
@@ -171,17 +195,10 @@ export default function EventChangeForm(props: {
     e.preventDefault();
 
     values.date_end = hasEndDate ? dateEnd : null;
+    values.price_value = eventPriceValue;
+    values.price_type = eventPriceType;
+    values.price_currency = eventPriceCurrency;
 
-    if (eventPriceCurrency && eventPriceValue == 0) {
-      values.price_value = 0;
-      values.price_currency = "";
-    } else if (eventPriceCurrency && eventPriceValue != 0) {
-      values.price_value = eventPriceValue;
-      values.price_currency = eventPriceCurrency;
-    } else {
-      values.price_value = 0;
-      values.price_currency = "";
-    }
     props.onSubmit(values);
   }
 
@@ -209,8 +226,8 @@ export default function EventChangeForm(props: {
 
   return (
     <div className="w-full">
-      <form onSubmit={submit} className="grid gap-x-4 sm:grid-cols-2">
-        <div className="col-span-1 sm:col-span-2">
+      <form onSubmit={submit} className="grid gap-x-4 md:grid-cols-2">
+        <div className="col-span-1 md:col-span-2">
           <TextForm
             min={2}
             required
@@ -260,13 +277,13 @@ export default function EventChangeForm(props: {
             onChange={sepDate.time.onChange}
           />
         </div>
-        <div className="col-span-1 sm:col-span-2">
+        <div className="col-span-1 md:col-span-2">
           <div className={`mb-3 mt-5 ${hasEndDate ? "bg-base-100" : ""}`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 -mt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 -mt-2">
               <label className="inline-flex cursor-pointer p-4 transition-colors bg-base-100 bg-opacity-0 hover:bg-opacity-70">
                 <input
                   type="checkbox"
-                  className="checkbox checkbox-sm checkbox-secondary ltr:mr-3 rtl:ml-3"
+                  className="checkbox checkbox-sm checkbox-secondary me-3"
                   checked={hasEndDate}
                   onChange={(e) => {
                     const checked = e.target.checked;
@@ -323,8 +340,8 @@ export default function EventChangeForm(props: {
                 <span className="label-text">{t("categories") + "*"}</span>
               </div>
               <CategoriesDropdown
-                className="w-full mr-4 md:mr-8 py-4 pb-2 md:py-0"
-                selectedGenders={values.genders}
+                className="w-full me-4 md:me-8 py-4 pb-2 md:py-0"
+                selectedCategories={values.genders}
                 handleChange={(gs) => setValue("genders", gs)}
               />
             </label>
@@ -336,7 +353,7 @@ export default function EventChangeForm(props: {
             </div>
             <div className="input-group">
               <select
-                name="chain_uid"
+                name="event_price_currency"
                 onChange={setEventPriceCurrency}
                 value={eventPriceCurrency}
                 className="select select-secondary select-outlined"
@@ -351,7 +368,7 @@ export default function EventChangeForm(props: {
                 ))}
               </select>
               <input
-                className={`input ltr:border-l-0 rtl:border-r-0  w-full flex-grow ${
+                className={`input [appearance:textfield] ltr:border-l-0 rtl:border-r-0  w-full flex-grow ${
                   isValidPrice ? "input-secondary" : "input-error"
                 }`}
                 disabled={eventPriceCurrency === ""}
@@ -363,6 +380,18 @@ export default function EventChangeForm(props: {
                 value={eventPriceText}
                 onChange={(e) => setEventPriceText(e.target.value)}
               />
+              <select
+                name="event_price_type"
+                onChange={setEventPriceType}
+                value={eventPriceType}
+                className="select select-secondary select-outlined"
+              >
+                {priceType.map((v, i) => (
+                  <option value={v} key={v} defaultChecked={i === 2}>
+                    {t(PRICE_TYPE_I18N[v])}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -398,14 +427,14 @@ export default function EventChangeForm(props: {
             </label>
           </div>
 
-          <div className="mb-6 flex sm:justify-center">
+          <div className="mb-6 flex flex-col md:justify-center border-2 border-secondary">
             <input
               type="file"
               className="hidden"
               onChange={onImageUpload}
               ref={refFileInput}
             />
-            <div className="relative w-full sm:w-96 aspect-[4/3] border-2 border-secondary flex justify-end items-top">
+            <div className="relative w-full aspect-[4/3] flex justify-end items-top">
               <div className="absolute z-10 flex flex-row">
                 {deleteImageUrl ? (
                   <button
@@ -424,7 +453,7 @@ export default function EventChangeForm(props: {
                   onClick={() => refFileInput.current?.click()}
                 >
                   {t("uploadImage")}
-                  <span className="icon-upload ltr:ml-4 rtl:mr-4"></span>
+                  <span className="icon-upload ms-4"></span>
                 </button>
               </div>
               {values.image_url ? (
@@ -435,11 +464,19 @@ export default function EventChangeForm(props: {
                 />
               ) : null}
             </div>
+            <input
+              type="url"
+              placeholder={t("uploadImageLink")!}
+              className="input input-xs w-full border-0 border-t border-secondary"
+              value={values.image_url}
+              onChange={(e) => setValue("image_url", e.target.value)}
+            />
           </div>
           <div className="flex justify-end">
             <button type="submit" className="btn btn-primary">
               {t("submit")}
-              <span className="icon-arrow-right ltr:ml-4 rtl:mr-4"></span>
+              <span className="icon-arrow-right ms-4 rtl:hidden"></span>
+              <span className="icon-arrow-left ms-4 ltr:hidden"></span>
             </button>
           </div>
         </div>

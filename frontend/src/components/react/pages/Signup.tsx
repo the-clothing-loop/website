@@ -10,12 +10,13 @@ import { registerBasicUser, registerOrphanedUser } from "../../../api/login";
 
 import { GinParseErrors } from "../util/gin-errors";
 import type { TFunction } from "i18next";
-import { Genders } from "../../../api/enums";
+import { Categories } from "../../../api/enums";
 import { useStore } from "@nanostores/react";
 import { $authUser, authUserRefresh } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import getQuery from "../util/query";
 import useLocalizePath from "../util/localize_path.hooks";
+import OriginalImageToProxy from "../util/image_proxy";
 
 export default function Signup() {
   const { t, i18n } = useTranslation();
@@ -151,8 +152,13 @@ export default function Signup() {
     window.location.href = localizePath("/thankyou");
     return <div></div>;
   } else {
-    let image =
-      chain?.genders?.length && chain.genders[0] === Genders.men
+    let image = chain?.image
+      ? {
+          src: OriginalImageToProxy(chain.image, "x600")!,
+          alt: "Loop cover image",
+          credit: "",
+        }
+      : chain?.genders?.length && chain.genders[0] === Categories.men
         ? {
             src: "https://images.clothingloop.org/cx585,cw2678,x600/mannen_amersfoort.jpg",
             alt: "Two men wearing jumpers, the left wearing a baseball cap, the right glasses, between them is a large blue bag with the number 11 taped on.",
@@ -281,14 +287,14 @@ function SubmitButton({
         return (
           <p className="bg-primary px-3 font-semibold text-sm border border-primary h-12 inline-flex items-center">
             {t("joined")}
-            <span className="icon-check ml-3 rtl:ml-0 rtl:mr-3"></span>
+            <span className="icon-check ms-3"></span>
           </p>
         );
       } else {
         return (
           <p className="px-3 font-semibold text-sm border border-secondary h-12 inline-flex items-center text-secondary">
             {t("pendingApproval")}
-            <span className="icon-user-check ml-3 rtl:ml-0 rtl:mr-3"></span>
+            <span className="icon-user-check ms-3"></span>
           </p>
         );
       }
@@ -298,7 +304,7 @@ function SubmitButton({
     return (
       <p className="px-3 font-semibold text-sm border border-secondary h-12 inline-flex items-center text-secondary">
         {t("closed")}
-        <span className="icon-lock ml-3 rtl:ml-0 rtl:mr-3"></span>
+        <span className="icon-lock ms-3"></span>
       </p>
     );
   }

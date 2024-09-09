@@ -3,10 +3,10 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 
 	"github.com/OneSignal/onesignal-go-api"
 	"github.com/go-playground/validator/v10"
-	"github.com/golang/glog"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -33,9 +33,9 @@ func CronHourly(db *gorm.DB) {
 
 // Email hosts about pending participants after 60 days.
 func emailHostsOldPendingParticipants(db *gorm.DB) {
-	glog.Info("Running emailHostsOldPendingParticipants")
+	slog.Info("Running emailHostsOldPendingParticipants")
 	if db == nil {
-		glog.Error("database is nil, trying to close old pending participants")
+		slog.Error("database is nil, trying to close old pending participants")
 		return
 	}
 
@@ -52,11 +52,11 @@ WHERE uc.is_approved = FALSE
 	AND uc.last_notified_is_unapproved_at IS NULL
 	`).Scan(&pendingValues).Error
 	if err != nil {
-		glog.Errorf("Failed to find old pending participants: %v", err)
+		slog.Error("Failed to find old pending participants", "err", err)
 		return
 	}
 	if len(pendingValues) > 0 {
-		glog.Infof("Pending participants: %v", pendingValues)
+		slog.Info("Pending participants", "values", pendingValues)
 	}
 
 	// List all chain ids of pending participants
@@ -132,7 +132,7 @@ ORDER BY u.email
 
 	for i := range emailValues {
 		email := emailValues[i]
-		glog.Infof("Sending email approve reminder to %s", email.Email)
+		slog.Info("Sending email approve reminder", "to", email.Email)
 		go views.EmailApproveReminder(db, email.I18n, email.Name, email.Email, email.Approvals)
 	}
 }
@@ -140,7 +140,7 @@ ORDER BY u.email
 // // Close chains if pending participants are still pending 30 days after reminder email is sent
 //
 //	func closeChainsWithOldPendingParticipants(db *gorm.DB) {
-//		glog.Info("Running closeChainsWithOldPendingParticipants")
+//		slog.Info("Running closeChainsWithOldPendingParticipants")
 //		db.Exec(`
 //		UPDATE chains SET published = FALSE, open_to_new_members = FALSE, last_abandoned_at = NOW() WHERE id IN (
 //			SELECT DISTINCT(uc.chain_id)
@@ -159,7 +159,7 @@ ORDER BY u.email
 //		`)
 //	}
 func emailAbandonedChainRecruitment(db *gorm.DB) {
-	glog.Info("Running emailAbandonedChainRecruitment")
+	slog.Info("Running emailAbandonedChainRecruitment")
 	// Get the abandoned chains older than 7 days
 	chainIDs := []uint{}
 	err := db.Raw(`
@@ -172,7 +172,7 @@ GROUP BY c2.id
 HAVING COUNT(uc.id) > 0
 	`).Scan(&chainIDs).Error
 	if err != nil {
-		glog.Infof("Unable to get abandoned chains %s", err)
+		slog.Info("Unable to get abandoned chains", "err", err)
 		return
 	}
 	if len(chainIDs) == 0 {
@@ -193,7 +193,7 @@ JOIN chains ON uc.chain_id = chains.id
 WHERE chains.id IN ? AND uc.is_chain_admin = FALSE
 	`, chainIDs).Scan(&users).Error
 	if err != nil {
-		glog.Errorf("Unable to get participants of abandoned chains %s", err)
+		slog.Error("Unable to get participants of abandoned chains", "err", err)
 		return
 	}
 
@@ -208,13 +208,13 @@ WHERE chains.id IN ? AND uc.is_chain_admin = FALSE
 	// prevent duplicate emails
 	err = db.Exec(`UPDATE chains AS c SET c.last_abandoned_recruitment_email = NOW() WHERE c.id IN ?`, chainIDs).Error
 	if err != nil {
-		glog.Errorf("Unable to prevent duplicate emails for abandoned chains %s", err)
+		slog.Error("Unable to prevent duplicate emails for abandoned chains", "err", err)
 		return
 	}
 }
 
 func notifyIfIsHoldingABagForTooLong(db *gorm.DB) {
-	glog.Info("Running notifyIfIsHoldingABagForTooLong")
+	slog.Info("Running notifyIfIsHoldingABagForTooLong")
 	res := &[]struct {
 		UserUID   string `gorm:"user_uid"`
 		BagNumber string `gorm:"bag_number"`
@@ -233,8 +233,8 @@ AND b.last_notified_at IS NULL
 		bagIDs := []uint{}
 		for i := range *res {
 			item := (*res)[i]
-			glog.Infof("Create notification for user %v holding bag %v\n", item.UserUID, item.BagNumber)
-			app.OneSignalCreateNotification(db, []string{item.UserUID}, *views.Notifications["bagYouAreHoldingIsTooOldTitle"], onesignal.StringMap{
+			slog.Info("Create notification", "user", item.UserUID, "holding_bag", item.BagNumber)
+			app.OneSignalCreateNotification(db, []string{item.UserUID}, *views.Notifications[views.NotificationEnumTitleBagTooOld], onesignal.StringMap{
 				En: onesignal.PtrString(item.BagNumber),
 			})
 
@@ -246,7 +246,7 @@ AND b.last_notified_at IS NULL
 }
 
 func emailSendAgain(db *gorm.DB) {
-	glog.Info("Running emailSendAgain")
+	slog.Info("Running emailSendAgain")
 	ms, err := models.MailGetDueForResend(db)
 	if err != nil {
 		return
@@ -264,7 +264,7 @@ func emailSendAgain(db *gorm.DB) {
 		errr := m.UpdateNextRetryAttempt(db, err)
 
 		if errr != nil {
-			if errors.Is(models.ErrMailLastRetry, errr) {
+			if errors.Is(errr, models.ErrMailLastRetry) {
 				views.EmailRootAdminFailedLastRetry(db, m.ToAddress, m.Subject)
 			}
 		}

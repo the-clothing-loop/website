@@ -1,31 +1,20 @@
 {
   "folders": [
     {
+      "name": "server",
       "path": "server"
     },
     {
+      "name": "frontend",
       "path": "frontend"
     },
     {
-      "path": ".github"
-    },
-    {
-      "path": "devops"
-    },
-    {
+      "name": "app",
       "path": "app"
     },
     {
-      "path": "docker"
-    },
-    {
-      "path": "bruno"
-    },
-    {
-      "path": ".husky"
-    },
-    {
-      "path": "docs"
+      "name": "clothing-loop",
+      "path": "."
     }
   ],
   "settings": {

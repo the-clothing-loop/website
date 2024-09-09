@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"strings"
 
 	"github.com/OneSignal/onesignal-go-api"
 	uuid "github.com/satori/go.uuid"
@@ -12,6 +14,10 @@ import (
 var OneSignalClient *onesignal.APIClient
 
 func OneSignalInit() {
+	if Config.ONESIGNAL_REST_API_KEY == "" {
+		return
+	}
+
 	configuration := onesignal.NewConfiguration()
 	OneSignalClient = onesignal.NewAPIClient(configuration)
 }
@@ -22,6 +28,7 @@ func oneSignalGetAuth() context.Context {
 
 func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTitle, notificationContent onesignal.StringMap) error {
 	if OneSignalClient == nil {
+		slog.Info("Send onesignal notification", "userids", userUIDs, "title", *notificationTitle.En)
 		return nil
 	}
 	if len(userUIDs) == 0 {
@@ -36,6 +43,9 @@ func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTit
 	notification.SetIsAnyWeb(false)
 	notification.SetHeadings(notificationTitle)
 	notification.SetContents(notificationContent)
+	notification.SetData(map[string]any{
+		"user_uids": strings.Join(userUIDs, ","),
+	})
 
 	auth := oneSignalGetAuth()
 	_, resp, err := OneSignalClient.DefaultApi.CreateNotification(auth).Notification(*notification).Execute()

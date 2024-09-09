@@ -2,68 +2,33 @@ package app
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 
-	"github.com/mattermost/mattermost/server/public/model"
-	"github.com/samber/lo"
+	"github.com/ascii8/nakama-go"
 )
 
-var ChatClient *model.Client4
-var ChatTeamId string
+var ChatClient *nakama.Client
 
-func ChatInit(url, token string) {
-	client := model.NewAPIv4Client(url)
-	client.SetToken(token)
+func ChatInit() {
 
-	ChatClient = client
+	if Config.NAKAMA_SERVER_KEY == "" {
+		panic("NAKAMA_SERVER_KEY is required")
+	}
+
+	ChatClient = ChatCreateClient()
+
+	ctx := context.TODO()
+
+	err := ChatClient.Healthcheck(ctx)
+	if err != nil {
+		slog.Error("unable to ping nakama", "err", err)
+		panic(err)
+	} else {
+		slog.Info("ping nakama received")
+	}
 }
 
-func ChatSetDefaultSettings(client *model.Client4) {
-	team := &model.Team{
-		Name:        "loops",
-		DisplayName: "Loops",
-		Type:        model.TeamInvite,
-	}
-	if Config.ENV == EnvEnumAcceptance {
-		team.Name += "acc"
-		team.DisplayName += " Acc"
-	} else if Config.ENV == EnvEnumDevelopment {
-		team.Name += "dev"
-		team.DisplayName += " Dev"
-	}
-
-	mmTeam, _, err := client.GetTeamByName(context.TODO(), team.Name, "")
-	if err != nil {
-		fmt.Println(err.Error())
-		mmTeam, _, err = client.CreateTeam(context.TODO(), team)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	client.PatchConfig(context.TODO(), &model.Config{
-		ServiceSettings: model.ServiceSettings{
-			EnableUserAccessTokens: lo.ToPtr(true),
-		},
-		TeamSettings: model.TeamSettings{
-			SiteName:           lo.ToPtr("Clothing Loop Chat"),
-			MaxUsersPerTeam:    lo.ToPtr(99_999),
-			MaxChannelsPerTeam: lo.ToPtr[int64](999_999),
-		},
-		EmailSettings: model.EmailSettings{
-			EnableSignUpWithEmail:    lo.ToPtr(false),
-			RequireEmailVerification: lo.ToPtr(false),
-		},
-		PrivacySettings: model.PrivacySettings{
-			ShowEmailAddress: lo.ToPtr(false),
-			ShowFullName:     lo.ToPtr(false),
-		},
-		NativeAppSettings: model.NativeAppSettings{
-			AppDownloadLink:        lo.ToPtr("https://www.clothingloop.org/en/"),
-			IosAppDownloadLink:     lo.ToPtr("https://apps.apple.com/us/app/my-clothing-loop/id6451443500"),
-			AndroidAppDownloadLink: lo.ToPtr("https://play.google.com/store/apps/details?id=org.clothingloop.app"),
-		},
-	})
-
-	ChatTeamId = mmTeam.Id
+func ChatCreateClient() *nakama.Client {
+	c := nakama.New(nakama.WithServerKey(Config.NAKAMA_SERVER_KEY), nakama.WithURL(Config.NAKAMA_URL))
+	return c
 }
