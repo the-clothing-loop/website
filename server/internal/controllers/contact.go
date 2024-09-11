@@ -73,7 +73,7 @@ func ContactMail(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	if !(body.Honeypot != nil && !*body.Honeypot) {
+	if body.Honeypot != nil {
 		if app.Config.ENV == app.EnvEnumDevelopment {
 			fmt.Println("Honeypot activated")
 		}
