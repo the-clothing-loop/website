@@ -26,7 +26,7 @@
     "astro-i18next": "^1.0.0-beta.21",
     "dayjs": "^1.11.10",
     "deck.gl": "^8.8.20",
-    "dompurify": "^3.0.9",
+    "dompurify": "^3.1.3",
     "events": "^3.3.0",
     "goscope2-sdk-js": "github:lil5/goscope2#v1.4.2",
     "i18next": "^22.0.0",
