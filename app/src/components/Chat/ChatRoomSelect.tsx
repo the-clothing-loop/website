@@ -85,7 +85,7 @@ export default function ChatRoomSelect(props: Props) {
   function onCreateChannelSubmit() {
     // if (e?.detail?.role === "submit" && e.detail?.data?.values?.name) {
     props.onCreateChannel(channelName, channelColor);
-   // props.onCreateChannel(channelName);
+    // props.onCreateChannel(channelName);
 
     modal.current?.dismiss();
 
@@ -141,11 +141,13 @@ export default function ChatRoomSelect(props: Props) {
   return (
     <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-purple-shade">
       {props.chainChannels.map((cr, i) => {
-        console.log(cr)
-      //  const initials = cr
-      //    .description!.split(" ")
-       //   .map((word) => word[0])
-        //  .join("");
+        const initials = cr.description
+          ? cr
+              .description!.split(" ")
+              .map((word) => word[0])
+              .join("")
+          : "";
+
         const isSelected = cr.id === props.selectedChannel?.id;
         return (
           <button
@@ -169,7 +171,7 @@ export default function ChatRoomSelect(props: Props) {
               )}
               style={{ backgroundColor: channelColor }}
             >
-              <span>{"initials"}</span>
+              <span>{initials}</span>
               {isSelected && props.isChainAdmin ? (
                 <div className="tw-absolute tw-bottom-0 tw-right-0 tw-bg-light-shade tw-z-10 tw-w-6 tw-h-6 tw-rounded-full -tw-m-1 tw-flex tw-justify-center tw-items-center">
                   <IonIcon icon={buildFilled} size="xs" color="dark" />
