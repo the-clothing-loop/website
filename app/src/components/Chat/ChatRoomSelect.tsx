@@ -1,10 +1,35 @@
-import { IonActionSheet, IonAlert, IonIcon, useIonAlert } from "@ionic/react";
+import {
+  IonActionSheet,
+  IonAlert,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonFabButton,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+  useIonAlert,
+} from "@ionic/react";
 import { Channel } from "@mattermost/types/channels";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLongPress } from "use-long-press";
-import { addOutline, build as buildFilled } from "ionicons/icons";
+import {
+  addOutline,
+  bag,
+  build as buildFilled,
+  checkmarkCircle,
+  ellipse,
+} from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { IonAlertCustomEvent } from "@ionic/core";
+import { IonAlertCustomEvent, IonModalCustomEvent } from "@ionic/core";
 import { Group } from "@heroiclabs/nakama-js";
 
 interface Props {
@@ -12,7 +37,7 @@ interface Props {
   selectedChannel: Group | null;
   isChainAdmin: boolean;
   onSelectChannel: (cr: Group) => void;
-  onCreateChannel: (name: string) => void;
+  onCreateChannel: (name: string, color: string) => void;
   onDeleteChannelSubmit: () => void;
   onRenameChannelSubmit: (name: string) => void;
   selectedOldBulkyItems: boolean;
@@ -35,12 +60,40 @@ export default function ChatRoomSelect(props: Props) {
     },
   );
 
-  function onCreateChannelSubmit(e: IonAlertCustomEvent<any>) {
-    if (e?.detail?.role === "submit" && e.detail?.data?.values?.name) {
-      props.onCreateChannel(e.detail.data.values.name);
-    }
-  }
+  const channelColors = [
+    "#C9843E",
+    "#AD8F22",
+    "#79A02D",
+    "#66926E",
+    "#199FBA",
+    "#6494C2",
+    "#1467B3",
+    "#A899C2",
+    "#513484",
+    "#B37EAD",
+    "#B76DAC",
+    "#F57BB0",
+    "#A35C7B",
+    "#E38C95",
+    "#C73643",
+    "#7D7D7D",
+    "#3C3C3B",
+  ];
+  const [channelColor, setChannelColor] = useState(channelColors[2]);
+  const modal = useRef<HTMLIonModalElement>(null);
+  const [channelName, setChannelName] = useState("");
+  function onCreateChannelSubmit() {
+    // if (e?.detail?.role === "submit" && e.detail?.data?.values?.name) {
+    props.onCreateChannel(channelName, channelColor);
+   // props.onCreateChannel(channelName);
 
+    modal.current?.dismiss();
+
+    //  }
+  }
+  function cancel() {
+    modal.current?.dismiss();
+  }
   function handleChannelOptionSelect(value: "delete" | "rename") {
     if (value == "delete") {
       const handler = () => {
@@ -88,10 +141,11 @@ export default function ChatRoomSelect(props: Props) {
   return (
     <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-purple-shade">
       {props.chainChannels.map((cr, i) => {
-        const initials = cr
-          .description!.split(" ")
-          .map((word) => word[0])
-          .join("");
+        console.log(cr)
+      //  const initials = cr
+      //    .description!.split(" ")
+       //   .map((word) => word[0])
+        //  .join("");
         const isSelected = cr.id === props.selectedChannel?.id;
         return (
           <button
@@ -108,13 +162,14 @@ export default function ChatRoomSelect(props: Props) {
                 })}
           >
             <div
-              className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple tw-flex tw-items-center tw-justify-center tw-ring  group-hover:tw-ring-purple tw-transition-colors".concat(
+              className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-flex tw-items-center tw-justify-center tw-ring  group-hover:tw-ring-purple tw-transition-colors".concat(
                 isSelected
                   ? " tw-ring-purple tw-ring-1"
                   : " tw-ring-transparent",
               )}
+              style={{ backgroundColor: channelColor }}
             >
-              <span>{initials}</span>
+              <span>{"initials"}</span>
               {isSelected && props.isChainAdmin ? (
                 <div className="tw-absolute tw-bottom-0 tw-right-0 tw-bg-light-shade tw-z-10 tw-w-6 tw-h-6 tw-rounded-full -tw-m-1 tw-flex tw-justify-center tw-items-center">
                   <IonIcon icon={buildFilled} size="xs" color="dark" />
@@ -187,22 +242,79 @@ export default function ChatRoomSelect(props: Props) {
           </button>
         </div>
       ) : null}
-      <IonAlert
-        onIonAlertDidDismiss={onCreateChannelSubmit}
+      <IonModal
+        ref={modal}
         trigger="create_channel_btn"
-        header="Create a chat room"
-        buttons={[
-          { text: t("cancel"), role: "cancel" },
-          { text: t("create"), role: "submit" },
-        ]}
-        inputs={[
-          {
-            placeholder: t("name"),
-            name: "name",
-            min: 1,
-          },
-        ]}
-      ></IonAlert>
+        onIonModalDidDismiss={onCreateChannelSubmit}
+      >
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonButton onClick={cancel}>{t("cancel")}</IonButton>
+            </IonButtons>
+            <IonTitle>{bag ? t("upateRoom") : t("createRoom")}</IonTitle>
+            <IonButtons slot="end">
+              <IonButton
+                onClick={onCreateChannelSubmit}
+                //    color={!error ? "primary" : "danger"}
+              >
+                {t("save")}
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent fullscreen>
+          <IonList>
+            <IonItem
+              lines="none"
+              // color={error === "number" ? "danger" : undefined}
+            >
+              <IonInput
+                type="text"
+                label={t("roomName")}
+                labelPlacement="start"
+                max={18}
+                spellCheck
+                autoCapitalize="words"
+                maxlength={18}
+                counter
+                placeholder={t("name")}
+                //value={"Name"}
+                onFocus={(e) => (e.target as any as HTMLInputElement).select()}
+                onIonInput={(e) =>
+                  setChannelName(e.detail.value?.toString() || "")
+                }
+              />
+            </IonItem>
+            <IonItem lines="none">
+              <IonLabel>
+                {t("roomColor")}
+                <div className="tw-grid tw-grid-cols-[repeat(auto-fill,75px)] tw-justify-center">
+                  {channelColors.map((c) => {
+                    const selected = c === channelColor;
+                    return (
+                      <IonButton
+                        fill="clear"
+                        size="default"
+                        key={c}
+                        onClick={() => setChannelColor(c)}
+                        className="hover:!tw-opacity-100 tw-group"
+                      >
+                        <IonIcon
+                          icon={selected ? checkmarkCircle : ellipse}
+                          style={{ color: c }}
+                          size="large"
+                          className="tw-border-2 tw-border-solid tw-border-transparent tw-rounded-full group-hover:tw-border-medium group-active:tw-border-primary"
+                        />
+                      </IonButton>
+                    );
+                  })}
+                </div>
+              </IonLabel>
+            </IonItem>
+          </IonList>
+        </IonContent>
+      </IonModal>
     </div>
   );
 }

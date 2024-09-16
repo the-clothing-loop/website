@@ -64,6 +64,7 @@ export default function Chat() {
   const [refScrollTop, entry] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
+
   const scrollTop = () => refScrollRoot.current?.scrollTo({ top: 0 });
 
   useEffect(() => {
@@ -85,7 +86,7 @@ export default function Chat() {
           window.nSession = await window.nClient.authenticateEmail(
             authUser.email,
             _mmData.pass,
-            false,
+            true,
           );
           _mmData.userId = window.nSession.user_id;
 
@@ -167,7 +168,8 @@ export default function Chat() {
     return _groups;
   }
 
-  async function onCreateChannel(name: string) {
+  async function onCreateChannel(name: string, color: string) {
+    console.log(mmData)
     if (!chain || !window.nClient || !window.nSession || !mmData) {
       if (!chain) console.error("chain not found");
       if (!window.nClient) console.error("nClient not found");
@@ -177,6 +179,8 @@ export default function Chat() {
     }
     try {
       console.info("Creating channel", name);
+      console.info("Channel color", color);
+
       const group = await window.nClient.createGroup(window.nSession, {
         name: crypto.randomUUID().toString(),
         description: name,
@@ -400,7 +404,7 @@ export default function Chat() {
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
-          </IonTitle>
+          </IonTitle> 
         </IonToolbar>
       </IonHeader>
       <IonContent
