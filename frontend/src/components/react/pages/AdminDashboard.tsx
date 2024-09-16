@@ -126,7 +126,10 @@ export default function AdminDashboard() {
                 {authUser.email}
               </span>
               <h1 className="font-serif font-bold text-4xl text-secondary mb-3">
-                {t("helloN", { n: authUser.name })}
+                {t("helloN", {
+                  n: authUser.name,
+                  interpolation: { escapeValue: false },
+                })}
               </h1>
               <p className="mb-6">
                 {t("thankYouForBeingHere")}

@@ -1202,7 +1202,10 @@ function ParticipantsTable(props: {
     const chainUID = props.chain.uid;
 
     addModal({
-      message: t("areYouSureRemoveParticipant", { name: user.name }),
+      message: t("areYouSureRemoveParticipant", {
+        name: user.name,
+        interpolation: { escapeValue: false },
+      }),
       actions: [
         {
           text: t("remove"),
