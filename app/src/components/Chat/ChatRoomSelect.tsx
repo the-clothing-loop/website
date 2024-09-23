@@ -1,6 +1,5 @@
 import {
   IonActionSheet,
-  IonAlert,
   IonButton,
   IonButtons,
   IonContent,
@@ -57,6 +56,8 @@ export default function ChatRoomSelect(props: Props) {
       },
     },
   );
+  const modal = useRef<HTMLIonModalElement>(null);
+  const [channelName, setChannelName] = useState("");
 
   const channelColors = [
     "#C9843E",
@@ -78,8 +79,7 @@ export default function ChatRoomSelect(props: Props) {
     "#3C3C3B",
   ];
   const [channelColor, setChannelColor] = useState(channelColors[2]);
-  const modal = useRef<HTMLIonModalElement>(null);
-  const [channelName, setChannelName] = useState("");
+
   function onCreateChannelSubmit() {
     props.onCreateChannel(channelName, channelColor);
     modal.current?.dismiss();
@@ -237,10 +237,7 @@ export default function ChatRoomSelect(props: Props) {
           </button>
         </div>
       ) : null}
-      <IonModal
-        ref={modal}
-        trigger="create_channel_btn"
-      >
+      <IonModal ref={modal} trigger="create_channel_btn">
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
@@ -248,9 +245,7 @@ export default function ChatRoomSelect(props: Props) {
             </IonButtons>
             <IonTitle>{t("createRoom")}</IonTitle>
             <IonButtons slot="end">
-              <IonButton
-                onClick={onCreateChannelSubmit}
-              >
+              <IonButton onClick={onCreateChannelSubmit}>
                 {t("Create")}
               </IonButton>
             </IonButtons>
