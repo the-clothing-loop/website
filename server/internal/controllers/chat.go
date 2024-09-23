@@ -1,14 +1,11 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
-	"github.com/GGP1/atoll"
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/services"
-	"gopkg.in/guregu/null.v3"
 )
 
 func ChatPatchUserPassword(c *gin.Context) {
@@ -19,33 +16,40 @@ func ChatPatchUserPassword(c *gin.Context) {
 		return
 	}
 
-	if !user.ChatPass.Valid {
-		p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Upper})
-		password := string(p)
-
-		user.ChatPass = null.StringFrom(password)
-		db.Exec(`UPDATE users SET chat_pass = ? WHERE id = ?`,
-			user.ChatPass.String,
-			user.ID)
-	}
-
-	if user.ChatPass.String == "" {
-		c.AbortWithError(http.StatusTeapot, fmt.Errorf("password is not set"))
+	err := services.ChatPatchUser(db, c.Request.Context(), user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	// if !user.ChatPass.Valid {
+	// 	p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Upper})
+	// 	password := string(p)
+
+	// 	user.ChatPass = null.StringFrom(password)
+	// 	db.Exec(`UPDATE users SET chat_pass = ? WHERE id = ?`,
+	// 		user.ChatPass.String,
+	// 		user.ID)
+	// }
+
+	// if user.ChatPass.String == "" {
+	// 	c.AbortWithError(http.StatusTeapot, fmt.Errorf("password is not set"))
+	// 	return
+	// }
+
 	json := gin.H{
-		"chat_pass": user.ChatPass.String,
+		"chat_user_id": user.ChatUserID,
+		"chat_pass":    user.ChatPass.String,
 	}
 	c.JSON(http.StatusOK, json)
 }
 
-func ChatCreateChannel(c *gin.Context) {
+func ChatCreateGroup(c *gin.Context) {
 	db := getDB(c)
 
 	var body struct {
 		ChainUID  string `json:"chain_uid" binding:"required,uuid"`
-		ChannelID string `json:"channel_id" binding:"required"`
+		ChannelID string `json:"group_id" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -71,7 +75,7 @@ func ChatDeleteChannel(c *gin.Context) {
 
 	var body struct {
 		ChainUID  string `json:"chain_uid" binding:"required,uuid"`
-		ChannelID string `json:"channel_id" binding:"required"`
+		ChannelID string `json:"group_id" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)

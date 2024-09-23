@@ -5,7 +5,6 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as apiChat from "../api/chat";
@@ -19,21 +18,29 @@ import BulkyList from "../components/Chat/BulkyList";
 
 import {
   Client,
-  Session,
-  Socket,
   Group,
   ChannelMessageList,
   User,
-  Channel,
+  Session,
+  Socket,
+  UserGroup,
 } from "@heroiclabs/nakama-js";
 
 import { uploadImage } from "../api/imgbb";
 import { bulkyItemPut } from "../api/bulky";
+import { useLocation } from "react-router";
 
 const VITE_CHAT_HOST = import.meta.env.VITE_CHAT_HOST;
 const VITE_CHAT_PORT = import.meta.env.VITE_CHAT_PORT;
 const VITE_CHAT_SERVER_KEY = import.meta.env.VITE_CHAT_SERVER_KEY;
 const VITE_CHAT_SSL = import.meta.env.VITE_CHAT_SSL == "true";
+
+const nakamaClient = new Client(
+  VITE_CHAT_SERVER_KEY,
+  VITE_CHAT_HOST,
+  VITE_CHAT_PORT,
+  VITE_CHAT_SSL,
+);
 
 const IS_GROUP_OPEN = true;
 
@@ -43,155 +50,167 @@ export type OnSendMessageWithImage = (
   file: string,
 ) => Promise<void>;
 
-type MmData = { userId: string; pass: string };
-
 // This follows the controller / view component pattern
 export default function Chat() {
-  const { t } = useTranslation();
+  const location = useLocation();
   const { chain, setChain, isThemeDefault } = useContext(StoreContext);
 
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [groups, setGroups] = useState<UserGroup[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<UserGroup | null>(null);
   const [selectedOldBulkyItems, setSelectedOldBulkyItems] = useState(false);
   const [postList, setPostList] = useState<ChannelMessageList>({
     messages: [],
   });
-  const [mmData, setMmData] = useState<MmData>();
   const [mmUsers, setMmUsers] = useState<Record<string, User>>({});
   const [loadingPostList, setLoadingPostList] = useState(false);
   const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
   const refScrollRoot = useRef<HTMLDivElement>(null);
-  const [refScrollTop, entry] = useIntersectionObserver({
+  const [refScrollTop] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
-
   const scrollTop = () => refScrollRoot.current?.scrollTo({ top: 0 });
+  const nakama = useNakama();
 
   useEffect(() => {
-    if (!chain || mmData) return;
-    if (chain && authUser && !window.nClient) {
-      apiChat
-        .chatPatchUser()
-        .then(async (resp) => {
-          const _mmData: Partial<MmData> = { pass: resp.data.chat_pass };
-          console.log("chat token", _mmData.pass);
-          if (!_mmData.pass) throw new Error("mmData not found");
-          // Start client
-          window.nClient = new Client(
-            VITE_CHAT_SERVER_KEY,
-            VITE_CHAT_HOST,
-            VITE_CHAT_PORT,
-            VITE_CHAT_SSL,
-          );
-          window.nSession = await window.nClient.authenticateEmail(
-            authUser.email,
-            _mmData.pass,
-            true,
-          );
-          _mmData.userId = window.nSession.user_id;
-
-          // Join channels
-          // await apiChat.chatJoinChannels(chain.uid);
-
-          setMmData(_mmData as MmData);
-          let chatRoomIds = chain.chat_room_ids || [];
-          if (!chain.chat_room_ids?.length) {
-            // console.log("create first channel");
-            // const group = await window.nClient.createGroup(window.nSession, {
-            //   name: crypto.randomUUID().toString(),
-            //   description: "General",
-            //   open: true,
-            // });
-            // await apiChat.chatCreateChannel(chain.uid, group.id!);
-            // console.log("create channel", group.id!);
-            // chatRoomIds.push(group.id!);
-          }
-          await getGroups(_mmData as MmData, chatRoomIds);
-        })
-        .catch((err) => {
-          console.error("error window.nClient", err);
-          window.nClient = undefined;
-        });
+    if (chain && authUser) {
+      if (!nakama.session) {
+        nakama
+          .createSession(authUser.uid, authUser.email)
+          .then(async (session) => {
+            console.log("session user id ", session.user_id);
+            try {
+              let chatRoomIds = chain.chat_room_ids || [];
+              if (!chain.chat_room_ids?.length && isChainAdmin) {
+                console.log("create first channel");
+                const group = await nakamaClient.createGroup(session, {
+                  avatar_url: "" /* Add here the chat color*/,
+                  description: "",
+                  name: "General",
+                  open: true,
+                });
+                await apiChat.chatCreateGroup(chain.uid, group.id);
+                console.log("create channel", group.id!);
+                chatRoomIds.push(group.id!);
+              }
+              await getGroups(session, chatRoomIds);
+            } catch (err) {
+              console.error("error nakamaClient", err);
+              if (session && nakamaClient)
+                console.log("nakama.session logout due to error");
+              nakamaClient.sessionLogout(
+                session,
+                session.token,
+                session.refresh_token,
+              );
+            }
+          })
+          .catch((err) => {
+            console.error("error nakamaClient", err);
+          });
+      } else {
+        getGroups(nakama.session, chain.chat_room_ids || [], true);
+      }
     }
-
-    if (window.nClient && chain) {
-      console.log("client");
-    }
-  }, [mmData, chain]);
+  }, [location]);
 
   const chainChannels = useMemo(() => {
     if (!chain || !chain.chat_room_ids) return [];
     console.log("chainChannels", groups);
     return groups.sort((a, b) =>
-      Date.parse(a.create_time!) > Date.parse(b.create_time!) ? 1 : 0,
+      Date.parse(a.group!.create_time!) > Date.parse(b.group!.create_time!)
+        ? 1
+        : 0,
     );
   }, [groups, chain]);
 
   /** Sets the channels state and return it too */
   async function getGroups(
-    _mmData: MmData,
+    session: Session,
     chatRoomIDs: string[],
-  ): Promise<Group[]> {
+    isFirstTime: boolean = false,
+  ): Promise<UserGroup[]> {
     console.log("getChannels start", chatRoomIDs);
-    if (!window.nClient) throw "nClient is not available";
-    if (!window.nSession) throw "nSession is not available";
-    if (!_mmData.userId) throw "Not logged in to chat";
+    if (!nakamaClient) throw "nClient is not available";
+    if (!session) throw "nSession is not available";
 
-    const _groups: Group[] = [];
-    const _mygroups = await window.nClient
-      .listUserGroups(window.nSession, _mmData.userId)
-      .then((res) => {
+    let _groups = await nakamaClient
+      .listUserGroups(session, session.user_id!)
+      .then<UserGroup[]>((res) => {
         console.log("listUserGroups", res);
         if (!res.user_groups) return [];
         return res.user_groups;
       });
-    for (const ch of _mygroups) {
-      if (chatRoomIDs?.includes(ch.group!.id!)) {
-        _groups.push(ch.group!);
+
+    // if first time find groups that are not available in nakama and join them
+    if (isFirstTime) {
+      let foundUnJoinedGroups = false;
+      const groupIds = _groups.map((ug) => ug.group!.id!);
+      // find loop groups that are not joined yet by the nakama user
+      for (const chatRoomID of chatRoomIDs) {
+        const found = groupIds.includes(chatRoomID);
+        if (!found) {
+          const ok = await nakamaClient
+            .joinGroup(session, chatRoomID)
+            .catch((e) => console.error("unable to find group", chatRoomID, e));
+          if (ok) {
+            foundUnJoinedGroups = true;
+          }
+        }
+      }
+      if (foundUnJoinedGroups) {
+        _groups = await nakamaClient
+          .listUserGroups(session, session.user_id!)
+          .then<UserGroup[]>((res) => {
+            console.log("listUserGroups", res);
+            if (!res.user_groups) return [];
+            return res.user_groups;
+          });
       }
     }
+
+    _groups = _groups.filter((ug) => chatRoomIDs.includes(ug.group!.id!));
+
     _groups.sort((a, b) =>
-      Date.parse(a.create_time!) > Date.parse(b.create_time!) ? 1 : 0,
+      Date.parse(a.group!.create_time!) > Date.parse(b.group!.create_time!)
+        ? 1
+        : 0,
     );
 
-    // if no channels are selected select the oldest
-    let _selectedGroup = selectedGroup;
-    if (!_selectedGroup) {
-      _selectedGroup = _groups.at(0) || null;
+    if (isFirstTime) {
+      // if no channels are selected select the oldest
+      let _selectedGroup: UserGroup | null = null;
+      _selectedGroup = _groups[0] || null;
       if (_selectedGroup) {
         await onSelectGroup(_selectedGroup);
       }
+      if (!_selectedGroup) onSelectOldBulkyItems();
     }
-    if (!_selectedGroup) onSelectOldBulkyItems();
 
     setGroups(_groups);
     return _groups;
   }
 
   async function onCreateChannel(name: string, color: string) {
-    if (!chain || !window.nClient || !window.nSession || !mmData) {
+    if (!chain || !nakamaClient || !nakama.session) {
       if (!chain) console.error("chain not found");
-      if (!window.nClient) console.error("nClient not found");
-      if (!window.nSession) console.error("nSession not found");
-      if (!mmData) console.error("mmData not found");
+      if (!nakamaClient) console.error("nClient not found");
+      if (!nakama.session) console.error("nSession not found");
       return;
     }
     try {
       console.info("Creating channel", name);
-      console.info("Channel color", color);
-
-      const group = await window.nClient.createGroup(window.nSession, {
+      const group = await nakamaClient.createGroup(nakama.session, {
         name: crypto.randomUUID().toString(),
         description: name,
-        open: IS_GROUP_OPEN,
         avatar_url: color,
+        open: IS_GROUP_OPEN,
       });
-      await apiChat.chatCreateChannel(chain.uid, group.id!);
-      const _groups = await getGroups(mmData, [
+      await apiChat.chatCreateGroup(chain.uid, group.id!);
+      const _groups = await getGroups(nakama.session, [
         ...(chain.chat_room_ids || []),
         group.id!,
       ]);
-      const _group = _groups.find((c) => c.id == group.id!) || null;
+      const _group = _groups.find((c) => c.group!.id == group.id!) || null;
 
       // update chain object from server to update chain.room_ids value
       await setChain(chain.uid, authUser);
@@ -206,21 +225,19 @@ export default function Chat() {
     }
   }
 
-  async function onRenameChannel(channel: Group, name: string) {
-    if (!chain || !window.nClient || !window.nSession || !mmData) {
+  async function onRenameChannel(channel: UserGroup, name: string) {
+    if (!chain || !nakamaClient || !nakama.session) {
       if (!chain) console.error("chain not found");
-      if (!window.nClient) console.error("window.nClient not found");
-      if (!window.nSession) console.error("window.nSession not found");
-      if (!mmData) console.error("mmData not found");
+      if (!nakamaClient) console.error("nakamaClient not found");
+      if (!nakama.session) console.error("nakama.session not found");
       return;
     }
     try {
       console.info("Updating channel name", name);
-      await window.nClient.updateGroup(window.nSession, channel.id!, {
+      await nakamaClient.updateGroup(nakama.session, channel.group!.id!, {
         description: name,
       });
-      const _channels = await getGroups(mmData, chain?.chat_room_ids || []);
-      setGroups(_channels);
+      await getGroups(nakama.session, chain?.chat_room_ids || []);
     } catch (err) {
       console.error(err);
     }
@@ -228,17 +245,17 @@ export default function Chat() {
 
   async function onDeleteChannel(channelID: string) {
     console.log(selectedGroup);
-    if (!chain || !window.nClient) {
+    if (!chain || !nakamaClient) {
       if (!chain) console.error("chain not found");
-      if (!window.nClient) console.error("window.nClient not found");
-      if (!window.nSession) console.error("window.nSession not found");
+      if (!nakamaClient) console.error("nakamaClient not found");
+      if (!nakama.session) console.error("nakama.session not found");
       return;
     }
     try {
       console.info("Deleting channel", channelID);
-      await apiChat.chatDeleteChannel(chain.uid, channelID);
+      await apiChat.chatDeleteGroup(chain.uid, channelID);
 
-      const _channels = groups.filter((c) => c.id != channelID);
+      const _channels = groups.filter((c) => c.group!.id != channelID);
       const _channel = _channels.at(-1) || null;
 
       setGroups(_channels);
@@ -253,31 +270,41 @@ export default function Chat() {
   }
 
   function onDeletePost(postID: string) {
-    if (!window.nClient || !window.nSocket || !selectedGroup) return;
+    if (!nakamaClient || !nakama.socket || !selectedGroup) return;
 
     console.info("deleting post", postID);
-    window.nSocket
+    nakama.socket
       ?.removeChatMessage(window.nChannel!.id!, postID)
       .finally(() => {
         reqPostList("current");
       });
   }
 
-  async function onSelectGroup(group: Group) {
-    if (window.nSocket && selectedGroup)
-      window.nSocket.leaveChat(selectedGroup.id!);
+  function onBanSender(senderID: string) {
+    if (!nakamaClient || !nakama.socket || !nakama.session || !selectedGroup)
+      return;
+    console.info("banning user");
+    nakamaClient.banGroupUsers(nakama.session, selectedGroup.group!.id!, [
+      senderID,
+    ]);
+  }
+
+  async function onSelectGroup(group: UserGroup) {
+    if (nakama.socket && selectedGroup)
+      nakama.socket.leaveChat(selectedGroup.group!.id!);
 
     setSelectedOldBulkyItems(false);
     setSelectedGroup(group);
-    console.log("selected group", group.id);
-    if (!group || !window.nClient || !window.nSession) return;
-    if (!window.nSocket) {
-      window.nSocket = window.nClient.createSocket(VITE_CHAT_SSL);
-      await window.nSocket.connect(window.nSession, true);
+    console.log("selected group", group.group!.id);
+    if (!group || !nakamaClient || !nakama.session) return;
+    let socket = nakama.socket;
+    if (!nakama.socket) {
+      socket = nakama.createSocket();
+      await socket.connect(nakama.session, true);
     }
-    window.nChannel = await window.nSocket?.joinChat(group.id!, 3, true, false);
+    window.nChannel = await socket!.joinChat(group.group!.id!, 3, true, false);
 
-    window.nSocket.onchannelmessage = (msg) => {
+    socket!.onchannelmessage = (msg) => {
       console.log("channel message", msg);
       if (msg.channel_id == window.nChannel?.id) reqPostList("current");
     };
@@ -290,10 +317,10 @@ export default function Chat() {
     // Don't ask for more posts than the last post
     if (cursor == "previous" && !postList.next_cursor) return;
     setLoadingPostList(true);
-    if (!window.nClient || !window.nSession) return;
+    if (!nakamaClient || !nakama.session) return;
 
-    const newPosts = await window.nClient.listChannelMessages(
-      window.nSession,
+    const newPosts = await nakamaClient.listChannelMessages(
+      nakama.session,
       window.nChannel!.id!,
       100,
       false,
@@ -312,15 +339,6 @@ export default function Chat() {
     }
     setLoadingPostList(false);
   }
-
-  function onScrollTop(lastPostId: string) {
-    reqPostList("previous");
-  }
-  // async function getFile(fileId: string, timestamp: number) {
-  //   if (!selectedChannel || !window.nClient) return;
-  //   const fileUrl = await window.nClient.getFileUrl(fileId, timestamp);
-  //   return fileUrl.toString();
-  // }
 
   function onSendMessageWithImage(
     title: string,
@@ -352,9 +370,9 @@ export default function Chat() {
   }
 
   async function onSendMessage(message: string) {
-    if (!selectedGroup || !window.nSocket || !window.nClient) return;
-    console.log("reqPostList", selectedGroup.id);
-    await window.nSocket.writeChatMessage(window.nChannel!.id!, { message });
+    if (!selectedGroup || !nakama.socket || !nakamaClient) return;
+    console.log("reqPostList", selectedGroup.group!.id);
+    await nakama.socket.writeChatMessage(window.nChannel!.id!, { message });
 
     await reqPostList("current");
     scrollTop();
@@ -367,9 +385,9 @@ export default function Chat() {
   async function getMmUser(mmUserID: string): Promise<User> {
     const found = mmUsers[mmUserID];
     if (found) return found;
-    if (!window.nSession) throw "No session";
+    if (!nakama.session) throw "No session";
 
-    const res = await window.nClient?.getUsers(window.nSession, [mmUserID]);
+    const res = await nakamaClient?.getUsers(nakama.session, [mmUserID]);
     if (!res?.users?.length) throw "Unable to find user";
     const firstUser = res.users[0];
     setMmUsers((s) => ({
@@ -382,12 +400,12 @@ export default function Chat() {
   function onSelectOldBulkyItems() {
     setSelectedGroup(null);
     setSelectedOldBulkyItems(true);
-    if (window.nChannel && window.nSocket)
-      window.nSocket.leaveChat(window.nChannel.id!);
+    if (window.nChannel && nakama.socket)
+      nakama.socket.leaveChat(window.nChannel.id!);
   }
   function onDeleteChannelSubmit() {
     if (!selectedGroup) return;
-    if (selectedGroup) onDeleteChannel(selectedGroup.id!);
+    if (selectedGroup) onDeleteChannel(selectedGroup.group!.id!);
   }
   function onRenameChannelSubmit(name: string) {
     if (!selectedGroup) return;
@@ -431,7 +449,7 @@ export default function Chat() {
           >
             {selectedOldBulkyItems ? (
               <BulkyList />
-            ) : window.nClient ? (
+            ) : nakama.session ? (
               <ChatPostList
                 isChainAdmin={isChainAdmin}
                 authUser={authUser}
@@ -439,6 +457,7 @@ export default function Chat() {
                 // getFile={getFile}
                 postList={postList}
                 chainUsers={chainUsers}
+                onBanSender={onBanSender}
                 onDeletePost={onDeletePost}
               />
             ) : (
@@ -458,4 +477,31 @@ export default function Chat() {
       </IonContent>
     </IonPage>
   );
+}
+
+function useNakama() {
+  const [session, setSession] = useState<Session | undefined>();
+  const [socket, setSocket] = useState<Socket | undefined>();
+
+  const createSession = (uid: string, email: string) =>
+    apiChat.chatPatchUser().then(async (resp) => {
+      const password = resp.data.chat_pass;
+      const _session = await nakamaClient.authenticateEmail(
+        email,
+        password,
+        true,
+        uid,
+      );
+      setSession(_session);
+      console.log("get session", _session);
+      return _session;
+    });
+
+  const createSocket = () => {
+    const _socket = nakamaClient.createSocket(VITE_CHAT_SSL);
+    setSocket(_socket);
+    return _socket;
+  };
+
+  return { createSession, session, socket, createSocket };
 }

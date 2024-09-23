@@ -29,14 +29,14 @@ import {
   ellipse,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { IonAlertCustomEvent, IonModalCustomEvent } from "@ionic/core";
-import { Group } from "@heroiclabs/nakama-js";
+import { IonAlertCustomEvent } from "@ionic/core";
+import { UserGroup } from "@heroiclabs/nakama-js";
 
 interface Props {
-  chainChannels: Group[];
-  selectedChannel: Group | null;
+  chainChannels: UserGroup[];
+  selectedChannel: UserGroup | null;
   isChainAdmin: boolean;
-  onSelectChannel: (cr: Group) => void;
+  onSelectChannel: (cr: UserGroup) => void;
   onCreateChannel: (name: string, color: string) => void;
   onDeleteChannelSubmit: () => void;
   onRenameChannelSubmit: (name: string) => void;
@@ -83,13 +83,8 @@ export default function ChatRoomSelect(props: Props) {
   const modal = useRef<HTMLIonModalElement>(null);
   const [channelName, setChannelName] = useState("");
   function onCreateChannelSubmit() {
-    // if (e?.detail?.role === "submit" && e.detail?.data?.values?.name) {
     props.onCreateChannel(channelName, channelColor);
-    // props.onCreateChannel(channelName);
-
     modal.current?.dismiss();
-
-    //  }
   }
   function cancel() {
     modal.current?.dismiss();
@@ -130,7 +125,7 @@ export default function ChatRoomSelect(props: Props) {
         ],
         inputs: [
           {
-            placeholder: props.selectedChannel?.description!,
+            placeholder: props.selectedChannel?.group!.description!,
             name: "newChannelName",
           },
         ],
@@ -141,20 +136,18 @@ export default function ChatRoomSelect(props: Props) {
   return (
     <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-purple-shade">
       {props.chainChannels.map((cr, i) => {
-        const initials = cr.description
-          ? cr
-              .description!.split(" ")
-              .map((word) => word[0])
-              .join("")
-          : "";
+        const initials = cr
+          .group!.description!.split(" ")
+          .map((word) => word[0])
+          .join("");
 
-        const isSelected = cr.id === props.selectedChannel?.id;
+        const isSelected = cr.group!.id === props.selectedChannel?.group!.id;
         return (
           <button
             className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
               isSelected ? " tw-bg-[#fff]/20" : "",
             )}
-            key={cr.id}
+            key={cr.group!.id}
             {...(isSelected
               ? props.isChainAdmin
                 ? longPressChannel(isSelected)
@@ -164,12 +157,12 @@ export default function ChatRoomSelect(props: Props) {
                 })}
           >
             <div
+              style={{ backgroundColor: cr.group!.avatar_url || "#fff" }}
               className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-flex tw-items-center tw-justify-center tw-ring  group-hover:tw-ring-purple tw-transition-colors".concat(
                 isSelected
                   ? " tw-ring-purple tw-ring-1"
                   : " tw-ring-transparent",
               )}
-              style={{ backgroundColor: cr.avatar_url }}
             >
               <span>{initials}</span>
               {isSelected && props.isChainAdmin ? (
@@ -183,7 +176,7 @@ export default function ChatRoomSelect(props: Props) {
                 isSelected ? " tw-font-bold" : "",
               )}
             >
-              {cr.description!}
+              {cr.group!.description!}
             </div>
           </button>
         );

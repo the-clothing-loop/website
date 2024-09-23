@@ -70,7 +70,7 @@ services:
       - "-ecx"
       - >
           /nakama/nakama migrate up --database.address postgres:localdb@nakama_postgres:5432/nakama &&
-          exec /nakama/nakama --name nakama1 --database.address postgres:localdb@nakama_postgres:5432/nakama --logger.level DEBUG --session.token_expiry_sec 7200          
+          exec /nakama/nakama --name nakama1 --database.address postgres:localdb@nakama_postgres:5432/nakama --logger.level DEBUG --session.token_expiry_sec 7200
     restart: always
     links:
       - nakama_postgres:db
@@ -79,6 +79,7 @@ services:
         condition: service_healthy
     volumes:
       - nakama_data:/nakama/data
+      # - ./nakama:/nakama/data/modules/
     ports:
       - "7349:7349"
       - "7350:7350"

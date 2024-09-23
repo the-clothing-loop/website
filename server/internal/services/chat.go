@@ -17,19 +17,7 @@ import (
 
 // Checks if the user is registered on the matrix server if not they are registered
 func ChatPatchUser(db *gorm.DB, ctx context.Context, user *models.User) error {
-	// check if user exists properly
-	if user.ChatUserID.Valid {
-		// get the chat user
-		res, err := app.ChatClient.Users(ctx, user.ChatUserID.String)
-		if err != nil {
-			slog.Info("chat user should exists but doesn't", "expected id", user.ChatUserID.String)
-			return err
-		}
-		_, err = lo.Nth(res.Users, 0)
-		if err != nil {
-			slog.Info("chat user should exists but doesn't", "expected id", user.ChatUserID.String)
-			return err
-		}
+	if user.ChatPass.Valid {
 		return nil
 	}
 
@@ -37,24 +25,6 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, user *models.User) error {
 
 	p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Upper})
 	password := string(p)
-	ctx2 := context.Background()
-	chatClient2 := app.ChatCreateClient()
-	err := chatClient2.AuthenticateEmail(ctx2, user.Email.String, password, true, user.Name)
-	if err != nil {
-		return err
-	}
-	chatClient2.LinkEmail(ctx2, user.Email.String, password)
-
-	res, err := chatClient2.Account(ctx2)
-	if err != nil {
-		return err
-	}
-	mmUser := res.User
-
-	chatClient2.SessionLogout(ctx2)
-
-	// Update database
-	user.ChatUserID = null.StringFrom(mmUser.Id)
 	user.ChatPass = null.StringFrom(password)
 	return db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`,
 		user.ChatUserID.String,

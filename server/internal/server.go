@@ -146,9 +146,9 @@ func Routes() *gin.Engine {
 
 	// chat
 	v2.PATCH("/chat/user/password", controllers.ChatPatchUserPassword)
-	v2.POST("/chat/channel/create", controllers.ChatCreateChannel)
-	// v2.POST("/chat/channel/join", controllers.ChatJoinChannels)
-	v2.POST("/chat/channel/delete", controllers.ChatDeleteChannel)
+	v2.POST("/chat/group/create", controllers.ChatCreateGroup)
+	// v2.POST("/chat/group/join", controllers.ChatJoinChannels)
+	v2.POST("/chat/group/delete", controllers.ChatDeleteChannel)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)
