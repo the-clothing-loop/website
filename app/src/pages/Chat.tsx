@@ -28,6 +28,7 @@ import {
 
 import { uploadImage } from "../api/imgbb";
 import { bulkyItemPut } from "../api/bulky";
+import { useLocation } from "react-router";
 
 const VITE_CHAT_HOST = import.meta.env.VITE_CHAT_HOST;
 const VITE_CHAT_PORT = import.meta.env.VITE_CHAT_PORT;
@@ -51,6 +52,7 @@ export type OnSendMessageWithImage = (
 
 // This follows the controller / view component pattern
 export default function Chat() {
+  const location = useLocation();
   const { chain, setChain, isThemeDefault } = useContext(StoreContext);
 
   const [groups, setGroups] = useState<UserGroup[]>([]);
@@ -70,46 +72,46 @@ export default function Chat() {
   const nakama = useNakama();
 
   useEffect(() => {
-    if (chain && authUser && !nakama.session) {
-      nakama
-        .createSession(authUser.uid, authUser.email)
-        .then(async (session) => {
-          console.log("session user id ", session.user_id);
-          try {
-            let chatRoomIds = chain.chat_room_ids || [];
-            if (!chain.chat_room_ids?.length && isChainAdmin) {
-              console.log("create first channel");
-              const group = await nakamaClient.createGroup(session, {
-                avatar_url: "" /* Add here the chat color*/,
-                description: "",
-                name: "General",
-                open: true,
-              });
-              await apiChat.chatCreateGroup(chain.uid, group.id);
-              console.log("create channel", group.id!);
-              chatRoomIds.push(group.id!);
+    if (chain && authUser) {
+      if (!nakama.session) {
+        nakama
+          .createSession(authUser.uid, authUser.email)
+          .then(async (session) => {
+            console.log("session user id ", session.user_id);
+            try {
+              let chatRoomIds = chain.chat_room_ids || [];
+              if (!chain.chat_room_ids?.length && isChainAdmin) {
+                console.log("create first channel");
+                const group = await nakamaClient.createGroup(session, {
+                  avatar_url: "" /* Add here the chat color*/,
+                  description: "",
+                  name: "General",
+                  open: true,
+                });
+                await apiChat.chatCreateGroup(chain.uid, group.id);
+                console.log("create channel", group.id!);
+                chatRoomIds.push(group.id!);
+              }
+              await getGroups(session, chatRoomIds);
+            } catch (err) {
+              console.error("error nakamaClient", err);
+              if (session && nakamaClient)
+                console.log("nakama.session logout due to error");
+              nakamaClient.sessionLogout(
+                session,
+                session.token,
+                session.refresh_token,
+              );
             }
-            await getGroups(session, chatRoomIds);
-          } catch (err) {
+          })
+          .catch((err) => {
             console.error("error nakamaClient", err);
-            if (session && nakamaClient)
-              console.log("nakama.session logout due to error");
-            nakamaClient.sessionLogout(
-              session,
-              session.token,
-              session.refresh_token,
-            );
-          }
-        })
-        .catch((err) => {
-          console.error("error nakamaClient", err);
-        });
+          });
+      } else {
+        getGroups(nakama.session, chain.chat_room_ids || [], true);
+      }
     }
-
-    if (nakamaClient && chain) {
-      console.log("client");
-    }
-  }, [chain]);
+  }, [location]);
 
   const chainChannels = useMemo(() => {
     if (!chain || !chain.chat_room_ids) return [];
@@ -174,15 +176,15 @@ export default function Chat() {
         : 0,
     );
 
-    // if no channels are selected select the oldest
-    let _selectedGroup: UserGroup | null = null;
     if (isFirstTime) {
+      // if no channels are selected select the oldest
+      let _selectedGroup: UserGroup | null = null;
       _selectedGroup = _groups[0] || null;
       if (_selectedGroup) {
         await onSelectGroup(_selectedGroup);
       }
+      if (!_selectedGroup) onSelectOldBulkyItems();
     }
-    if (!_selectedGroup) onSelectOldBulkyItems();
 
     setGroups(_groups);
     return _groups;
