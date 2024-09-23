@@ -2,14 +2,12 @@ package services
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"regexp"
 	"strings"
 
 	"github.com/GGP1/atoll"
 	"github.com/samber/lo"
-	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gopkg.in/guregu/null.v3"
 	"gorm.io/gorm"
@@ -86,32 +84,32 @@ func ChatDeleteChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mm
 // 	return err
 // }
 
-func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user *models.User, isChainAdmin bool, mmChannelId string) error {
-	if user.ChatUserID.String == "" {
-		return fmt.Errorf("You must be registered on our chat server before joining a room")
-	}
+// func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user *models.User, isChainAdmin bool, mmChannelId string) error {
+// 	if user.ChatUserID.String == "" {
+// 		return fmt.Errorf("You must be registered on our chat server before joining a room")
+// 	}
 
-	if len(chain.ChatRoomIDs) == 0 || !lo.Contains(chain.ChatRoomIDs, mmChannelId) {
-		return fmt.Errorf("Channel does not exist in this Loop")
-	}
+// 	if len(chain.ChatRoomIDs) == 0 || !lo.Contains(chain.ChatRoomIDs, mmChannelId) {
+// 		return fmt.Errorf("Channel does not exist in this Loop")
+// 	}
 
-	// Check if room already contains user
-	client2 := app.ChatCreateClient()
-	ctx2 := context.Background()
-	err := client2.AuthenticateEmail(ctx, user.Email.String, user.ChatPass.String, false, user.Name)
-	if err != nil {
-		return err
-	}
-	client2.JoinGroup(ctx2, mmChannelId)
-	if isChainAdmin {
-		err = app.ChatClient.PromoteGroupUsers(ctx, mmChannelId, user.ChatUserID.String)
-		if err != nil {
-			return err
-		}
-	}
+// 	// Check if room already contains user
+// 	client2 := app.ChatCreateClient()
+// 	ctx2 := context.Background()
+// 	err := client2.AuthenticateEmail(ctx, user.Email.String, user.ChatPass.String, false, user.Name)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	client2.JoinGroup(ctx2, mmChannelId)
+// 	if isChainAdmin {
+// 		err = app.ChatClient.PromoteGroupUsers(ctx, mmChannelId, user.ChatUserID.String)
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 var reChatValidateUniqueName = regexp.MustCompile("[^a-z0-9]")
 

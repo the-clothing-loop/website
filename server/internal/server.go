@@ -18,7 +18,7 @@ func Routes() *gin.Engine {
 	// initialization
 	db := app.DatabaseInit()
 	app.MailInit()
-	app.ChatInit()
+	// app.ChatInit()
 
 	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
 		app.BrevoInit()
