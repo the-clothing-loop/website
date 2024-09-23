@@ -70,7 +70,7 @@ export default function SelectUserModal({
   }, [selectedUserUID, route, authUser, chainUsers]);
 
   async function submit(userUID: string) {
-    console.info("Select a user for bag","user:", userUID, "bag:", bagID);
+    console.info("Select a user for bag", "user:", userUID, "bag:", bagID);
 
     if ((typeof userUID !== "string" || !userUID) && !bagID) return;
     modal.current?.dismiss(userUID, "success");

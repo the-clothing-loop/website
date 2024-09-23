@@ -260,14 +260,15 @@ export default function Chat() {
       console.info("Deleting channel", channelID);
       await apiChat.chatDeleteGroup(chain.uid, channelID);
 
-      const _channels = groups.filter((c) => c.group!.id != channelID);
-      const _channel = _channels.at(-1) || null;
+      const _groups = groups.filter((c) => c.group!.id != channelID);
+      const _selectedGroup = _groups.at(-1) || null;
 
-      setGroups(_channels);
-      setSelectedGroup(_channel);
+      setGroups(_groups);
+      if (_selectedGroup) onSelectGroup(_selectedGroup);
+      else onSelectOldBulkyItems();
       // update chain object from server to update chain.room_ids value
       await setChain(chain.uid, authUser);
-      if (!_channel) return;
+      if (!_selectedGroup) return;
       reqPostList("current");
     } catch (err) {
       console.error(err);
