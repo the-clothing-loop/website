@@ -240,30 +240,25 @@ export default function ChatRoomSelect(props: Props) {
       <IonModal
         ref={modal}
         trigger="create_channel_btn"
-        onIonModalDidDismiss={onCreateChannelSubmit}
       >
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
               <IonButton onClick={cancel}>{t("cancel")}</IonButton>
             </IonButtons>
-            <IonTitle>{bag ? t("upateRoom") : t("createRoom")}</IonTitle>
+            <IonTitle>{t("createRoom")}</IonTitle>
             <IonButtons slot="end">
               <IonButton
                 onClick={onCreateChannelSubmit}
-                //    color={!error ? "primary" : "danger"}
               >
-                {t("save")}
+                {t("Create")}
               </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
           <IonList>
-            <IonItem
-              lines="none"
-              // color={error === "number" ? "danger" : undefined}
-            >
+            <IonItem lines="none">
               <IonInput
                 type="text"
                 label={t("roomName")}
@@ -273,8 +268,7 @@ export default function ChatRoomSelect(props: Props) {
                 autoCapitalize="words"
                 maxlength={18}
                 counter
-                placeholder={t("name")}
-                //value={"Name"}
+                placeholder={t("roomName")}
                 onFocus={(e) => (e.target as any as HTMLInputElement).select()}
                 onIonInput={(e) =>
                   setChannelName(e.detail.value?.toString() || "")
