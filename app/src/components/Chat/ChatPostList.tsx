@@ -19,7 +19,6 @@ interface Props {
   // getFile: (fileId: string, timestamp: number) => void;
   chainUsers: User[];
   onDeletePost: (id: string) => void;
-  onBanSender: (id: string) => void;
 }
 
 export interface PostActionSheetOpen {
@@ -41,23 +40,15 @@ export default function ChatPostList(props: Props) {
         role: "destructive",
         handler: () => handlePostOptionSelect("delete"),
       },
+      {
+        text: t("cancel"),
+        role: "cancel",
+      },
     ];
-
-    if (isChainAdmin && isPostActionSheetOpen?.isMe === false) {
-      list.push({
-        text: t("ban"),
-        role: "destructive",
-        handler: () => handlePostOptionSelect("ban"),
-      });
-    }
-    list.push({
-      text: t("cancel"),
-      role: "cancel",
-    });
     return list;
   }, [isChainAdmin, isPostActionSheetOpen]);
 
-  function handlePostOptionSelect(value: "delete" | "ban") {
+  function handlePostOptionSelect(value: "delete") {
     if (value == "delete") {
       if (!isPostActionSheetOpen) return;
       const postID = isPostActionSheetOpen.post.message_id!;
@@ -71,22 +62,6 @@ export default function ChatPostList(props: Props) {
             role: "destructive",
             text: t("delete"),
             handler: () => props.onDeletePost(postID),
-          },
-        ],
-      });
-    } else if (value == "ban") {
-      if (!isPostActionSheetOpen) return;
-      const postUser = isPostActionSheetOpen.post.sender_id!;
-      presentAlert({
-        header: "Ban user?",
-        buttons: [
-          {
-            text: t("cancel"),
-          },
-          {
-            role: "destructive",
-            text: t("ban"),
-            handler: () => props.onBanSender(postUser),
           },
         ],
       });

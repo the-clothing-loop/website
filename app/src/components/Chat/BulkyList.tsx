@@ -91,7 +91,7 @@ export default function BulkyList() {
       let message = window.encodeURI(
         t("imInterestedInThisBulkyItem", { name: bulkyItemName }),
       );
-      console.log("phone", phone, "message", message);
+      console.info("phone", phone, "message", message);
 
       switch (type) {
         case "sms":
