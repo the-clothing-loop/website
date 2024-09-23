@@ -23,6 +23,7 @@ import {
   User,
   Session,
   Socket,
+  UserGroup,
 } from "@heroiclabs/nakama-js";
 
 import { uploadImage } from "../api/imgbb";
@@ -52,8 +53,8 @@ export type OnSendMessageWithImage = (
 export default function Chat() {
   const { chain, setChain, isThemeDefault } = useContext(StoreContext);
 
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [groups, setGroups] = useState<UserGroup[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<UserGroup | null>(null);
   const [selectedOldBulkyItems, setSelectedOldBulkyItems] = useState(false);
   const [postList, setPostList] = useState<ChannelMessageList>({
     messages: [],
@@ -114,7 +115,9 @@ export default function Chat() {
     if (!chain || !chain.chat_room_ids) return [];
     console.log("chainChannels", groups);
     return groups.sort((a, b) =>
-      Date.parse(a.create_time!) > Date.parse(b.create_time!) ? 1 : 0,
+      Date.parse(a.group!.create_time!) > Date.parse(b.group!.create_time!)
+        ? 1
+        : 0,
     );
   }, [groups, chain]);
 
@@ -122,56 +125,59 @@ export default function Chat() {
   async function getGroups(
     session: Session,
     chatRoomIDs: string[],
-  ): Promise<Group[]> {
+    isFirstTime: boolean = false,
+  ): Promise<UserGroup[]> {
     console.log("getChannels start", chatRoomIDs);
     if (!nakamaClient) throw "nClient is not available";
     if (!session) throw "nSession is not available";
 
-    const _groups: Group[] = [];
-    const _mygroups = await nakamaClient
+    let _groups = await nakamaClient
       .listUserGroups(session, session.user_id!)
-      .then((res) => {
+      .then<UserGroup[]>((res) => {
         console.log("listUserGroups", res);
         if (!res.user_groups) return [];
         return res.user_groups;
       });
 
-    const joinedGroupIds = [];
-    for (const chatRoomID of chatRoomIDs) {
-      let foundGroup = _mygroups.find((g) => g.group!.id === chatRoomID);
-      if (foundGroup) {
-        _groups.push(foundGroup.group!);
-      } else {
-        const ok = await nakamaClient
-          .joinGroup(session, chatRoomID)
-          .catch((e) => console.error("unable to find group", chatRoomID, e));
-        if (ok) {
-          joinedGroupIds.push(chatRoomID);
+    // if first time find groups that are not available in nakama and join them
+    if (isFirstTime) {
+      let foundUnJoinedGroups = false;
+      const groupIds = _groups.map((ug) => ug.group!.id!);
+      // find loop groups that are not joined yet by the nakama user
+      for (const chatRoomID of chatRoomIDs) {
+        const found = groupIds.includes(chatRoomID);
+        if (!found) {
+          const ok = await nakamaClient
+            .joinGroup(session, chatRoomID)
+            .catch((e) => console.error("unable to find group", chatRoomID, e));
+          if (ok) {
+            foundUnJoinedGroups = true;
+          }
         }
       }
-    }
-    if (joinedGroupIds.length) {
-      const _moreGroups = await nakamaClient
-        .listUserGroups(session, session.user_id!)
-        .then((res) => {
-          console.log("listUserGroups", res);
-          if (!res.user_groups) return [];
-          return res.user_groups;
-        });
-      for (const group of _moreGroups) {
-        if (joinedGroupIds.indexOf(group!.group!.id!) === -1) {
-          _groups.push(group!.group!);
-        }
+      if (foundUnJoinedGroups) {
+        _groups = await nakamaClient
+          .listUserGroups(session, session.user_id!)
+          .then<UserGroup[]>((res) => {
+            console.log("listUserGroups", res);
+            if (!res.user_groups) return [];
+            return res.user_groups;
+          });
       }
     }
+
+    _groups = _groups.filter((ug) => chatRoomIDs.includes(ug.group!.id!));
+
     _groups.sort((a, b) =>
-      Date.parse(a.create_time!) > Date.parse(b.create_time!) ? 1 : 0,
+      Date.parse(a.group!.create_time!) > Date.parse(b.group!.create_time!)
+        ? 1
+        : 0,
     );
 
     // if no channels are selected select the oldest
-    let _selectedGroup = selectedGroup;
-    if (!_selectedGroup) {
-      _selectedGroup = _groups.at(0) || null;
+    let _selectedGroup: UserGroup | null = null;
+    if (isFirstTime) {
+      _selectedGroup = _groups[0] || null;
       if (_selectedGroup) {
         await onSelectGroup(_selectedGroup);
       }
@@ -194,6 +200,7 @@ export default function Chat() {
       const group = await nakamaClient.createGroup(nakama.session, {
         name: crypto.randomUUID().toString(),
         description: name,
+        avatar_url: "#ee33ee",
         open: IS_GROUP_OPEN,
       });
       await apiChat.chatCreateGroup(chain.uid, group.id!);
@@ -201,7 +208,7 @@ export default function Chat() {
         ...(chain.chat_room_ids || []),
         group.id!,
       ]);
-      const _group = _groups.find((c) => c.id == group.id!) || null;
+      const _group = _groups.find((c) => c.group!.id == group.id!) || null;
 
       // update chain object from server to update chain.room_ids value
       await setChain(chain.uid, authUser);
@@ -216,7 +223,7 @@ export default function Chat() {
     }
   }
 
-  async function onRenameChannel(channel: Group, name: string) {
+  async function onRenameChannel(channel: UserGroup, name: string) {
     if (!chain || !nakamaClient || !nakama.session) {
       if (!chain) console.error("chain not found");
       if (!nakamaClient) console.error("nakamaClient not found");
@@ -225,14 +232,10 @@ export default function Chat() {
     }
     try {
       console.info("Updating channel name", name);
-      await nakamaClient.updateGroup(nakama.session, channel.id!, {
+      await nakamaClient.updateGroup(nakama.session, channel.group!.id!, {
         description: name,
       });
-      const _channels = await getGroups(
-        nakama.session,
-        chain?.chat_room_ids || [],
-      );
-      setGroups(_channels);
+      await getGroups(nakama.session, chain?.chat_room_ids || []);
     } catch (err) {
       console.error(err);
     }
@@ -250,7 +253,7 @@ export default function Chat() {
       console.info("Deleting channel", channelID);
       await apiChat.chatDeleteGroup(chain.uid, channelID);
 
-      const _channels = groups.filter((c) => c.id != channelID);
+      const _channels = groups.filter((c) => c.group!.id != channelID);
       const _channel = _channels.at(-1) || null;
 
       setGroups(_channels);
@@ -275,20 +278,20 @@ export default function Chat() {
       });
   }
 
-  async function onSelectGroup(group: Group) {
+  async function onSelectGroup(group: UserGroup) {
     if (nakama.socket && selectedGroup)
-      nakama.socket.leaveChat(selectedGroup.id!);
+      nakama.socket.leaveChat(selectedGroup.group!.id!);
 
     setSelectedOldBulkyItems(false);
     setSelectedGroup(group);
-    console.log("selected group", group.id);
+    console.log("selected group", group.group!.id);
     if (!group || !nakamaClient || !nakama.session) return;
     let socket = nakama.socket;
     if (!nakama.socket) {
       socket = nakama.createSocket();
       await socket.connect(nakama.session, true);
     }
-    window.nChannel = await socket!.joinChat(group.id!, 3, true, false);
+    window.nChannel = await socket!.joinChat(group.group!.id!, 3, true, false);
 
     socket!.onchannelmessage = (msg) => {
       console.log("channel message", msg);
@@ -357,7 +360,7 @@ export default function Chat() {
 
   async function onSendMessage(message: string) {
     if (!selectedGroup || !nakama.socket || !nakamaClient) return;
-    console.log("reqPostList", selectedGroup.id);
+    console.log("reqPostList", selectedGroup.group!.id);
     await nakama.socket.writeChatMessage(window.nChannel!.id!, { message });
 
     await reqPostList("current");
@@ -391,7 +394,7 @@ export default function Chat() {
   }
   function onDeleteChannelSubmit() {
     if (!selectedGroup) return;
-    if (selectedGroup) onDeleteChannel(selectedGroup.id!);
+    if (selectedGroup) onDeleteChannel(selectedGroup.group!.id!);
   }
   function onRenameChannelSubmit(name: string) {
     if (!selectedGroup) return;

@@ -5,13 +5,13 @@ import { useLongPress } from "use-long-press";
 import { addOutline, build as buildFilled } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
-import { Group } from "@heroiclabs/nakama-js";
+import { UserGroup } from "@heroiclabs/nakama-js";
 
 interface Props {
-  chainChannels: Group[];
-  selectedChannel: Group | null;
+  chainChannels: UserGroup[];
+  selectedChannel: UserGroup | null;
   isChainAdmin: boolean;
-  onSelectChannel: (cr: Group) => void;
+  onSelectChannel: (cr: UserGroup) => void;
   onCreateChannel: (name: string) => void;
   onDeleteChannelSubmit: () => void;
   onRenameChannelSubmit: (name: string) => void;
@@ -77,7 +77,7 @@ export default function ChatRoomSelect(props: Props) {
         ],
         inputs: [
           {
-            placeholder: props.selectedChannel?.description!,
+            placeholder: props.selectedChannel?.group!.description!,
             name: "newChannelName",
           },
         ],
@@ -89,16 +89,16 @@ export default function ChatRoomSelect(props: Props) {
     <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-purple-shade">
       {props.chainChannels.map((cr, i) => {
         const initials = cr
-          .description!.split(" ")
+          .group!.description!.split(" ")
           .map((word) => word[0])
           .join("");
-        const isSelected = cr.id === props.selectedChannel?.id;
+        const isSelected = cr.group!.id === props.selectedChannel?.group!.id;
         return (
           <button
             className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
               isSelected ? " tw-bg-[#fff]/20" : "",
             )}
-            key={cr.id}
+            key={cr.group!.id}
             {...(isSelected
               ? props.isChainAdmin
                 ? longPressChannel(isSelected)
@@ -108,7 +108,8 @@ export default function ChatRoomSelect(props: Props) {
                 })}
           >
             <div
-              className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-purple tw-flex tw-items-center tw-justify-center tw-ring  group-hover:tw-ring-purple tw-transition-colors".concat(
+              style={{ backgroundColor: cr.group!.avatar_url || "#fff" }}
+              className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-flex tw-items-center tw-justify-center tw-ring  group-hover:tw-ring-purple tw-transition-colors".concat(
                 isSelected
                   ? " tw-ring-purple tw-ring-1"
                   : " tw-ring-transparent",
@@ -126,7 +127,7 @@ export default function ChatRoomSelect(props: Props) {
                 isSelected ? " tw-font-bold" : "",
               )}
             >
-              {cr.description!}
+              {cr.group!.description!}
             </div>
           </button>
         );
