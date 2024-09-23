@@ -190,7 +190,7 @@ export default function Chat() {
     return _groups;
   }
 
-  async function onCreateChannel(name: string) {
+  async function onCreateChannel(name: string, color: string) {
     if (!chain || !nakamaClient || !nakama.session) {
       if (!chain) console.error("chain not found");
       if (!nakamaClient) console.error("nClient not found");
@@ -202,7 +202,7 @@ export default function Chat() {
       const group = await nakamaClient.createGroup(nakama.session, {
         name: crypto.randomUUID().toString(),
         description: name,
-        avatar_url: "#ee33ee",
+        avatar_url: color,
         open: IS_GROUP_OPEN,
       });
       await apiChat.chatCreateGroup(chain.uid, group.id!);

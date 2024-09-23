@@ -48,6 +48,7 @@
     "@uidotdev/usehooks": "^2.4.1",
     "autoprefixer": "^10.4.20",
     "beautiful-react-hooks": "^5.0.2",
+    "color2k": "^2.0.3",
     "dayjs": "^1.11.13",
     "deck.gl": "^9.0.27",
     "i18next": "^23.14.0",

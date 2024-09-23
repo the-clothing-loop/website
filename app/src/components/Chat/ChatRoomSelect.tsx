@@ -1,18 +1,40 @@
-import { IonActionSheet, IonAlert, IonIcon, useIonAlert } from "@ionic/react";
+import {
+  IonActionSheet,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonTitle,
+  IonToolbar,
+  useIonAlert,
+} from "@ionic/react";
 import { Channel } from "@mattermost/types/channels";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLongPress } from "use-long-press";
-import { addOutline, build as buildFilled } from "ionicons/icons";
+import {
+  addOutline,
+  bag,
+  build as buildFilled,
+  checkmarkCircle,
+  ellipse,
+} from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
 import { UserGroup } from "@heroiclabs/nakama-js";
+import { readableColor } from "color2k";
 
 interface Props {
   chainChannels: UserGroup[];
   selectedChannel: UserGroup | null;
   isChainAdmin: boolean;
   onSelectChannel: (cr: UserGroup) => void;
-  onCreateChannel: (name: string) => void;
+  onCreateChannel: (name: string, color: string) => void;
   onDeleteChannelSubmit: () => void;
   onRenameChannelSubmit: (name: string) => void;
   selectedOldBulkyItems: boolean;
@@ -34,13 +56,37 @@ export default function ChatRoomSelect(props: Props) {
       },
     },
   );
+  const modal = useRef<HTMLIonModalElement>(null);
+  const [channelName, setChannelName] = useState("");
 
-  function onCreateChannelSubmit(e: IonAlertCustomEvent<any>) {
-    if (e?.detail?.role === "submit" && e.detail?.data?.values?.name) {
-      props.onCreateChannel(e.detail.data.values.name);
-    }
+  const channelColors = [
+    "#C9843E",
+    "#AD8F22",
+    "#79A02D",
+    "#66926E",
+    "#199FBA",
+    "#6494C2",
+    "#1467B3",
+    "#A899C2",
+    "#513484",
+    "#B37EAD",
+    "#B76DAC",
+    "#F57BB0",
+    "#A35C7B",
+    "#E38C95",
+    "#C73643",
+    "#7D7D7D",
+    "#3C3C3B",
+  ];
+  const [channelColor, setChannelColor] = useState(channelColors[2]);
+
+  function onCreateChannelSubmit() {
+    props.onCreateChannel(channelName, channelColor);
+    modal.current?.dismiss();
   }
-
+  function cancel() {
+    modal.current?.dismiss();
+  }
   function handleChannelOptionSelect(value: "delete" | "rename") {
     if (value == "delete") {
       const handler = () => {
@@ -92,7 +138,10 @@ export default function ChatRoomSelect(props: Props) {
           .group!.description!.split(" ")
           .map((word) => word[0])
           .join("");
+
         const isSelected = cr.group!.id === props.selectedChannel?.group!.id;
+
+        const textColor = readableColor(cr.group!.avatar_url || "#fff");
         return (
           <button
             className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
@@ -115,7 +164,7 @@ export default function ChatRoomSelect(props: Props) {
                   : " tw-ring-transparent",
               )}
             >
-              <span>{initials}</span>
+              <span style={{ color: textColor }}>{initials}</span>
               {isSelected && props.isChainAdmin ? (
                 <div className="tw-absolute tw-bottom-0 tw-right-0 tw-bg-light-shade tw-z-10 tw-w-6 tw-h-6 tw-rounded-full -tw-m-1 tw-flex tw-justify-center tw-items-center">
                   <IonIcon icon={buildFilled} size="xs" color="dark" />
@@ -188,22 +237,68 @@ export default function ChatRoomSelect(props: Props) {
           </button>
         </div>
       ) : null}
-      <IonAlert
-        onIonAlertDidDismiss={onCreateChannelSubmit}
-        trigger="create_channel_btn"
-        header="Create a chat room"
-        buttons={[
-          { text: t("cancel"), role: "cancel" },
-          { text: t("create"), role: "submit" },
-        ]}
-        inputs={[
-          {
-            placeholder: t("name"),
-            name: "name",
-            min: 1,
-          },
-        ]}
-      ></IonAlert>
+      <IonModal ref={modal} trigger="create_channel_btn">
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonButton onClick={cancel}>{t("cancel")}</IonButton>
+            </IonButtons>
+            <IonTitle>{t("createRoom")}</IonTitle>
+            <IonButtons slot="end">
+              <IonButton onClick={onCreateChannelSubmit}>
+                {t("Create")}
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent fullscreen>
+          <IonList>
+            <IonItem lines="none">
+              <IonInput
+                type="text"
+                label={t("roomName")}
+                labelPlacement="start"
+                max={18}
+                spellCheck
+                autoCapitalize="words"
+                maxlength={18}
+                counter
+                placeholder={t("roomName")}
+                onFocus={(e) => (e.target as any as HTMLInputElement).select()}
+                onIonInput={(e) =>
+                  setChannelName(e.detail.value?.toString() || "")
+                }
+              />
+            </IonItem>
+            <IonItem lines="none">
+              <IonLabel>
+                {t("roomColor")}
+                <div className="tw-grid tw-grid-cols-[repeat(auto-fill,75px)] tw-justify-center">
+                  {channelColors.map((c) => {
+                    const selected = c === channelColor;
+                    return (
+                      <IonButton
+                        fill="clear"
+                        size="default"
+                        key={c}
+                        onClick={() => setChannelColor(c)}
+                        className="hover:!tw-opacity-100 tw-group"
+                      >
+                        <IonIcon
+                          icon={selected ? checkmarkCircle : ellipse}
+                          style={{ color: c }}
+                          size="large"
+                          className="tw-border-2 tw-border-solid tw-border-transparent tw-rounded-full group-hover:tw-border-medium group-active:tw-border-primary"
+                        />
+                      </IonButton>
+                    );
+                  })}
+                </div>
+              </IonLabel>
+            </IonItem>
+          </IonList>
+        </IonContent>
+      </IonModal>
     </div>
   );
 }
