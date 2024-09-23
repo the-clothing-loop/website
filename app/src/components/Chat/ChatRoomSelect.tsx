@@ -4,7 +4,6 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonFabButton,
   IonHeader,
   IonIcon,
   IonInput,
@@ -12,8 +11,6 @@ import {
   IonLabel,
   IonList,
   IonModal,
-  IonSelect,
-  IonSelectOption,
   IonTitle,
   IonToolbar,
   useIonAlert,
@@ -31,6 +28,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { IonAlertCustomEvent } from "@ionic/core";
 import { UserGroup } from "@heroiclabs/nakama-js";
+import { readableColor } from "color2k";
 
 interface Props {
   chainChannels: UserGroup[];
@@ -142,6 +140,8 @@ export default function ChatRoomSelect(props: Props) {
           .join("");
 
         const isSelected = cr.group!.id === props.selectedChannel?.group!.id;
+
+        const textColor = readableColor(cr.group!.avatar_url || "#fff");
         return (
           <button
             className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
@@ -164,7 +164,7 @@ export default function ChatRoomSelect(props: Props) {
                   : " tw-ring-transparent",
               )}
             >
-              <span>{initials}</span>
+              <span style={{ color: textColor }}>{initials}</span>
               {isSelected && props.isChainAdmin ? (
                 <div className="tw-absolute tw-bottom-0 tw-right-0 tw-bg-light-shade tw-z-10 tw-w-6 tw-h-6 tw-rounded-full -tw-m-1 tw-flex tw-justify-center tw-items-center">
                   <IonIcon icon={buildFilled} size="xs" color="dark" />
