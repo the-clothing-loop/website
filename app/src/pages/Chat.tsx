@@ -280,6 +280,15 @@ export default function Chat() {
       });
   }
 
+  function onBanSender(senderID: string) {
+    if (!nakamaClient || !nakama.socket || !nakama.session || !selectedGroup)
+      return;
+    console.info("banning user");
+    nakamaClient.banGroupUsers(nakama.session, selectedGroup.group!.id!, [
+      senderID,
+    ]);
+  }
+
   async function onSelectGroup(group: UserGroup) {
     if (nakama.socket && selectedGroup)
       nakama.socket.leaveChat(selectedGroup.group!.id!);
@@ -448,6 +457,7 @@ export default function Chat() {
                 // getFile={getFile}
                 postList={postList}
                 chainUsers={chainUsers}
+                onBanSender={onBanSender}
                 onDeletePost={onDeletePost}
               />
             ) : (

@@ -6,6 +6,7 @@ import { IonButton, IonIcon, IonItem, IonModal, IonText } from "@ionic/react";
 import { ellipsisVertical } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
 import { ChannelMessage, User as UserProfile } from "@heroiclabs/nakama-js";
+import { PostActionSheetOpen } from "./ChatPostList";
 
 export interface ChatPostProps {
   post: ChannelMessage;
@@ -14,14 +15,12 @@ export interface ChatPostProps {
   getMmUser: (id: string) => Promise<UserProfile>;
   // getFile: (fileId: string, timestamp: number) => void;
   isChainAdmin: boolean;
-  onLongPress: (id: string) => void;
+  onLongPress: (o: PostActionSheetOpen) => void;
 }
 
 export default function ChatPost(props: ChatPostProps) {
-  const { t } = useTranslation();
-
   const longPress = useLongPress((e) => {
-    props.onLongPress(props.post.message_id!);
+    props.onLongPress({ post: props.post, isMe });
   });
   const [username, setUsername] = useState("");
   const [isMe, setIsMe] = useState(false);
@@ -200,8 +199,8 @@ export default function ChatPost(props: ChatPostProps) {
 
   return (
     <div
-      className={"tw-mb-2 tw-flex tw-flex-row".concat(
-        isMe ? " tw-justify-end" : " tw-justify-start",
+      className={"tw-mb-2 tw-flex tw-justify-start".concat(
+        isMe ? " tw-flex-row-reverse" : " tw-flex-row",
       )}
       {...(props.isChainAdmin ? longPress : {})}
     >
@@ -219,13 +218,14 @@ export default function ChatPost(props: ChatPostProps) {
           {message}
         </div>
       </div>
-      {props.isChainAdmin ? (
+      {props.isChainAdmin || isMe ? (
         <IonButton
-          onClick={() => props.onLongPress(props.post.message_id!)}
+          onClick={() => props.onLongPress({ post: props.post, isMe })}
           color="transparent"
           className="tw-sticky tw-top-0 tw-opacity-70"
           size="small"
           type="button"
+          shape="round"
         >
           <IonIcon
             slot="icon-only"
