@@ -157,5 +157,8 @@
   "resetHeaders": "Reset headers",
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
   "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
-  "chatRoomOptions": "Chat Room Options"
+  "chatRoomOptions": "Chat Room Options",
+  "createRoom": "Create Room",
+  "roomName": "Room Name",
+  "roomColor": "Room Color"
 }
