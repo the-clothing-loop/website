@@ -200,12 +200,16 @@ export default function ChatPost(props: ChatPostProps) {
 
   return (
     <div
-      className="tw-mb-2 tw-flex tw-flex-row tw-items-start"
+      className={"tw-mb-2 tw-flex tw-flex-row".concat(
+        isMe ? " tw-justify-end" : " tw-justify-start",
+      )}
       {...(props.isChainAdmin ? longPress : {})}
     >
       <div
-        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-mx-4".concat(
-          isMe ? " tw-bg-purple-shade" : " tw-bg-light",
+        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-mx-4".concat(
+          isMe
+            ? " tw-bg-purple-shade tw-rounded-bl-xl"
+            : " tw-bg-light tw-rounded-br-xl",
         )}
       >
         {username ? (
