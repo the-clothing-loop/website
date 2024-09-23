@@ -169,7 +169,7 @@ export default function ChatRoomSelect(props: Props) {
                   ? " tw-ring-purple tw-ring-1"
                   : " tw-ring-transparent",
               )}
-              style={{ backgroundColor: channelColor }}
+              style={{ backgroundColor: cr.avatar_url }}
             >
               <span>{initials}</span>
               {isSelected && props.isChainAdmin ? (

@@ -169,7 +169,6 @@ export default function Chat() {
   }
 
   async function onCreateChannel(name: string, color: string) {
-    console.log(mmData)
     if (!chain || !window.nClient || !window.nSession || !mmData) {
       if (!chain) console.error("chain not found");
       if (!window.nClient) console.error("nClient not found");
@@ -185,6 +184,7 @@ export default function Chat() {
         name: crypto.randomUUID().toString(),
         description: name,
         open: IS_GROUP_OPEN,
+        avatar_url: color,
       });
       await apiChat.chatCreateChannel(chain.uid, group.id!);
       const _groups = await getGroups(mmData, [
@@ -404,7 +404,7 @@ export default function Chat() {
         <IonToolbar>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
-          </IonTitle> 
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent
