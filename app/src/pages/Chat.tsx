@@ -33,7 +33,7 @@ import { useLocation } from "react-router";
 const VITE_CHAT_HOST = import.meta.env.VITE_CHAT_HOST;
 const VITE_CHAT_PORT = import.meta.env.VITE_CHAT_PORT;
 const VITE_CHAT_SERVER_KEY = import.meta.env.VITE_CHAT_SERVER_KEY;
-const VITE_CHAT_SSL = import.meta.env.VITE_CHAT_SSL == "true";
+const VITE_CHAT_SSL = import.meta.env.VITE_CHAT_SSL !== "false";
 
 const nakamaClient = new Client(
   VITE_CHAT_SERVER_KEY,
