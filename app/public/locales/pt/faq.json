@@ -42,5 +42,13 @@
   "feedback": {
     "title": "Feedback and suggestions",
     "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
+  },
+  "routePrivacy": {
+    "title": "De quem poderei ver as informações de contato no aplicativo?",
+    "content": "Na lista de Rota, você verá as informações de contato dos participantes antes e depois de você; isso pode diferir por rota. Além disso, você verá as informações dos participantes que postaram itens na seção Itens volumosos. Isto é projetado para ajudar a facilitar a troca entre os participantes."
+  },
+  "randomParticiPrivacy": {
+    "title": "Por que estou vendo mais informações aleatórias de participantes na Rota?",
+    "content": "Se outros participantes postarem um item na seção Itens em volume, você verá suas informações de contato. O aplicativo exibe detalhes de contato para facilitar a comunicação entre os participantes e organizar um swap."
   }
 }
