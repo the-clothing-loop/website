@@ -42,5 +42,13 @@
   "feedback": {
     "title": "Feedback and suggestions",
     "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
+  },
+  "routePrivacy": {
+    "title": "Vems kontaktuppgifter kommer jag att se i appen?",
+    "content": "I Ruttlistan ser du deltagarnas kontaktuppgifter före och efter dig, vilket kan skilja sig åt per rutt. Dessutom kommer du att se information om deltagare som har postat objekt i avsnittet Bulky objekt. Detta är utformat för att underlätta utbytet mellan deltagarna."
+  },
+  "randomParticiPrivacy": {
+    "title": "Varför ser jag mer eller mer information från slumpmässiga deltagare i Route?",
+    "content": "Om andra deltagare har lagt upp ett objekt i avsnittet Bulky Objekt ser du deras kontaktuppgifter. Appen visar kontaktuppgifter för att underlätta kommunikationen mellan deltagarna och organisera ett byte."
   }
 }
