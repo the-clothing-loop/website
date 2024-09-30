@@ -306,6 +306,7 @@ export default function Settings() {
               user={authUser}
               chain={chain}
               isUserPaused={isUserPaused}
+              showEmail
             />
           ) : null}
           <IonList>
