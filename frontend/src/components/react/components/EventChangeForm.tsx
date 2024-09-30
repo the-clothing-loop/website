@@ -219,6 +219,13 @@ export default function EventChangeForm(props: {
     }
   }
 
+  function setHttpsIfNeeded() {
+    if (values.link.startsWith("http")) return;
+    // loose regex test if link
+    if (!/^[^\/]*\.\w+\//.test(values.link)) return;
+    setValue("link", "https://" + values.link);
+  }
+
   console.log("initial values: ", props.initialValues);
   console.log("Date values: ", values.date);
   console.log("Date End values: ", values.date_end);
@@ -402,6 +409,7 @@ export default function EventChangeForm(props: {
               type="url"
               value={values.link}
               onChange={(e) => setValue("link", e.target.value)}
+              onBlur={setHttpsIfNeeded}
             />
           </div>
 
