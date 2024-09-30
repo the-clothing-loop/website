@@ -42,5 +42,13 @@
   "feedback": {
     "title": "Réponse et suggestions",
     "content": "Avez-vous une idée ou une suggestion pour votre local Loop? Envoyez un message à l'hôte. Si vous avez des commentaires ou une suggestion pour le site Web et l'organisation générale, envoyez un e-mail à hello@clothingloop.org. Nous sommes ravis de vous entendre, car nous sommes ensemble dans la création de ce projet."
+  },
+  "routePrivacy": {
+    "title": "Quelles informations de contact puis-je voir dans l'application ?",
+    "content": "Dans la liste des itinéraires, vous verrez les coordonnées des participants avant et après vous; cela peut différer par itinéraire. De plus, vous verrez l’information des participants qui ont affiché des éléments dans la section Objets en vrac . Ceci est conçu pour faciliter l'échange entre les participants."
+  },
+  "randomParticiPrivacy": {
+    "title": "Pourquoi est-ce que je vois plus ou plus d'informations sur la route des participants?",
+    "content": "Si d’autres participants ont posté un article dans la section Objets en vrac, vous verrez leurs coordonnées. L'application affiche les coordonnées pour faciliter la communication entre les participants et organiser un swap."
   }
 }
