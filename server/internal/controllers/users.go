@@ -349,10 +349,10 @@ func UserPurge(c *gin.Context) {
 	}
 
 	amountOfBags, err := user.CountAttachedBags(db)
-	if err != nil || amountOfBags == 0 {
-		if err != nil {
-			slog.Error("Error getting bag count", "err", err)
-		}
+	if err != nil {
+		slog.Error("Error getting bag count", "err", err)
+	}
+	if amountOfBags != 0 {
 		c.String(http.StatusConflict, "Please give your bags to someone else, or delete them from the app")
 		return
 	}

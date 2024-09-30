@@ -60,14 +60,58 @@ WHERE uc.chain_id = ? AND uc.user_id IN ?`, chainID, userUIDs).Scan(&lengthOut).
 	return lengthIn == lengthOut
 }
 
-func (u *User) DeleteUserChainDependencies(db *gorm.DB, chainID uint) (err error) {
-	tx := db.Begin()
+func (u *User) DeleteOrPassOnUserChainBags(db *gorm.DB, chainID uint) (err error) {
+	// List bags
+	bags := []struct {
+		ID          uint
+		UserChainID uint
+	}{}
+	err = db.Raw(`
+SELECT id, user_chain_id FROM bags WHERE user_chain_id IN (
+	SELECT id from user_chains WHERE user_id = ?	
+)`, u.ID).Scan(&bags).Error
+	if err != nil {
+		return fmt.Errorf("Error to selecting bags: %v", err)
+	}
 
-	err = tx.Exec(`
+	// Pass on bag to other host if possible, otherwise stay put
+	errs := []error{}
+	for _, bag := range bags {
+		err := db.Exec(`
+UPDATE bags SET user_chain_id = (
+	SELECT uc.id FROM user_chains AS uc
+	WHERE uc.is_chain_admin IS TRUE
+		AND uc.is_approved IS TRUE
+		AND uc.chain_id = ?
+	ORDER BY
+		uc.user_id != ? DESC,
+		uc.user_id
+	LIMIT 1
+) WHERE id = ?`, chainID, u.ID, bag.ID).Error
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	if len(errs) > 0 {
+		return fmt.Errorf("One or more bags where unable to be passed along to another host: %v", errs)
+	}
+
+	err = db.Exec(`
 DELETE FROM bags WHERE user_chain_id IN (
 	SELECT id FROM user_chains WHERE user_id = ? AND chain_id = ?
 )
 	`, u.ID, chainID).Error
+	if err != nil {
+		return fmt.Errorf("Unable to delete bags: %v", err)
+	}
+
+	return nil
+}
+
+func (u *User) DeleteUserChainDependencies(db *gorm.DB, chainID uint) (err error) {
+	tx := db.Begin()
+
+	err = u.DeleteOrPassOnUserChainBags(tx, chainID)
 	if err != nil {
 		tx.Rollback()
 		return fmt.Errorf("Unable to delete bags from user in loop: %v", err)
@@ -87,39 +131,11 @@ DELETE FROM bulky_items WHERE user_chain_id IN (
 }
 
 func (u *User) DeleteUserChainDependenciesAllChains(db *gorm.DB) (err error) {
-	// TODO: send notification to host
-	// give away bags to the next host
-	err = db.Exec(`
-UPDATE bags AS b
-SET user_chain_id = (
-	SELECT uc.id FROM user_chains AS uc
-	WHERE uc.is_chain_admin IS TRUE
-		AND uc.is_approved IS TRUE
-		AND uc.chain_id = (
-			SELECT uc2.chain_id FROM user_chains AS uc2
-			WHERE uc2.id = b.user_chain_id
-		)
-	ORDER BY
-     uc.user_id != ? DESC,
-     uc.user_id
-	LIMIT 1
-)
-WHERE b.user_chain_id IN (
-	SELECT id FROM user_chains WHERE user_id = ?
-)
-	`, u.ID, u.ID).Error
-	if err != nil {
-		return fmt.Errorf("Unable to give away connected bags from user: %v", err)
-	}
-
-	// delete other bags unable to give away
-	err = db.Exec(`
-DELETE FROM bags WHERE user_chain_id IN (
-	SELECT id FROM user_chains WHERE user_id = ?
-)
-	`, u.ID).Error
-	if err != nil {
-		return fmt.Errorf("Unable to delete bulky items from user: %v", err)
+	for _, uc := range u.Chains {
+		err = u.DeleteOrPassOnUserChainBags(db, uc.ChainID)
+		if err != nil {
+			return err
+		}
 	}
 
 	// delete bulky items from user
