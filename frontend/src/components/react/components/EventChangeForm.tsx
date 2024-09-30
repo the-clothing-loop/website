@@ -178,17 +178,22 @@ export default function EventChangeForm(props: {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const res = await uploadImageFile(file, 800, EVENT_IMAGE_EXPIRATION);
-    console.log(res.data);
-    setValue("image_url", res.data.image);
-    setDeleteImageUrl(res.data.delete);
+    try {
+      const res = await uploadImageFile(file, 800, EVENT_IMAGE_EXPIRATION);
+      console.log(res.data);
+      setValue("image_url", res.data.image);
+      setDeleteImageUrl(res.data.delete);
+    } catch (err: any) {
+      console.error("Unable to upload image", err);
+      addToastError(GinParseErrors(t, err), err?.status);
+    }
   }
 
   async function onImageDelete() {
     if (deleteImageUrl) {
-      await deleteImage(deleteImageUrl);
-      setValue("image_url", "");
+      deleteImage(deleteImageUrl);
     }
+    setValue("image_url", "");
   }
 
   function submit(e: FormEvent) {
