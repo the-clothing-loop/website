@@ -42,5 +42,13 @@
   "feedback": {
     "title": "Feedback en suggesties",
     "content": "Heb je een idee of suggestie voor jouw lokale Loop? Stuur dan de host een berichtje.\n\nHeb je feedback of een suggestie voor de algemene website en organisatie, stuur dan een email naar hello@clothingloop.org . Wij horen graag van jou, want samen maken wij dit project.\n\nThrift, Swap, Borrow and gebruik wat je al hebt!"
+  },
+  "routePrivacy": {
+    "title": "Wiens contactinformatie zie ik in de app?",
+    "content": "In de routelijst ziet u de contactinformatie van de deelnemers voor en na jou; dit kan per route verschillen. Verder zie je de informatie van deelnemers die items hebben geplaatst in de Bulky Items sectie. Dit is ontworpen om het wisselen tussen deelnemers te vergemakkelijken."
+  },
+  "randomParticiPrivacy": {
+    "title": "Waarom zie ik informatie van meer of willekeurige deelnemers in Route?",
+    "content": "Als andere deelnemers een item hebben geplaatst in de Bulky Items sectie, ziet u hun contactinformatie. De app toont contactgegevens om de communicatie tussen de deelnemers te vergemakkelijken en een swap te organiseren."
   }
 }
