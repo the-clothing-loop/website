@@ -242,7 +242,7 @@
   "anErrorOccurredDuringCheckout": "אירעה שגיאה במהלך ה...(להשלים)...",
   "pleaseEnterYourEmail": "אנא הזינו את כתובת הדואר האלקטרוני שלכם",
   "signedUpOn": "נרשמו ב",
-  "nDays": "{{ n }} ימים",
+  "nDays_other": "{{ count }} ימים",
   "leaveWaitlist": "עזוב רשימת המתנה",
   "pleaseEnterAValid": {
     "emailAddress": "נא למלא כתובת דואר אלקטרונית תקנית",
