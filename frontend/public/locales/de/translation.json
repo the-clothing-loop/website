@@ -242,7 +242,7 @@
   "anErrorOccurredDuringCheckout": "Ein Fehler ist beim Checkout aufgetreten...",
   "pleaseEnterYourEmail": "Bitte gib Deine E-Mail-Adresse ein",
   "signedUpOn": "Jetzt registieren",
-  "nDays": "${ n } Tage",
+  "nDays_other": "${ count } Tage",
   "leaveWaitlist": "Warteliste verlassen",
   "pleaseEnterAValid": {
     "emailAddress": "Bitte gib eine gültige E-Mail-Adresse ein",

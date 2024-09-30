@@ -242,7 +242,7 @@
   "anErrorOccurredDuringCheckout": "حدث خطأ أثناء الدفع...",
   "pleaseEnterYourEmail": "الرجاء إدخال عنوان بريدك الإلكتروني",
   "signedUpOn": "تم التسجيل في",
-  "nDays": "{{ n }} days",
+  "nDays_other": "{{ count }} days",
   "leaveWaitlist": "مغادرة قائمة الانتظار",
   "pleaseEnterAValid": {
     "emailAddress": "الرجاء إدخال عنوان بريد إلكتروني صالح",

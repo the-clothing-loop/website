@@ -11,7 +11,7 @@ export default function simplifyDays(
   if (numDays < 1) {
     return t("new");
   } else if (numDays < 7) {
-    return t("nDays", { n: numDays });
+    return t("nDays", { count: numDays });
   } else {
     let locale = i18n.language;
     if (locale === "en") locale = "default";

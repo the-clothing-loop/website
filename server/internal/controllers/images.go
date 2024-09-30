@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
@@ -52,8 +53,10 @@ func imagesRead(c *gin.Context) (imgRes *ImageUploadResponse, err error) {
 		return nil, fmt.Errorf("Unable to encode to jpeg: %v", err)
 	}
 
+	now := time.Now()
+
 	jpgContents, _ := io.ReadAll(buf)
-	filename := fmt.Sprintf("uploads/%s.jpg", imageSha1)
+	filename := fmt.Sprintf("uploads/%s_%s.jpg", now.Format(time.DateOnly), imageSha1)
 	slog.Debug("Writing image", "to", path.Join(app.Config.IMAGES_DIR, filename))
 	err = os.WriteFile(path.Join(app.Config.IMAGES_DIR, filename), jpgContents, 0644)
 	if err != nil {

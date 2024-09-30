@@ -242,7 +242,7 @@
   "anErrorOccurredDuringCheckout": "Ett fel inträffade under radering...",
   "pleaseEnterYourEmail": "Vänligen ange din e-post adress",
   "signedUpOn": "Har skrivit in sig",
-  "nDays": "${ n } dagar",
+  "nDays_other": "${ count } dagar",
   "leaveWaitlist": "Lämna väntelistan",
   "pleaseEnterAValid": {
     "emailAddress": "Vänloigen ange en giltig e-postadress",

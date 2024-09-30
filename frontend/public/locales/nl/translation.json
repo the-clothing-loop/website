@@ -242,7 +242,7 @@
   "anErrorOccurredDuringCheckout": "Er is een fout opgetreden tijdens het afrekenen...",
   "pleaseEnterYourEmail": "Vul je e-mailadres in",
   "signedUpOn": "Aangemeld op:",
-  "nDays": "{{ n }} dagen",
+  "nDays_other": "{{ count }} dagen",
   "leaveWaitlist": "Wachtlijst verlaten",
   "pleaseEnterAValid": {
     "emailAddress": "Voer een geldig e-mailadres in",
