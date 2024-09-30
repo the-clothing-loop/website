@@ -42,5 +42,13 @@
   "feedback": {
     "title": "Feedback e suggerimenti",
     "content": "Se hai un'idea o un suggerimento per il tuo ciclo locale, invia un messaggio all'host. Se avete un feedback o un suggerimento per il sito web generale e l'organizzazione, e-mail hello@clothingloop. rg. Ci piacerebbe sentire da voi, perché insieme stiamo creando questo progetto."
+  },
+  "routePrivacy": {
+    "title": "Di chi vedrò le informazioni di contatto nell'app?",
+    "content": "Nell'elenco Percorso, vedrete le informazioni di contatto dei partecipanti prima e dopo di voi; questo può differire per percorso. Inoltre, vedrete le informazioni dei partecipanti che hanno pubblicato gli articoli nella sezione Oggetti ingombranti. Questo è destinato a facilitare lo scambio tra i partecipanti."
+  },
+  "randomParticiPrivacy": {
+    "title": "Perché sto vedendo informazioni più o casuale dei partecipanti in Route?",
+    "content": "Se altri partecipanti hanno pubblicato un elemento nella sezione Oggetti ingombranti, vedrete le loro informazioni di contatto. L'app visualizza i dettagli di contatto per facilitare la comunicazione tra i partecipanti e organizzare uno swap."
   }
 }
