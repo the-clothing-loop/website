@@ -242,7 +242,8 @@
   "anErrorOccurredDuringCheckout": "Une erreur s'est produite lors du paiement...",
   "pleaseEnterYourEmail": "Veuillez entrer votre adresse e-mail",
   "signedUpOn": "S'est inscrit le",
-  "nDays": "{{ n }} jours",
+  "nDays_one": "{{ count }} jour",
+  "nDays_other": "{{ count }} days",
   "leaveWaitlist": "Quitter la liste d'attente",
   "pleaseEnterAValid": {
     "emailAddress": "Veuillez entrer une adresse e-mail valide",
