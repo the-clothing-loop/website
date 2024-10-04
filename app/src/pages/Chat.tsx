@@ -82,17 +82,20 @@ export default function Chat() {
               let chatRoomIds = chain.chat_room_ids || [];
               if (!chain.chat_room_ids?.length && isChainAdmin) {
                 console.info("create first group");
+                const groupName = crypto.randomUUID();
                 const group = await nakamaClient.createGroup(
                   nakama.state.session!,
                   {
                     avatar_url: "" /* Add here the chat color*/,
-                    description: "",
-                    name: "General",
+                    description: "General",
+                    name: groupName,
                     open: true,
                   },
                 );
                 await apiChat.chatCreateGroup(chain.uid, group.id);
                 console.info("create group", group.id!);
+                // update chain object from server to update chain.room_ids value
+                await setChain(chain.uid, authUser);
                 chatRoomIds.push(group.id!);
               }
               await getGroups(chatRoomIds, true);
@@ -118,7 +121,6 @@ export default function Chat() {
   }, [location]);
 
   const chainChannels = useMemo(() => {
-    if (!chain || !chain.chat_room_ids) return [];
     console.log("chainChannels", groups);
     return groups.sort((a, b) =>
       Date.parse(a.group!.create_time!) > Date.parse(b.group!.create_time!)
@@ -203,7 +205,7 @@ export default function Chat() {
     try {
       console.info("Creating channel", name);
       const group = await nakamaClient.createGroup(nakama.state.session, {
-        name: crypto.randomUUID().toString(),
+        name: crypto.randomUUID(),
         description: name,
         avatar_url: color,
         open: IS_GROUP_OPEN,
@@ -288,10 +290,8 @@ export default function Chat() {
 
   async function onSelectGroup(group: UserGroup) {
     if (nakama.state.socket && nakama.state.channel)
-      nakama.state.socket.leaveChat(nakama.state.channel.id!);
+      await nakama.state.socket.leaveChat(nakama.state.channel.id!);
 
-    setSelectedOldBulkyItems(false);
-    setSelectedGroup(group);
     console.info("selected group", group.group!.id);
     if (!group || !nakamaClient || !nakama.state.session) return;
     if (!nakama.state.socket) {
@@ -309,7 +309,11 @@ export default function Chat() {
       console.log("channel message", msg);
       if (msg.channel_id == nakama.state.channel?.id) reqPostList("current");
     };
+
+    setSelectedOldBulkyItems(false);
+    setSelectedGroup(group);
     setTimeout(() => {
+      console.log("request current group chat");
       reqPostList("current");
     }, 0);
   }

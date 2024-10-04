@@ -43,8 +43,6 @@
     "@ionic/react-router": "^8.2.7",
     "@ionic/storage": "^4.0.0",
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
-    "@mattermost/client": "9.7.0-0",
-    "@mattermost/types": "9.7.0-0",
     "@uidotdev/usehooks": "^2.4.1",
     "autoprefixer": "^10.4.20",
     "beautiful-react-hooks": "^5.0.2",
@@ -91,13 +89,5 @@
     "vite": "^5.4.2",
     "vite-plugin-pwa": "^0.20.1",
     "vitest": "^2.0.5"
-  },
-  "overrides": {
-    "@mattermost/client": {
-      "@mattermost/types": "$@mattermost/types"
-    },
-    "@mattermost/types": {
-      "typescript": "$typescript"
-    }
   }
 }

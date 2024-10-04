@@ -1,10 +1,8 @@
-import { Post } from "@mattermost/types/posts";
 import { User } from "../../api/types";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useLongPress } from "use-long-press";
-import { IonButton, IonIcon, IonItem, IonModal, IonText } from "@ionic/react";
+import { IonButton, IonIcon } from "@ionic/react";
 import { ellipsisVertical } from "ionicons/icons";
-import { useTranslation } from "react-i18next";
 import { ChannelMessage, User as UserProfile } from "@heroiclabs/nakama-js";
 import { PostActionSheetOpen } from "./ChatPostList";
 

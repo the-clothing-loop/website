@@ -14,18 +14,15 @@ import {
   IonToolbar,
   useIonAlert,
 } from "@ionic/react";
-import { Channel } from "@mattermost/types/channels";
 import { useRef, useState } from "react";
 import { useLongPress } from "use-long-press";
 import {
   addOutline,
-  bag,
   build as buildFilled,
   checkmarkCircle,
   ellipse,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { IonAlertCustomEvent } from "@ionic/core";
 import { UserGroup } from "@heroiclabs/nakama-js";
 import { readableColor } from "color2k";
 
@@ -133,6 +130,30 @@ export default function ChatRoomSelect(props: Props) {
 
   return (
     <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-purple-shade">
+      <button
+        className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
+          props.selectedOldBulkyItems ? " tw-bg-[#fff]/20" : "",
+        )}
+        key="oldBulkyItems"
+        onClick={props.onSelectOldBulkyItems}
+      >
+        <div
+          className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-blue-tint tw-flex tw-items-center tw-justify-center tw-ring group-hover:tw-ring-blue tw-transition-colors".concat(
+            props.selectedOldBulkyItems
+              ? " tw-ring-blue tw-ring-1"
+              : " tw-ring-transparent",
+          )}
+        >
+          <span>B</span>
+        </div>
+        <div
+          className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
+            props.selectedOldBulkyItems ? " tw-font-bold" : "",
+          )}
+        >
+          {t("bulkyItems")}
+        </div>
+      </button>
       {props.chainChannels.map((cr, i) => {
         const initials = cr
           .group!.description!.split(" ")
@@ -181,30 +202,6 @@ export default function ChatRoomSelect(props: Props) {
           </button>
         );
       })}
-      <button
-        className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
-          props.selectedOldBulkyItems ? " tw-bg-[#fff]/20" : "",
-        )}
-        key="oldBulkyItems"
-        onClick={props.onSelectOldBulkyItems}
-      >
-        <div
-          className={"tw-relative tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-blue-tint tw-flex tw-items-center tw-justify-center tw-ring group-hover:tw-ring-blue tw-transition-colors".concat(
-            props.selectedOldBulkyItems
-              ? " tw-ring-blue tw-ring-1"
-              : " tw-ring-transparent",
-          )}
-        >
-          <span>B</span>
-        </div>
-        <div
-          className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
-            props.selectedOldBulkyItems ? " tw-font-bold" : "",
-          )}
-        >
-          {t("bulkyItems")}
-        </div>
-      </button>
       <IonActionSheet
         header={t("chatRoomOptions")}
         key="actionSheet"

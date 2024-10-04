@@ -1,4 +1,3 @@
-import { PaginatedPostList } from "@mattermost/types/posts";
 import ChatPost from "./ChatPost";
 import { User } from "../../api/types";
 import { useContext, useMemo, useState } from "react";
