@@ -30,9 +30,9 @@
 		method OPTIONS
 	}
 	respond @options 200
-	header Access-Control-Allow-Origin "https://app.acc.clothingloop.org"
-	header Access-Control-Allow-Methods "*"
-	header Access-Control-Allow-Headers "Content-Type, Origin, Authorization, X-Requested-With, Accept"
 
+	header >Access-Control-Allow-Origin "https://app.acc.clothingloop.org"
+	header >Access-Control-Allow-Methods "*"
+	header >Access-Control-Allow-Headers "Content-Type, Origin, Authorization, X-Requested-With, Accept"
 	reverse_proxy acc_nakama:7350
 }
