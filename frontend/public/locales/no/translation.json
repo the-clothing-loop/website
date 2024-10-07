@@ -242,6 +242,7 @@
   "anErrorOccurredDuringCheckout": "En feil oppstod under utsjekking...",
   "pleaseEnterYourEmail": "Tast inn din e-postadresse",
   "signedUpOn": "Registrert på",
+  "nDays_one": "{{ count }} dag",
   "nDays_other": "{{ count }} dager",
   "leaveWaitlist": "Forlat ventelisten",
   "pleaseEnterAValid": {

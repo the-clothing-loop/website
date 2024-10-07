@@ -67,6 +67,14 @@
     "7": {
       "question": "Waarom zie ik alleen een SMS-knop?",
       "answer": "Dit telefoonnummer begint met 06 en heeft geen internationale code (bijvoorbeeld +31). Als een telefoonnummer wel een internationale code heeft (+31 6...), verschijnen er ook WhatsApp-, Signal- en Telegram-knoppen.<br/>Je kunt je telefoonnummer wijzigen bij Account. Hosts kunnen ook de gegevens van een deelnemer bewerken."
+    },
+    "routePrivacy": {
+      "question": "Wiens contactinformatie zie ik in de app?",
+      "answer": "In de routelijst ziet u de contactinformatie van de deelnemers voor en na jou; dit kan per route verschillen. Verder zie je de informatie van deelnemers die items hebben geplaatst in de Bulky Items sectie. Dit is ontworpen om het wisselen tussen deelnemers te vergemakkelijken."
+    },
+    "randomParticiPrivacy": {
+      "question": "Waarom zie ik informatie van meer of willekeurige deelnemers in Route?",
+      "answer": "Als andere deelnemers een item hebben geplaatst in de Bulky Items sectie, ziet u hun contactinformatie. De app toont contactgegevens om de communicatie tussen de deelnemers te vergemakkelijken en een swap te organiseren."
     }
   },
   "faqForHosts": "FAQ voor Hosts",

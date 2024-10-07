@@ -242,7 +242,8 @@
   "anErrorOccurredDuringCheckout": "An error occurred during checkout...",
   "pleaseEnterYourEmail": "Please enter your e-mail address",
   "signedUpOn": "Signed up on",
-  "nDays_other": "{{ count }} days",
+  "nDays_one": "Dia {{ count }}",
+  "nDays_other": "{{ count }} dias",
   "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Please enter a valid e-mail address",
