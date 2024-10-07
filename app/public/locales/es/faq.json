@@ -42,13 +42,5 @@
   "feedback": {
     "title": "Comentarios y sugerencias",
     "content": "Si tienes una idea o sugerencia para tu bucle local, envía un mensaje al anfitrión. Si tienes comentarios o sugerencias para el sitio web general y la organización, envía un correo electrónico a hello@clothingloop. rg. Nos encantaría saber de ti, porque juntos estamos creando este proyecto."
-  },
-  "routePrivacy": {
-    "title": "¿Qué información de contacto veré en la aplicación?",
-    "content": "En la lista Ruta, verás la información de contacto de los participantes antes y después de ti; esto puede diferir por ruta. Además, verás la información de los participantes que han publicado artículos en la sección de artículos voluminosos. Esto está diseñado para facilitar el intercambio entre los participantes."
-  },
-  "randomParticiPrivacy": {
-    "title": "¿Por qué estoy viendo más o al azar la información de los participantes en Ruta?",
-    "content": "Si otros participantes han publicado un artículo en la sección de artículos voluminosos, verás su información de contacto. La aplicación muestra los datos de contacto para facilitar la comunicación entre los participantes y organizar un intercambio."
   }
 }
