@@ -41,7 +41,7 @@
   "delete": "Borrar",
   "cancel": "Cancelar",
   "deleteAccount": "Por favor, confirma que deseas eliminar esta cuenta de forma permanente.",
-  "deleteAccountWithLoops": "Como usted es el único anfitrión de los siguientes loops, ¡también se eliminarán!",
+  "deleteAccountWithLoops": "¡Como es el único anfitrión de los siguientes bucles, necesita eliminar estos primero o agregar un cohost!",
   "areYouSureRemoveEvent": "¿Está seguro que desea eliminar permanentemente este evento?",
   "areYouSureLogout": "¿Estás seguro de que quieres cerrar sesión?",
   "deleteUserBtn": "Eliminar cuenta",
@@ -242,6 +242,7 @@
   "anErrorOccurredDuringCheckout": "Se produjo un error durante el checkout...",
   "pleaseEnterYourEmail": "Por favor introduzca tu correo electrónico",
   "signedUpOn": "Registrado a",
+  "nDays_one": "{{ count }} día",
   "nDays_other": "{{ count }} días",
   "leaveWaitlist": "Salir de la lista de espera",
   "pleaseEnterAValid": {

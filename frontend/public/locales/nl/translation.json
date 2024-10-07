@@ -41,7 +41,7 @@
   "delete": "Verwijder",
   "cancel": "Annuleren",
   "deleteAccount": "Weet je zeker dat je je account definitief wil verwijderen?",
-  "deleteAccountWithLoops": "Aangezien jij de enige host van de volgende Loops bent, zullen deze ook worden verwijderd!",
+  "deleteAccountWithLoops": "Aangezien u de enige host van de volgende Lussen bent, moet u deze eerst verwijderen of een co-host toevoegen!",
   "areYouSureRemoveEvent": "Weet je zeker dat je deze gebeurtenis permanent wilt verwijderen?",
   "areYouSureLogout": "Weet je zeker dat je wilt uitloggen?",
   "deleteUserBtn": "Account verwijderen",
@@ -242,6 +242,7 @@
   "anErrorOccurredDuringCheckout": "Er is een fout opgetreden tijdens het afrekenen...",
   "pleaseEnterYourEmail": "Vul je e-mailadres in",
   "signedUpOn": "Aangemeld op:",
+  "nDays_one": "{{ count }} dag",
   "nDays_other": "{{ count }} dagen",
   "leaveWaitlist": "Wachtlijst verlaten",
   "pleaseEnterAValid": {

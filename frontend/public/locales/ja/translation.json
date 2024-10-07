@@ -41,7 +41,7 @@
   "delete": "Delete",
   "cancel": "Cancel",
   "deleteAccount": "Are you sure you want to permanently delete your account?",
-  "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
+  "deleteAccountWithLoops": "次の Loops の唯一のホストなので、最初にこれらを削除するか、共同ホストを追加する必要があります。",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "Delete Account",
@@ -242,7 +242,8 @@
   "anErrorOccurredDuringCheckout": "An error occurred during checkout...",
   "pleaseEnterYourEmail": "Please enter your e-mail address",
   "signedUpOn": "Signed up on",
-  "nDays_other": "{{ count }} days",
+  "nDays_one": "{{ count }} 日",
+  "nDays_other": "{{ count }} 日",
   "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Please enter a valid e-mail address",

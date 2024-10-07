@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"io"
 	"log/slog"
 	"strings"
 
@@ -10,6 +11,19 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
+
+// type OneSignalErrorResponse struct {
+// 	Errors   []string          `json:"errors,omitempty"`
+// 	Warnings map[string]string `json:"warnings,omitempty"`
+// }
+
+// // {"errors":["Option Metadata must not exceed 3500 bytes.","Data Data must be no more than 2048 bytes long","Option Message in English language is too long to send to an iOS device. You can either make the content shorter or shorten or remove the other options."],"warnings":{"invalid_external_user_ids":"The following external_ids have unsubscribed subscriptions
+// //  attached: [
+// func (e OneSignalErrorResponse) GetInvalidExternalUserIds() []string {
+// 	for _, warning := range e.Warnings {
+// 		warning
+// 	}
+// }
 
 var OneSignalClient *onesignal.APIClient
 
@@ -50,7 +64,10 @@ func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTit
 	auth := oneSignalGetAuth()
 	_, resp, err := OneSignalClient.DefaultApi.CreateNotification(auth).Notification(*notification).Execute()
 	if err != nil {
-		fmt.Printf("response error: %++v\n", resp)
+		defer resp.Body.Close()
+		body, err := io.ReadAll(resp.Body)
+		fmt.Printf("response error: %s\n", string(body))
+		slog.Error("Unable to send notification", "err", err)
 		return err
 	}
 	return nil

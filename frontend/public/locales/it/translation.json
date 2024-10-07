@@ -41,7 +41,7 @@
   "delete": "Elimina",
   "cancel": "Cancella",
   "deleteAccount": "Sei sicuro di voler eliminare definitivamente il tuo account?",
-  "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
+  "deleteAccountWithLoops": "Poiché sei l'unico host dei seguenti cicli, devi prima eliminare questi o aggiungere un co-host!",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "Delete Account",
@@ -242,7 +242,8 @@
   "anErrorOccurredDuringCheckout": "An error occurred during checkout...",
   "pleaseEnterYourEmail": "Inserisci il tuo indirizzo email",
   "signedUpOn": "Signed up on",
-  "nDays_other": "{{ count }} days",
+  "nDays_one": "{{ count }} giorno",
+  "nDays_other": "{{ count }} giorni",
   "leaveWaitlist": "Leave Waitlist",
   "pleaseEnterAValid": {
     "emailAddress": "Inserisci un indirizzo email valido",
