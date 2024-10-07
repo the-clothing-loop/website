@@ -26,8 +26,6 @@ export const faqListKeys = [
   "whatCanYouTakeFromTheBag",
   "whatCantYouTakeFromTheBag",
   "whatToDoWithBulkyItems",
-  "routePrivacy",
-  "randomParticiPrivacy",
   "awayOrBusy",
   "foundSomethingYouLike",
   "newMembers",
