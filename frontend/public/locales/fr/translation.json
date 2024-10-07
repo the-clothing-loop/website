@@ -243,7 +243,7 @@
   "pleaseEnterYourEmail": "Veuillez entrer votre adresse e-mail",
   "signedUpOn": "S'est inscrit le",
   "nDays_one": "{{ count }} jour",
-  "nDays_other": "{{ count }} jours",
+  "nDays_other": "{{ count }} days",
   "leaveWaitlist": "Quitter la liste d'attente",
   "pleaseEnterAValid": {
     "emailAddress": "Veuillez entrer une adresse e-mail valide",
