@@ -41,7 +41,7 @@
   "delete": "Supprimer",
   "cancel": "Annuler",
   "deleteAccount": "Êtes-vous sûr de vouloir supprimer définitivement votre compte ?",
-  "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
+  "deleteAccountWithLoops": "Comme vous êtes le seul hôte des boucles suivantes, vous devez d'abord les supprimer ou ajouter un co-hôte !",
   "areYouSureRemoveEvent": "Êtes-vous sûr de vouloir supprimer définitivement cet événement ?",
   "areYouSureLogout": "Êtes-vous sûr de vouloir vous déconnecter ?",
   "deleteUserBtn": "Supprimer le compte",
