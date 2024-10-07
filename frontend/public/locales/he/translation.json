@@ -41,7 +41,7 @@
   "delete": "מחק",
   "cancel": "ביטול",
   "deleteAccount": "האם אתם בטוחים שברצונכם למחוק את החשבון לצמיתות?",
-  "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
+  "deleteAccountWithLoops": "As you are the only host of the following Loops, you need to delete these first or add a co-host!",
   "areYouSureRemoveEvent": "האם הינכם בטוחים שברצונכם למחוק את האירוע הזה לצמיתות?",
   "areYouSureLogout": "האם אתם בטוחים שאתם רוצים להתנתק?",
   "deleteUserBtn": "מחק חשבון",
