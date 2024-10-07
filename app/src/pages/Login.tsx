@@ -81,7 +81,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         inputEmail.current?.blur();
       } catch (err: any) {
         setSentState(State.error);
-        toastError(present, err?.statusText || err?.message);
+        toastError(present, err);
         console.error(err);
       }
     })();
@@ -102,7 +102,10 @@ export default function Login(props: { isLoggedIn: boolean }) {
   function handleVerifyToken() {
     if (verifyState === State.loading) return;
     let token = inputToken.current?.value || "";
-    if (!token) return;
+    if (!token) {
+      toastError(present, "Passcode required");
+      return;
+    }
     setVerifyState(State.loading);
 
     if (token === "12345678" && tokenOverride !== "") {
@@ -117,7 +120,7 @@ export default function Login(props: { isLoggedIn: boolean }) {
         modal.current?.dismiss("success");
         history.replace("/settings", "select-loop");
       } catch (e: any) {
-        console.error(e);
+        toastError(present, e);
         if (!(e?.status === 401)) connError(e);
         setVerifyState(State.error);
       }
