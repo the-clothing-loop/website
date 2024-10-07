@@ -195,13 +195,16 @@ export default function ChainDetailsForm({
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const nonClothingItems = values.genders?.includes("4") || values.genders?.includes("5")
-  
+    const includesClothing =
+      values.genders?.includes("1") ||
+      values.genders?.includes("2") ||
+      values.genders?.includes("3");
+
     if (!values.genders?.length) {
       addToastError(t("required") + ": " + t("categories"), 400);
       return;
     }
-    if (!values.sizes?.length && !nonClothingItems) {
+    if (!values.sizes?.length && includesClothing) {
       addToastError(t("required") + ": " + t("sizes"), 400);
       return;
     }
