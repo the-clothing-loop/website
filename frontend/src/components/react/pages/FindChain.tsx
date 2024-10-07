@@ -414,6 +414,10 @@ export default function FindChain() {
         }
       }
     }
+    const filterFunc = createFilterFunc(
+      urlParams.getAll("g"),
+      urlParams.getAll("s"),
+    );
     let ans = visibleFeatures
       .sort((a, b) => {
         let aLngLat = new mapboxgl.LngLat(
@@ -429,7 +433,7 @@ export default function FindChain() {
       .map((f) => f.properties.chainIndex)
       .filter((value, index, arr) => arr.indexOf(value) === index)
       .map((chainIndex) => chains[chainIndex])
-      .filter((c) => c) as Chain[];
+      .filter(filterFunc) as Chain[];
 
     setVisibleChains(ans);
     return ans;
