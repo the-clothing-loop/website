@@ -42,13 +42,5 @@
   "feedback": {
     "title": "Feedback und Vorschläge",
     "content": "Wenn Sie eine Idee oder einen Vorschlag für Ihre lokale Schleife haben, senden Sie dem Host eine Nachricht. Wenn Sie Feedback oder Anregungen für die allgemeine Website und Organisation haben, schreiben Sie bitte eine E-Mail an hello@clothingloop. Wir würden uns freuen von Ihnen zu hören, denn gemeinsam erstellen wir dieses Projekt."
-  },
-  "routePrivacy": {
-    "title": "Wessen Kontaktinformationen werde ich in der App sehen?",
-    "content": "In der Routenliste sehen Sie die Kontaktinformationen der Teilnehmer vor und nach Ihnen; dies kann sich je nach Route unterscheiden. Außerdem sehen Sie die Informationen der Teilnehmer, die Beiträge in der Bulky Items Sektion gepostet haben. Dies soll helfen, den Tausch zwischen den Teilnehmern zu erleichtern."
-  },
-  "randomParticiPrivacy": {
-    "title": "Warum sehe ich mehr oder zufällige Teilnehmerinformationen in Route?",
-    "content": "Wenn andere Teilnehmer einen Artikel in der Rubrik Bulky Items veröffentlicht haben, sehen Sie deren Kontaktinformationen. Die App zeigt Kontaktdaten an, um die Kommunikation zwischen den Teilnehmern zu erleichtern und einen Swap-Modus zu organisieren."
   }
 }
