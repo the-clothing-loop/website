@@ -42,13 +42,5 @@
   "feedback": {
     "title": "Feedback and suggestions",
     "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
-  },
-  "routePrivacy": {
-    "title": "Czyje informacje kontaktowe zobaczę w aplikacji?",
-    "content": "Na liście tras zobaczysz dane kontaktowe uczestników przed i po Ciebie; może się to różnić w zależności od trasy. Ponadto zobaczysz informacje o uczestnikach, którzy opublikowali pozycje w sekcji Bulky Items. Ma to na celu ułatwienie wymiany między uczestnikami."
-  },
-  "randomParticiPrivacy": {
-    "title": "Dlaczego widzę więcej lub losowych informacji o uczestniku?",
-    "content": "Jeśli inni uczestnicy opublikowali produkt w sekcji Bulky Items, zobaczysz ich dane kontaktowe. Aplikacja wyświetla dane kontaktowe, aby ułatwić komunikację między uczestnikami i zorganizować swap."
   }
 }
