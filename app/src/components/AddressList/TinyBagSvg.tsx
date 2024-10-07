@@ -1,12 +1,22 @@
 import { Bag } from "../../api/types";
 import BagSVG from "../Bags/Svg";
 
+type BagType = "" | "👻" | "🐰" | "👟" | "📖";
 interface Props {
   bag: Bag;
+  type: BagType;
 }
 
-export default function TinyBagSvg({ bag }: Props) {
-  if (bag.number.includes("👻")) {
+export function getBagType(bag: Bag): BagType {
+  if (bag.number.includes("👻")) return "👻";
+  if (bag.number.includes("🐰")) return "🐰";
+  if (bag.number.includes("👟")) return "👟";
+  if (bag.number.includes("📖")) return "📖";
+  return "";
+}
+
+export default function TinyBagSvg({ bag, type }: Props) {
+  if (type === "👻") {
     return (
       <svg
         fill={bag.color}
@@ -32,7 +42,7 @@ export default function TinyBagSvg({ bag }: Props) {
       </svg>
     );
   }
-  if (bag.number.includes("🐰")) {
+  if (type === "🐰") {
     return (
       <svg
         fill={bag.color}
@@ -67,7 +77,7 @@ export default function TinyBagSvg({ bag }: Props) {
       </svg>
     );
   }
-  if (bag.number.includes("👟")) {
+  if (type === "👟") {
     return (
       <svg
         fill={bag.color}
@@ -91,7 +101,7 @@ export default function TinyBagSvg({ bag }: Props) {
     );
   }
 
-  if (bag.number.includes("📖")) {
+  if (type === "📖") {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 24 26">
         <path
