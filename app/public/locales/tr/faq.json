@@ -42,13 +42,5 @@
   "feedback": {
     "title": "Feedback and suggestions",
     "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
-  },
-  "routePrivacy": {
-    "title": "Whose contact information will I see in the app?",
-    "content": "In the Route list, you will see the contact information of participants before and after you; this may differ per route. Furthermore, you’ll see the information of participants who have posted items in the Bulky Items section. This is designed to help facilitate the swap between participants."
-  },
-  "randomParticiPrivacy": {
-    "title": "Why am I seeing more or random participant’s information in Route?",
-    "content": "If other participants have posted an item in the Bulky Items section, you’ll see their contact information. The app displays contact details to facilitate communication between participants and organize a swap."
   }
 }
