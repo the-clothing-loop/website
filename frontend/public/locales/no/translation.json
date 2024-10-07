@@ -41,7 +41,7 @@
   "delete": "Slett",
   "cancel": "Avbryt",
   "deleteAccount": "Er du sikker på at du vil slette kontoen permanent?",
-  "deleteAccountWithLoops": "Siden du er den eneste verten av følgende løkker, vil de også bli slettet!",
+  "deleteAccountWithLoops": "Siden du er den eneste verten av følgende løkker, må du slette disse eller legge til en co-vert!",
   "areYouSureRemoveEvent": "Er du sikker på at du vil slette denne hendelsen?",
   "areYouSureLogout": "Er du sikker på at du vil logge ut?",
   "deleteUserBtn": "Slett konto",

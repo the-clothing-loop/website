@@ -41,7 +41,7 @@
   "delete": "Löschen",
   "cancel": "Abbrechen",
   "deleteAccount": "Sind Sie sicher, dass Sie Ihr Konto für immer löschen möchten?",
-  "deleteAccountWithLoops": "As you are the only host of the following Loops, those will also be deleted!",
+  "deleteAccountWithLoops": "Da Sie der einzige Host der folgenden Schleifen sind, müssen Sie diese zuerst löschen oder einen Co-Host hinzufügen!",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
   "deleteUserBtn": "Konto löschen",
