@@ -11,6 +11,7 @@ import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { useLegal } from "../util/user.hooks";
 import { GinParseErrors } from "../util/gin-errors";
+import DeleteModal from "../components/DeleteModal";
 
 export default function AdminDashboard() {
   const { t, i18n } = useTranslation();
@@ -51,21 +52,7 @@ export default function AdminDashboard() {
     addModal({
       message: t("deleteAccount"),
       content: () => {
-        if (!(chainNames && chainNames.length)) return <></>;
-        return (
-          <div className="space-y-2">
-            <p className="">{t("deleteAccountWithLoops")}</p>
-            <ul
-              className={`text-sm font-semibold mx-8 ${
-                chainNames.length > 1 ? "list-disc" : "list-none text-center"
-              }`}
-            >
-              {chainNames.map((name) => (
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
-          </div>
-        );
+        return <DeleteModal></DeleteModal>;
       },
       actions: [
         {
