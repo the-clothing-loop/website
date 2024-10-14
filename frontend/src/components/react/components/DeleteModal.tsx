@@ -12,9 +12,10 @@ export default function DeleteModal() {
 
   const [chains, setChains] = useState<Chain[]>([]);
   const [showTextArea, setShowTextArea] = useState(false);
+  const [showMovedOptions, setShowMovedOptions] = useState(false);
 
+  console.log(showMovedOptions);
   const reasonsForLeaving = [
-    t("moved"),
     t("addressToFar"),
     t("notEnoughItemsILiked"),
     t("tooTimeConsuming"),
@@ -25,7 +26,10 @@ export default function DeleteModal() {
   function showTextHandler(event: React.ChangeEvent<HTMLInputElement>) {
     setShowTextArea(!event.target.checked);
   }
-
+  function showMovedOptionsHandler(event: React.ChangeEvent<HTMLInputElement>) {
+    setShowMovedOptions(event.target.checked);
+    console.log(showMovedOptions);
+  }
   if (!authUser) return;
   const chainNames = authUser.is_root_admin
     ? undefined
@@ -41,6 +45,46 @@ export default function DeleteModal() {
         <p>Please select a reason for leaving</p>
 
         <ul className="list-none">
+          <li key="moved" className="flex items-center mb-4">
+            <input
+              type="checkbox"
+              className="checkbox border-black"
+              name={"moved"}
+              onChange={(e) => showMovedOptionsHandler(e)}
+            />
+            <label className="ml-2">{t("moved")}</label>
+          </li>
+          {showMovedOptions ? (
+            <div className="ml-8">
+              <li key="planToJoinNewLoop" className="flex items-center mb-4">
+                <input
+                  type="checkbox"
+                  className="checkbox border-black"
+                  name={"moved"}
+                />
+                <label className="ml-2">{t("planToJoinNewLoop")}</label>
+              </li>
+              <li key="planToStartNewLoop" className="flex items-center mb-4">
+                <input
+                  type="checkbox"
+                  className="checkbox border-black"
+                  name={"moved"}
+                />
+                <label className="ml-2">{t("planToStartNewLoop")}</label>
+              </li>
+              <li
+                key="dontPlanToParticipate"
+                className="flex items-center mb-4"
+              >
+                <input
+                  type="checkbox"
+                  className="checkbox border-black"
+                  name={"moved"}
+                />
+                <label className="ml-2">{t("dontPlanToParticipate")}</label>
+              </li>
+            </div>
+          ) : null}
           {reasonsForLeaving.map((r) => (
             <li key={r} className="flex items-center mb-4">
               <input
