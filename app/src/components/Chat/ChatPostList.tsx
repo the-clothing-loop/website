@@ -1,7 +1,12 @@
 import ChatPost from "./ChatPost";
 import { User } from "../../api/types";
 import { useContext, useMemo, useState } from "react";
-import { ActionSheetButton, IonActionSheet, useIonAlert } from "@ionic/react";
+import {
+  ActionSheetButton,
+  IonActionSheet,
+  IonIcon,
+  useIonAlert,
+} from "@ionic/react";
 import { useTranslation } from "react-i18next";
 import {
   ChannelMessage,
@@ -9,6 +14,7 @@ import {
   User as UserProfile,
 } from "@heroiclabs/nakama-js";
 import { StoreContext } from "../../stores/Store";
+import { chatbubblesOutline } from "ionicons/icons";
 
 interface Props {
   postList: ChannelMessageList;
@@ -85,6 +91,15 @@ export default function ChatPostList(props: Props) {
           />
         );
       })}
+
+      {props.postList.messages?.length !== 0 ? null : (
+        <div className="tw-w-full tw-h-screen tw-flex tw-justify-center tw-items-center">
+          <div className="tw-text-center tw-relative">
+            <IonIcon icon={chatbubblesOutline} className="tw-text-6xl" />
+            <h1>Start Chatting</h1>
+          </div>
+        </div>
+      )}
 
       <IonActionSheet
         isOpen={isPostActionSheetOpen !== null}
