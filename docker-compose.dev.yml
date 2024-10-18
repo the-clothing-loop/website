@@ -19,7 +19,7 @@ services:
     working_dir: /app
     command: sh -c 'npm i; npm run start:lan'
   server:
-    image: golang:1.22-alpine
+    image: golang:1.23-alpine
     depends_on:
       - db
       - mailpit
