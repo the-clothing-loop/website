@@ -67,6 +67,14 @@
     "7": {
       "question": "Why do I only see an SMS button?",
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
+    },
+    "routePrivacy": {
+      "question": "Wessen Kontaktinformationen werde ich in der App sehen?",
+      "answer": "In der Routenliste sehen Sie die Kontaktinformationen der Teilnehmer vor und nach Ihnen; dies kann sich je nach Route unterscheiden. Außerdem sehen Sie die Informationen der Teilnehmer, die Beiträge in der Bulky Items Sektion gepostet haben. Dies soll helfen, den Tausch zwischen den Teilnehmern zu erleichtern."
+    },
+    "randomParticiPrivacy": {
+      "question": "Warum sehe ich mehr oder zufällige Teilnehmerinformationen in Route?",
+      "answer": "Wenn andere Teilnehmer einen Artikel in der Rubrik Bulky Items veröffentlicht haben, sehen Sie deren Kontaktinformationen. Die App zeigt Kontaktdaten an, um die Kommunikation zwischen den Teilnehmern zu erleichtern und einen Swap-Modus zu organisieren."
     }
   },
   "faqForHosts": "FAQ für Hosts",

@@ -349,10 +349,10 @@ func UserPurge(c *gin.Context) {
 	}
 
 	amountOfBags, err := user.CountAttachedBags(db)
-	if err != nil || amountOfBags == 0 {
-		if err != nil {
-			slog.Error("Error getting bag count", "err", err)
-		}
+	if err != nil {
+		slog.Error("Error getting bag count", "err", err)
+	}
+	if amountOfBags != 0 {
 		c.String(http.StatusConflict, "Please give your bags to someone else, or delete them from the app")
 		return
 	}
@@ -362,18 +362,6 @@ func UserPurge(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-
-	// notify connected hosts, send email to chain admins
-	chainIDs := []uint{}
-	for _, uc := range user.Chains {
-		chainIDs = append(chainIDs, uc.ChainID)
-	}
-
-	services.EmailLoopAdminsOnUserLeft(db,
-		user.Name,
-		user.Email.String,
-		user.Email.String,
-		chainIDs...)
 
 	// find chains where user is the last chain admin
 	chainIDsToDelete := []uint{}
@@ -388,6 +376,12 @@ WHERE uc.chain_id IN (
 GROUP BY uc.chain_id
 HAVING COUNT(uc.id) = 1
 	`, user.ID).Scan(&chainIDsToDelete)
+	participantsToBeOrphaned := int64(0)
+	db.Raw("SELECT COUNT(id) FROM user_chains WHERE chain_id IN ? AND is_chain_admin = FALSE AND is_approved = TRUE AND user_id != ?", chainIDsToDelete, user.ID).Count(&participantsToBeOrphaned)
+	if participantsToBeOrphaned > 0 {
+		c.String(http.StatusConflict, "Set someone else as host or delete the loop first before deleting your account")
+		return
+	}
 
 	tx := db.Begin()
 
@@ -483,6 +477,18 @@ UPDATE events SET user_id = (
 	}
 
 	tx.Commit()
+
+	// notify connected hosts, send email to chain admins
+	chainIDs := []uint{}
+	for _, uc := range user.Chains {
+		chainIDs = append(chainIDs, uc.ChainID)
+	}
+
+	services.EmailLoopAdminsOnUserLeft(db,
+		user.Name,
+		user.Email.String,
+		user.Email.String,
+		chainIDs...)
 
 	auth.CookieRemove(c)
 }

@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
@@ -338,12 +339,13 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 			token += "&c=" + chainUID
 		}
 	}
+	headerPostfix := lo.If(isApp, "MyClothingLoop App").Else("clothingloop.org")
 	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
 		"Token":   template.URL(token),
 		"IsApp":   isApp,
-	})
+	}, headerPostfix)
 	if err != nil {
 		return err
 	}

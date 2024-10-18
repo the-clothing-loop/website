@@ -75,11 +75,13 @@ export default function UserCard({
   chain,
   isUserPaused,
   showMessengers = false,
+  showEmail = false,
 }: {
   user: User;
   chain: Chain | null;
   isUserPaused: boolean;
   showMessengers?: boolean;
+  showEmail?: boolean;
 }) {
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
@@ -165,6 +167,20 @@ export default function UserCard({
         </IonText>
       </div>
       <IonList>
+        {showEmail ? (
+          <IonItem
+            lines="none"
+            key="email"
+            detail={false}
+            target="_blank"
+            href={`mailto:` + user.email}
+          >
+            <IonLabel>
+              <h3 className="!tw-font-bold">{t("email")}</h3>
+              <p className="dark:tw-text-primary-contrast">{user.email}</p>
+            </IonLabel>
+          </IonItem>
+        ) : null}
         {isPhonePrivate ? null : (
           <>
             <IonItem

@@ -27,7 +27,18 @@ const ARR_HOST_KEYS = [
   "12",
   "13",
 ];
-const ARR_APP_KEYS = ["0", "1", "2", "3", "4", "5", "6", "7"];
+const ARR_APP_KEYS = [
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "routePrivacy",
+  "randomParticiPrivacy",
+];
 
 function ObjToArrFaqI18n(t: TFunction, i18nKey: string, keys: string[]) {
   let obj = t(i18nKey, {

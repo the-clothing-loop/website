@@ -133,7 +133,7 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 				"Token": strconv.Itoa(faker.IntBetween(10000000, 99999999)),
 			},
 			DataExpected: []string{"Name", "Token"},
-			Args:         []any{},
+			Args:         []any{faker.Lorem().Word()},
 		},
 		{
 			Name: "login_verification",
@@ -144,7 +144,7 @@ func TestEmailFormattingByLanguage(t *testing.T) {
 				"Token":   strconv.Itoa(faker.IntBetween(10000000, 99999999)),
 			},
 			DataExpected: []string{"Name", "Token", "BaseURL"},
-			Args:         []any{},
+			Args:         []any{faker.Lorem().Word()},
 		},
 		{
 			Name: "loop_is_deleted",

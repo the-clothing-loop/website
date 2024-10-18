@@ -67,6 +67,14 @@
     "7": {
       "question": "Why do I only see an SMS button?",
       "answer": "This phone number starts with 06 and doesn’t have an international code (for example +31). If a phone number does have an international code (+31 6…), WhatsApp, Signal and Telegram buttons also appear.<br/>You can change your phone number in Account. Hosts are also able to edit a participant’s information"
+    },
+    "routePrivacy": {
+      "question": "Vems kontaktuppgifter kommer jag att se i appen?",
+      "answer": "I Ruttlistan ser du deltagarnas kontaktuppgifter före och efter dig, vilket kan skilja sig åt per rutt. Dessutom kommer du att se information om deltagare som har postat objekt i avsnittet Bulky objekt. Detta är utformat för att underlätta utbytet mellan deltagarna."
+    },
+    "randomParticiPrivacy": {
+      "question": "Varför ser jag mer eller mer information från slumpmässiga deltagare i Route?",
+      "answer": "Om andra deltagare har lagt upp ett objekt i avsnittet Bulky Objekt ser du deras kontaktuppgifter. Appen visar kontaktuppgifter för att underlätta kommunikationen mellan deltagarna och organisera ett byte."
     }
   },
   "faqForHosts": "FAQ för värdar",

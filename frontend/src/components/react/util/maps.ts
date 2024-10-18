@@ -1,4 +1,3 @@
-import mapboxgl from "mapbox-gl";
 import { useState } from "react";
 
 export function circleRadiusKm(meters: number, latitude: number): number {

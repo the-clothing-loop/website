@@ -67,6 +67,14 @@
     "7": {
       "question": "¿Por qué sólo veo un botón SMS?",
       "answer": "Este número de teléfono comienza con 06 y no tiene un código internacional (por ejemplo, +31). Si un número de teléfono tiene un código internacional (+31 6…), también aparecerán botones de WhatsApp, Signal y Telegram.<br/> Puedes cambiar tu número de teléfono en Cuenta. Los anfitriones también pueden editar la información de un participante"
+    },
+    "routePrivacy": {
+      "question": "¿Qué información de contacto veré en la aplicación?",
+      "answer": "En la lista Ruta, verás la información de contacto de los participantes antes y después de ti; esto puede diferir por ruta. Además, verás la información de los participantes que han publicado artículos en la sección de artículos voluminosos. Esto está diseñado para facilitar el intercambio entre los participantes."
+    },
+    "randomParticiPrivacy": {
+      "question": "¿Por qué estoy viendo más o al azar la información de los participantes en Ruta?",
+      "answer": "Si otros participantes han publicado un artículo en la sección de artículos voluminosos, verás su información de contacto. La aplicación muestra los datos de contacto para facilitar la comunicación entre los participantes y organizar un intercambio."
     }
   },
   "faqForHosts": "Preguntas frecuentes para anfitrionas.es",

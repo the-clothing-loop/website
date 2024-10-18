@@ -1,6 +1,7 @@
 import redaxios from "redaxios";
 import type { OneSignalPlugin } from "onesignal-cordova-plugin";
-import { type Capacitor } from "@capacitor";
+import type { Capacitor } from "@capacitor";
+import type { mapboxgl } from "mapbox-gl";
 
 declare global {
   var axios: typeof redaxios;
@@ -10,5 +11,6 @@ declare global {
       OneSignal?: OneSignalPlugin;
     };
     Capacitor?: Capacitor;
+    mapboxgl: mapboxgl;
   }
 }
