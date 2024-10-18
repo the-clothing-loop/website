@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { StoreProvider } from "./stores/Store";
 import Routes from "./Routes";
 import { logout } from "./api/login";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import dayjs from "./dayjs";
-import Loading from "./components/PrivateRoute/Loading";
 
 export default function App() {
   const [presentAlert] = useIonAlert();
@@ -51,11 +50,9 @@ export default function App() {
 
   return (
     <StoreProvider onIsOffline={handleIsOffline}>
-      <Suspense fallback={<Loading />}>
-        <IonReactRouter>
-          <Routes />
-        </IonReactRouter>
-      </Suspense>
+      <IonReactRouter>
+        <Routes />
+      </IonReactRouter>
     </StoreProvider>
   );
 }
