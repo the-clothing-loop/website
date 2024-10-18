@@ -191,7 +191,8 @@
   "getReadyToSwap": "Préparez-vous à faire du troc !",
   "getReadyToSwapMessage": "Le responsable de votre Loop local vous ajoutera à l’itinéraire des sacs dès que possible. Ensuite, ce ne sera qu'une question de temps avant que le premier sac n'arrive ! Si vous trouvez quelque chose qui vous plaît, vous pouvez le prendre du sac. Et avant de transmettre le sac à la personne suivante dans la chaîne, vous ajoutez au sac quelque chose qui ne vous convient plus. N'oubliez pas de partager une photo de votre nouveau trésor avec le groupe !",
   "ourImpact": "Notre impact",
-  "co2EmissionAvoided": "Emissions avoided in ’23",
+  "co2EmissionAvoided": "Émissions de CO2 évitées en ’23",
+  "lKg": "kg",
   "lWaterAvoided": "Water use avoided in ’23",
   "nLiters": "liters",
   "fromLocalLockdownToSuccess": "Une initiative locale née durant le lockdown qui est devenue un succès international",
@@ -242,7 +243,7 @@
   "pleaseEnterYourEmail": "Veuillez entrer votre adresse e-mail",
   "signedUpOn": "S'est inscrit le",
   "nDays_one": "{{ count }} jour",
-  "nDays_other": "{{ count }} jours",
+  "nDays_other": "{{ count }} days",
   "leaveWaitlist": "Quitter la liste d'attente",
   "pleaseEnterAValid": {
     "emailAddress": "Veuillez entrer une adresse e-mail valide",
