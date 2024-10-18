@@ -195,10 +195,11 @@ export default function ChainDetailsForm({
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const includesClothing =
-      values.genders?.includes("1") ||
-      values.genders?.includes("2") ||
-      values.genders?.includes("3");
+    const includesClothing = [
+      Categories.children,
+      Categories.women,
+      Categories.men,
+    ].some((c) => values.genders?.includes(c));
 
     if (!values.genders?.length) {
       addToastError(t("required") + ": " + t("categories"), 400);
