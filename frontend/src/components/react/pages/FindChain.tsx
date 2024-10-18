@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 
 import type * as GeoJSONTypes from "geojson";
-import mapboxgl, { type MapboxGeoJSONFeature } from "mapbox-gl";
+import type { MapboxGeoJSONFeature } from "mapbox-gl";
 
 // Project resources
 import type { Chain, UID } from "../../../api/types";
@@ -115,7 +115,7 @@ export default function FindChain() {
     const hasCenter = !!(
       _center[GEOJSON_LONGITUDE_INDEX] && _center[GEOJSON_LATITUDE_INDEX]
     );
-    const _map = new mapboxgl.Map({
+    const _map = new window.mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
       projection: { name: "mercator" },
@@ -127,7 +127,7 @@ export default function FindChain() {
         : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
       style: "mapbox://styles/mapbox/light-v11",
     });
-    const _marker = new mapboxgl.Marker({
+    const _marker = new window.mapboxgl.Marker({
       color: "#518d7e",
     });
 
@@ -405,7 +405,7 @@ export default function FindChain() {
         let f = features[i];
         if (!f.properties?.cluster) {
           if (f.geometry.type !== "Point") continue;
-          let fLngLat = new mapboxgl.LngLat(
+          let fLngLat = new window.mapboxgl.LngLat(
             f.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
             f.geometry.coordinates[GEOJSON_LATITUDE_INDEX],
           );
@@ -420,11 +420,11 @@ export default function FindChain() {
     );
     let ans = visibleFeatures
       .sort((a, b) => {
-        let aLngLat = new mapboxgl.LngLat(
+        let aLngLat = new window.mapboxgl.LngLat(
           a.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
           a.geometry.coordinates[GEOJSON_LATITUDE_INDEX],
         );
-        let bLngLat = new mapboxgl.LngLat(
+        let bLngLat = new window.mapboxgl.LngLat(
           b.geometry.coordinates[GEOJSON_LONGITUDE_INDEX],
           b.geometry.coordinates[GEOJSON_LATITUDE_INDEX],
         );
