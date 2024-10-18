@@ -1,7 +1,7 @@
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
 import { Trans, useTranslation } from "react-i18next";
-import mapboxgl from "mapbox-gl";
+import type { Map } from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import type * as GeoJSONTypes from "geojson";
 
@@ -81,7 +81,7 @@ export default function ChainDetailsForm({
   const localizePath = useLocalizePath(i18n);
 
   const mapRef = useRef<any>();
-  const [map, setMap] = useState<mapboxgl.Map>();
+  const [map, setMap] = useState<Map>();
   const [values, setValue] = useForm<RegisterChainForm>({
     name: "",
     description: "",
@@ -97,7 +97,7 @@ export default function ChainDetailsForm({
 
   useEffect(() => {
     const hasCenter = !!(values.longitude && values.latitude);
-    const _map = new mapboxgl.Map({
+    const _map = new window.mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
       projection: { name: "mercator" },
