@@ -11,24 +11,42 @@ export default function DeleteModal() {
   const authUser = useStore($authUser);
 
   const [chains, setChains] = useState<Chain[]>([]);
-  const [showTextArea, setShowTextArea] = useState(false);
+  const [showOtherTextFieldArea, setShowOtherTextFieldArea] = useState(false);
   const [showMovedOptions, setShowMovedOptions] = useState(false);
+  const [showNotEnoughItemsOptions, setShowNotEnoughItemsOptions] =
+    useState(false);
 
-  console.log(showMovedOptions);
   const reasonsForLeaving = [
     t("addressToFar"),
-    t("notEnoughItemsILiked"),
     t("tooTimeConsuming"),
     t("doneSwapping"),
     t("didntFitIn"),
   ];
 
-  function showTextHandler(event: React.ChangeEvent<HTMLInputElement>) {
-    setShowTextArea(!event.target.checked);
+  const movedOptions = [
+    t("planToJoinNewLoop"),
+    t("planToStartNewLoop"),
+    t("dontPlanToParticipate"),
+  ];
+
+  const notEnoughItemsOptions = [
+    t("qualityDidntMatch"),
+    t("sizesDidntMatch"),
+    t("stylesDidntMatch"),
+  ];
+
+  function showOtherTextFieldHandler(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    setShowOtherTextFieldArea(event.target.checked);
   }
   function showMovedOptionsHandler(event: React.ChangeEvent<HTMLInputElement>) {
     setShowMovedOptions(event.target.checked);
-    console.log(showMovedOptions);
+  }
+  function showNotEnoughItemsOptionsHandler(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    setShowNotEnoughItemsOptions(event.target.checked);
   }
   if (!authUser) return;
   const chainNames = authUser.is_root_admin
@@ -54,36 +72,47 @@ export default function DeleteModal() {
             />
             <label className="ml-2">{t("moved")}</label>
           </li>
+
           {showMovedOptions ? (
-            <div className="ml-8">
-              <li key="planToJoinNewLoop" className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  className="checkbox border-black"
-                  name={"moved"}
-                />
-                <label className="ml-2">{t("planToJoinNewLoop")}</label>
-              </li>
-              <li key="planToStartNewLoop" className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  className="checkbox border-black"
-                  name={"moved"}
-                />
-                <label className="ml-2">{t("planToStartNewLoop")}</label>
-              </li>
-              <li
-                key="dontPlanToParticipate"
-                className="flex items-center mb-4"
-              >
-                <input
-                  type="checkbox"
-                  className="checkbox border-black"
-                  name={"moved"}
-                />
-                <label className="ml-2">{t("dontPlanToParticipate")}</label>
-              </li>
-            </div>
+            <>
+              {movedOptions.map((r) => (
+                <li key={r} className="flex items-center mb-4 ml-8">
+                  <input
+                    type="checkbox"
+                    className="checkbox border-black"
+                    name={r}
+                    id={r}
+                  />
+                  <label className="ml-2">{r}</label>
+                </li>
+              ))}
+            </>
+          ) : null}
+
+          <li key="notEnoughItemsILiked" className="flex items-center mb-4">
+            <input
+              type="checkbox"
+              className="checkbox border-black"
+              name={"notEnoughItemsILiked"}
+              onChange={(e) => showNotEnoughItemsOptionsHandler(e)}
+            />
+            <label className="ml-2">{t("notEnoughItemsILiked")}</label>
+          </li>
+
+          {showNotEnoughItemsOptions ? (
+            <>
+              {notEnoughItemsOptions.map((r) => (
+                <li key={r} className="flex items-center mb-4 ml-8">
+                  <input
+                    type="checkbox"
+                    className="checkbox border-black"
+                    name={r}
+                    id={r}
+                  />
+                  <label className="ml-2">{r}</label>
+                </li>
+              ))}
+            </>
           ) : null}
           {reasonsForLeaving.map((r) => (
             <li key={r} className="flex items-center mb-4">
@@ -101,16 +130,21 @@ export default function DeleteModal() {
               type="checkbox"
               className="checkbox border-black"
               name={"other"}
-              onChange={(e) => showTextHandler(e)}
+              onChange={(e) => showOtherTextFieldHandler(e)}
             />
             <label className="ml-2">{t("other")}</label>
           </li>
-          <li key="other_text" className="">
-            <textarea
-              disabled={showTextArea}
-              className="bg-grey-light w-full"
-            />
-          </li>
+          {showOtherTextFieldArea ? (
+            <>
+              <li key="other_text" className="mx-7">
+                <label className="text-sm">
+                  Please let us know why you've decided to leave the Clothing
+                  Loop and if there's anything we could do to improve.
+                </label>
+                <textarea className="bg-grey-light w-full" />
+              </li>
+            </>
+          ) : null}
         </ul>
       </div>
     );

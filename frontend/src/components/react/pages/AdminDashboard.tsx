@@ -52,7 +52,7 @@ export default function AdminDashboard() {
     addModal({
       message: t("deleteAccount"),
       content: () => {
-        return <DeleteModal></DeleteModal>;
+        return <DeleteModal/>;
       },
       actions: [
         {
