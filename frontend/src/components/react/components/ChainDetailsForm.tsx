@@ -1,7 +1,7 @@
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
 import { Trans, useTranslation } from "react-i18next";
-import type { Map } from "mapbox-gl";
+import mapboxgl, { Map } from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import type * as GeoJSONTypes from "geojson";
 
@@ -97,7 +97,7 @@ export default function ChainDetailsForm({
 
   useEffect(() => {
     const hasCenter = !!(values.longitude && values.latitude);
-    const _map = new window.mapboxgl.Map({
+    const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
       projection: { name: "mercator" },

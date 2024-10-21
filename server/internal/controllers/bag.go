@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/OneSignal/onesignal-go-api"
 	"github.com/samber/lo"
 
 	"github.com/gin-gonic/gin"
@@ -154,10 +153,7 @@ LIMIT 1
 	if body.UserUID != body.HolderUID {
 		err := app.OneSignalCreateNotification(db, []string{body.HolderUID},
 			*views.Notifications[views.NotificationEnumTitleBagAssignedYou],
-			onesignal.StringMap{
-				En: onesignal.PtrString(bag.Number),
-			},
-		)
+			app.OneSignalEllipsisContent(bag.Number))
 		if err != nil {
 			slog.Error("Notification creation failed", "err", err)
 		}
