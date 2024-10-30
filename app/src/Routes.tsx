@@ -73,6 +73,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import BagSVG from "./components/Bags/Svg";
 import IsPaused from "./utils/is_paused";
 import toastError from "../toastError";
+import { ChatContext } from "./stores/Chat";
 
 SplashScreen.show({
   autoHide: true,
@@ -168,6 +169,7 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 function AppRoute() {
   const { t } = useTranslation();
   const { refresh, bags, authUser, chain } = useContext(StoreContext);
+  const { showNotification } = useContext(ChatContext);
   const isPaused = IsPaused(authUser, chain?.uid);
 
   const hasBagTooOldMe = useMemo(() => {
@@ -247,6 +249,9 @@ function AppRoute() {
         </IonTabButton>
         <IonTabButton tab="chat" href="/chat" disabled={!chain}>
           <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
+          {showNotification ? (
+            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
+          ) : null}
           <IonLabel>{t("chat")}</IonLabel>
         </IonTabButton>
 

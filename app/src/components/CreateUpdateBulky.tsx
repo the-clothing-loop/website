@@ -56,6 +56,7 @@ export default function CreateBulky({
   const [bulkyTitle, setBulkyTitle] = useState("");
   const [bulkyMessage, setBulkyMessage] = useState("");
   const [imageData, setImageData] = useState<string>();
+  const [image, setImage] = useState<File>();
   const [error, setError] = useState("");
   const [isCapacitor] = useState(() => isPlatform("capacitor"));
   const [loadingUpload, setLoadingUpload] = useState(State.loading);
@@ -83,13 +84,13 @@ export default function CreateBulky({
       setError("message");
       return;
     }
-    if (!imageData) {
+    if (!image) {
       setError("image-url");
       return;
     }
 
     try {
-      await onSendBulkyItem(`${bulkyTitle}\n\n${bulkyMessage}`, imageData);
+      await onSendBulkyItem(`${bulkyTitle}\n\n${bulkyMessage}`, image);
 
       refScrollRoot.current?.scrollTo({
         top: 0,
@@ -131,21 +132,19 @@ export default function CreateBulky({
     setLoadingUpload(State.loading);
 
     // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
-    function getBase64(file: File) {
+    function getDataUrl(file: File) {
       return new Promise<string>((resolve, reject) => {
         let reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () =>
-          resolve(
-            (reader.result as string).replace("data:", "").replace(/^.+,/, ""),
-          );
+        reader.onload = () => resolve(reader.result as string);
         reader.onerror = (error) => reject(error);
       });
     }
 
     (async () => {
-      const image64 = await getBase64(file);
+      const image64 = await getDataUrl(file);
       setImageData(image64);
+      setImage(file);
     })()
       .then(() => {
         setLoadingUpload(State.success);
@@ -162,7 +161,25 @@ export default function CreateBulky({
     const photo = await Camera.getPhoto({
       resultType: CameraResultType.Base64,
     });
+
+    // https://stackoverflow.com/a/38935990/19100899
+    function dataURLtoFile(dataurl: string, filename: string) {
+      const arr = dataurl.split(",");
+      const mime = arr[0].match(/:(.*?);/)![1];
+      const bstr = atob(arr[arr.length - 1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    }
     if (!photo.dataUrl) throw "Image not found";
+    const f = dataURLtoFile(
+      photo.dataUrl,
+      photo.webPath?.replace(/^.*[\\\/]/, "") + "." + photo.format,
+    );
+    setImage(f);
     setImageData(photo.dataUrl);
   }
 

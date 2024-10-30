@@ -168,4 +168,8 @@ UPDATE user_chains SET is_approved = FALSE WHERE id IN (
 		slog.Info("Migration run: set new allow_map column to true")
 		db.Exec("UPDATE chains SET allow_map = 1")
 	}
+
+	if db.Migrator().HasColumn(&models.User{}, "chat_user") {
+		db.Migrator().DropColumn(&models.User{}, "chat_user")
+	}
 }

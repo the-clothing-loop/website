@@ -73,7 +73,6 @@ export const StoreContext = createContext({
   setRouteListView: (v: RouteListView) => {},
   connError: (err: any) => Promise.resolve(IsAuthenticated.Unknown),
   shouldBlur: false,
-  mmData: {} as MmData,
   setMmData: (d: MmData) => {},
   toggleChainAllowMap: () => Promise.resolve(),
 });
@@ -94,7 +93,6 @@ export function StoreProvider({
     undefined,
   );
   const [chainUsers, setChainUsers] = useState<Array<User>>([]);
-  const [mmData, setMmData] = useState<MmData>({});
   const [listOfChains, setListOfChains] = useState<Array<Chain>>([]);
   const [route, setRoute] = useState<UID[]>([]);
   const [bags, setBags] = useState<Bag[]>([]);
@@ -156,7 +154,6 @@ export function StoreProvider({
     await storage.remove("auth");
     await storage.remove("chain_uid");
     await storage.remove("mm_token");
-    setMmData({});
     setAuthUser(null);
     _setChain(null);
     setChainHeaders(undefined);
@@ -543,8 +540,6 @@ export function StoreProvider({
         setRouteListView,
         connError,
         shouldBlur,
-        mmData,
-        setMmData,
         toggleChainAllowMap,
       }}
     >

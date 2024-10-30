@@ -26,7 +26,7 @@ export enum SendingMsgState {
 }
 interface Props {
   onSendMessage: (msg: string) => Promise<void>;
-  onSendMessageWithImage: (msg: string, image: File | string) => Promise<void>;
+  onSendMessageWithImage: (msg: string, image: File) => Promise<void>;
 }
 
 // This follows the controller / view component pattern
