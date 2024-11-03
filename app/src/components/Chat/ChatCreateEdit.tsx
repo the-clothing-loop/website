@@ -88,8 +88,8 @@ export function useChatCreateEdit(props: {
     modal,
     channelName,
     setChannelName,
-    channelId: channelEdit,
-    setChannelId: setChannelEdit,
+    channelEdit,
+    setChannelEdit,
     channelColor,
     setChannelColor,
     onChannelOptionSelect,
@@ -106,7 +106,7 @@ export default function ChatCreateEdit({
   modal,
   channelName,
   setChannelName,
-  channelId,
+  channelEdit,
   onRenameChannel,
   onCreateChannel,
   channelColor,
@@ -116,8 +116,8 @@ export default function ChatCreateEdit({
     modal.current?.dismiss();
   }
   function onCreateEditChannelSubmit() {
-    if (channelId) {
-      onRenameChannel(channelId, channelName, channelColor);
+    if (channelEdit) {
+      onRenameChannel(channelEdit, channelName, channelColor);
     } else {
       onCreateChannel(channelName, channelColor);
     }
@@ -131,10 +131,10 @@ export default function ChatCreateEdit({
           <IonButtons slot="start">
             <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{channelId ? t("editRoom") : t("createRoom")}</IonTitle>
+          <IonTitle>{channelEdit ? t("editRoom") : t("createRoom")}</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={onCreateEditChannelSubmit}>
-              {channelId ? t("edit") : t("create")}
+              {channelEdit ? t("edit") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>

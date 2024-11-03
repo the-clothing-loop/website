@@ -12,10 +12,15 @@ export function chatPatchUser(chain_uid: string) {
 export interface RespChatCreateChannel {
   chat_channel: string;
 }
-export function chatCreateChannel(chain_uid: string, name: string) {
+export function chatCreateChannel(
+  chain_uid: string,
+  name: string,
+  color: string,
+) {
   return axios.post<RespChatCreateChannel>(`/v2/chat/channel/create`, {
     chain_uid,
     name,
+    color,
   });
 }
 

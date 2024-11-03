@@ -41,7 +41,7 @@ func ChatPatchUser(c *gin.Context) {
 	if len(chain.ChatRoomIDs) == 0 {
 		_, isChainAdmin := user.IsPartOfChain(chain.UID)
 		if isChainAdmin {
-			_, err := services.ChatCreateChannel(db, c.Request.Context(), chain, user.ChatUserID.String, "General")
+			_, err := services.ChatCreateChannel(db, c.Request.Context(), chain, user.ChatUserID.String, "General", "#fff")
 			if err != nil {
 				c.String(http.StatusInternalServerError, err.Error())
 				return
@@ -63,6 +63,7 @@ func ChatCreateChannel(c *gin.Context) {
 	var body struct {
 		ChainUID string `json:"chain_uid" binding:"required,uuid"`
 		Name     string `json:"name" binding:"required"`
+		Color    string `json:"color" binding:"required,hexcolor"`
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -74,7 +75,7 @@ func ChatCreateChannel(c *gin.Context) {
 		return
 	}
 
-	mmChannel, err := services.ChatCreateChannel(db, c.Request.Context(), chain, user.ChatUserID.String, body.Name)
+	mmChannel, err := services.ChatCreateChannel(db, c.Request.Context(), chain, user.ChatUserID.String, body.Name, body.Color)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return

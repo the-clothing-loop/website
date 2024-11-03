@@ -1,19 +1,22 @@
 import {
+  IonActionSheet,
+  IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonAlert,
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
-import { MmData, StoreContext } from "../stores/Store";
+import { StoreContext } from "../stores/Store";
 import { useContext, useEffect, useRef, useState } from "react";
 import * as apiChat from "../api/chat";
-import { Client4, WebSocketClient, WebSocketMessage } from "@mattermost/client";
+import { Client4, WebSocketMessage } from "@mattermost/client";
 import { PaginatedPostList, Post } from "@mattermost/types/posts";
 import RoomNotReady from "../components/Chat/RoomNotReady";
 import { Channel } from "@mattermost/types/channels";
-import ChatWindow from "../components/Chat/ChatWindow";
 import Loading from "../components/PrivateRoute/Loading";
 import { UserProfile } from "@mattermost/types/users";
 import { ChatContext } from "../stores/Chat";
@@ -21,6 +24,13 @@ import ChatRoomSelect from "../components/Chat/ChatRoomSelect";
 import ChatCreateEdit, {
   useChatCreateEdit,
 } from "../components/Chat/ChatCreateEdit";
+import ChatInput from "../components/Chat/ChatInput";
+import ChatPost from "../components/Chat/ChatPost";
+import { useIntersectionObserver } from "@uidotdev/usehooks";
+import { useDebouncedCallback } from "use-debounce";
+import ChatRoomActions, {
+  useChatRoomActions,
+} from "../components/Chat/ChatRoomActions";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -61,6 +71,31 @@ export default function Chat() {
     onDeleteChannel,
     selectedChannel,
   });
+  const refScrollRoot = useRef<HTMLDivElement>(null);
+  const [refScrollTop, entry] = useIntersectionObserver({
+    root: refScrollRoot.current,
+  });
+  const [isPostActionSheetOpen, setIsPostActionSheetOpen] = useState<
+    string | null
+  >(null);
+  const slowTriggerScrollTop = useDebouncedCallback(() => {
+    const lastPostId = postList.order.at(-1);
+    if (lastPostId) {
+      console.log("last post", lastPostId);
+      onScrollTop(lastPostId);
+    }
+  }, 1000);
+  const [presentAlert] = useIonAlert();
+  const UseChatRoomActions = useChatRoomActions(
+    UseChatCreateEdit.onChannelOptionSelect,
+  );
+
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      console.log("Intersecting");
+      slowTriggerScrollTop();
+    }
+  }, [entry?.isIntersecting]);
 
   useEffect(() => {
     if (!chain) return;
@@ -144,11 +179,11 @@ export default function Chat() {
     return _channels;
   }
 
-  async function onCreateChannel(name: string) {
+  async function onCreateChannel(name: string, color: string) {
     if (!chain) return;
     try {
       console.info("Creating channel", name);
-      const res = await apiChat.chatCreateChannel(chain.uid, name);
+      const res = await apiChat.chatCreateChannel(chain.uid, name, color);
       // update chain object from server to update chain.room_ids value
       await setChain(chain.uid, authUser);
     } catch (err) {
@@ -300,6 +335,41 @@ export default function Chat() {
 
     await reqPostList("");
   }
+  function onSendMessageWithCallback(message: string) {
+    return onSendMessage(message).then(() => {
+      refScrollRoot.current?.scrollTo({
+        top: 0,
+      });
+    });
+  }
+
+  function onSendMessageWithImageWithCallback(message: string, image: File) {
+    return onSendMessageWithImage(message, image).then(() => {
+      refScrollRoot.current?.scrollTo({
+        top: 0,
+      });
+    });
+  }
+
+  function onPostOptionSelect(value: "delete") {
+    if (value == "delete") {
+      const postID = isPostActionSheetOpen;
+      if (!postID) return;
+      presentAlert({
+        header: "Delete post?",
+        buttons: [
+          {
+            text: t("cancel"),
+          },
+          {
+            role: "destructive",
+            text: t("delete"),
+            handler: () => onDeletePost(postID),
+          },
+        ],
+      });
+    }
+  }
 
   function onClickEnableChat() {
     if (!chain) return;
@@ -327,6 +397,13 @@ export default function Chat() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
+          <IonButtons>
+            <IonButton
+              onClick={() => UseChatCreateEdit.modal.current?.present()}
+            >
+              {t("edit")}
+            </IonButton>
+          </IonButtons>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
           </IonTitle>
@@ -347,17 +424,9 @@ export default function Chat() {
             onClickEnable={onClickEnableChat}
           />
         ) : (
-          <>
-            <ChatWindow
-              getMmUser={getMmUser}
-              onDeletePost={onDeletePost}
-              getFile={getFile}
-              onSendMessage={onSendMessage}
-              onSendMessageWithImage={onSendMessageWithImage}
-              onScrollTop={onScrollTop}
-              postList={postList}
-              authUser={authUser}
-            >
+          <div className="tw-relative tw-h-full tw-flex tw-flex-col">
+            <div className="tw-shrink-0 w-full">
+              <ChatRoomActions {...UseChatRoomActions} />
               <ChatRoomSelect
                 chainChannels={channels}
                 selectedChannel={selectedChannel}
@@ -369,9 +438,58 @@ export default function Chat() {
                 }}
                 onOpenCreateChannel={UseChatCreateEdit.onOpenCreateChannel}
                 onChannelOptionSelect={UseChatCreateEdit.onChannelOptionSelect}
+                isChannelActionSheetOpen={
+                  UseChatRoomActions.isChannelActionSheetOpen
+                }
+                setIsChannelActionSheetOpen={
+                  UseChatRoomActions.setIsChannelActionSheetOpen
+                }
               />
-            </ChatWindow>
-          </>
+            </div>
+
+            <div
+              ref={refScrollRoot}
+              className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto"
+            >
+              {postList.order.map((postID, i) => {
+                const post = postList.posts[postID];
+                // const prevPostID = props.postList.order[i + 1];
+                // const prevPost = prevPostID ? props.postList.posts[prevPostID] : null;
+                return (
+                  <ChatPost
+                    isChainAdmin={isChainAdmin}
+                    authUser={authUser}
+                    onLongPress={(id) => setIsPostActionSheetOpen(id)}
+                    post={post}
+                    getMmUser={getMmUser}
+                    getFile={getFile}
+                    key={post.id}
+                    users={chainUsers}
+                  />
+                );
+              })}
+              <span key="top" ref={refScrollTop}></span>
+            </div>
+            <ChatInput
+              onSendMessage={onSendMessageWithCallback}
+              onSendMessageWithImage={onSendMessageWithImageWithCallback}
+            />
+            <IonActionSheet
+              isOpen={isPostActionSheetOpen !== null}
+              onDidDismiss={() => setIsPostActionSheetOpen(null)}
+              buttons={[
+                {
+                  text: t("delete"),
+                  role: "destructive",
+                  handler: () => onPostOptionSelect("delete"),
+                },
+                {
+                  text: t("cancel"),
+                  role: "cancel",
+                },
+              ]}
+            ></IonActionSheet>
+          </div>
         )}
       </IonContent>
     </IonPage>

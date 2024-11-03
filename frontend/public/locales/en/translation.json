@@ -338,5 +338,10 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "chatRoomOptions": "Chat Room Options",
+  "createRoom": "Create Room",
+  "editRoom": "Edit Room",
+  "roomName": "Room Name",
+  "roomColor": "Room Color"
 }

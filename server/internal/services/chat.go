@@ -62,12 +62,13 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 	return nil
 }
 
-func ChatCreateChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmUserId, name string) (*model.Channel, error) {
+func ChatCreateChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, mmUserId, name, color string) (*model.Channel, error) {
 	newChannel := &model.Channel{
 		TeamId:      app.ChatTeamId,
 		Name:        fmt.Sprintf("%dr%d%s", chain.ID, len(chain.ChatRoomIDs)+1, lo.RandomString(5, lo.LowerCaseLettersCharset)),
 		DisplayName: name,
 		Type:        model.ChannelTypePrivate,
+		Header:      color,
 	}
 
 	newChannel, _, err := app.ChatClient.CreateChannel(ctx, newChannel)

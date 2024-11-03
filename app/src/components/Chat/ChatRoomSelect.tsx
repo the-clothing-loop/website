@@ -15,6 +15,8 @@ interface Props {
   selectedOldBulkyItems: boolean;
   onSelectOldBulkyItems: () => void;
   onChannelOptionSelect: (value: "delete" | "rename") => void;
+  isChannelActionSheetOpen: boolean;
+  setIsChannelActionSheetOpen: (_: boolean) => void;
 }
 
 export default function ChatRoomSelect({
@@ -26,10 +28,11 @@ export default function ChatRoomSelect({
   onSelectOldBulkyItems,
   onChannelOptionSelect,
   onOpenCreateChannel,
+  isChannelActionSheetOpen,
+  setIsChannelActionSheetOpen,
 }: Props) {
   const { t } = useTranslation();
-  const [isChannelActionSheetOpen, setIsChannelActionSheetOpen] =
-    useState(false);
+
   const longPressChannel = useLongPress(
     (e) => {
       setIsChannelActionSheetOpen(true);
@@ -115,28 +118,6 @@ export default function ChatRoomSelect({
           </button>
         );
       })}
-
-      <IonActionSheet
-        header={t("chatRoomOptions")}
-        key="actionSheet"
-        isOpen={isChannelActionSheetOpen}
-        onDidDismiss={() => setIsChannelActionSheetOpen(false)}
-        buttons={[
-          {
-            text: t("rename"),
-            handler: () => onChannelOptionSelect("rename"),
-          },
-          {
-            text: t("delete"),
-            role: "destructive",
-            handler: () => onChannelOptionSelect("delete"),
-          },
-          {
-            text: t("cancel"),
-            role: "cancel",
-          },
-        ]}
-      ></IonActionSheet>
 
       {isChainAdmin ? (
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
