@@ -68,8 +68,8 @@ func (u *User) DeleteOrPassOnUserChainBags(db *gorm.DB, chainID uint) (err error
 	}{}
 	err = db.Raw(`
 SELECT id, user_chain_id FROM bags WHERE user_chain_id IN (
-	SELECT id from user_chains WHERE user_id = ?	
-)`, u.ID).Scan(&bags).Error
+	SELECT id from user_chains WHERE user_id = ?	AND chain_id = ?
+)`, u.ID, chainID).Scan(&bags).Error
 	if err != nil {
 		return fmt.Errorf("Error to selecting bags: %v", err)
 	}
