@@ -99,7 +99,7 @@ export default function Counters() {
         <div>
           <div className="h-20 text-6xl font-serif text-stroke-base-100 flex items-center">
             <a
-              href="https://heyzine.com/flip-book/0c17a4fe2a.html"
+              href="https://heyzine.com/flip-book/a8c1962269.html"
               target="_blank"
               rel="noreferrer"
               className="btn btn-primary btn-circle"
