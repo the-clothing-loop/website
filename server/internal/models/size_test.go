@@ -19,6 +19,8 @@ func TestValidateSizeValid(t *testing.T) {
 		SizeEnumMenMedium,
 		SizeEnumMenLarge,
 		SizeEnumMenPlusSize,
+		SizeEnumTeenGirls,
+		SizeEnumTeenBoys,
 	})
 
 	assert.True(t, sut)

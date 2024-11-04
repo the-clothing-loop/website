@@ -454,7 +454,7 @@ func EmailSomeoneIsInterestedInJoiningYourLoop(db *gorm.DB, lng,
 		imgEl := `<img src="` + app.Config.SITE_BASE_URL_FE + `/images/categories/%s-50.png" alt="%s" width="12" height="12" style="padding-left: 30px; height: 12px; width: 12px"/>`
 		for _, v := range participantSizeEnums {
 			switch v {
-			case models.SizeEnumBaby, models.SizeEnum1_4YearsOld, models.SizeEnum5_12YearsOld:
+			case models.SizeEnumBaby, models.SizeEnum1_4YearsOld, models.SizeEnum5_12YearsOld, models.SizeEnumTeenGirls, models.SizeEnumTeenBoys:
 				if !childrenAdded {
 					sizesHtml += "<br/>" + fmt.Sprintf(imgEl, "baby", "baby") + " "
 					childrenAdded = true
