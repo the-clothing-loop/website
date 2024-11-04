@@ -31,6 +31,8 @@ import { useDebouncedCallback } from "use-debounce";
 import ChatRoomActions, {
   useChatRoomActions,
 } from "../components/Chat/ChatRoomActions";
+import ChatPostList from "../components/Chat/ChatPostList";
+import BulkyList from "../components/Chat/BulkyList";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
@@ -54,6 +56,7 @@ export default function Chat() {
   const { t } = useTranslation();
   const { chain, setChain, isThemeDefault } = useContext(StoreContext);
   const [channels, setChannels] = useState<Channel[]>([]);
+  const [selectedOldBulkyItems, setSelectedOldBulkyItems] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [mmUser, setMmUser] = useState<Record<string, UserProfile>>({});
   const [postList, setPostList] = useState<PaginatedPostList>({
@@ -75,9 +78,7 @@ export default function Chat() {
   const [refScrollTop, entry] = useIntersectionObserver({
     root: refScrollRoot.current,
   });
-  const [isPostActionSheetOpen, setIsPostActionSheetOpen] = useState<
-    string | null
-  >(null);
+
   const slowTriggerScrollTop = useDebouncedCallback(() => {
     const lastPostId = postList.order.at(-1);
     if (lastPostId) {
@@ -85,7 +86,6 @@ export default function Chat() {
       onScrollTop(lastPostId);
     }
   }, 1000);
-  const [presentAlert] = useIonAlert();
   const UseChatRoomActions = useChatRoomActions(
     UseChatCreateEdit.onChannelOptionSelect,
   );
@@ -351,26 +351,6 @@ export default function Chat() {
     });
   }
 
-  function onPostOptionSelect(value: "delete") {
-    if (value == "delete") {
-      const postID = isPostActionSheetOpen;
-      if (!postID) return;
-      presentAlert({
-        header: "Delete post?",
-        buttons: [
-          {
-            text: t("cancel"),
-          },
-          {
-            role: "destructive",
-            text: t("delete"),
-            handler: () => onDeletePost(postID),
-          },
-        ],
-      });
-    }
-  }
-
   function onClickEnableChat() {
     if (!chain) return;
     ChatStore.init(chain.uid);
@@ -418,79 +398,63 @@ export default function Chat() {
           onRenameChannel={onRenameChannel}
           onCreateChannel={onCreateChannel}
         />
-        {!ChatStore.state.client ? (
-          <RoomNotReady
-            isChainAdmin={isChainAdmin}
-            onClickEnable={onClickEnableChat}
-          />
-        ) : (
-          <div className="tw-relative tw-h-full tw-flex tw-flex-col">
-            <div className="tw-shrink-0 w-full">
-              <ChatRoomActions {...UseChatRoomActions} />
-              <ChatRoomSelect
-                chainChannels={channels}
-                selectedChannel={selectedChannel}
-                isChainAdmin={isChainAdmin}
-                onSelectChannel={onSelectChannel}
-                selectedOldBulkyItems={false}
-                onSelectOldBulkyItems={function (): void {
-                  throw new Error("Function not implemented.");
-                }}
-                onOpenCreateChannel={UseChatCreateEdit.onOpenCreateChannel}
-                onChannelOptionSelect={UseChatCreateEdit.onChannelOptionSelect}
-                isChannelActionSheetOpen={
-                  UseChatRoomActions.isChannelActionSheetOpen
-                }
-                setIsChannelActionSheetOpen={
-                  UseChatRoomActions.setIsChannelActionSheetOpen
-                }
-              />
-            </div>
 
-            <div
-              ref={refScrollRoot}
-              className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto"
-            >
-              {postList.order.map((postID, i) => {
-                const post = postList.posts[postID];
-                // const prevPostID = props.postList.order[i + 1];
-                // const prevPost = prevPostID ? props.postList.posts[prevPostID] : null;
-                return (
-                  <ChatPost
-                    isChainAdmin={isChainAdmin}
-                    authUser={authUser}
-                    onLongPress={(id) => setIsPostActionSheetOpen(id)}
-                    post={post}
-                    getMmUser={getMmUser}
-                    getFile={getFile}
-                    key={post.id}
-                    users={chainUsers}
-                  />
-                );
-              })}
-              <span key="top" ref={refScrollTop}></span>
-            </div>
-            <ChatInput
-              onSendMessage={onSendMessageWithCallback}
-              onSendMessageWithImage={onSendMessageWithImageWithCallback}
+        <div className="tw-relative tw-h-full tw-flex tw-flex-col">
+          <div className="tw-shrink-0 w-full">
+            <ChatRoomActions {...UseChatRoomActions} />
+            <ChatRoomSelect
+              chainChannels={channels}
+              selectedChannel={selectedChannel}
+              isChainAdmin={isChainAdmin}
+              onSelectChannel={onSelectChannel}
+              selectedOldBulkyItems={false}
+              onSelectOldBulkyItems={function (): void {
+                throw new Error("Function not implemented.");
+              }}
+              onOpenCreateChannel={UseChatCreateEdit.onOpenCreateChannel}
+              onChannelOptionSelect={UseChatCreateEdit.onChannelOptionSelect}
+              isChannelActionSheetOpen={
+                UseChatRoomActions.isChannelActionSheetOpen
+              }
+              setIsChannelActionSheetOpen={
+                UseChatRoomActions.setIsChannelActionSheetOpen
+              }
             />
-            <IonActionSheet
-              isOpen={isPostActionSheetOpen !== null}
-              onDidDismiss={() => setIsPostActionSheetOpen(null)}
-              buttons={[
-                {
-                  text: t("delete"),
-                  role: "destructive",
-                  handler: () => onPostOptionSelect("delete"),
-                },
-                {
-                  text: t("cancel"),
-                  role: "cancel",
-                },
-              ]}
-            ></IonActionSheet>
           </div>
-        )}
+
+          <div
+            ref={refScrollRoot}
+            className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto"
+          >
+            {selectedOldBulkyItems ? (
+              <BulkyList
+                key="BulkyList"
+                onSendMessageWithImage={onSendMessageWithImage}
+              />
+            ) : ChatStore.state.client ? (
+              <ChatPostList
+                key="ChatPostList"
+                isChainAdmin={isChainAdmin}
+                authUser={authUser}
+                postList={postList}
+                getMmUser={getMmUser}
+                getFile={getFile}
+                chainUsers={chainUsers}
+                onDeletePost={onDeletePost}
+              />
+            ) : (
+              <RoomNotReady
+                isChainAdmin={isChainAdmin}
+                onClickEnable={onClickEnableChat}
+              />
+            )}
+            <span key="top" ref={refScrollTop}></span>
+          </div>
+          <ChatInput
+            onSendMessage={onSendMessageWithCallback}
+            onSendMessageWithImage={onSendMessageWithImageWithCallback}
+          />
+        </div>
       </IonContent>
     </IonPage>
   );
