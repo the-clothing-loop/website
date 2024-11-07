@@ -1,4 +1,6 @@
-import mapboxjs, { type Map } from "mapbox-gl";
+import "https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js";
+
+import type { Map } from "mapbox-gl";
 import { useEffect, useState } from "react";
 import { type RouteCoordinate, routeCoordinates } from "../../api/route";
 import type { Chain, UID } from "../../api/types";
@@ -35,7 +37,7 @@ export default function RouteMap(props: {
   );
 
   useEffect(() => {
-    const _map = new mapboxjs.Map({
+    const _map = new window.mapboxgl.Map({
       container: id,
       accessToken: MAPBOX_TOKEN,
       style: "mapbox://styles/mapbox/light-v11",
@@ -47,7 +49,7 @@ export default function RouteMap(props: {
     setZoom(11);
     _map.on("load", () => {
       (async () => {
-        _map.on("zoomend", (e) => {
+        _map.on("zoomend", (e: any) => {
           setZoom(e.target.getZoom());
         });
 

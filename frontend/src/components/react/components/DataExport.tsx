@@ -17,6 +17,9 @@ export const SizeNames: Record<Sizes | string, string> = {
   "9": "men_m",
   A: "men_l",
   B: "men_plus",
+  C: "maternity",
+  D: "teenGirls",
+  E: "teenBoys",
 };
 
 const usersHeaders: Array<{ label: string; key: keyof UserData }> = [

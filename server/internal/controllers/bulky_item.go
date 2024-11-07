@@ -4,8 +4,6 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/OneSignal/onesignal-go-api"
-	"github.com/cdfmlr/ellipsis"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -90,14 +88,9 @@ func BulkyPut(c *gin.Context) {
 			WHERE c.uid = ? AND u.uid != ? AND uc.is_approved = TRUE`, body.ChainUID, body.UserUID).Scan(&userUIDs)
 
 		if len(userUIDs) > 0 {
-			title := lo.FromPtrOr(body.Title, "...")
-			title = ellipsis.Ending(title, 20)
-
 			err := app.OneSignalCreateNotification(db, userUIDs,
 				*views.Notifications[views.NotificationEnumTitleNewBulkyCreated],
-				onesignal.StringMap{
-					En: onesignal.PtrString(title),
-				})
+				app.OneSignalEllipsisContent(lo.FromPtr(body.Title)))
 			if err != nil {
 				slog.Error(err.Error())
 			}

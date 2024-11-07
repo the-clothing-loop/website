@@ -24,9 +24,6 @@ export default function DeleteModal() {
   const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(6, 9);
   const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(9);
 
-  console.log(primaryOptions);
-  console.log(movedOptions);
-  console.log(notEnoughItemsOptions);
   primaryOptions.map((r: string) => {
     console.log(t(ReasonsForLeavingI18nKeys[r]));
   });

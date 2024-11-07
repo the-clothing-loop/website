@@ -5,14 +5,14 @@ import { $authUser, authUserRefresh } from "../../../../stores/auth";
 import { addModal, addToastError } from "../../../../stores/toast";
 import { chainAddUser } from "../../../../api/chain";
 
-import sanitizeHtml from "sanitize-html";
+// import sanitizeHtml from "sanitize-html";
 import { GinParseErrors } from "../../util/gin-errors";
 import { SizeBadges } from "../Badges";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
 import useLocalizePath from "../../util/localize_path.hooks";
 import ChainDescription from "./ChainDescription";
-import type { StringMap, TOptions } from "i18next";
+// import type { StringMap, TOptions } from "i18next";
 
 enum ListChainType {
   Focused,

@@ -2,10 +2,12 @@ export enum Sizes {
   baby = "1",
   "1To4YearsOld" = "2",
   "5To12YearsOld" = "3",
+  teenGirls = "D",
   womenSmall = "4",
   womenMedium = "5",
   womenLarge = "6",
   womenPlusSize = "7",
+
   menSmall = "8",
   menMedium = "9",
   menLarge = "A",

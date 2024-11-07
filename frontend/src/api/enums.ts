@@ -11,6 +11,8 @@ export enum Sizes {
   menLarge = "A",
   menPlusSize = "B",
   womenMaternity = "C",
+  teenGirls = "D",
+  teenBoys = "E",
 }
 
 export const SizeI18nKeys: Record<Sizes | string, string> = {
@@ -26,6 +28,8 @@ export const SizeI18nKeys: Record<Sizes | string, string> = {
   A: "menLarge",
   B: "menPlusSize",
   C: "womenMaternity",
+  D: "teenGirls",
+  E: "teenBoys",
 };
 
 export enum Categories {

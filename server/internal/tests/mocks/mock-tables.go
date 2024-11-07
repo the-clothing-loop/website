@@ -224,6 +224,8 @@ func MockSizes(zeroOrMore bool) []string {
 		models.SizeEnumMenMedium,
 		models.SizeEnumMenLarge,
 		models.SizeEnumMenPlusSize,
+		models.SizeEnumTeenGirls,
+		models.SizeEnumTeenBoys,
 	}, zeroOrMore)
 }
 func MockGenders(zeroOrMore bool) (genders []string) {

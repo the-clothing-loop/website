@@ -1,7 +1,7 @@
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
 import { Trans, useTranslation } from "react-i18next";
-import mapboxgl from "mapbox-gl";
+import mapboxgl, { Map } from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import type * as GeoJSONTypes from "geojson";
 
@@ -81,7 +81,7 @@ export default function ChainDetailsForm({
   const localizePath = useLocalizePath(i18n);
 
   const mapRef = useRef<any>();
-  const [map, setMap] = useState<mapboxgl.Map>();
+  const [map, setMap] = useState<Map>();
   const [values, setValue] = useForm<RegisterChainForm>({
     name: "",
     description: "",
@@ -195,11 +195,17 @@ export default function ChainDetailsForm({
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    const includesClothing = [
+      Categories.children,
+      Categories.women,
+      Categories.men,
+    ].some((c) => values.genders?.includes(c));
+
     if (!values.genders?.length) {
       addToastError(t("required") + ": " + t("categories"), 400);
       return;
     }
-    if (!values.sizes?.length) {
+    if (!values.sizes?.length && includesClothing) {
       addToastError(t("required") + ": " + t("sizes"), 400);
       return;
     }
