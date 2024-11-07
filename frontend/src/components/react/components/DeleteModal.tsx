@@ -82,7 +82,6 @@ export default function DeleteModal() {
         <p>Please select a reason for leaving</p>
 
         <ul className="list-none">
-          
           <li key="moved" className="flex items-center mb-4">
             <input
               type="checkbox"
