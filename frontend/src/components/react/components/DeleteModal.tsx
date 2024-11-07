@@ -4,37 +4,56 @@ import { useStore } from "@nanostores/react";
 
 import type { Chain } from "../../../api/types";
 import { $authUser } from "../../../stores/auth";
-import useLocalizePath from "../util/localize_path.hooks";
+import {
+  ReasonsForLeaving,
+  ReasonsForLeavingI18nKeys,
+} from "../../../api/enums";
 
 export default function DeleteModal() {
   const { t, i18n } = useTranslation();
   const authUser = useStore($authUser);
-
   const [chains, setChains] = useState<Chain[]>([]);
   const [showOtherTextFieldArea, setShowOtherTextFieldArea] = useState(false);
   const [showMovedOptions, setShowMovedOptions] = useState(false);
   const [showNotEnoughItemsOptions, setShowNotEnoughItemsOptions] =
     useState(false);
 
-  const reasonsForLeaving = [
-    t("addressToFar"),
-    t("tooTimeConsuming"),
-    t("doneSwapping"),
-    t("didntFitIn"),
-  ];
+  const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
 
-  const movedOptions = [
-    t("planToJoinNewLoop"),
-    t("planToStartNewLoop"),
-    t("dontPlanToParticipate"),
-  ];
+  const primaryOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(2, 6);
+  const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(6, 9);
+  const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(9);
 
-  const notEnoughItemsOptions = [
-    t("qualityDidntMatch"),
-    t("sizesDidntMatch"),
-    t("stylesDidntMatch"),
-  ];
+  console.log(primaryOptions);
+  console.log(movedOptions);
+  console.log(notEnoughItemsOptions);
+  primaryOptions.map((r: string) => {
+    console.log(t(ReasonsForLeavingI18nKeys[r]));
+  });
+  movedOptions.map((r: string) => {
+    console.log(t(ReasonsForLeavingI18nKeys[r]));
+  });
+  notEnoughItemsOptions.map((r: string) => {
+    console.log(t(ReasonsForLeavingI18nKeys[r]));
+  });
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
 
+    if (checked) {
+      setSelectedReasons((prev) => [
+        ...prev,
+        ReasonsForLeaving[name as keyof typeof ReasonsForLeaving],
+      ]);
+    } else {
+      setSelectedReasons((prev) =>
+        prev.filter(
+          (reason) =>
+            reason !==
+            ReasonsForLeaving[name as keyof typeof ReasonsForLeaving],
+        ),
+      );
+    }
+  };
   function showOtherTextFieldHandler(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {
@@ -63,6 +82,7 @@ export default function DeleteModal() {
         <p>Please select a reason for leaving</p>
 
         <ul className="list-none">
+          
           <li key="moved" className="flex items-center mb-4">
             <input
               type="checkbox"
@@ -83,7 +103,9 @@ export default function DeleteModal() {
                     name={r}
                     id={r}
                   />
-                  <label className="ml-2">{r}</label>
+                  <label className="ml-2">
+                    {t(ReasonsForLeavingI18nKeys[r])}
+                  </label>
                 </li>
               ))}
             </>
@@ -109,20 +131,23 @@ export default function DeleteModal() {
                     name={r}
                     id={r}
                   />
-                  <label className="ml-2">{r}</label>
+                  <label className="ml-2">
+                    {t(ReasonsForLeavingI18nKeys[r])}
+                  </label>
                 </li>
               ))}
             </>
           ) : null}
-          {reasonsForLeaving.map((r) => (
+          {primaryOptions.map((r: string) => (
             <li key={r} className="flex items-center mb-4">
               <input
                 type="checkbox"
                 className="checkbox border-black"
                 name={r}
                 id={r}
+                onChange={(e) => handleCheckboxChange(e)}
               />
-              <label className="ml-2">{r}</label>
+              <label className="ml-2">{t(ReasonsForLeavingI18nKeys[r])}</label>
             </li>
           ))}
           <li key="other" className="flex items-center mb-4">

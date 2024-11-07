@@ -50,7 +50,7 @@
   "qualityDidntMatch": "The quality of the clothes didn't match my standards",
   "sizesDidntMatch": "The sizes of the clothes didn't match my size",
   "stylesDidntMatch": "The styles of the clothes didn't match my style",
-  "addressToFar": "The next address is too far away",
+  "addressTooFar": "The next address is too far away",
   "tooTimeConsuming": "The loop took up too much time",
   "doneSwapping": "I'm done swapping",
   "didntFitIn": "I didn't connect to the Clothing Loop community",
