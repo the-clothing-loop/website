@@ -24,15 +24,6 @@ export default function DeleteModal() {
   const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(6, 9);
   const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(9);
 
-  primaryOptions.map((r: string) => {
-    console.log(t(ReasonsForLeavingI18nKeys[r]));
-  });
-  movedOptions.map((r: string) => {
-    console.log(t(ReasonsForLeavingI18nKeys[r]));
-  });
-  notEnoughItemsOptions.map((r: string) => {
-    console.log(t(ReasonsForLeavingI18nKeys[r]));
-  });
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
 
