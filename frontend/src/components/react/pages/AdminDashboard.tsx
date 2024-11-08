@@ -24,7 +24,12 @@ export default function AdminDashboard() {
     () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
     [authUser],
   );
+  const [reasonsForLeaving, setReasonsForLeaving] = useState<string[]>([]);
 
+  function handleSelectReasons(data: string[]) {
+    setReasonsForLeaving(data);
+  }
+  
   function deleteClicked() {
     if (!authUser) return;
     const chainNames = authUser.is_root_admin
@@ -52,7 +57,7 @@ export default function AdminDashboard() {
     addModal({
       message: t("deleteAccount"),
       content: () => {
-        return <DeleteModal />;
+        return <DeleteModal onSubmitDeleteAccount={handleSelectReasons} />;
       },
       actions: [
         {

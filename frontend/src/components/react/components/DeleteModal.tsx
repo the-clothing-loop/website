@@ -9,7 +9,11 @@ import {
   ReasonsForLeavingI18nKeys,
 } from "../../../api/enums";
 
-export default function DeleteModal() {
+interface DeleteModalProps {
+  onSubmitDeleteAccount: (selectedReasons: string[]) => void;
+}
+export default function DeleteModal({ onSubmitDeleteAccount }: DeleteModalProps) {
+
   const { t, i18n } = useTranslation();
   const authUser = useStore($authUser);
   const [chains, setChains] = useState<Chain[]>([]);
