@@ -18,16 +18,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type ImageUploadResponse struct {
-	Delete    string `json:"delete"`
-	Thumbnail string `json:"thumbnail"`
-	Image     string `json:"image"`
-}
-
-func imagesRead(c *gin.Context) (imgRes *ImageUploadResponse, err error) {
+func imagesRead(c *gin.Context) (imgRes *sharedtypes.ImageUploadResponse, err error) {
 	if app.Config.IMGBB_KEY == "" {
 		return nil, errors.New("Api key to found")
 	}
@@ -69,7 +64,7 @@ func imagesRead(c *gin.Context) (imgRes *ImageUploadResponse, err error) {
 	bHash, _ := bcrypt.GenerateFromPassword([]byte(filename+app.Config.IMGBB_KEY), bcrypt.DefaultCost)
 	key := base64.URLEncoding.EncodeToString(bHash)
 
-	res := &ImageUploadResponse{
+	res := &sharedtypes.ImageUploadResponse{
 		Thumbnail: fmt.Sprintf("https://images.clothingloop.org/400x/%s", filename),
 		Image:     fmt.Sprintf("https://images.clothingloop.org/original/%s", filename),
 		Delete:    fmt.Sprintf("%s/v2/image_purge?path=%s&key=%s", app.Config.SITE_BASE_URL_API, filename, key),

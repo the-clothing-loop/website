@@ -117,7 +117,7 @@ export default function AddressList() {
         const isWarden =
           user.chains.find((uc) => uc.chain_uid === chain?.uid)
             ?.is_chain_warden || false;
-        const isPrivate = IsPrivate(user.email);
+        const isPrivate = IsPrivate(user.email!);
         const isAddressPrivate = IsPrivate(user.address);
         const isUserPaused = IsPaused(user, chain.uid);
 

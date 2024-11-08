@@ -4,29 +4,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 
-	"gopkg.in/guregu/null.v3/zero"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gorm.io/gorm"
 )
-
-type UserChain struct {
-	ID                         uint           `json:"-"`
-	UserID                     uint           `json:"-" gorm:"index"`
-	UserUID                    string         `json:"user_uid" gorm:"-:migration;<-:false"`
-	ChainID                    uint           `json:"-"`
-	ChainUID                   string         `json:"chain_uid" gorm:"-:migration;<-:false"`
-	IsChainAdmin               bool           `json:"is_chain_admin"`
-	IsChainWarden              bool           `json:"is_chain_warden"`
-	CreatedAt                  time.Time      `json:"created_at"`
-	IsApproved                 bool           `json:"is_approved"`
-	LastNotifiedIsUnapprovedAt zero.Time      `json:"-"`
-	RouteOrder                 int            `json:"-"`
-	IsPaused                   bool           `json:"is_paused"`
-	Note                       sql.NullString `json:"-" gorm:"->:false;<-:create"`
-	Bags                       []Bag          `json:"-"`
-	Bulky                      []BulkyItem    `json:"-"`
-}
 
 var ErrRouteInvalid = errors.New("Invalid route")
 
@@ -151,8 +132,8 @@ DELETE FROM bulky_items WHERE user_chain_id IN (
 	return nil
 }
 
-func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]UserChain, error) {
-	results := []UserChain{}
+func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]sharedtypes.UserChain, error) {
+	results := []sharedtypes.UserChain{}
 
 	err := db.Raw(`
 	SELECT

@@ -1,5 +1,5 @@
+import { Bag, User } from "../../api/typex2";
 import dayjs from "../../dayjs";
-import { Bag, User } from "../../api/types";
 
 export function useBagTooOld(
   authUser: User | null,

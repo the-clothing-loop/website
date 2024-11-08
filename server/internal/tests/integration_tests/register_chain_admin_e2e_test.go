@@ -12,6 +12,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func TestRegisterChainAdmin(t *testing.T) {
@@ -55,9 +56,9 @@ func TestRegisterChainAdmin(t *testing.T) {
 	testUser := &models.User{}
 	db.Raw("SELECT * FROM users WHERE email = ? LIMIT 1", adminEmail).Scan(testUser)
 	assert.NotEmpty(t, testUser.ID, "user of admin email: %s not found", adminEmail)
-	assert.Equal(t, adminEmail, testUser.Email.String)
+	assert.Equal(t, adminEmail, *testUser.Email)
 
-	testUserChain := &models.UserChain{}
+	testUserChain := &sharedtypes.UserChain{}
 	db.Raw("SELECT * FROM user_chains WHERE user_id = ? LIMIT 1", testUser.ID).Scan(testUserChain)
 	assert.NotEmpty(t, testUserChain.ID, "chainUser of admin user_id: %d not found", testUser.ID)
 

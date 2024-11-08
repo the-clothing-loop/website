@@ -109,7 +109,7 @@ export default function ChainMemberList() {
       case "email":
       case "name":
         res = res.sort((a, b) =>
-          a[sortBy].localeCompare(b[sortBy]) == 1 ? 1 : -1,
+          a[sortBy]!.localeCompare(b[sortBy]!) == 1 ? 1 : -1,
         );
         break;
       case "date":
@@ -274,7 +274,7 @@ export default function ChainMemberList() {
         uid: chain.uid,
         image: "",
       });
-      setChain((s) => ({ ...(s as Chain), image: undefined }));
+      setChain((s) => ({ ...(s as Chain), image: null }));
     } catch (err: any) {
       addToastError(GinParseErrors(t, err));
     }

@@ -57,3 +57,9 @@ stripe-dev:
 .PHONY: coords-migrate
 coords-migrate:
 	@SERVER_ENV=production go run cmd/get-user-coords-and-country/main.go -mb-token="" 2>&1 | tee -a coords.log
+
+.PHONY: typex2
+typex2:
+	@go install github.com/lil5/typex2@v1.2.0
+	@typex2 -l typescript -i ./sharedtypes -o ../frontend/src/api/typex2.ts
+	@typex2 -l typescript -i ./sharedtypes -o ../app/src/api/typex2.ts

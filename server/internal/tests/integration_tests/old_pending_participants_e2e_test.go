@@ -12,6 +12,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func TestOldPendingParticipantsCloseOldChain(t *testing.T) {
@@ -37,10 +38,10 @@ WHERE chain_id = ?
 	assert.Nil(t, err)
 	assert.True(t, resultChain.Published)
 
-	resultUserChain := &models.UserChain{}
+	resultUserChain := &sharedtypes.UserChain{}
 	err = db.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ?`, chain.ID, participant.ID).Scan(resultUserChain).Error
 	assert.Nil(t, err)
-	assert.True(t, resultUserChain.LastNotifiedIsUnapprovedAt.Valid, resultUserChain.LastNotifiedIsUnapprovedAt.Time)
+	assert.NotNil(t, resultUserChain.LastNotifiedIsUnapprovedAt, resultUserChain.LastNotifiedIsUnapprovedAt)
 
 	db.Exec(`
 UPDATE user_chains SET last_notified_is_unapproved_at = (NOW() - INTERVAL 32 DAY)
@@ -83,10 +84,10 @@ WHERE chain_id = ?
 	assert.Nil(t, err)
 	assert.True(t, resultChain.Published)
 
-	resultUserChain := &models.UserChain{}
+	resultUserChain := &sharedtypes.UserChain{}
 	err = db.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ?`, chain.ID, participant.ID).Scan(resultUserChain).Error
 	assert.Nil(t, err)
-	assert.True(t, resultUserChain.LastNotifiedIsUnapprovedAt.Valid, resultUserChain.LastNotifiedIsUnapprovedAt.Time)
+	assert.NotNil(t, resultUserChain.LastNotifiedIsUnapprovedAt, resultUserChain.LastNotifiedIsUnapprovedAt)
 
 	// time elapsed
 	db.Exec(`
@@ -135,10 +136,10 @@ WHERE chain_id = ?
 	assert.Nil(t, err)
 	assert.True(t, resultChain.Published)
 
-	resultUserChain := &models.UserChain{}
+	resultUserChain := &sharedtypes.UserChain{}
 	err = db.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ?`, chain.ID, participant.ID).Scan(resultUserChain).Error
 	assert.Nil(t, err)
-	assert.True(t, resultUserChain.LastNotifiedIsUnapprovedAt.Valid, resultUserChain.LastNotifiedIsUnapprovedAt.Time)
+	assert.NotNil(t, resultUserChain.LastNotifiedIsUnapprovedAt, resultUserChain.LastNotifiedIsUnapprovedAt)
 
 	// time elapsed
 	db.Exec(`
@@ -158,7 +159,7 @@ WHERE chain_id = ?
 
 	controllers.ChainDeleteUnapproved(c)
 
-	resultUserChain = &models.UserChain{}
+	resultUserChain = &sharedtypes.UserChain{}
 	err = db.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ?`, chain.ID, participant.ID).Scan(resultUserChain).Error
 	assert.Nil(t, err)
 	assert.Empty(t, resultUserChain.ID, resultUserChain)
@@ -194,10 +195,10 @@ WHERE chain_id = ?
 	assert.Nil(t, err)
 	assert.True(t, resultChain.Published)
 
-	resultUserChain := &models.UserChain{}
+	resultUserChain := &sharedtypes.UserChain{}
 	err = db.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ?`, chain.ID, participant.ID).Scan(resultUserChain).Error
 	assert.Nil(t, err)
-	assert.False(t, resultUserChain.LastNotifiedIsUnapprovedAt.Valid, resultUserChain.LastNotifiedIsUnapprovedAt.Time)
+	assert.Nil(t, resultUserChain.LastNotifiedIsUnapprovedAt, resultUserChain.LastNotifiedIsUnapprovedAt)
 
 	db.Exec(`
 UPDATE user_chains SET last_notified_is_unapproved_at = (NOW() - INTERVAL 10 DAY)
@@ -235,10 +236,10 @@ WHERE chain_id = ?
 	assert.Nil(t, err)
 	assert.True(t, resultChain.Published)
 
-	resultUserChain := &models.UserChain{}
+	resultUserChain := &sharedtypes.UserChain{}
 	err = db.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ?`, chain.ID, participant.ID).Scan(resultUserChain).Error
 	assert.Nil(t, err)
-	assert.False(t, resultUserChain.LastNotifiedIsUnapprovedAt.Valid, resultUserChain.LastNotifiedIsUnapprovedAt.Time)
+	assert.Nil(t, resultUserChain.LastNotifiedIsUnapprovedAt, resultUserChain.LastNotifiedIsUnapprovedAt)
 
 	db.Exec(`
 UPDATE user_chains SET last_notified_is_unapproved_at = (NOW() - INTERVAL 32 DAY)

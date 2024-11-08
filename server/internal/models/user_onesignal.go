@@ -1,13 +1,11 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/the-clothing-loop/website/server/sharedtypes"
+	"gorm.io/gorm"
+)
 
-type UserOnesignal struct {
-	ID          uint
-	PlayerID    string `gorm:"uniqueIndex"`
-	OnesignalID string `gorm:"unique"`
-	UserID      uint
-}
+type UserOnesignal sharedtypes.UserOnesignal
 
 func UserOnesignalGetAllPlayerIDs(db *gorm.DB, userIDs []uint) ([]string, error) {
 	onesignalIDs := []string{}

@@ -7,25 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
 	"github.com/the-clothing-loop/website/server/internal/app"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
-
-type InfoTopLoop struct {
-	UID          string `json:"uid" gorm:"uid"`
-	Name         string `json:"name" gorm:"name"`
-	MembersCount int    `json:"members_count" gorm:"members_count"`
-}
-
-type Info struct {
-	TotalChains    int `json:"total_chains" gorm:"total_chains"`
-	TotalUsers     int `json:"total_users" gorm:"total_users"`
-	TotalCountries int `json:"total_countries" gorm:"total_countries"`
-}
 
 func InfoGet(c *gin.Context) {
 	db := getDB(c)
 
-	data, err := app.CacheFindOrUpdate[Info]("info", cache.DefaultExpiration, func() (*Info, error) {
-		data := Info{}
+	data, err := app.CacheFindOrUpdate[sharedtypes.Info]("info", cache.DefaultExpiration, func() (*sharedtypes.Info, error) {
+		data := sharedtypes.Info{}
 		err := db.Raw(`
 		SELECT (
 			SELECT COUNT(chains.id)
@@ -58,8 +47,8 @@ func InfoGet(c *gin.Context) {
 func InfoTopTen(c *gin.Context) {
 	db := getDB(c)
 
-	data, err := app.CacheFindOrUpdate[[]InfoTopLoop]("info", cache.DefaultExpiration, func() (*[]InfoTopLoop, error) {
-		data := []InfoTopLoop{}
+	data, err := app.CacheFindOrUpdate[[]sharedtypes.InfoTopLoop]("info", cache.DefaultExpiration, func() (*[]sharedtypes.InfoTopLoop, error) {
+		data := []sharedtypes.InfoTopLoop{}
 		err := db.Raw(`
 SELECT uid, name, COUNT(uc.id) AS members_count
 FROM chains
