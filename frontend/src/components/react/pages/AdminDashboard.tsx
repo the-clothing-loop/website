@@ -64,6 +64,7 @@ export default function AdminDashboard() {
           text: t("delete"),
           type: "error",
           fn: () => {
+            console.log(reasonsForLeaving);
             /*
             userPurge(authUser!.uid)
               .then(() => {
