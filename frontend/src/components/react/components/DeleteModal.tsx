@@ -28,7 +28,7 @@ export default function DeleteModal({
   const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
   const moved = Object.keys(ReasonsForLeavingI18nKeys)[0];
   const notEnoughItemsILiked = Object.keys(ReasonsForLeavingI18nKeys)[1];
-  const primaryOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(2, 7);
+  const primaryOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(2, 6);
   const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(7, 10);
   const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(
     10,
