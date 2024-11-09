@@ -13,6 +13,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/pkg/ring_ext"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gorm.io/gorm"
 )
 
@@ -44,10 +45,7 @@ func RouteOrderGet(c *gin.Context) {
 func RouteOrderSet(c *gin.Context) {
 	db := getDB(c)
 
-	var query struct {
-		ChainUID   string   `json:"chain_uid" binding:"required"`
-		RouteOrder []string `json:"route_order" binding:"required"`
-	}
+	var query sharedtypes.RouteOrderSet
 	if err := c.ShouldBindJSON(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -125,19 +123,13 @@ func GetRouteCoordinates(c *gin.Context) {
 
 	cities := retrieveChainUsersAsTspCities(db, chain.ID)
 
-	type Response struct {
-		UserUID    string  `json:"user_uid"`
-		Latitude   float64 `json:"latitude"`
-		Longitude  float64 `json:"longitude"`
-		RouteOrder int     `json:"route_order"`
-	}
-	response := []Response{}
+	response := []sharedtypes.RouteCoordinatesGetResponseItem{}
 	r := ring_ext.NewWithValues(cities.FilterOutIsPausedToKeys(authUser.UID))
 	slog.Debug("Chain route privacy", "chain uid", chain.UID, "route privacy", chain.RoutePrivacy)
 	closeBy := ring_ext.GetSurroundingValues(r, authUser.UID, chain.RoutePrivacy)
 	slog.Debug("chain surrounding", "closeBy", closeBy)
 	for _, city := range cities.Arr {
-		item := Response{
+		item := sharedtypes.RouteCoordinatesGetResponseItem{
 			UserUID:    city.Key,
 			Latitude:   city.Latitude,
 			Longitude:  city.Longitude,

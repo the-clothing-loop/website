@@ -42,7 +42,7 @@ import {
   useEffect,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Bag, UID } from "../api/types";
+import { UID } from "../api/types";
 import { bagRemove } from "../api/bag";
 import CreateBag from "../components/CreateUpdateBag";
 import EditHeaders from "../components/EditHeaders";
@@ -64,6 +64,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import dayjs from "../dayjs";
 import IsPaused from "../utils/is_paused";
 import BagAnalyticsModal from "../components/Bags/BagAnalyticsModal";
+import { Bag } from "../api/typex2";
 
 type State = { bag_id?: number } | undefined;
 

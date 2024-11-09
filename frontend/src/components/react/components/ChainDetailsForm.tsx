@@ -16,12 +16,13 @@ import useForm from "../util/form.hooks";
 import { addToastError } from "../../../stores/toast";
 import { circleRadiusKm } from "../util/maps";
 import useLocalizePath from "../util/localize_path.hooks";
+import type { Chain } from "../../../api/types";
 
 const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY || "";
 
 interface Props {
   onSubmit: (values: RegisterChainForm) => void;
-  initialValues?: RegisterChainForm;
+  initialValues?: Chain;
   showBack?: boolean;
   showAllowedTOH: boolean;
   showAllowedDPA: boolean;

@@ -24,6 +24,8 @@ export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
   A: "(X)L",
   B: "XL≤",
   C: t("womenMaternity"),
+  D: t("teenGirls"),
+  E: t("teenBoys"),
 });
 
 export function SizeBadges({

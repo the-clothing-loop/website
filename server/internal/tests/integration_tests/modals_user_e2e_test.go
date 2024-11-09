@@ -24,7 +24,7 @@ func TestUsersService(t *testing.T) {
 	tests := []testData{
 		{
 			testName:      "User exist",
-			email:         expectedUserExist.Email.String,
+			email:         *expectedUserExist.Email,
 			user:          expectedUserExist,
 			expectedError: nil,
 		},

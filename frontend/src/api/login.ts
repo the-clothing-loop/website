@@ -1,31 +1,9 @@
-import { Sizes } from "./enums";
 import type { UID, User } from "./types";
 import axios from "./axios";
+import type { ChainCreateRequest, UserCreateRequest } from "./typex2";
 
-export interface RequestRegisterUser {
-  name: string;
-  email: string;
-  address: string;
-  phone_number: string;
-  newsletter: boolean;
-  sizes: Array<Sizes | string>;
-  longitude: number;
-  latitude: number;
-}
-
-export interface RequestRegisterChain {
-  name: string;
-  description: string;
-  address: string;
-  country_code?: string;
-  latitude: number;
-  longitude: number;
-  radius: number;
-  open_to_new_members: boolean;
-  sizes: Array<Sizes | string> | null;
-  genders: Array<Sizes | string> | null;
-  allow_toh: boolean;
-}
+export type RequestRegisterUser = UserCreateRequest;
+export type RequestRegisterChain = ChainCreateRequest;
 
 export function registerChainAdmin(
   user: RequestRegisterUser,

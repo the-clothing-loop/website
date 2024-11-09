@@ -1,5 +1,5 @@
-import type { Chain, UID } from "./types";
-import type { RequestRegisterChain } from "./login";
+import type { UID } from "./types";
+import type { ChainResponse as Chain, ChainCreateRequest } from "./typex2";
 import axios from "./axios";
 
 export function chainGet(
@@ -48,7 +48,7 @@ export function chainGetNear(params?: RequestChainGetNearParams) {
   return axios.get<Chain[]>("/v2/chain/near", { params });
 }
 
-export function chainCreate(chain: RequestRegisterChain) {
+export function chainCreate(chain: ChainCreateRequest) {
   return axios.post<never>("/v2/chain", chain);
 }
 

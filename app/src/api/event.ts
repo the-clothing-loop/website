@@ -1,4 +1,5 @@
-import type { Event, UID } from "./types";
+import type { UID } from "./types";
+import type { Event, EventCreateRequest, EventUpdateRequest } from "./typex2";
 import axios from "./axios";
 
 interface EventGetAllParams {
@@ -7,23 +8,8 @@ interface EventGetAllParams {
   radius: number;
 }
 
-export interface EventCreateBody {
-  name: string;
-  description?: string;
-  latitude: number;
-  longitude: number;
-  address: string;
-  price_currency: string | null;
-  price_value: number;
-  link: string;
-  date: string;
-  date_end: string | null;
-  genders: string[];
-  chain_uid?: string;
-  image_url: string;
-  image_delete_url?: string;
-}
-export type EventUpdateBody = Partial<EventCreateBody> & { uid: UID };
+export type EventCreateBody = EventCreateRequest;
+export type EventUpdateBody = EventUpdateRequest;
 
 /** 5 months */
 export const EVENT_IMAGE_EXPIRATION = 60 * 60 * 24 * 30 * 5;

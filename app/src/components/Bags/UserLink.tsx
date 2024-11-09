@@ -1,6 +1,6 @@
 import { IonIcon } from "@ionic/react";
 import { pauseCircle, chevronForwardOutline } from "ionicons/icons";
-import { User } from "../../api/types";
+import { User } from "../../api/typex2";
 
 interface Props {
   user: User;

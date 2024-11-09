@@ -9,6 +9,7 @@ import (
 
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v73"
@@ -19,12 +20,7 @@ import (
 
 // Rewrite of https://github.com/CollActionteam/clothing-loop/blob/e5d09d38d72bb42f531d0dc0ec7a5b18459bcbcd/firebase/functions/src/payments.ts#L18
 func PaymentsInitiate(c *gin.Context) {
-	var body struct {
-		PriceCents  int64  `json:"price_cents" binding:"omitempty"`
-		Email       string `json:"email" binding:"required,email"`
-		IsRecurring bool   `json:"is_recurring"`
-		PriceID     string `json:"price_id"`
-	}
+	var body sharedtypes.PaymentsInitiateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, "Email required")
 		return
@@ -96,8 +92,8 @@ func PaymentsInitiate(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"session_id": session.ID,
+	c.JSON(200, sharedtypes.PaymentsInitiateResponse{
+		SessionID: session.ID,
 	})
 }
 

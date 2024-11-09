@@ -17,6 +17,9 @@ export const SizeNames: Record<Sizes | string, string> = {
   "9": "men_m",
   A: "men_l",
   B: "men_plus",
+  C: "maternity",
+  D: "teenGirls",
+  E: "teenBoys",
 };
 
 const usersHeaders: Array<{ label: string; key: keyof UserData }> = [
@@ -50,7 +53,7 @@ export function UserDataExport(props: {
     ).map<UserData>((u) => ({
       name: u.name,
       address: u.address,
-      email: u.email,
+      email: u.email!,
       phoneNumber: u.phone_number,
       interestedSizes: u.sizes.map((s) => SizeNames[s]).join(","),
     }));

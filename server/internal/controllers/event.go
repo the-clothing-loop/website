@@ -14,30 +14,14 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/pkg/imgbb"
-	"gopkg.in/guregu/null.v3"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gopkg.in/guregu/null.v3/zero"
 )
 
 func EventCreate(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Name           string                `json:"name" binding:"required"`
-		Description    string                `json:"description"`
-		Latitude       float64               `json:"latitude" binding:"required,latitude"`
-		Longitude      float64               `json:"longitude" binding:"required,longitude"`
-		Address        string                `json:"address" binding:"required"`
-		PriceValue     float64               `json:"price_value"`
-		PriceCurrency  string                `json:"price_currency"`
-		PriceType      models.EventPriceType `json:"price_type" binding:"required"`
-		Link           string                `json:"link"`
-		Date           time.Time             `json:"date" binding:"required"`
-		DateEnd        null.Time             `json:"date_end" binding:"omitempty"`
-		Genders        []string              `json:"genders" binding:"required"`
-		ChainUID       string                `json:"chain_uid,omitempty" binding:"omitempty"`
-		ImageUrl       string                `json:"image_url" binding:"required,url"`
-		ImageDeleteUrl string                `json:"image_delete_url" binding:"omitempty,url"`
-	}
+	var body sharedtypes.EventCreateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -72,19 +56,15 @@ func EventCreate(c *gin.Context) {
 		UserID:         user.ID,
 		ImageUrl:       body.ImageUrl,
 		ImageDeleteUrl: body.ImageDeleteUrl,
-		PriceType: models.NullEventPriceType{
-			EventPriceType: body.PriceType,
-			Valid:          true,
-			Set:            true,
-		},
+		PriceType:      &body.PriceType,
 	}
 	event.ValidateDescription()
 	if body.ChainUID != "" && chain != nil {
-		event.ChainID = zero.NewInt(int64(chain.ID), true)
+		event.ChainID = &chain.ID
 	}
 	if body.PriceCurrency != "" {
 		event.PriceValue = body.PriceValue
-		event.PriceCurrency = zero.StringFrom(body.PriceCurrency)
+		event.PriceCurrency = &body.PriceCurrency
 	}
 
 	if err := db.Create(event).Error; err != nil {
@@ -235,24 +215,7 @@ func EventDelete(c *gin.Context) {
 func EventUpdate(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		UID            string                 `json:"uid" binding:"required,uuid"`
-		Name           *string                `json:"name,omitempty"`
-		Description    *string                `json:"description,omitempty"`
-		Address        *string                `json:"address,omitempty"`
-		Link           *string                `json:"link,omitempty"`
-		PriceValue     *float64               `json:"price_value,omitempty"`
-		PriceCurrency  *string                `json:"price_currency,omitempty"`
-		PriceType      *models.EventPriceType `json:"price_type,omitempty"`
-		Latitude       *float64               `json:"latitude,omitempty" binding:"omitempty,latitude"`
-		Longitude      *float64               `json:"longitude,omitempty" binding:"omitempty,longitude"`
-		Date           *time.Time             `json:"date,omitempty"`
-		DateEnd        *time.Time             `json:"date_end,omitempty"`
-		Genders        *[]string              `json:"genders,omitempty"`
-		ImageUrl       *string                `json:"image_url,omitempty"`
-		ImageDeleteUrl *string                `json:"image_delete_url,omitempty"`
-		ChainUID       *string                `json:"chain_uid,omitempty"`
-	}
+	var body sharedtypes.EventUpdateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -316,16 +279,16 @@ func EventUpdate(c *gin.Context) {
 		event.Date = *(body.Date)
 		// Must set the start date to set the end date
 		if body.DateEnd != nil {
-			event.DateEnd = null.Time{Time: *(body.DateEnd), Valid: true}
+			event.DateEnd = body.DateEnd
 		} else {
-			event.DateEnd = null.Time{}
+			event.DateEnd = nil
 		}
 	}
 	if body.Genders != nil {
 		event.Genders = *(body.Genders)
 	}
 	if chainID != 0 {
-		event.ChainID = zero.IntFrom(int64(chainID))
+		event.ChainID = &chainID
 	}
 	if body.ImageUrl != nil {
 		event.ImageUrl = *body.ImageUrl
@@ -337,14 +300,14 @@ func EventUpdate(c *gin.Context) {
 		}
 	}
 	if body.PriceType != nil {
-		event.PriceType = models.NewNullEventPriceType(body.PriceType)
+		event.PriceType = body.PriceType
 	}
 	if body.PriceCurrency != nil && body.PriceValue != nil {
 		if *body.PriceCurrency == "" {
-			event.PriceCurrency = zero.String{}
+			event.PriceCurrency = nil
 			event.PriceValue = 0
 		} else {
-			event.PriceCurrency = zero.StringFrom(*body.PriceCurrency)
+			event.PriceCurrency = body.PriceCurrency
 			event.PriceValue = *body.PriceValue
 		}
 	}
@@ -392,8 +355,8 @@ LIMIT 1
 	icalE.SetCreatedTime(event.CreatedAt)
 	icalE.SetModifiedAt(event.UpdatedAt)
 	icalE.SetStartAt(event.Date)
-	if event.DateEnd.Valid {
-		icalE.SetEndAt(event.DateEnd.Time)
+	if event.DateEnd != nil {
+		icalE.SetEndAt(*event.DateEnd)
 	} else {
 		icalE.SetEndAt(event.Date.Add(time.Duration(2) * time.Hour))
 	}

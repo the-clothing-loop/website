@@ -11,11 +11,12 @@ import {
   IonToolbar,
   useIonLoading,
 } from "@ionic/react";
-import { Chain, User } from "../../api/types";
 import { useEffect, useRef, useState } from "react";
 import { addOutline, eyeOffOutline, removeOutline } from "ionicons/icons";
 import RoutePrivacyExample from "./RoutePrivacyExample";
 import { useTranslation } from "react-i18next";
+import { Chain } from "../../api/types";
+import { User } from "../../api/typex2";
 
 export default function RoutePrivacyInput(props: {
   chain: Chain;

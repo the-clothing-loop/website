@@ -278,7 +278,12 @@ export default function Home() {
               </div>
             </div>
             <div className="md:w-1/2 sm:max-md:pb-8">
-              <video
+              <img
+                className="object-cover object-top w-full max-h-[600px]"
+                src="https://images.clothingloop.org/0x0/2024_ourimpact_cropped_optimized.webp"
+                alt="slides of a book displaying different pages previewing the downloadable impact report pdf"
+              />
+              {/* <video
                 autoPlay
                 loop
                 muted
@@ -295,7 +300,7 @@ export default function Home() {
                   src="https://images.clothingloop.org/original/impact_rapport.mp4"
                   type="video/mp4"
                 />
-              </video>
+              </video> */}
             </div>
           </section>
         </div>

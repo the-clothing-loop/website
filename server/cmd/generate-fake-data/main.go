@@ -10,6 +10,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 var faker = Faker.New()
@@ -69,7 +70,7 @@ func main() {
 		var count int
 		db.Raw(`SELECT COUNT(*) FROM user_chains WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID).Scan(&count)
 		if count == 0 {
-			db.Create(&models.UserChain{
+			db.Create(&sharedtypes.UserChain{
 				UserID:       user.ID,
 				ChainID:      chain.ID,
 				IsChainAdmin: false,

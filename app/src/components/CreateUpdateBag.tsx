@@ -21,12 +21,13 @@ import {
 import type { IonSelectCustomEvent, IonModalCustomEvent } from "@ionic/core";
 import { checkmarkCircle, ellipse } from "ionicons/icons";
 import { RefObject, useContext, useState } from "react";
-import { Bag, UID } from "../api/types";
+import { UID } from "../api/types";
 import { bagPut } from "../api/bag";
 import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
+import { Bag } from "../api/typex2";
 
 const bagColors = [
   "#C9843E",
