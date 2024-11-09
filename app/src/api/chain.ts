@@ -1,6 +1,5 @@
 import type { UID } from "./types";
 import type { ChainResponse as Chain, ChainCreateRequest } from "./typex2";
-import type { RequestRegisterChain } from "./login";
 import axios from "./axios";
 
 export function chainGet(
