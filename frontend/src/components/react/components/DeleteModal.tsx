@@ -10,12 +10,15 @@ import {
 } from "../../../api/enums";
 
 interface DeleteModalProps {
-  onSubmitDeleteAccount: (selectedReasons: string[]) => void;
+  onUpdateSelectedReasons: (selectedReasons: string[]) => void;
 }
-export default function DeleteModal({ onSubmitDeleteAccount }: DeleteModalProps) {
 
+export default function DeleteModal({
+  onUpdateSelectedReasons,
+}: DeleteModalProps) {
   const { t, i18n } = useTranslation();
   const authUser = useStore($authUser);
+
   const [chains, setChains] = useState<Chain[]>([]);
   const [showOtherTextFieldArea, setShowOtherTextFieldArea] = useState(false);
   const [showMovedOptions, setShowMovedOptions] = useState(false);
@@ -28,24 +31,16 @@ export default function DeleteModal({ onSubmitDeleteAccount }: DeleteModalProps)
   const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(6, 9);
   const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(9);
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, checked } = event.target;
+    const updatedReasons = checked
+      ? [...selectedReasons, name]
+      : selectedReasons.filter((reason) => reason !== name);
 
-    if (checked) {
-      setSelectedReasons((prev) => [
-        ...prev,
-        ReasonsForLeaving[name as keyof typeof ReasonsForLeaving],
-      ]);
-    } else {
-      setSelectedReasons((prev) =>
-        prev.filter(
-          (reason) =>
-            reason !==
-            ReasonsForLeaving[name as keyof typeof ReasonsForLeaving],
-        ),
-      );
-    }
-  };
+    setSelectedReasons(updatedReasons);
+    onUpdateSelectedReasons(updatedReasons);
+  }
+
   function showOtherTextFieldHandler(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {

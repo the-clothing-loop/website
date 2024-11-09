@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
 
@@ -24,12 +24,12 @@ export default function AdminDashboard() {
     () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
     [authUser],
   );
-  const [reasonsForLeaving, setReasonsForLeaving] = useState<string[]>([]);
+  const reasonsForLeaving = useRef<string[]>([]);
 
-  function handleSelectReasons(data: string[]) {
-    setReasonsForLeaving(data);
-  }
-  
+  const handleSelectReasons = (selectedReasons: string[]) => {
+    reasonsForLeaving.current = selectedReasons;
+  };
+
   function deleteClicked() {
     if (!authUser) return;
     const chainNames = authUser.is_root_admin
@@ -57,13 +57,14 @@ export default function AdminDashboard() {
     addModal({
       message: t("deleteAccount"),
       content: () => {
-        return <DeleteModal onSubmitDeleteAccount={handleSelectReasons} />;
+        return <DeleteModal onUpdateSelectedReasons={handleSelectReasons} />;
       },
       actions: [
         {
           text: t("delete"),
           type: "error",
           fn: () => {
+            /*
             userPurge(authUser!.uid)
               .then(() => {
                 window.location.href = localizePath("/users/logout");
@@ -71,7 +72,7 @@ export default function AdminDashboard() {
               .catch((err: any) => {
                 console.error("Error purging user:", err);
                 addToastError(GinParseErrors(t, err), err?.status);
-              });
+              });*/
           },
         },
       ],
