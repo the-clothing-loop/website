@@ -324,7 +324,8 @@ func UserPurge(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID string `form:"user_uid" binding:"required,uuid"`
+		UserUID           string   `form:"user_uid" binding:"required,uuid"`
+		ReasonsForLeaving []string `form:"reasons_for_leaving" binding:"required"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -382,7 +383,22 @@ HAVING COUNT(uc.id) = 1
 		c.String(http.StatusConflict, "Set someone else as host or delete the loop first before deleting your account")
 		return
 	}
+	fmt.Print("im here", query.ReasonsForLeaving)
 
+	deletedUser := models.DeletedUser{
+		Email:     user.Email.String,
+		CreatedAt: user.CreatedAt,
+		DeletedAt: time.Now(),
+	}
+	if err := deletedUser.SetReasons(query.ReasonsForLeaving); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := db.Create(&deletedUser).Error; err != nil {
+		c.String(http.StatusInternalServerError, "Failed to save deletion reasons")
+		return
+	}
 	tx := db.Begin()
 
 	err = user.DeleteUserChainDependenciesAllChains(tx)
