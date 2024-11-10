@@ -65,15 +65,15 @@ export default function AdminDashboard() {
           type: "error",
           fn: () => {
             console.log(reasonsForLeaving);
-            /*
-            userPurge(authUser!.uid)
+            
+            userPurge(authUser!.uid, reasonsForLeaving.current)
               .then(() => {
                 window.location.href = localizePath("/users/logout");
               })
               .catch((err: any) => {
                 console.error("Error purging user:", err);
                 addToastError(GinParseErrors(t, err), err?.status);
-              });*/
+              });
           },
         },
       ],
