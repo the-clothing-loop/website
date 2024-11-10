@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -390,9 +391,15 @@ HAVING COUNT(uc.id) = 1
 		CreatedAt: user.CreatedAt,
 		DeletedAt: time.Now(),
 	}
-	if err := deletedUser.SetReasons(query.ReasonsForLeaving); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
+	for _, reason := range query.ReasonsForLeaving {
+		reasons := strings.Split(reason, ",")
+		for _, r := range reasons {
+			fmt.Println("Processed reason:", r)
+		}
+		if err := deletedUser.SetReasons(reasons); err != nil {
+			c.String(http.StatusBadRequest, err.Error())
+			return
+		}
 	}
 
 	if err := db.Create(&deletedUser).Error; err != nil {

@@ -6,6 +6,22 @@ import (
 	"time"
 )
 
+const (
+	ReasonEnumMoved                 = "1"
+	ReasonEnumNotEnoughItemsILiked  = "2"
+	ReasonEnumAddressTooFar         = "3"
+	ReasonEnumTooTimeConsuming      = "4"
+	ReasonEnumDoneSwapping          = "5"
+	ReasonEnumDidntFitIn            = "6"
+	ReasonEnumOther                 = "7"
+	ReasonEnumPlanToJoinNewLoop     = "8"
+	ReasonEnumPlanToStartNewLoop    = "9"
+	ReasonEnumDontPlanToParticipate = "10"
+	ReasonEnumQualityDidntMatch     = "11"
+	ReasonEnumSizesDidntMatch       = "12"
+	ReasonEnumStylesDidntMatch      = "13"
+)
+
 type DeletedUser struct {
 	Email                 string
 	CreatedAt             time.Time `json:"-"`
@@ -30,31 +46,31 @@ func (d *DeletedUser) SetReasons(reasons []string) error {
 		fmt.Println("Received reason:", reason)
 
 		switch reason {
-		case "1":
+		case ReasonEnumMoved:
 			d.Moved = true
-		case "2":
+		case ReasonEnumNotEnoughItemsILiked:
 			d.NotEnoughItemsILiked = true
-		case "3":
+		case ReasonEnumAddressTooFar:
 			d.AddressTooFar = true
-		case "4":
+		case ReasonEnumTooTimeConsuming:
 			d.TooTimeConsuming = true
-		case "5":
+		case ReasonEnumDoneSwapping:
 			d.DoneSwapping = true
-		case "6":
+		case ReasonEnumDidntFitIn:
 			d.DidntFitIn = true
-		case "7":
+		case ReasonEnumOther:
 			d.Other = true
-		case "8":
+		case ReasonEnumPlanToJoinNewLoop:
 			d.PlanToJoinNewLoop = true
-		case "9":
+		case ReasonEnumPlanToStartNewLoop:
 			d.PlanToStartNewLoop = true
-		case "10":
+		case ReasonEnumDontPlanToParticipate:
 			d.DontPlanToParticipate = true
-		case "11":
+		case ReasonEnumQualityDidntMatch:
 			d.QualityDidntMatch = true
-		case "12":
+		case ReasonEnumSizesDidntMatch:
 			d.SizesDidntMatch = true
-		case "13":
+		case ReasonEnumStylesDidntMatch:
 			d.StylesDidntMatch = true
 		default:
 			return fmt.Errorf("Invalid reason: %s", reason)
