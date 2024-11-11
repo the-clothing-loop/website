@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
 
@@ -64,8 +64,6 @@ export default function AdminDashboard() {
           text: t("delete"),
           type: "error",
           fn: () => {
-            console.log(reasonsForLeaving);
-            
             userPurge(authUser!.uid, reasonsForLeaving.current)
               .then(() => {
                 window.location.href = localizePath("/users/logout");

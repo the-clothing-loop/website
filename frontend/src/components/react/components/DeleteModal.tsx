@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
 
 import type { Chain } from "../../../api/types";
 import { $authUser } from "../../../stores/auth";
-import {
-  ReasonsForLeaving,
-  ReasonsForLeavingI18nKeys,
-} from "../../../api/enums";
+import { ReasonsForLeavingI18nKeys } from "../../../api/enums";
 
 interface DeleteModalProps {
   onUpdateSelectedReasons: (selectedReasons: string[]) => void;
