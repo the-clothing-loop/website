@@ -1,4 +1,5 @@
 import { ChainResponse } from "./typex2";
+export type { User, BulkyItem } from "./typex2";
 
 export type UID = string;
 

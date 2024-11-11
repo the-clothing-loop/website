@@ -33,10 +33,13 @@ import ChatRoomActions, {
 } from "../components/Chat/ChatRoomActions";
 import ChatPostList from "../components/Chat/ChatPostList";
 import BulkyList from "../components/Chat/BulkyList";
+import { uploadImageFile } from "../api/imgbb";
+import { bulkyItemPut } from "../api/bulky";
 
 const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
 
 export type OnSendMessageWithImage = (
+  title: string,
   message: string,
   file: File,
 ) => Promise<void>;
@@ -236,6 +239,11 @@ export default function Chat() {
 
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
     setSelectedChannel(channel);
+    setSelectedOldBulkyItems(false);
+  }
+  function onSelectOldBulkyItems() {
+    setSelectedChannel(null);
+    setSelectedOldBulkyItems(true);
   }
 
   async function reqPostList(lastPostId: string) {
@@ -299,10 +307,13 @@ export default function Chat() {
   }
 
   async function onSendMessageWithImage(
+    title: string,
     message: string,
     image: File,
   ): Promise<void> {
-    if (!selectedChannel || !ChatStore.state.client) return;
+    if (!selectedChannel || !ChatStore.state.client) {
+      return createOldBulkyItem(title, message, image);
+    }
     console.log("reqPostList", selectedChannel.id);
 
     const formData = new FormData();
@@ -325,6 +336,23 @@ export default function Chat() {
     await reqPostList("");
   }
 
+  async function createOldBulkyItem(
+    title: string,
+    message: string,
+    image: File,
+  ) {
+    if (!chain?.uid) throw "Select a Loop first";
+    if (!authUser?.uid) throw "You must be logged in";
+    const res1 = await uploadImageFile(image, 800);
+    await bulkyItemPut({
+      chain_uid: chain.uid,
+      user_uid: authUser.uid,
+      title,
+      message,
+      image_url: res1.data.image,
+    });
+  }
+
   async function onSendMessage(message: string) {
     if (!selectedChannel || !ChatStore.state.client) return;
     console.log("reqPostList", selectedChannel.id);
@@ -343,8 +371,12 @@ export default function Chat() {
     });
   }
 
-  function onSendMessageWithImageWithCallback(message: string, image: File) {
-    return onSendMessageWithImage(message, image).then(() => {
+  function onSendMessageWithImageWithCallback(
+    title: string,
+    message: string,
+    image: File,
+  ) {
+    return onSendMessageWithImage(title, message, image).then(() => {
       refScrollRoot.current?.scrollTo({
         top: 0,
       });
@@ -407,10 +439,8 @@ export default function Chat() {
               selectedChannel={selectedChannel}
               isChainAdmin={isChainAdmin}
               onSelectChannel={onSelectChannel}
-              selectedOldBulkyItems={false}
-              onSelectOldBulkyItems={function (): void {
-                throw new Error("Function not implemented.");
-              }}
+              selectedOldBulkyItems={selectedOldBulkyItems}
+              onSelectOldBulkyItems={onSelectOldBulkyItems}
               onOpenCreateChannel={UseChatCreateEdit.onOpenCreateChannel}
               onChannelOptionSelect={UseChatCreateEdit.onChannelOptionSelect}
               isChannelActionSheetOpen={
@@ -451,6 +481,7 @@ export default function Chat() {
             <span key="top" ref={refScrollTop}></span>
           </div>
           <ChatInput
+            isOldBulkyItems={selectedOldBulkyItems}
             onSendMessage={onSendMessageWithCallback}
             onSendMessageWithImage={onSendMessageWithImageWithCallback}
           />

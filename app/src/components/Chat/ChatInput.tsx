@@ -6,9 +6,10 @@ import {
   IonIcon,
   IonInput,
   IonItem,
+  IonLabel,
   IonPopover,
 } from "@ionic/react";
-import { sendOutline } from "ionicons/icons";
+import { cubeOutline, sendOutline } from "ionicons/icons";
 import { MouseEvent, useContext, useRef, useState } from "react";
 import { Sleep } from "../../utils/sleep";
 import { addOutline } from "ionicons/icons";
@@ -17,7 +18,7 @@ import { BulkyItem } from "../../api/types";
 import { StoreContext } from "../../stores/Store";
 import BagSVG from "../../components/Bags/Svg";
 import { useTranslation } from "react-i18next";
-import { IonButtonCustomEvent, IonFabButtonCustomEvent } from "@ionic/core";
+import { OnSendMessageWithImage } from "../../pages/Chat";
 
 export enum SendingMsgState {
   DEFAULT,
@@ -25,8 +26,9 @@ export enum SendingMsgState {
   ERROR,
 }
 interface Props {
+  isOldBulkyItems: boolean;
   onSendMessage: (msg: string) => Promise<void>;
-  onSendMessageWithImage: (msg: string, image: File) => Promise<void>;
+  onSendMessageWithImage: OnSendMessageWithImage;
 }
 
 // This follows the controller / view component pattern
@@ -37,6 +39,7 @@ export default function ChatInput(props: Props) {
   const modal = useRef<HTMLIonModalElement>(null);
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const { refresh } = useContext(StoreContext);
+  const refChatInput = useRef<HTMLIonInputElement>(null);
 
   async function sendMessage() {
     setStatus(SendingMsgState.SENDING);
@@ -55,6 +58,12 @@ export default function ChatInput(props: Props) {
   function onSubmit(e: any) {
     e.preventDefault();
     sendMessage();
+    setTimeout(() => {
+      const el = refChatInput.current?.querySelector("input") as any;
+
+      console.log("focus back", el);
+      el?.focus();
+    }, 100);
   }
 
   function handleClickPlus(e: MouseEvent) {
@@ -71,72 +80,103 @@ export default function ChatInput(props: Props) {
   }
   return (
     <>
-      <div className="tw-bg-light">
-        <IonFab
-          slot="fixed"
-          vertical="bottom"
-          horizontal="start"
-          color="light"
-          className="-tw-ml-3 -tw-mb-4"
-        >
-          <IonFabButton size="small" id="main-fab">
-            <IonIcon icon={addOutline}></IonIcon>
-          </IonFabButton>
-          <IonFabList side="top" className="tw-mb-14">
-            <div className="tw-relative">
-              <IonFabButton
-                onClick={handleClickPlus}
-                size="small"
-                id="fab-bulky"
-              >
-                <div className="tw-w-8 tw-h-8 tw-mb-1.5">
-                  <BagSVG
-                    bag={{ number: "", color: "var(--ion-color-primary)" }}
-                    isList
-                  />
-                </div>
-              </IonFabButton>
-              <div className="tw-absolute tw-top-0 tw-bottom-0 tw-left-full tw-w-[max-content] tw-flex tw-items-center">
-                <button
-                  onClick={(e) => handleClickFabText(e, handleClickPlus)}
-                  className="tw-py-1 tw-px-4 tw-bg-light tw-rounded tw-opacity-80 hover:tw-opacity-100 tw-font-bold tw-text-sm"
-                >
-                  {t("createBulkyItem")}
-                </button>
-              </div>
-            </div>
-          </IonFabList>
-        </IonFab>
-        <form className="tw-flex-shrink-0 tw-ml-8" onSubmit={onSubmit}>
+      {props.isOldBulkyItems ? (
+        <form className="tw-flex-shrink-0 tw-bg-light" onSubmit={onSubmit}>
           <IonItem
             lines="none"
             color="light"
-            disabled={status == SendingMsgState.SENDING}
+            button
+            onClick={handleClickPlus}
+            detail={false}
+            detailIcon={addOutline}
+            style={{
+              "--detail-icon-color": "var(--ion-color-primary)",
+              "--detail-icon-opacity": "1",
+            }}
           >
-            <IonInput
-              placeholder="Send Message"
-              value={message}
-              disabled={status == SendingMsgState.SENDING}
-              onIonInput={(e) => setMessage(e.detail.value as string)}
-              className="tw-ml-2"
+            <IonIcon
+              slot="start"
+              className="tw-opacity-25"
+              icon={cubeOutline}
             />
-            <IonButton
-              slot="end"
-              shape="round"
-              disabled={status !== SendingMsgState.DEFAULT}
-              color="light"
-              className="tw-mr-0"
-              type="submit"
-            >
-              <IonIcon
-                icon={sendOutline}
-                color="primary"
-                className="tw-text-2xl"
-              />
-            </IonButton>
+            <IonLabel>{t("createBulkyItem")}</IonLabel>
+            <IonIcon slot="end" color="primary" icon={addOutline} />
           </IonItem>
         </form>
-      </div>
+      ) : (
+        <div className="tw-bg-light">
+          <IonFab
+            slot="fixed"
+            vertical="bottom"
+            horizontal="start"
+            color="light"
+            className="-tw-ml-3 -tw-mb-4"
+          >
+            <IonFabButton size="small" id="main-fab">
+              <IonIcon icon={addOutline}></IonIcon>
+            </IonFabButton>
+            <IonFabList side="top" className="tw-mb-14">
+              <div className="tw-relative">
+                <IonFabButton
+                  onClick={handleClickPlus}
+                  size="small"
+                  id="fab-bulky"
+                >
+                  <div className="tw-w-8 tw-h-8 tw-mb-1.5">
+                    <BagSVG
+                      bag={{ number: "", color: "var(--ion-color-primary)" }}
+                      isList
+                    />
+                  </div>
+                </IonFabButton>
+                <div className="tw-absolute tw-top-0 tw-bottom-0 tw-left-full tw-w-[max-content] tw-flex tw-items-center">
+                  <button
+                    onClick={(e) => handleClickFabText(e, handleClickPlus)}
+                    className="tw-py-1 tw-px-4 tw-bg-light tw-rounded tw-opacity-80 hover:tw-opacity-100 tw-font-bold tw-text-sm"
+                  >
+                    {t("createBulkyItem")}
+                  </button>
+                </div>
+              </div>
+            </IonFabList>
+          </IonFab>
+          <form className="tw-flex-shrink-0 tw-ml-8" onSubmit={onSubmit}>
+            <IonItem
+              lines="none"
+              color="light"
+              disabled={status == SendingMsgState.SENDING}
+            >
+              <IonInput
+                ref={refChatInput}
+                placeholder="Send Message"
+                value={message}
+                disabled={status == SendingMsgState.SENDING}
+                onIonInput={(e) => setMessage(e.detail.value as string)}
+                className="tw-bg-background tw-my-1 tw-min-h-10 [&_*]:tw-ps-3"
+              />
+              <IonFabButton
+                slot="end"
+                disabled={status !== SendingMsgState.DEFAULT}
+                size="small"
+                className="tw-ms-0 tw-my-0 -tw-me-2"
+                style={{
+                  "--box-shadow": "none",
+                  "--background": "var(--ion-color-light)",
+                  "--background-hover": "var(--ion-color-primary-tint)",
+                  "--color": "var(--ion-color-primary)",
+                  "--color-hover": "var(--ion-color-base-light)",
+                  "--color-focused": "var(--ion-color-base-light)",
+                  "--color-activated": "var(--ion-color-base-light)",
+                }}
+                type="button"
+                onClick={onSubmit}
+              >
+                <IonIcon icon={sendOutline} className="tw-text-2xl" />
+              </IonFabButton>
+            </IonItem>
+          </form>
+        </div>
+      )}
       <CreateBulky
         modal={modal}
         didDismiss={() => refresh("bulky-items")}
