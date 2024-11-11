@@ -29,7 +29,7 @@ export default function Signup() {
     let registerUser: RequestRegisterUser = {
       name: values.name,
       email: values.email,
-      phone_number: values.phone,
+      phone_number: values.phone_number,
       newsletter: values.newsletter,
       address: values.address,
       sizes: values.sizes,

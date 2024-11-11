@@ -2,7 +2,7 @@ name: cl-dev
 
 services:
   app:
-    image: node:20-alpine
+    image: node:22-alpine
     ports:
       - 127.0.0.1:8081:8081
     #   - 5173:5173
@@ -11,7 +11,7 @@ services:
     working_dir: /app
     command: sh -c 'npm i && npm run dev:docker'
   frontend:
-    image: node:20-alpine
+    image: node:22-alpine
     # ports:
     #   - 3000:3000
     volumes:
@@ -19,7 +19,7 @@ services:
     working_dir: /app
     command: sh -c 'npm i; npm run start:lan'
   server:
-    image: golang:1.22.3-alpine
+    image: golang:1.23-alpine
     depends_on:
       - db
       - mailpit

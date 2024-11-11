@@ -19,13 +19,14 @@ import {
   flag,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { Chain, User } from "../api/types";
+import { Chain } from "../api/types";
 import IsPrivate from "../utils/is_private";
 import { IsChainAdmin, IsChainWarden } from "../stores/Store";
 import { useMemo, useRef, useState } from "react";
 import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";
 import { useLongPress } from "use-long-press";
+import { User } from "../api/typex2";
 
 interface MessagingApp {
   icon: string;
@@ -75,11 +76,13 @@ export default function UserCard({
   chain,
   isUserPaused,
   showMessengers = false,
+  showEmail = false,
 }: {
   user: User;
   chain: Chain | null;
   isUserPaused: boolean;
   showMessengers?: boolean;
+  showEmail?: boolean;
 }) {
   const { t } = useTranslation();
   const isAddressPrivate = IsPrivate(user.address);
@@ -165,6 +168,20 @@ export default function UserCard({
         </IonText>
       </div>
       <IonList>
+        {showEmail ? (
+          <IonItem
+            lines="none"
+            key="email"
+            detail={false}
+            target="_blank"
+            href={`mailto:` + user.email}
+          >
+            <IonLabel>
+              <h3 className="!tw-font-bold">{t("email")}</h3>
+              <p className="dark:tw-text-primary-contrast">{user.email}</p>
+            </IonLabel>
+          </IonItem>
+        ) : null}
         {isPhonePrivate ? null : (
           <>
             <IonItem

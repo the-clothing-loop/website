@@ -15,6 +15,8 @@ const (
 	SizeEnumMenLarge       = "A"
 	SizeEnumMenPlusSize    = "B"
 	SizeEnumWomenMaternity = "C"
+	SizeEnumTeenGirls      = "D"
+	SizeEnumTeenBoys       = "E"
 )
 
 var SizeLetters = map[string]string{
@@ -30,6 +32,8 @@ var SizeLetters = map[string]string{
 	SizeEnumMenLarge:       "(X)L",
 	SizeEnumMenPlusSize:    "XL≤",
 	SizeEnumWomenMaternity: "Maternity",
+	SizeEnumTeenGirls:      "Teen ♀",
+	SizeEnumTeenBoys:       "Teen ♂",
 }
 
 var ErrSizeInvalid = errors.New("Invalid size enum")
@@ -39,7 +43,7 @@ func ValidateAllSizeEnum(arr []string) bool {
 		return false
 	}
 	for _, s := range arr {
-		if err := validate.Var(s, "oneof=1 2 3 4 5 6 7 8 9 A B C,required"); err != nil {
+		if err := validate.Var(s, "oneof=1 2 3 4 5 6 7 8 9 A B C D E,required"); err != nil {
 			return false
 		}
 	}

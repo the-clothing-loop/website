@@ -31,7 +31,7 @@ export default function AdminDashboard() {
       : (authUser.chains
           .filter((uc) => uc.is_chain_admin)
           .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
-          .filter((c) => c && c.total_hosts)
+          .filter((c) => c && c.total_hosts && !(c.total_hosts > 1))
           .map((c) => c!.name) as string[]);
 
     console.log(
@@ -126,7 +126,10 @@ export default function AdminDashboard() {
                 {authUser.email}
               </span>
               <h1 className="font-serif font-bold text-4xl text-secondary mb-3">
-                {t("helloN", { n: authUser.name })}
+                {t("helloN", {
+                  n: authUser.name,
+                  interpolation: { escapeValue: false },
+                })}
               </h1>
               <p className="mb-6">
                 {t("thankYouForBeingHere")}

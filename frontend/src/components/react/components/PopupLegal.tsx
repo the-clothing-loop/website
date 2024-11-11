@@ -84,6 +84,7 @@ export default function PopupLegal({
                 </div>
                 <button
                   onClick={scrollDownToh}
+                  type="button"
                   className="absolute bottom-2 ltr:right-2 rtl:left-2 btn btn-circle btn-sm btn-secondary text-white opacity-50 hover:opacity-90 tooltip ltr:tooltip-left rtl:tooltip-right before:font-normal before:text-sm"
                   data-tip="Scroll to the bottom."
                 >
@@ -109,6 +110,7 @@ export default function PopupLegal({
                 </div>
                 <button
                   onClick={scrollDownDpa}
+                  type="button"
                   className="absolute bottom-2 ltr:right-2 rtl:left-2 btn btn-circle btn-sm btn-secondary text-white opacity-50 hover:opacity-90 tooltip ltr:tooltip-left rtl:tooltip-right before:font-normal before:text-sm"
                   data-tip="Scroll to the bottom."
                 >

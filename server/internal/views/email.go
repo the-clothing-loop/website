@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"gorm.io/gorm"
@@ -338,12 +339,13 @@ func EmailLoginVerification(c *gin.Context, db *gorm.DB,
 			token += "&c=" + chainUID
 		}
 	}
+	headerPostfix := lo.If(isApp, "MyClothingLoop App").Else("clothingloop.org")
 	err := emailGenerateMessage(m, i18n, "login_verification", gin.H{
 		"Name":    name,
 		"BaseURL": app.Config.SITE_BASE_URL_FE,
 		"Token":   template.URL(token),
 		"IsApp":   isApp,
-	})
+	}, headerPostfix)
 	if err != nil {
 		return err
 	}
@@ -452,7 +454,7 @@ func EmailSomeoneIsInterestedInJoiningYourLoop(db *gorm.DB, lng,
 		imgEl := `<img src="` + app.Config.SITE_BASE_URL_FE + `/images/categories/%s-50.png" alt="%s" width="12" height="12" style="padding-left: 30px; height: 12px; width: 12px"/>`
 		for _, v := range participantSizeEnums {
 			switch v {
-			case models.SizeEnumBaby, models.SizeEnum1_4YearsOld, models.SizeEnum5_12YearsOld:
+			case models.SizeEnumBaby, models.SizeEnum1_4YearsOld, models.SizeEnum5_12YearsOld, models.SizeEnumTeenGirls, models.SizeEnumTeenBoys:
 				if !childrenAdded {
 					sizesHtml += "<br/>" + fmt.Sprintf(imgEl, "baby", "baby") + " "
 					childrenAdded = true

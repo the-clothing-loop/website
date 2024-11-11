@@ -1,5 +1,6 @@
 import axios from "./axios";
-import type { BulkyItem, UID } from "./types";
+import type { UID } from "./types";
+import type { BulkyItem } from "./typex2";
 
 export function bulkyItemGetAllByChain(chainUID: UID, userUID: UID) {
   return axios.get<BulkyItem[]>("/v2/bulky-item/all", {

@@ -12,22 +12,12 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gopkg.in/guregu/null.v3"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
-
-type UserCreateRequestBody struct {
-	Email       string   `json:"email" binding:"required,email"`
-	Name        string   `json:"name" binding:"required,min=3"`
-	Address     string   `json:"address" binding:"required,min=3"`
-	PhoneNumber string   `json:"phone_number" binding:"required,min=3"`
-	Newsletter  bool     `json:"newsletter"`
-	Sizes       []string `json:"sizes"`
-	Latitude    float64  `json:"latitude"`
-	Longitude   float64  `json:"longitude"`
-}
 
 func UserGet(c *gin.Context) {
 	db := getDB(c)
@@ -135,7 +125,7 @@ func UserGetAllOfChain(c *gin.Context) {
 	tx.Commit()
 
 	for i, user := range users {
-		thisUserChains := []models.UserChain{}
+		thisUserChains := []sharedtypes.UserChain{}
 		for ii := range allUserChains {
 			userChain := (allUserChains)[ii]
 			if userChain.UserID == user.ID {
@@ -178,7 +168,7 @@ func UserHasNewsletter(c *gin.Context) {
 	}
 
 	hasNewsletter := 0
-	db.Raw(`SELECT COUNT(*) FROM newsletters WHERE email = ? LIMIT 1`, user.Email.String).Scan(&hasNewsletter)
+	db.Raw(`SELECT COUNT(*) FROM newsletters WHERE email = ? LIMIT 1`, *user.Email).Scan(&hasNewsletter)
 
 	c.JSON(200, hasNewsletter > 0)
 }
@@ -186,21 +176,7 @@ func UserHasNewsletter(c *gin.Context) {
 func UserUpdate(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		ChainUID      string     `json:"chain_uid,omitempty" binding:"omitempty,uuid"`
-		UserUID       string     `json:"user_uid,omitempty" binding:"uuid"`
-		Name          *string    `json:"name,omitempty"`
-		PhoneNumber   *string    `json:"phone_number,omitempty"`
-		Newsletter    *bool      `json:"newsletter,omitempty"`
-		PausedUntil   *time.Time `json:"paused_until,omitempty"`
-		ChainPaused   *bool      `json:"chain_paused,omitempty"`
-		Sizes         *[]string  `json:"sizes,omitempty"`
-		Address       *string    `json:"address,omitempty"`
-		I18n          *string    `json:"i18n,omitempty"`
-		Latitude      *float64   `json:"latitude,omitempty"`
-		Longitude     *float64   `json:"longitude,omitempty"`
-		AcceptedLegal *bool      `json:"accepted_legal,omitempty"`
-	}
+	var body sharedtypes.UserUpdateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -290,7 +266,7 @@ WHERE uc.user_id = ? AND c.id IN (
 	if body.Newsletter != nil {
 		if *body.Newsletter {
 			n := &models.Newsletter{
-				Email:    user.Email.String,
+				Email:    *user.Email,
 				Name:     user.Name,
 				Verified: true,
 			}
@@ -313,8 +289,8 @@ WHERE uc.user_id = ? AND c.id IN (
 				c.String(http.StatusInternalServerError, "Internal Server Error")
 				return
 			}
-			if app.Brevo != nil && user.Email.Valid {
-				app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
+			if app.Brevo != nil && user.Email != nil {
+				app.Brevo.DeleteContact(c.Request.Context(), *user.Email)
 			}
 		}
 	}
@@ -349,10 +325,10 @@ func UserPurge(c *gin.Context) {
 	}
 
 	amountOfBags, err := user.CountAttachedBags(db)
-	if err != nil || amountOfBags == 0 {
-		if err != nil {
-			slog.Error("Error getting bag count", "err", err)
-		}
+	if err != nil {
+		slog.Error("Error getting bag count", "err", err)
+	}
+	if amountOfBags != 0 {
 		c.String(http.StatusConflict, "Please give your bags to someone else, or delete them from the app")
 		return
 	}
@@ -362,18 +338,6 @@ func UserPurge(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-
-	// notify connected hosts, send email to chain admins
-	chainIDs := []uint{}
-	for _, uc := range user.Chains {
-		chainIDs = append(chainIDs, uc.ChainID)
-	}
-
-	services.EmailLoopAdminsOnUserLeft(db,
-		user.Name,
-		user.Email.String,
-		user.Email.String,
-		chainIDs...)
 
 	// find chains where user is the last chain admin
 	chainIDsToDelete := []uint{}
@@ -388,6 +352,12 @@ WHERE uc.chain_id IN (
 GROUP BY uc.chain_id
 HAVING COUNT(uc.id) = 1
 	`, user.ID).Scan(&chainIDsToDelete)
+	participantsToBeOrphaned := int64(0)
+	db.Raw("SELECT COUNT(id) FROM user_chains WHERE chain_id IN ? AND is_chain_admin = FALSE AND is_approved = TRUE AND user_id != ?", chainIDsToDelete, user.ID).Count(&participantsToBeOrphaned)
+	if participantsToBeOrphaned > 0 {
+		c.String(http.StatusConflict, "Set someone else as host or delete the loop first before deleting your account")
+		return
+	}
 
 	tx := db.Begin()
 
@@ -466,8 +436,8 @@ UPDATE events SET user_id = (
 		}
 	}
 
-	if user.Email.Valid {
-		err = tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email.String).Error
+	if user.Email != nil {
+		err = tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email).Error
 		if err != nil {
 			tx.Rollback()
 			slog.Error("UserPurge: Unable to remove newsletter", "err", err)
@@ -475,14 +445,26 @@ UPDATE events SET user_id = (
 			return
 		}
 
-		views.EmailAccountDeletedSuccessfully(db, user.I18n, user.Name, user.Email.String)
+		views.EmailAccountDeletedSuccessfully(db, user.I18n, user.Name, *user.Email)
 
 		if app.Brevo != nil {
-			app.Brevo.DeleteContact(c.Request.Context(), user.Email.String)
+			app.Brevo.DeleteContact(c.Request.Context(), *user.Email)
 		}
 	}
 
 	tx.Commit()
+
+	// notify connected hosts, send email to chain admins
+	chainIDs := []uint{}
+	for _, uc := range user.Chains {
+		chainIDs = append(chainIDs, uc.ChainID)
+	}
+
+	services.EmailLoopAdminsOnUserLeft(db,
+		user.Name,
+		*user.Email,
+		*user.Email,
+		chainIDs...)
 
 	auth.CookieRemove(c)
 }
@@ -490,12 +472,7 @@ UPDATE events SET user_id = (
 func UserTransferChain(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		TransferUserUID string `json:"transfer_user_uid" binding:"required,uuid"`
-		FromChainUID    string `json:"from_chain_uid" binding:"required,uuid"`
-		ToChainUID      string `json:"to_chain_uid" binding:"required,uuid"`
-		IsCopy          bool   `json:"is_copy"`
-	}
+	var body sharedtypes.UserTransferChainRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -555,7 +532,7 @@ LIMIT 1
 		return
 	}
 
-	uc := &models.UserChain{}
+	uc := &sharedtypes.UserChain{}
 	err = tx.Raw(`SELECT * FROM user_chains WHERE chain_id = ? AND user_id = ? LIMIT 1`, result.FromChainID, result.UserID).Scan(uc).Error
 
 	if uc.ID == 0 || err != nil {
@@ -594,7 +571,7 @@ LIMIT 1
 	} else if body.IsCopy {
 		// Copy from one chain to another
 
-		err = tx.Create(&models.UserChain{
+		err = tx.Create(&sharedtypes.UserChain{
 			UserID:       result.UserID,
 			ChainID:      result.ToChainID,
 			IsChainAdmin: uc.IsChainAdmin,

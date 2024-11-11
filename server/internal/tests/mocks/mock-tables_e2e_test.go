@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func TestMockUserShouldSetChainAdminTrue(t *testing.T) {
@@ -15,7 +15,7 @@ func TestMockUserShouldSetChainAdminTrue(t *testing.T) {
 		IsChainAdmin: true,
 	})
 
-	userChain := &models.UserChain{}
+	userChain := &sharedtypes.UserChain{}
 	db.Raw(`SELECT * FROM user_chains WHERE user_id = ? AND chain_id = ? LIMIT 1`, user.ID, chain.ID).Scan(userChain)
 
 	assert.Equal(t, user.ID, userChain.UserID)

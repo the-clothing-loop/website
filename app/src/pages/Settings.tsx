@@ -8,7 +8,6 @@ import {
   IonDatetime,
   IonHeader,
   IonIcon,
-  IonImg,
   IonItem,
   IonItemDivider,
   IonLabel,
@@ -34,14 +33,7 @@ import {
   IonModalCustomEvent,
   OverlayEventDetail,
 } from "@ionic/core";
-import {
-  RefObject,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { StoreContext } from "../stores/Store";
 import UserCard from "../components/UserCard";
 import { Trans, useTranslation } from "react-i18next";
@@ -288,7 +280,7 @@ export default function Settings() {
             headerText={headerText}
             onEdit={() => headerSheetModal.current?.present()}
             isChainAdmin={isChainAdmin}
-            className={`tw-relative tw-text-4xl tw-font-serif tw-font-bold ${
+            className={`tw-relative tw-text-2xl tw-font-serif tw-font-bold ${
               isThemeDefault ? "tw-text-orange dark:tw-text-orange" : ""
             }`}
           />
@@ -314,6 +306,7 @@ export default function Settings() {
               user={authUser}
               chain={chain}
               isUserPaused={isUserPaused}
+              showEmail
             />
           ) : null}
           <IonList>

@@ -22,7 +22,7 @@ import { IsChainAdmin, StoreContext } from "../stores/Store";
 import { useContext, useMemo, useRef } from "react";
 import CreateUpdateRules from "../components/CreateUpdateRules";
 import { FaqListItem, faqItemTranslationOption, faqListKeys } from "./HelpItem";
-import { User } from "../api/types";
+import { User } from "../api/typex2";
 import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 

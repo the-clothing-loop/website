@@ -21,6 +21,10 @@ func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIDs ...uint)
 		return err
 	}
 
+	if user.Email == nil {
+		return nil
+	}
+
 	if len(results) == 0 {
 		slog.Error("Empty chain that is still public", "ChainID", chainIDs)
 		return fmt.Errorf("No admins exist for this loop")
@@ -35,7 +39,7 @@ func EmailLoopAdminsOnUserJoin(db *gorm.DB, user *models.User, chainIDs ...uint)
 			result.Name,
 			result.ChainName,
 			user.Name,
-			user.Email.String,
+			*user.Email,
 			user.PhoneNumber,
 			user.Address,
 			user.Sizes,
@@ -77,10 +81,10 @@ func EmailLoopAdminsOnUserLeft(db *gorm.DB, removedUserName, removedUserEmail, e
 
 func EmailYouSignedUpForLoop(db *gorm.DB, user *models.User, chainNames ...string) error {
 	for _, chainName := range chainNames {
-		if !user.Email.Valid {
+		if user.Email == nil {
 			continue
 		}
-		views.EmailYouSignedUpForLoop(db, user.I18n, user.Name, user.Email.String, chainName)
+		views.EmailYouSignedUpForLoop(db, user.I18n, user.Name, *user.Email, chainName)
 	}
 	return nil
 }

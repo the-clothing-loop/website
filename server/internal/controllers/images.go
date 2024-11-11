@@ -12,21 +12,17 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type ImageUploadResponse struct {
-	Delete    string `json:"delete"`
-	Thumbnail string `json:"thumbnail"`
-	Image     string `json:"image"`
-}
-
-func imagesRead(c *gin.Context) (imgRes *ImageUploadResponse, err error) {
+func imagesRead(c *gin.Context) (imgRes *sharedtypes.ImageUploadResponse, err error) {
 	if app.Config.IMGBB_KEY == "" {
 		return nil, errors.New("Api key to found")
 	}
@@ -52,8 +48,10 @@ func imagesRead(c *gin.Context) (imgRes *ImageUploadResponse, err error) {
 		return nil, fmt.Errorf("Unable to encode to jpeg: %v", err)
 	}
 
+	now := time.Now()
+
 	jpgContents, _ := io.ReadAll(buf)
-	filename := fmt.Sprintf("uploads/%s.jpg", imageSha1)
+	filename := fmt.Sprintf("uploads/%s_%s.jpg", now.Format(time.DateOnly), imageSha1)
 	slog.Debug("Writing image", "to", path.Join(app.Config.IMAGES_DIR, filename))
 	err = os.WriteFile(path.Join(app.Config.IMAGES_DIR, filename), jpgContents, 0644)
 	if err != nil {
@@ -66,7 +64,7 @@ func imagesRead(c *gin.Context) (imgRes *ImageUploadResponse, err error) {
 	bHash, _ := bcrypt.GenerateFromPassword([]byte(filename+app.Config.IMGBB_KEY), bcrypt.DefaultCost)
 	key := base64.URLEncoding.EncodeToString(bHash)
 
-	res := &ImageUploadResponse{
+	res := &sharedtypes.ImageUploadResponse{
 		Thumbnail: fmt.Sprintf("https://images.clothingloop.org/400x/%s", filename),
 		Image:     fmt.Sprintf("https://images.clothingloop.org/original/%s", filename),
 		Delete:    fmt.Sprintf("%s/v2/image_purge?path=%s&key=%s", app.Config.SITE_BASE_URL_API, filename, key),

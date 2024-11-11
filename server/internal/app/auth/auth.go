@@ -181,7 +181,7 @@ func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, a
 
 	if event.UserID == authUser.ID || authUser.IsRootAdmin {
 		return true, authUser, event
-	} else if event.ChainUID.Valid {
+	} else if event.ChainUID != nil {
 		err = authUser.AddUserChainsToObject(db)
 		if err != nil {
 			slog.Error("Unable to retrieve user related loops", "err", err)
@@ -189,7 +189,7 @@ func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, a
 			return false, nil, nil
 		}
 
-		_, isChainAdmin := authUser.IsPartOfChain(event.ChainUID.String)
+		_, isChainAdmin := authUser.IsPartOfChain(*event.ChainUID)
 		if isChainAdmin {
 			return true, authUser, event
 		}

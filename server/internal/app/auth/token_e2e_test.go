@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
-	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func TestLoginFlowToken(t *testing.T) {
@@ -24,7 +24,7 @@ func TestLoginFlowToken(t *testing.T) {
 	assert.Nil(t, err, "CreateUnverifiedToken should return a nil err")
 
 	// ensure that token is in database
-	userToken := models.UserToken{}
+	userToken := sharedtypes.UserToken{}
 	res := db.Raw(`
 SELECT *
 FROM user_tokens
@@ -40,7 +40,7 @@ LIMIT 1
 	assert.NotNilf(t, err, "Unverified token (%s) should not be useable", token)
 
 	// verify token
-	_, newToken, err := auth.OtpVerify(db, user.Email.String, token)
+	_, newToken, err := auth.OtpVerify(db, *user.Email, token)
 	assert.Nil(t, err, "Token should pass verification (%s) %v", token, err)
 
 	// ensure verified token is usable for authenticate
@@ -48,7 +48,7 @@ LIMIT 1
 	assert.Nil(t, err, "Verified token should be useable (%s) %v", token, err)
 
 	// check that user token is removed
-	userTokens := []models.UserToken{}
+	userTokens := []sharedtypes.UserToken{}
 	db.Raw(`
 SELECT *
 FROM user_tokens

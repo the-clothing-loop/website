@@ -6,6 +6,7 @@ import {
   EVENT_IMAGE_EXPIRATION,
   eventUpdate,
   eventDelete,
+  type EventPriceType,
 } from "../../../api/event";
 import type { Event } from "../../../api/types";
 import { SizeBadges } from "../components/Badges";
@@ -273,12 +274,18 @@ export default function EventDetails() {
                         <span className="font-sans text-lg" key="price">
                           {event.price_currency + " " + eventPriceValue}
                           <span className="text-sm ms-1 align-baseline">
-                            {t(PRICE_TYPE_I18N[event.price_type])}
+                            {t(
+                              PRICE_TYPE_I18N[
+                                event.price_type as EventPriceType
+                              ],
+                            )}
                           </span>
                         </span>
                       ) : (
                         <span className="font-sans text-lg" key="free">
-                          {t(PRICE_TYPE_I18N[event.price_type])}
+                          {t(
+                            PRICE_TYPE_I18N[event.price_type as EventPriceType],
+                          )}
                         </span>
                       )}
                     </dd>

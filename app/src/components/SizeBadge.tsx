@@ -24,6 +24,8 @@ export enum Sizes {
   menLarge = "A",
   menPlusSize = "B",
   womenMaternity = "C",
+  teenGirls = "D",
+  teenBoys = "E",
 }
 const categories: ICategories = {
   [Categories.children]: [
@@ -62,6 +64,8 @@ export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
   A: "(X)L",
   B: "XL≤",
   C: t("womenMaternity"),
+  D: t("teenGirls"),
+  E: t("teenBoys"),
 });
 function BadgeItem({
   sizes,

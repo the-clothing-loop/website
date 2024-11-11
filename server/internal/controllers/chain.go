@@ -14,6 +14,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -28,20 +29,6 @@ const (
 
 const ErrAllowTOHFalse = "The Terms of the Hosts must be approved"
 
-type ChainCreateRequestBody struct {
-	Name             string   `json:"name" binding:"required"`
-	Description      string   `json:"description"`
-	Address          string   `json:"address" binding:"required"`
-	CountryCode      string   `json:"country_code" binding:"required"`
-	Latitude         float64  `json:"latitude" binding:"required"`
-	Longitude        float64  `json:"longitude" binding:"required"`
-	Radius           float32  `json:"radius" binding:"required,gte=1.0,lte=100.0"`
-	OpenToNewMembers bool     `json:"open_to_new_members" binding:"required"`
-	Sizes            []string `json:"sizes" binding:"required"`
-	Genders          []string `json:"genders" binding:"required"`
-	AllowTOH         bool     `json:"allow_toh" binding:"required"`
-}
-
 func ChainCreate(c *gin.Context) {
 	db := getDB(c)
 	ok, user, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
@@ -49,7 +36,7 @@ func ChainCreate(c *gin.Context) {
 		return
 	}
 
-	var body ChainCreateRequestBody
+	var body sharedtypes.ChainCreateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -80,7 +67,7 @@ func ChainCreate(c *gin.Context) {
 		OpenToNewMembers: true,
 		Sizes:            body.Sizes,
 		Genders:          body.Genders,
-		UserChains: []models.UserChain{
+		UserChains: []sharedtypes.UserChain{
 			{
 				UserID:       user.ID,
 				IsChainAdmin: true,
@@ -151,7 +138,7 @@ func ChainGet(c *gin.Context) {
 		return
 	}
 
-	body := models.ChainResponse{
+	body := sharedtypes.ChainResponse{
 		UID:              chain.UID,
 		Name:             chain.Name,
 		Description:      chain.Description,
@@ -215,7 +202,7 @@ func ChainGetAll(c *gin.Context) {
 		return
 	}
 
-	chains := []*models.ChainResponse{}
+	chains := []*sharedtypes.ChainResponse{}
 	sql := models.ChainResponseSQLSelect
 	whereOrSql := []string{}
 	args := []any{}
@@ -312,27 +299,7 @@ func ChainGetNear(c *gin.Context) {
 func ChainUpdate(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		UID              string    `json:"uid" binding:"required"`
-		Name             *string   `json:"name,omitempty"`
-		Description      *string   `json:"description,omitempty"`
-		Address          *string   `json:"address,omitempty"`
-		Image            *string   `json:"image,omitempty"`
-		CountryCode      *string   `json:"country_code,omitempty"`
-		Latitude         *float32  `json:"latitude,omitempty"`
-		Longitude        *float32  `json:"longitude,omitempty"`
-		Radius           *float32  `json:"radius,omitempty" binding:"omitempty,gte=1.0,lte=100.0"`
-		Sizes            *[]string `json:"sizes,omitempty"`
-		Genders          *[]string `json:"genders,omitempty"`
-		RulesOverride    *string   `json:"rules_override,omitempty"`
-		HeadersOverride  *string   `json:"headers_override,omitempty"`
-		Published        *bool     `json:"published,omitempty"`
-		OpenToNewMembers *bool     `json:"open_to_new_members,omitempty"`
-		Theme            *string   `json:"theme,omitempty"`
-		RoutePrivacy     *int      `json:"route_privacy"`
-		AllowMap         *bool     `json:"allow_map,omitempty"`
-		IsAppDisabled    *bool     `json:"is_app_disabled,omitempty"`
-	}
+	var body sharedtypes.ChainUpdateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -461,11 +428,7 @@ func ChainDelete(c *gin.Context) {
 func ChainAddUser(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		UserUID      string `json:"user_uid" binding:"required,uuid"`
-		ChainUID     string `json:"chain_uid" binding:"required,uuid"`
-		IsChainAdmin bool   `json:"is_chain_admin"`
-	}
+	var body sharedtypes.ChainAddUserRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -483,7 +446,7 @@ func ChainAddUser(c *gin.Context) {
 	}
 
 	user, err := models.UserGetByUID(db, body.UserUID, true)
-	userChain := &models.UserChain{}
+	userChain := &sharedtypes.UserChain{}
 	if err == nil {
 		db.Raw(`
 SELECT * FROM user_chains
@@ -508,7 +471,7 @@ LIMIT 1
 			db.Save(userChain)
 		}
 	} else {
-		if err := db.Create(&models.UserChain{
+		if err := db.Create(&sharedtypes.UserChain{
 			UserID:       user.ID,
 			ChainID:      chain.ID,
 			IsChainAdmin: false,
@@ -530,10 +493,7 @@ LIMIT 1
 func ChainRemoveUser(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		UserUID  string `json:"user_uid" binding:"required,uuid"`
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-	}
+	var body sharedtypes.ChainRemoveUserRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -569,8 +529,8 @@ func ChainRemoveUser(c *gin.Context) {
 	// send email to chain admins
 	services.EmailLoopAdminsOnUserLeft(db,
 		user.Name,
-		user.Email.String,
-		user.Email.String,
+		*user.Email,
+		*user.Email,
 		chain.ID,
 	)
 }
@@ -578,10 +538,7 @@ func ChainRemoveUser(c *gin.Context) {
 func ChainApproveUser(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		UserUID  string `json:"user_uid" binding:"required,uuid"`
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-	}
+	var body sharedtypes.ChainApproveUserRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -605,8 +562,8 @@ WHERE user_id = ? AND chain_id = ?
 	newRoute, _ := tsp.RunAddOptimalOrderNewCity(cities.ToTspCities(), user.UID)
 	chain.SetRouteOrderByUserUIDs(db, newRoute) // update the route order
 
-	if user.Email.Valid {
-		views.EmailAnAdminApprovedYourJoinRequest(db, user.I18n, user.Name, user.Email.String, chain.Name)
+	if user.Email != nil {
+		views.EmailAnAdminApprovedYourJoinRequest(db, user.I18n, user.Name, *user.Email, chain.Name)
 	}
 }
 
@@ -636,8 +593,8 @@ func ChainDeleteUnapproved(c *gin.Context) {
 
 	chain.ClearAllLastNotifiedIsUnapprovedAt(db)
 
-	if user.Email.Valid {
-		views.EmailAnAdminDeniedYourJoinRequest(db, user.I18n, user.Name, user.Email.String, chain.Name,
+	if user.Email != nil {
+		views.EmailAnAdminDeniedYourJoinRequest(db, user.I18n, user.Name, *user.Email, chain.Name,
 			query.Reason)
 	}
 }
@@ -698,11 +655,7 @@ func ChainGetUserNote(c *gin.Context) {
 
 func ChainChangeUserWarden(c *gin.Context) {
 	db := getDB(c)
-	var body struct {
-		UserUID  string `json:"user_uid" binding:"required,uuid"`
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-		Warden   bool   `json:"warden"`
-	}
+	var body sharedtypes.ChainChangeUserWardenRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return

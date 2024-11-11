@@ -10,8 +10,8 @@ import (
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/controllers"
-	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func TestUserTransferChain(t *testing.T) {
@@ -28,7 +28,7 @@ func TestUserTransferChain(t *testing.T) {
 				IsOpenToNewMembers: true,
 			})
 			participant, _ := mocks.MockUser(t, db, chain1.ID, mocks.MockChainAndUserOptions{})
-			db.Create(&models.UserChain{
+			db.Create(&sharedtypes.UserChain{
 				UserID:       host.ID,
 				ChainID:      chain2.ID,
 				IsChainAdmin: true,

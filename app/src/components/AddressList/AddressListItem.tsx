@@ -1,7 +1,7 @@
 import { IonItem, IonText, IonIcon } from "@ionic/react";
-import { shield, pauseCircleSharp, flag } from "ionicons/icons";
-import { Bag, User } from "../../api/types";
-import TinyBagSvg from "./TinyBagSvg";
+import { shield, pauseCircleSharp, flag, arrowUpSharp } from "ionicons/icons";
+import TinyBagSvg, { getBagType } from "./TinyBagSvg";
+import { Bag, User } from "../../api/typex2";
 
 export interface AddressListItemProps {
   user: User;
@@ -100,18 +100,28 @@ export default function AddressListItem({
               )}, minmax(0, 1fr))`,
             }}
           >
-            {bags.map((b) => (
-              <div
-                className={"tw-w-4 tw-h-4".concat(
-                  isMe ? " tw-shadow-bags" : "",
-                )}
-                key={b.id}
-              >
-                <div className="-tw-translate-y-px">
-                  <TinyBagSvg bag={b} />
+            {bags.map((b) => {
+              const bagType = getBagType(b);
+              return (
+                <div
+                  className={"tw-w-4 tw-h-4".concat(
+                    isMe ? " tw-shadow-bags" : "",
+                  )}
+                  key={b.id}
+                >
+                  <div className="relative -tw-translate-y-px">
+                    <TinyBagSvg bag={b} type={bagType} />
+                    {bagType === "👻" ? (
+                      <IonIcon
+                        key="ghostarrow"
+                        icon={arrowUpSharp}
+                        className="tw-absolute tw-text-xs tw-bottom-0 tw-right-0 tw-translate-x-1 tw-translate-y-1"
+                      />
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

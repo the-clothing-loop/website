@@ -13,11 +13,11 @@ import (
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	Faker "github.com/jaswdr/faker"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/guregu/null.v3"
-	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
 
@@ -75,9 +75,9 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	if o.OverrideLongitude != nil {
 		longitude = *o.OverrideLongitude
 	}
-	chains := []models.UserChain{}
+	chains := []sharedtypes.UserChain{}
 	if chainID != 0 {
-		chains = append(chains, models.UserChain{
+		chains = append(chains, sharedtypes.UserChain{
 			ChainID:      chainID,
 			IsChainAdmin: o.IsChainAdmin,
 			IsApproved:   !o.IsNotApproved,
@@ -86,10 +86,10 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 		})
 	}
 
-	userTokens := []models.UserToken{}
+	userTokens := []sharedtypes.UserToken{}
 	token = uuid.NewV4().String()
 	if o.IsNotTokenVerified {
-		userTokens = append(userTokens, models.UserToken{
+		userTokens = append(userTokens, sharedtypes.UserToken{
 			Token:    token,
 			Verified: !o.IsNotTokenVerified,
 		})
@@ -97,7 +97,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 
 	user = &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           zero.StringFrom(fmt.Sprintf("%s@%s", faker.UUID().V4(), lo.Ternary(o.OnlyEmailExampleCom, "example.com", faker.Internet().FreeEmailDomain()))),
+		Email:           lo.ToPtr(fmt.Sprintf("%s@%s", faker.UUID().V4(), lo.Ternary(o.OnlyEmailExampleCom, "example.com", faker.Internet().FreeEmailDomain()))),
 		IsEmailVerified: !o.IsNotEmailVerified,
 		IsRootAdmin:     o.IsRootAdmin,
 		Name:            "Fake " + faker.Person().Name(),
@@ -111,7 +111,7 @@ func MockUser(t *testing.T, db *gorm.DB, chainID uint, o MockChainAndUserOptions
 	}
 
 	if o.IsNotActive {
-		user.PausedUntil = null.NewTime(time.Now().Add(7*time.Hour), true)
+		user.PausedUntil = lo.ToPtr(time.Now().Add(7 * time.Hour))
 	}
 
 	if err := db.Create(user).Error; err != nil {
@@ -170,7 +170,7 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 		RoutePrivacy:     routePrivacy,
 		Sizes:            MockSizes(true),
 		Genders:          MockGenders(false),
-		UserChains:       []models.UserChain{},
+		UserChains:       []sharedtypes.UserChain{},
 	}
 
 	if err := db.Create(&chain).Error; err != nil {
@@ -189,8 +189,8 @@ func MockChainAndUser(t *testing.T, db *gorm.DB, o MockChainAndUserOptions) (cha
 	return chain, user, token
 }
 
-func MockAddUserToChain(t *testing.T, db *gorm.DB, chainID uint, user *models.User, o MockChainAndUserOptions) *models.UserChain {
-	uc := &models.UserChain{
+func MockAddUserToChain(t *testing.T, db *gorm.DB, chainID uint, user *models.User, o MockChainAndUserOptions) *sharedtypes.UserChain {
+	uc := &sharedtypes.UserChain{
 		UserID:       user.ID,
 		ChainID:      chainID,
 		IsChainAdmin: o.IsChainAdmin,
@@ -224,6 +224,8 @@ func MockSizes(zeroOrMore bool) []string {
 		models.SizeEnumMenMedium,
 		models.SizeEnumMenLarge,
 		models.SizeEnumMenPlusSize,
+		models.SizeEnumTeenGirls,
+		models.SizeEnumTeenBoys,
 	}, zeroOrMore)
 }
 func MockGenders(zeroOrMore bool) (genders []string) {
@@ -261,7 +263,7 @@ func MockEvent(t *testing.T, db *gorm.DB, userID, chainID uint) (event *models.E
 		Date:      time.Now().Add(time.Duration(faker.IntBetween(1, 20)) * time.Hour),
 		Genders:   MockGenders(false),
 		UserID:    userID,
-		ChainID:   zero.IntFrom(int64(chainID)),
+		ChainID:   &chainID,
 	}
 
 	if err := db.Create(&event).Error; err != nil {

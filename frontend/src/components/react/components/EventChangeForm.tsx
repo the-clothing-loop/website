@@ -42,6 +42,7 @@ const defaultValues: EventCreateBody = {
   date_end: null,
   genders: [],
   image_url: "",
+  image_delete_url: "",
 };
 
 const currencies = [
@@ -135,7 +136,7 @@ export default function EventChangeForm(props: {
     () => values.price_currency || defaultValues.price_currency!,
   );
   const [eventPriceType, _setEventPriceType] = useState<EventPriceType>(
-    () => values.price_type || defaultValues.price_type!,
+    () => (values.price_type || defaultValues.price_type!) as EventPriceType,
   );
   const isValidPrice = useMemo(
     () => validatePrice(eventPriceText),
@@ -178,17 +179,22 @@ export default function EventChangeForm(props: {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const res = await uploadImageFile(file, 800, EVENT_IMAGE_EXPIRATION);
-    console.log(res.data);
-    setValue("image_url", res.data.image);
-    setDeleteImageUrl(res.data.delete);
+    try {
+      const res = await uploadImageFile(file, 800, EVENT_IMAGE_EXPIRATION);
+      console.log(res.data);
+      setValue("image_url", res.data.image);
+      setDeleteImageUrl(res.data.delete);
+    } catch (err: any) {
+      console.error("Unable to upload image", err);
+      addToastError(GinParseErrors(t, err), err?.status);
+    }
   }
 
   async function onImageDelete() {
     if (deleteImageUrl) {
-      await deleteImage(deleteImageUrl);
-      setValue("image_url", "");
+      deleteImage(deleteImageUrl);
     }
+    setValue("image_url", "");
   }
 
   function submit(e: FormEvent) {
@@ -217,6 +223,13 @@ export default function EventChangeForm(props: {
       console.error("Unable to get loops", err);
       addToastError(GinParseErrors(t, err), err?.status);
     }
+  }
+
+  function setHttpsIfNeeded() {
+    if (values.link.startsWith("http")) return;
+    // loose regex test if link
+    if (!/^[^\/]*\.\w+\//.test(values.link)) return;
+    setValue("link", "https://" + values.link);
   }
 
   console.log("initial values: ", props.initialValues);
@@ -402,6 +415,7 @@ export default function EventChangeForm(props: {
               type="url"
               value={values.link}
               onChange={(e) => setValue("link", e.target.value)}
+              onBlur={setHttpsIfNeeded}
             />
           </div>
 

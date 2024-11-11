@@ -1,9 +1,5 @@
 import axios from "./axios";
-export interface UploadImageBody {
-  delete: string;
-  image: string;
-  thumb: string;
-}
+import { ImageUploadResponse } from "./typex2";
 
 function getBase64(file: File) {
   return new Promise<string>((resolve, reject) => {
@@ -34,7 +30,7 @@ export async function uploadImage(
   let params: { size: number; expiration?: number } = { size };
   if (expiration) params.expiration = expiration;
 
-  return await axios.post<UploadImageBody>("/v2/image", image64, {
+  return await axios.post<ImageUploadResponse>("/v2/image", image64, {
     params,
   });
 }

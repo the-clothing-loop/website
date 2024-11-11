@@ -1,43 +1,11 @@
 package models
 
 import (
-	"time"
-
 	"github.com/microcosm-cc/bluemonday"
-	"gopkg.in/guregu/null.v3"
-	"gopkg.in/guregu/null.v3/zero"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
-// ENUM(free, entrance, donation, perswap)
-type EventPriceType string
-
-type Event struct {
-	ID             uint               `json:"-"`
-	UID            string             `gorm:"uniqueIndex" json:"uid"`
-	Name           string             `json:"name"`
-	Description    string             `json:"description"`
-	Latitude       float64            `json:"latitude"`
-	Longitude      float64            `json:"longitude"`
-	Address        string             `json:"address"`
-	PriceValue     float64            `json:"price_value"`
-	PriceCurrency  zero.String        `json:"price_currency"`
-	PriceType      NullEventPriceType `json:"price_type"`
-	Link           string             `json:"link"`
-	Date           time.Time          `json:"date"`
-	DateEnd        null.Time          `json:"date_end"`
-	Genders        []string           `gorm:"serializer:json" json:"genders"`
-	ChainID        zero.Int           `json:"-"`
-	ChainUID       zero.String        `json:"chain_uid" gorm:"-:migration;<-:false"`
-	UserID         uint               `json:"-"`
-	CreatedAt      time.Time          `json:"-"`
-	UpdatedAt      time.Time          `json:"-"`
-	UserUID        zero.String        `json:"user_uid" gorm:"-:migration;<-:false"`
-	UserName       zero.String        `json:"user_name" gorm:"-:migration;<-:false"`
-	UserEmail      zero.String        `json:"user_email" gorm:"-:migration;<-:false"`
-	ImageUrl       string             `json:"image_url"`
-	ImageDeleteUrl string             `json:"-"`
-	ChainName      zero.String        `json:"chain_name" gorm:"-:migration;<-:false"`
-}
+type Event sharedtypes.Event
 
 const EventGetSql = `SELECT
 events.id                    AS id,

@@ -41,18 +41,7 @@ export default function UserEdit() {
     if (!userUID) return;
     (async () => {
       try {
-        let userUpdateBody: UserUpdateBody = {
-          user_uid: userUID,
-          name: values.name,
-          phone_number: values.phone,
-          newsletter: values.newsletter,
-          address: values.address,
-          sizes: values.sizes,
-        };
-        if (values.latitude && values.longitude) {
-          userUpdateBody.latitude = values.latitude;
-          userUpdateBody.longitude = values.longitude;
-        }
+        let userUpdateBody: UserUpdateBody = { ...values };
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.info(userUpdateBody);
 

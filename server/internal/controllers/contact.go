@@ -1,14 +1,13 @@
 package controllers
 
 import (
-	"errors"
-	"fmt"
 	"log/slog"
 	"net/http"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,11 +15,7 @@ import (
 func ContactNewsletter(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Name      string `json:"name" binding:"required"`
-		Email     string `json:"email" binding:"required,email"`
-		Subscribe bool   `json:"subscribe"`
-	}
+	var body sharedtypes.ContactNewsletterRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -63,34 +58,23 @@ func ContactNewsletter(c *gin.Context) {
 func ContactMail(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Name     string `json:"name" binding:"required"`
-		Email    string `json:"email" binding:"required,email"`
-		Message  string `json:"message" binding:"required"`
-		Honeypot *bool  `json:"accept"`
-	}
+	var body sharedtypes.ContactMailRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	if !(body.Honeypot != nil && !*body.Honeypot) {
-		if app.Config.ENV == app.EnvEnumDevelopment {
-			fmt.Println("Honeypot activated")
-		}
+
+	err := views.EmailContactReceived(db, body.Name, body.Email, body.Message)
+	if err != nil {
+		slog.Error("Unable to send email", "err", err)
+		c.String(http.StatusInternalServerError, "Unable to send email")
 		return
 	}
 
-	err2 := views.EmailContactReceived(db, body.Name, body.Email, body.Message)
-	if err2 != nil {
-		slog.Error("Unable to send email", "err", err2)
-	}
-
-	err := views.EmailContactConfirmation(c, db, body.Name, body.Email, body.Message)
+	err = views.EmailContactConfirmation(c, db, body.Name, body.Email, body.Message)
 	if err != nil {
 		slog.Error("Unable to send email", "err", err)
-	}
-
-	if err2 != nil || err != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Unable to send email"))
+		c.String(http.StatusInternalServerError, "Unable to send email")
+		return
 	}
 }

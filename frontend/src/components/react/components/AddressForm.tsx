@@ -18,20 +18,13 @@ import {
 import { isValidPhoneNumber } from "react-phone-number-input/max";
 import { $authUser } from "../../../stores/auth";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import { CoordsFromMapbox } from "../util/maps";
 import { useStore } from "@nanostores/react";
 import useLocalizePath from "../util/localize_path.hooks";
+import type { UserCreateRequest } from "../../../api/typex2";
+import { CoordsFromMapbox } from "../util/maps";
 
-export interface ValuesForm {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  sizes: string[];
-  newsletter: boolean;
-  latitude: number | undefined;
-  longitude: number | undefined;
-}
+export type ValuesForm = UserCreateRequest;
+
 const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY;
 
 export default function AddressForm(props: {
@@ -50,13 +43,13 @@ export default function AddressForm(props: {
   const authUser = useStore($authUser);
   const [values, setValue, setValues] = useForm<ValuesForm>({
     name: "",
-    phone: "",
+    phone_number: "",
     email: "",
     sizes: [] as string[],
     address: "",
     newsletter: false,
-    latitude: undefined,
-    longitude: undefined,
+    latitude: 0,
+    longitude: 0,
   });
   const [address, setAddress] = useForm({
     street: "",
@@ -87,13 +80,13 @@ export default function AddressForm(props: {
           const user = userReq.data;
           setValues({
             name: user.name,
-            phone: user.phone_number,
-            email: user.email,
+            phone_number: user.phone_number,
+            email: user.email!,
             sizes: user.sizes,
             address: user.address,
             newsletter: hasNewsletterReq.data,
-            latitude: user.latitude,
-            longitude: user.longitude,
+            latitude: 0,
+            longitude: 0,
           });
         } catch (error) {
           console.warn(error);
@@ -116,7 +109,7 @@ export default function AddressForm(props: {
     e.preventDefault();
 
     (async () => {
-      if (!isValidPhoneNumber(values.phone)) {
+      if (!isValidPhoneNumber(values.phone_number)) {
         addToastError(t("enterValidPhoneNumberWithCountryCode"), 400);
         return;
       }
@@ -232,8 +225,8 @@ export default function AddressForm(props: {
         <PhoneFormField
           required
           min={3}
-          value={values.phone}
-          onChange={(e) => setValue("phone", e)}
+          value={values.phone_number}
+          onChange={(e) => setValue("phone_number", e)}
         />
         {!authUser ? (
           <TextForm

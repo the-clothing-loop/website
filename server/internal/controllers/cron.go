@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/OneSignal/onesignal-go-api"
 	"github.com/go-playground/validator/v10"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
@@ -234,9 +233,7 @@ AND b.last_notified_at IS NULL
 		for i := range *res {
 			item := (*res)[i]
 			slog.Info("Create notification", "user", item.UserUID, "holding_bag", item.BagNumber)
-			app.OneSignalCreateNotification(db, []string{item.UserUID}, *views.Notifications[views.NotificationEnumTitleBagTooOld], onesignal.StringMap{
-				En: onesignal.PtrString(item.BagNumber),
-			})
+			app.OneSignalCreateNotification(db, []string{item.UserUID}, *views.Notifications[views.NotificationEnumTitleBagTooOld], app.OneSignalEllipsisContent(item.BagNumber))
 
 			bagIDs = append(bagIDs, item.BagID)
 		}

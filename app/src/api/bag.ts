@@ -1,4 +1,5 @@
-import type { Bag, UID } from "./types";
+import type { UID } from "./types";
+import type { Bag } from "./typex2";
 import axios from "./axios";
 
 const regxBag = /^(\d+)/;

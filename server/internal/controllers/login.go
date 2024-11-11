@@ -12,20 +12,16 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
-	"gopkg.in/guregu/null.v3/zero"
 )
 
 func LoginEmail(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Email    string `binding:"required,email" json:"email"`
-		IsApp    bool   `json:"app"`
-		ChainUID string `json:"chain_uid" binding:"omitempty,uuid"`
-	}
+	var body sharedtypes.LoginEmailRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, "Email required")
 		return
@@ -48,7 +44,7 @@ func LoginEmail(c *gin.Context) {
 		return
 	}
 
-	err = views.EmailLoginVerification(c, db, user.Name, user.Email.String, token, body.IsApp, body.ChainUID)
+	err = views.EmailLoginVerification(c, db, user.Name, *user.Email, token, body.IsApp, body.ChainUID)
 	if err != nil {
 		slog.Error("Unable to send email", "err", err)
 		c.String(http.StatusInternalServerError, "Unable to send email")
@@ -87,7 +83,7 @@ func LoginValidate(c *gin.Context) {
 	}
 
 	// Is the first time verifying the user account
-	if user.Email.Valid && !user.IsEmailVerified {
+	if user.Email != nil && !user.IsEmailVerified {
 		db.Exec(`UPDATE chains SET published = TRUE WHERE id IN (
 			SELECT chain_id FROM user_chains WHERE user_id = ? AND is_chain_admin = TRUE
 	   )`, user.ID)
@@ -131,7 +127,7 @@ func LoginValidate(c *gin.Context) {
 			return
 		}
 		if !found {
-			db.Create(&models.UserChain{
+			db.Create(&sharedtypes.UserChain{
 				UserID:       user.ID,
 				ChainID:      chainID,
 				IsChainAdmin: false,
@@ -159,10 +155,7 @@ func LoginValidate(c *gin.Context) {
 func RegisterChainAdmin(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Chain ChainCreateRequestBody `json:"chain" binding:"required"`
-		User  UserCreateRequestBody  `json:"user" binding:"required"`
-	}
+	var body sharedtypes.RegisterChainAdminRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -208,7 +201,7 @@ func RegisterChainAdmin(c *gin.Context) {
 	}
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           zero.StringFrom(body.User.Email),
+		Email:           &(body.User.Email),
 		IsEmailVerified: false,
 		IsRootAdmin:     false,
 		Name:            body.User.Name,
@@ -225,7 +218,7 @@ func RegisterChainAdmin(c *gin.Context) {
 		c.String(http.StatusConflict, "User already exists")
 		return
 	}
-	chain.UserChains = []models.UserChain{{
+	chain.UserChains = []sharedtypes.UserChain{{
 		UserID:       user.ID,
 		IsChainAdmin: true,
 		IsApproved:   true,
@@ -245,16 +238,13 @@ func RegisterChainAdmin(c *gin.Context) {
 		return
 	}
 
-	go views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token, chain.UID)
+	go views.EmailRegisterVerification(c, db, user.Name, *user.Email, token, chain.UID)
 }
 
 func RegisterBasicUser(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		ChainUID string                `json:"chain_uid" binding:"omitempty,uuid"`
-		User     UserCreateRequestBody `json:"user" binding:"required"`
-	}
+	var body sharedtypes.RegisterBasicUserRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -280,7 +270,7 @@ func RegisterBasicUser(c *gin.Context) {
 
 	user := &models.User{
 		UID:             uuid.NewV4().String(),
-		Email:           zero.StringFrom(body.User.Email),
+		Email:           &(body.User.Email),
 		IsEmailVerified: false,
 		IsRootAdmin:     false,
 		Name:            body.User.Name,
@@ -296,7 +286,7 @@ func RegisterBasicUser(c *gin.Context) {
 		return
 	}
 	if body.ChainUID != "" {
-		db.Create(&models.UserChain{
+		db.Create(&sharedtypes.UserChain{
 			UserID:       user.ID,
 			ChainID:      chainID,
 			IsChainAdmin: false,
@@ -318,7 +308,7 @@ func RegisterBasicUser(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Unable to create token")
 		return
 	}
-	views.EmailRegisterVerification(c, db, user.Name, user.Email.String, token, body.ChainUID)
+	views.EmailRegisterVerification(c, db, user.Name, *user.Email, token, body.ChainUID)
 }
 
 func Logout(c *gin.Context) {
@@ -356,10 +346,7 @@ func RefreshToken(c *gin.Context) {
 func LoginSuperAsGenerateLink(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		UserUID string `json:"user_uid" binding:"required,uuid"`
-		IsApp   bool   `json:"is_app"`
-	}
+	var body sharedtypes.LoginSuperAsGenerateLinkRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return

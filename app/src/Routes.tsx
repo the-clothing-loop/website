@@ -52,28 +52,30 @@ import "./theme/overrides.css";
 import { IsAuthenticated, StoreContext } from "./stores/Store";
 import { useContext, useEffect, useMemo } from "react";
 
+import { useTranslation } from "react-i18next";
+import dayjs from "./dayjs";
+import { OneSignalInitCap } from "./onesignal";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import BagSVG from "./components/Bags/Svg";
+import IsPaused from "./utils/is_paused";
+import toastError from "../toastError";
+
+// routes
 import HelpList from "./pages/HelpList";
+import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import OpenSource from "./pages/OpenSource";
 import HelpItem from "./pages/HelpItem";
-import Login from "./pages/Login";
-import Settings from "./pages/Settings";
 import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
 import Chat from "./pages/Chat";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import { OnboardingPageOne, OnboardingPageTwo } from "./pages/Onboarding";
 
-import { useTranslation } from "react-i18next";
-import dayjs from "./dayjs";
-import { OneSignalInitCap } from "./onesignal";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-import OpenSource from "./pages/OpenSource";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
-import BagSVG from "./components/Bags/Svg";
-import IsPaused from "./utils/is_paused";
-import toastError from "../toastError";
 import { ChatContext } from "./stores/Chat";
+import Login from "./pages/Login";
+import Settings from "./pages/Settings";
 
 SplashScreen.show({
   autoHide: true,

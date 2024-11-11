@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/controllers"
-	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func TestAddUser(t *testing.T) {
@@ -44,11 +44,11 @@ func TestAddUser(t *testing.T) {
 	assert.Equal(t, token, tokenReq)
 	assert.Equalf(t, 200, result.Response.StatusCode, "body: %s auth header: %v", result.Body, c.Request.Header.Get("Authorization"))
 
-	uc := &models.UserChain{}
+	uc := &sharedtypes.UserChain{}
 	db.Raw("SELECT * FROM user_chains WHERE user_id = ? AND chain_id = ? LIMIT 1", admin.ID, chain.ID).Scan(&uc)
 	assert.NotEmpty(t, uc, "chainUser of admin chain_id: %d user_id: %d not found", chain.ID, admin.ID)
 
-	uc = &models.UserChain{}
+	uc = &sharedtypes.UserChain{}
 	db.Raw("SELECT * FROM user_chains WHERE user_id = ? AND chain_id = ? LIMIT 1", participant.ID, chain.ID).Scan(&uc)
 	assert.NotEmpty(t, uc, "chainUser of participant chain_id: %d user_id: %d not found", chain.ID, participant.ID)
 }

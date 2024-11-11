@@ -9,7 +9,7 @@ import (
 
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/pkg/ring_ext"
-	"gopkg.in/guregu/null.v3"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gopkg.in/guregu/null.v3/zero"
 
 	"gorm.io/gorm"
@@ -18,41 +18,10 @@ import (
 var ErrUserNotFound = errors.New("User not found")
 var ErrAddUserChainsToObject = errors.New("Unable to add associated loops to user")
 
-type User struct {
-	ID                    uint            `json:"-"`
-	UID                   string          `json:"uid" gorm:"uniqueIndex"`
-	FID                   zero.String     `json:"-" gorm:"column:fid"`
-	Email                 zero.String     `json:"email" gorm:"unique"`
-	IsEmailVerified       bool            `json:"is_email_verified"`
-	IsRootAdmin           bool            `json:"is_root_admin"`
-	PausedUntil           null.Time       `json:"paused_until"`
-	Name                  string          `json:"name"`
-	PhoneNumber           string          `json:"phone_number"`
-	Address               string          `json:"address"`
-	Sizes                 []string        `json:"sizes" gorm:"serializer:json"`
-	LastSignedInAt        zero.Time       `json:"-"`
-	LastPokeAt            zero.Time       `json:"-"`
-	UserToken             []UserToken     `json:"-"`
-	Event                 []Event         `json:"-"`
-	Chains                []UserChain     `json:"chains"`
-	UserOnesignal         []UserOnesignal `json:"-"`
-	CreatedAt             time.Time       `json:"-"`
-	UpdatedAt             time.Time       `json:"-"`
-	I18n                  string          `json:"i18n"`
-	JwtTokenPepper        int             `json:"-" `
-	Latitude              float64         `json:"-"`
-	Longitude             float64         `json:"-"`
-	AcceptedTOH           bool            `json:"-"`
-	AcceptedDPA           bool            `json:"-"`
-	AcceptedTOHJSON       *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
-	AcceptedDPAJSON       *bool           `json:"accepted_dpa,omitempty" gorm:"-:migration;<-:false"`
-	NotificationChainUIDs []string        `json:"notification_chain_uids,omitempty" gorm:"-"`
-	ChatUserID            null.String     `json:"-"`
-	ChatPass              null.String     `json:"-"`
-}
+type User sharedtypes.User
 
 func (u *User) AddUserChainsToObject(db *gorm.DB) error {
-	userChains := []UserChain{}
+	userChains := []sharedtypes.UserChain{}
 	err := db.Raw(`
 SELECT
 	user_chains.id             AS id,
@@ -154,11 +123,11 @@ func (u *User) CountAttachedBags(db *gorm.DB) (int, error) {
 }
 
 func (u *User) LastPokeTooRecent() bool {
-	if !u.LastPokeAt.Valid {
+	if u.LastPokeAt == nil {
 		return false
 	}
 
-	return !u.LastPokeAt.Time.Before(time.Now().Add(-24 * 7 * time.Hour))
+	return !u.LastPokeAt.Before(time.Now().Add(-24 * 7 * time.Hour))
 }
 
 func (u *User) SetLastPokeToNow(db *gorm.DB) error {
@@ -334,11 +303,11 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 		}
 
 		isCurrentlyPaused := false
-		if u.PausedUntil.Valid {
-			isCurrentlyPaused = u.PausedUntil.Time.After(time.Now())
+		if u.PausedUntil != nil {
+			isCurrentlyPaused = u.PausedUntil.After(time.Now())
 		}
 		if !isCurrentlyPaused {
-			uc, ok := lo.Find(u.Chains, func(uc UserChain) bool { return uc.UserID == u.ID && uc.ChainID == chain.ID })
+			uc, ok := lo.Find(u.Chains, func(uc sharedtypes.UserChain) bool { return uc.UserID == u.ID && uc.ChainID == chain.ID })
 			if ok && uc.IsPaused {
 				isCurrentlyPaused = true
 			}
@@ -405,7 +374,7 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 
 func hideUserInformation(isChainAdmin bool, user *User) {
 	if !isChainAdmin {
-		user.Email = zero.StringFrom("***")
+		user.Email = lo.ToPtr("***")
 		user.PhoneNumber = "***"
 	}
 	user.Address = "***"

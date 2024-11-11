@@ -1,9 +1,9 @@
 import { IonIcon, IonList } from "@ionic/react";
 import AddressListItem from "../AddressList/AddressListItem";
-import { Bag, User } from "../../api/types";
 import { useMemo } from "react";
 import { eyeOffOutline } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
+import { Bag, User } from "../../api/typex2";
 
 const pausedIndex = 4;
 const meIndex = 2;
@@ -27,7 +27,7 @@ export default function RoutePrivacyExample(props: {
       name,
       email: name + "@example.com",
       phone_number: "0612345678",
-      email_verified: true,
+      is_email_verified: true,
       chains: [] as User["chains"],
       address: t("nAddress", { name }),
       sizes: [],
@@ -43,7 +43,7 @@ export default function RoutePrivacyExample(props: {
       name: props.authUserName,
       email: props.authUserName + "@example.com",
       phone_number: "0612345678",
-      email_verified: true,
+      is_email_verified: true,
       chains: [] as User["chains"],
       address: t("nAddress", { name: props.authUserName }),
       sizes: [],

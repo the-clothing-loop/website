@@ -78,7 +78,7 @@ export default function Counters() {
                 {new Intl.NumberFormat().format(1197375)}
               </span>
 
-              <span className="text-lg ms-1">&nbsp;{t("nCo2")}</span>
+              <span className="text-lg ms-1">&nbsp;{t("lKg")}</span>
             </span>
           </div>
           <div className="opacity-80">{t("co2EmissionAvoided")}</div>

@@ -11,6 +11,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gorm.io/gorm"
 )
 
@@ -49,7 +50,7 @@ func OtpCreate(db *gorm.DB, userID uint) (string, error) {
 	token := string(tokenB)
 
 	// set token in database
-	res := db.Create(&models.UserToken{
+	res := db.Create(&sharedtypes.UserToken{
 		Token:    token,
 		Verified: false,
 		UserID:   userID,
@@ -64,7 +65,7 @@ func OtpCreate(db *gorm.DB, userID uint) (string, error) {
 // Returns the user before it was verified
 func OtpVerify(db *gorm.DB, userEmail, otp string) (*models.User, string, error) {
 	// check if otp is valid
-	userToken := &models.UserToken{}
+	userToken := &sharedtypes.UserToken{}
 	db.Raw(`
 SELECT ut.* FROM user_tokens AS ut
 JOIN users AS u ON ut.user_id = u.id
@@ -97,12 +98,12 @@ WHERE id = ?
 		}
 	}
 
-	if user.Email.Valid {
+	if user.Email != nil {
 		if res := db.Exec(`
 UPDATE newsletters
 SET verified = TRUE
 WHERE email = ?
-	`, user.Email.String); res.Error != nil {
+	`, user.Email); res.Error != nil {
 			return nil, "", fmt.Errorf("Unable to allow sending newsletters to user")
 		}
 	}
@@ -146,9 +147,9 @@ func AuthenticateToken(db *gorm.DB, tokenString string) (*models.User, bool, err
 	}
 
 	shouldUpdateLastSignedInAt := true
-	if user.LastSignedInAt.Valid {
+	if user.LastSignedInAt != nil {
 		// if user last signed in earlier than an hour ago, we should update last signed in value
-		shouldUpdateLastSignedInAt = user.LastSignedInAt.Time.Before(time.Now().Add(time.Duration(-1 * time.Hour)))
+		shouldUpdateLastSignedInAt = user.LastSignedInAt.Before(time.Now().Add(time.Duration(-1 * time.Hour)))
 	}
 	if shouldUpdateLastSignedInAt {
 		db.Exec(`
