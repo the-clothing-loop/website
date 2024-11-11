@@ -32,7 +32,7 @@ func ChatPatchUser(c *gin.Context) {
 		httperror.New(http.StatusInternalServerError, err).StatusWithError(c)
 		return
 	}
-	if user.ChatPass.String == "" {
+	if user.ChatPass == nil {
 		c.AbortWithError(http.StatusTeapot, fmt.Errorf("password is not set"))
 		return
 	}
@@ -41,7 +41,7 @@ func ChatPatchUser(c *gin.Context) {
 	if len(chain.ChatRoomIDs) == 0 {
 		_, isChainAdmin := user.IsPartOfChain(chain.UID)
 		if isChainAdmin {
-			_, err := services.ChatCreateChannel(db, c.Request.Context(), chain, user.ChatUserID.String, "General", "#fff")
+			_, err := services.ChatCreateChannel(db, c.Request.Context(), chain, *user.ChatUserID, "General", "#fff")
 			if err != nil {
 				c.String(http.StatusInternalServerError, err.Error())
 				return
@@ -51,8 +51,8 @@ func ChatPatchUser(c *gin.Context) {
 
 	json := gin.H{
 		"chat_team": app.ChatTeamId,
-		"chat_user": user.ChatUserID.String,
-		"chat_pass": user.ChatPass.String,
+		"chat_user": *user.ChatUserID,
+		"chat_pass": *user.ChatPass,
 	}
 	c.JSON(http.StatusOK, json)
 }
@@ -75,7 +75,7 @@ func ChatCreateChannel(c *gin.Context) {
 		return
 	}
 
-	mmChannel, err := services.ChatCreateChannel(db, c.Request.Context(), chain, user.ChatUserID.String, body.Name, body.Color)
+	mmChannel, err := services.ChatCreateChannel(db, c.Request.Context(), chain, *user.ChatUserID, body.Name, body.Color)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return

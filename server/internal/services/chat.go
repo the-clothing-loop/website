@@ -12,7 +12,6 @@ import (
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"gopkg.in/guregu/null.v3"
 	"gorm.io/gorm"
 )
 
@@ -21,9 +20,9 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 	var mmUser *model.User
 	var err error
 	// check if user exists properly
-	if user.ChatUserID.Valid {
+	if user.ChatUserID != nil {
 		// get the chat user
-		mmUser, _, err = app.ChatClient.GetUser(ctx, user.ChatUserID.String, "")
+		mmUser, _, err = app.ChatClient.GetUser(ctx, *user.ChatUserID, "")
 		if err == nil {
 			slog.Info("chat user exists", "id", mmUser.Id)
 		}
@@ -35,11 +34,14 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 		username := user.UID
 		p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Upper})
 		password := string(p)
+		if user.Email == nil {
+			return fmt.Errorf("Email is required")
+		}
 		mmUser, _, err = app.ChatClient.CreateUser(ctx, &model.User{
 			Nickname: user.Name,
 			Username: username,
 			Password: password,
-			Email:    user.Email.String,
+			Email:    *user.Email,
 		})
 		if err != nil {
 			return err
@@ -51,11 +53,11 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 		}
 
 		// Update database
-		user.ChatUserID = null.StringFrom(mmUser.Id)
-		user.ChatPass = null.StringFrom(password)
+		user.ChatUserID = &mmUser.Id
+		user.ChatPass = &password
 		db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`,
-			user.ChatUserID.String,
-			user.ChatPass.String,
+			*user.ChatUserID,
+			*user.ChatPass,
 			user.ID)
 	}
 
@@ -141,7 +143,7 @@ func chatChannelSetMemberRole(ctx context.Context, mmChannelId string, member *m
 }
 
 func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user *models.User, isChainAdmin bool, mmChannelId string) error {
-	if user.ChatUserID.String == "" {
+	if user.ChatUserID == nil {
 		return fmt.Errorf("You must be registered on our chat server before joining a room")
 	}
 
@@ -150,10 +152,10 @@ func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user
 	}
 
 	// Check if room already contains user
-	mmChannelMembers, _, _ := app.ChatClient.GetChannelMembersByIds(ctx, mmChannelId, []string{user.ChatUserID.String})
+	mmChannelMembers, _, _ := app.ChatClient.GetChannelMembersByIds(ctx, mmChannelId, []string{*user.ChatUserID})
 	if len(mmChannelMembers) != 0 {
 		member, ok := lo.Find(mmChannelMembers, func(member model.ChannelMember) bool {
-			return member.UserId == user.ChatUserID.String
+			return member.UserId == *user.ChatUserID
 		})
 		if ok {
 			chatChannelSetMemberRole(ctx, mmChannelId, &member, isChainAdmin)
@@ -162,7 +164,7 @@ func ChatJoinChannel(db *gorm.DB, ctx context.Context, chain *models.Chain, user
 	}
 
 	// Add user if not already added to chat room
-	err := chatChannelAddUser(ctx, mmChannelId, user.ChatUserID.String, isChainAdmin)
+	err := chatChannelAddUser(ctx, mmChannelId, *user.ChatUserID, isChainAdmin)
 	if err != nil {
 		return err
 	}
