@@ -41,7 +41,10 @@ export default function UserEdit() {
     if (!userUID) return;
     (async () => {
       try {
-        let userUpdateBody: UserUpdateBody = { ...values };
+        let userUpdateBody: UserUpdateBody = {
+          user_uid: userUID,
+          ...values,
+        };
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.info(userUpdateBody);
 
