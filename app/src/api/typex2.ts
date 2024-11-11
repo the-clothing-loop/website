@@ -74,6 +74,7 @@ export interface ChainResponse {
 	is_app_disabled?: (boolean | null)
 	route_privacy?: (number | null)
 	allow_map?: (boolean | null)
+	chat_room_ids?: string[]
 }
 
 export interface ChainUpdateRequest {
