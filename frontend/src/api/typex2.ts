@@ -99,6 +99,35 @@ export interface ChainUpdateRequest {
 	is_app_disabled?: (boolean | null)
 }
 
+export interface ChatCreateChannelRequest {
+	chain_uid: string
+	name: string
+	color: string
+}
+
+export interface ChatCreateChannelResponse {
+	chat_channel: string
+}
+
+export interface ChatDeleteChannelRequest {
+	chain_uid: string
+	channel_id: string
+}
+
+export interface ChatJoinChannelsRequest {
+	chain_uid: string
+}
+
+export interface ChatPatchUserRequest {
+	chain_uid: string
+}
+
+export interface ChatPatchUserResponse {
+	chat_team: string
+	chat_user: string
+	chat_pass: string
+}
+
 export interface ContactMailRequest {
 	name: string
 	email: string

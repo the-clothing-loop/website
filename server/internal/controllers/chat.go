@@ -9,14 +9,13 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/pkg/httperror"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func ChatPatchUser(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-	}
+	var body sharedtypes.ChatPatchUserRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -49,22 +48,17 @@ func ChatPatchUser(c *gin.Context) {
 		}
 	}
 
-	json := gin.H{
-		"chat_team": app.ChatTeamId,
-		"chat_user": *user.ChatUserID,
-		"chat_pass": *user.ChatPass,
-	}
-	c.JSON(http.StatusOK, json)
+	c.JSON(http.StatusOK, sharedtypes.ChatPatchUserResponse{
+		ChatTeam: app.ChatTeamId,
+		ChatUser: *user.ChatUserID,
+		ChatPass: *user.ChatPass,
+	})
 }
 
 func ChatCreateChannel(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-		Name     string `json:"name" binding:"required"`
-		Color    string `json:"color" binding:"required,hexcolor"`
-	}
+	var body sharedtypes.ChatCreateChannelRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -81,18 +75,15 @@ func ChatCreateChannel(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"chat_channel": mmChannel.Id,
+	c.JSON(http.StatusOK, sharedtypes.ChatCreateChannelResponse{
+		ChatChannel: mmChannel.Id,
 	})
 }
 
 func ChatDeleteChannel(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		ChainUID  string `json:"chain_uid" binding:"required,uuid"`
-		ChannelID string `json:"channel_id" binding:"required"`
-	}
+	var body sharedtypes.ChatDeleteChannelRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -115,9 +106,7 @@ func ChatDeleteChannel(c *gin.Context) {
 func ChatJoinChannels(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		ChainUID string `json:"chain_uid" binding:"required,uuid"`
-	}
+	var body sharedtypes.ChatJoinChannelsRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -129,7 +118,7 @@ func ChatJoinChannels(c *gin.Context) {
 	}
 
 	_, isChainAdmin := user.IsPartOfChain(chain.UID)
-	if !isChainAdmin && len(chain.ChatRoomIDs) == 0 {
+	if chain.IsAppDisabled && !isChainAdmin {
 		c.String(http.StatusExpectationFailed, "The Loop host must first enable chat")
 		return
 	}

@@ -24,7 +24,7 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 		// get the chat user
 		mmUser, _, err = app.ChatClient.GetUser(ctx, *user.ChatUserID, "")
 		if err == nil {
-			slog.Info("chat user exists", "id", mmUser.Id)
+			slog.Info("chat user exists", "id", mmUser.Id, "err", err)
 		}
 	}
 

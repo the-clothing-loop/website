@@ -409,13 +409,15 @@ export default function Chat() {
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          <IonButtons>
-            <IonButton
-              onClick={() => UseChatCreateEdit.modal.current?.present()}
-            >
-              {t("edit")}
-            </IonButton>
-          </IonButtons>
+          {ChatStore.state.client ? (
+            <IonButtons>
+              <IonButton
+                onClick={() => UseChatCreateEdit.modal.current?.present()}
+              >
+                {t("edit")}
+              </IonButton>
+            </IonButtons>
+          ) : null}
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
           </IonTitle>
@@ -423,7 +425,7 @@ export default function Chat() {
       </IonHeader>
       <IonContent
         fullscreen
-        class={isThemeDefault ? "tw-bg-purple-contrast" : ""}
+        class={isThemeDefault ? "tw-bg-light-contrast" : ""}
       >
         <ChatCreateEdit
           {...UseChatCreateEdit}

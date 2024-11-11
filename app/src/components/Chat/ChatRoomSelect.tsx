@@ -45,10 +45,10 @@ export default function ChatRoomSelect({
   );
 
   return (
-    <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-purple-shade">
+    <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-light">
       <button
         className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
-          selectedOldBulkyItems ? " tw-bg-[#fff]/20" : "",
+          selectedOldBulkyItems ? " tw-bg-[#fff]/40" : "",
         )}
         key="oldBulkyItems"
         onClick={onSelectOldBulkyItems}
@@ -82,7 +82,7 @@ export default function ChatRoomSelect({
         return (
           <button
             className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
-              isSelected ? " tw-bg-[#fff]/20" : "",
+              isSelected ? " tw-bg-[#fff]/40" : "",
             )}
             key={cr.id}
             {...(isSelected
