@@ -25,9 +25,11 @@ export default function AdminDashboard() {
     [authUser],
   );
   const reasonsForLeaving = useRef<string[]>([]);
+  const otherExplanation = useRef<string>();
 
-  const handleSelectReasons = (selectedReasons: string[]) => {
+  const handleSelectReasons = (selectedReasons: string[], other?: string) => {
     reasonsForLeaving.current = selectedReasons;
+    otherExplanation.current = other;
   };
 
   function deleteClicked() {
@@ -64,14 +66,20 @@ export default function AdminDashboard() {
           text: t("delete"),
           type: "error",
           fn: () => {
-            userPurge(authUser!.uid, reasonsForLeaving.current)
-              .then(() => {
-                window.location.href = localizePath("/users/logout");
-              })
-              .catch((err: any) => {
-                console.error("Error purging user:", err);
-                addToastError(GinParseErrors(t, err), err?.status);
-              });
+            otherExplanation.current
+              ? userPurge(
+                  authUser!.uid,
+                  reasonsForLeaving.current,
+                  otherExplanation.current,
+                )
+              : userPurge(authUser!.uid, reasonsForLeaving.current)
+                  .then(() => {
+                    window.location.href = localizePath("/users/logout");
+                  })
+                  .catch((err: any) => {
+                    console.error("Error purging user:", err);
+                    addToastError(GinParseErrors(t, err), err?.status);
+                  });
           },
         },
       ],

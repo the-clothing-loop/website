@@ -327,6 +327,7 @@ func UserPurge(c *gin.Context) {
 	var query struct {
 		UserUID           string   `form:"user_uid" binding:"required,uuid"`
 		ReasonsForLeaving []string `form:"reasons_for_leaving"`
+		OtherExplanation  string   `form:"other_explanation"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -387,9 +388,10 @@ HAVING COUNT(uc.id) = 1
 	fmt.Print("im here", query.ReasonsForLeaving)
 
 	deletedUser := models.DeletedUser{
-		Email:         user.Email.String,
-		UserCreatedAt: user.CreatedAt,
-		UserDeletedAt: time.Now(),
+		Email:            user.Email.String,
+		UserCreatedAt:    user.CreatedAt,
+		UserDeletedAt:    time.Now(),
+		OtherExplanation: query.OtherExplanation,
 	}
 	if ok := models.ValidateAllReasonsEnum(query.ReasonsForLeaving); !ok {
 		c.String(http.StatusBadRequest, models.ErrReasonInvalid.Error())

@@ -7,7 +7,7 @@ import { $authUser } from "../../../stores/auth";
 import { ReasonsForLeavingI18nKeys } from "../../../api/enums";
 
 interface DeleteModalProps {
-  onUpdateSelectedReasons: (selectedReasons: string[]) => void;
+  onUpdateSelectedReasons: (selectedReasons: string[], other?: string) => void;
 }
 
 export default function DeleteModal({
@@ -26,10 +26,13 @@ export default function DeleteModal({
   const moved = Object.keys(ReasonsForLeavingI18nKeys)[0];
   const notEnoughItemsILiked = Object.keys(ReasonsForLeavingI18nKeys)[1];
   const primaryOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(2, 6);
+  const other = Object.keys(ReasonsForLeavingI18nKeys)[6];
+  console.log(other);
   const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(7, 10);
   const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(
     10,
   );
+  const [otherExplanation, setOtherExplanation] = useState("");
 
   function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, checked } = event.target;
@@ -41,12 +44,6 @@ export default function DeleteModal({
     onUpdateSelectedReasons(updatedReasons);
   }
 
-  function showOtherTextFieldHandler(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    setShowOtherTextFieldArea(event.target.checked);
-    handleCheckboxChange(event);
-  }
   function showMovedOptionsHandler(event: React.ChangeEvent<HTMLInputElement>) {
     setShowMovedOptions(event.target.checked);
     handleCheckboxChange(event);
@@ -56,6 +53,19 @@ export default function DeleteModal({
   ) {
     setShowNotEnoughItemsOptions(event.target.checked);
     handleCheckboxChange(event);
+  }
+  function showOtherTextFieldHandler(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    setShowOtherTextFieldArea(event.target.checked);
+    handleCheckboxChange(event);
+  }
+  function handleOtherTextChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) {
+    const updatedOther = event.target.value;
+    setOtherExplanation(updatedOther);
+    onUpdateSelectedReasons(selectedReasons, updatedOther);
   }
   if (!authUser) return;
   const chainNames = authUser.is_root_admin
@@ -147,23 +157,30 @@ export default function DeleteModal({
               <label className="ml-2">{t(ReasonsForLeavingI18nKeys[r])}</label>
             </li>
           ))}
-          <li key="other" className="flex items-center mb-4">
+          <li key={other} className="flex items-center mb-4">
             <input
               type="checkbox"
               className="checkbox border-black"
-              name={"other"}
+              name={other}
+              id={other}
               onChange={(e) => showOtherTextFieldHandler(e)}
             />
-            <label className="ml-2">{t("other")}</label>
+            <label className="ml-2">
+              {t(ReasonsForLeavingI18nKeys[other])}
+            </label>
           </li>
           {showOtherTextFieldArea ? (
             <>
-              <li key="other_text" className="mx-7">
+              <li key="other_textarea" className="mx-7">
                 <label className="text-sm">
                   Please let us know why you've decided to leave the Clothing
                   Loop and if there's anything we could do to improve.
                 </label>
-                <textarea className="bg-grey-light w-full" />
+                <textarea
+                  className="bg-grey-light w-full"
+                  value={otherExplanation}
+                  onChange={handleOtherTextChange}
+                />
               </li>
             </>
           ) : null}
