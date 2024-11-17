@@ -387,9 +387,9 @@ HAVING COUNT(uc.id) = 1
 	fmt.Print("im here", query.ReasonsForLeaving)
 
 	deletedUser := models.DeletedUser{
-		Email:     user.Email.String,
-		CreatedAt: user.CreatedAt,
-		DeletedAt: time.Now(),
+		Email:         user.Email.String,
+		UserCreatedAt: user.CreatedAt,
+		UserDeletedAt: time.Now(),
 	}
 	if ok := models.ValidateAllReasonsEnum(query.ReasonsForLeaving); !ok {
 		c.String(http.StatusBadRequest, models.ErrReasonInvalid.Error())

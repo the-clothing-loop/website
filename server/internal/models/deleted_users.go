@@ -24,22 +24,22 @@ const (
 )
 
 type DeletedUser struct {
-	Email                 string
-	CreatedAt             time.Time `json:"-"`
-	DeletedAt             time.Time `json:"-"`
-	Moved                 bool
-	NotEnoughItemsILiked  bool
-	AddressTooFar         bool
-	TooTimeConsuming      bool
-	DoneSwapping          bool
-	DidntFitIn            bool
-	Other                 bool
-	PlanToJoinNewLoop     bool
-	PlanToStartNewLoop    bool
-	DontPlanToParticipate bool
-	QualityDidntMatch     bool
-	SizesDidntMatch       bool
-	StylesDidntMatch      bool
+	Email                   string
+	UserCreatedAt           time.Time `json:"-"`
+	UserDeletedAt           time.Time `json:"-"`
+	IsMoved                 bool
+	IsNotEnoughItemsILiked  bool
+	IsAddressTooFar         bool
+	IsTooTimeConsuming      bool
+	IsDoneSwapping          bool
+	IsDidntFitIn            bool
+	IsOther                 bool
+	IsPlanToJoinNewLoop     bool
+	IsPlanToStartNewLoop    bool
+	IsDontPlanToParticipate bool
+	IsQualityDidntMatch     bool
+	IsSizesDidntMatch       bool
+	IsStylesDidntMatch      bool
 }
 
 var ErrReasonInvalid = errors.New("Invalid gender enum")
@@ -62,31 +62,31 @@ func (d *DeletedUser) SetReasons(reasons []string) error {
 
 		switch reason {
 		case ReasonEnumMoved:
-			d.Moved = true
+			d.IsMoved = true
 		case ReasonEnumNotEnoughItemsILiked:
-			d.NotEnoughItemsILiked = true
+			d.IsNotEnoughItemsILiked = true
 		case ReasonEnumAddressTooFar:
-			d.AddressTooFar = true
+			d.IsAddressTooFar = true
 		case ReasonEnumTooTimeConsuming:
-			d.TooTimeConsuming = true
+			d.IsTooTimeConsuming = true
 		case ReasonEnumDoneSwapping:
-			d.DoneSwapping = true
+			d.IsDoneSwapping = true
 		case ReasonEnumDidntFitIn:
-			d.DidntFitIn = true
+			d.IsDidntFitIn = true
 		case ReasonEnumOther:
-			d.Other = true
+			d.IsOther = true
 		case ReasonEnumPlanToJoinNewLoop:
-			d.PlanToJoinNewLoop = true
+			d.IsPlanToJoinNewLoop = true
 		case ReasonEnumPlanToStartNewLoop:
-			d.PlanToStartNewLoop = true
+			d.IsPlanToStartNewLoop = true
 		case ReasonEnumDontPlanToParticipate:
-			d.DontPlanToParticipate = true
+			d.IsDontPlanToParticipate = true
 		case ReasonEnumQualityDidntMatch:
-			d.QualityDidntMatch = true
+			d.IsQualityDidntMatch = true
 		case ReasonEnumSizesDidntMatch:
-			d.SizesDidntMatch = true
+			d.IsSizesDidntMatch = true
 		case ReasonEnumStylesDidntMatch:
-			d.StylesDidntMatch = true
+			d.IsStylesDidntMatch = true
 		default:
 			return fmt.Errorf("Invalid reason: %s", reason)
 		}
