@@ -326,7 +326,7 @@ func UserPurge(c *gin.Context) {
 
 	var query struct {
 		UserUID           string   `form:"user_uid" binding:"required,uuid"`
-		ReasonsForLeaving []string `form:"reasons_for_leaving" binding:"required"`
+		ReasonsForLeaving []string `form:"reasons_for_leaving"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -391,11 +391,13 @@ HAVING COUNT(uc.id) = 1
 		CreatedAt: user.CreatedAt,
 		DeletedAt: time.Now(),
 	}
+	if ok := models.ValidateAllReasonsEnum(query.ReasonsForLeaving); !ok {
+		c.String(http.StatusBadRequest, models.ErrReasonInvalid.Error())
+		return
+	}
+
 	for _, reason := range query.ReasonsForLeaving {
 		reasons := strings.Split(reason, ",")
-		for _, r := range reasons {
-			fmt.Println("Processed reason:", r)
-		}
 		if err := deletedUser.SetReasons(reasons); err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			return
@@ -403,7 +405,7 @@ HAVING COUNT(uc.id) = 1
 	}
 
 	if err := db.Create(&deletedUser).Error; err != nil {
-		c.String(http.StatusInternalServerError, "Failed to save deletion reasons")
+		c.String(http.StatusInternalServerError, "Failed to add deleted user to database")
 		return
 	}
 	tx := db.Begin()
