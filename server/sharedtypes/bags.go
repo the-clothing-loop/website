@@ -11,7 +11,7 @@ type Bag struct {
 	UserChainID           uint       `json:"-"`
 	ChainUID              string     `json:"chain_uid" gorm:"-:migration;<-:false"`
 	UserUID               string     `json:"user_uid" gorm:"-:migration;<-:false"`
-	UpdatedAt             time.Time  `json:"updated_at"`
+	UpdatedAt             time.Time  `json:"updated_at" gorm:"autoUpdateTime:false"`
 	LastNotifiedAt        *time.Time `json:"-"`
 	LastUserEmailToUpdate string     `json:"-"`
 	LastUserDateToUpdate  string     `json:"-"`
