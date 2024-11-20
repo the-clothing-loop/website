@@ -39,7 +39,7 @@ test("test regx", () => {
 
   suts.split(",").forEach((sut, i) => {
     const match = regxBag.exec(sut);
-    const no = match?.at(1) ? parseInt(match[1]) : NaN;
+    const no = match?.[1] ? parseInt(match[1]) : NaN;
     expect(no).toEqual(expected[i]);
   });
 });
