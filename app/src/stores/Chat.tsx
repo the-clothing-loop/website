@@ -2,6 +2,8 @@ import { Client4, WebSocketClient } from "@mattermost/client";
 import { createContext, PropsWithChildren, useState } from "react";
 import { UID } from "../api/types";
 import * as apiChat from "../api/chat";
+import { Sleep } from "../utils/sleep";
+import { UserProfile } from "@mattermost/types/users";
 
 type State = {
   chat_team: string;
@@ -9,6 +11,7 @@ type State = {
   chat_pass: string;
   client: Client4;
   socket: WebSocketClient;
+  user_profiles: Record<string, UserProfile>;
 };
 type RequiredOrEmpty<T> = T | Partial<Record<keyof T, undefined>>;
 
@@ -30,7 +33,9 @@ export function ChatProvider({ children }: PropsWithChildren) {
       const client = new Client4();
       client.setUrl(VITE_CHAT_URL);
 
-      await client.loginById(data.chat_user, data.chat_pass);
+      await Sleep(500);
+
+      await client.loginById(data.chat_user_id, data.chat_pass);
       const socket = new WebSocketClient();
       const url = client.getWebSocketUrl().replace("http", "ws");
       socket.initialize(url, client.getToken());
@@ -39,10 +44,11 @@ export function ChatProvider({ children }: PropsWithChildren) {
 
       setState({
         chat_team: data.chat_team,
-        chat_user: data.chat_user,
+        chat_user: data.chat_user_id,
         chat_pass: data.chat_pass,
         client,
         socket,
+        user_profiles: {},
       });
     });
   }

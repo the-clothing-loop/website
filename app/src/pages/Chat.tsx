@@ -1,13 +1,17 @@
 import {
-  IonActionSheet,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
+  IonItem,
+  IonList,
   IonPage,
+  IonPopover,
   IonTitle,
   IonToolbar,
-  useIonAlert,
+  useIonActionSheet,
+  useIonPopover,
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
@@ -18,14 +22,12 @@ import { PaginatedPostList, Post } from "@mattermost/types/posts";
 import RoomNotReady from "../components/Chat/RoomNotReady";
 import { Channel } from "@mattermost/types/channels";
 import Loading from "../components/PrivateRoute/Loading";
-import { UserProfile } from "@mattermost/types/users";
 import { ChatContext } from "../stores/Chat";
 import ChatRoomSelect from "../components/Chat/ChatRoomSelect";
 import ChatCreateEdit, {
   useChatCreateEdit,
 } from "../components/Chat/ChatCreateEdit";
 import ChatInput from "../components/Chat/ChatInput";
-import ChatPost from "../components/Chat/ChatPost";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { useDebouncedCallback } from "use-debounce";
 import ChatRoomActions, {
@@ -35,8 +37,7 @@ import ChatPostList from "../components/Chat/ChatPostList";
 import BulkyList from "../components/Chat/BulkyList";
 import { uploadImageFile } from "../api/imgbb";
 import { bulkyItemPut } from "../api/bulky";
-
-const VITE_CHAT_URL = import.meta.env.VITE_CHAT_URL;
+import { menuOutline } from "ionicons/icons";
 
 export type OnSendMessageWithImage = (
   title: string,
@@ -44,24 +45,14 @@ export type OnSendMessageWithImage = (
   file: File,
 ) => Promise<void>;
 
-type WebSocketMessagePosted = WebSocketMessage<{
-  channel_display_name: string;
-  channel_name: string;
-  channel_type: string;
-  post: string;
-  sender_name: string;
-  team_id: string;
-  set_online: true;
-}>;
-
 // This follows the controller / view component pattern
 export default function Chat() {
   const { t } = useTranslation();
+  const [presentActionSheet] = useIonActionSheet();
   const { chain, setChain, isThemeDefault } = useContext(StoreContext);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedOldBulkyItems, setSelectedOldBulkyItems] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-  const [mmUser, setMmUser] = useState<Record<string, UserProfile>>({});
   const [postList, setPostList] = useState<PaginatedPostList>({
     order: [],
     posts: {},
@@ -85,7 +76,6 @@ export default function Chat() {
   const slowTriggerScrollTop = useDebouncedCallback(() => {
     const lastPostId = postList.order.at(-1);
     if (lastPostId) {
-      console.log("last post", lastPostId);
       onScrollTop(lastPostId);
     }
   }, 1000);
@@ -237,6 +227,11 @@ export default function Chat() {
     });
   }
 
+  // todo:
+  function onEditPost(postID: string) {
+    console.warn("TODO!!!", "onEditPost", postID);
+  }
+
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
     setSelectedChannel(channel);
     setSelectedOldBulkyItems(false);
@@ -325,7 +320,7 @@ export default function Chat() {
       const file_id = res.file_infos[0].id;
       await ChatStore.state.client.createPost({
         channel_id: selectedChannel.id,
-        message: message,
+        message: title + "\n\n" + message,
         file_ids: [file_id],
       } as Partial<Post> as Post);
     } catch (err) {
@@ -388,36 +383,40 @@ export default function Chat() {
     ChatStore.init(chain.uid);
   }
 
-  async function getMmUser(mmUserID: string): Promise<UserProfile> {
-    const found = mmUser[mmUserID];
-    if (found) return found;
+  function onOpenMenu() {
+    presentActionSheet({
+      header: t("chatRoom"),
 
-    const res = await ChatStore.state.client?.getUser(mmUserID);
-    if (!res) throw "Unable to find user";
-    setMmUser((s) => ({
-      [res.id]: res,
-      ...s,
-    }));
-    return res;
+      buttons: [
+        {
+          text: t("edit"),
+          handler: () => UseChatCreateEdit.onOpenCreateChannel("edit"),
+        },
+        {
+          text: t("cancel"),
+          role: "cancel",
+        },
+      ],
+    });
   }
 
   if (!authUser) {
     return <Loading />;
   }
 
+  const showEditButton =
+    !selectedOldBulkyItems && selectedChannel && isChainAdmin;
   return (
     <IonPage>
       <IonHeader translucent>
         <IonToolbar>
-          {ChatStore.state.client ? (
-            <IonButtons>
-              <IonButton
-                onClick={() => UseChatCreateEdit.modal.current?.present()}
-              >
-                {t("edit")}
+          <IonButtons>
+            {showEditButton ? (
+              <IonButton onClick={onOpenMenu}>
+                <IonIcon icon={menuOutline} />
               </IonButton>
-            </IonButtons>
-          ) : null}
+            ) : null}
+          </IonButtons>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
             Chat
           </IonTitle>
@@ -469,10 +468,10 @@ export default function Chat() {
                 isChainAdmin={isChainAdmin}
                 authUser={authUser}
                 postList={postList}
-                getMmUser={getMmUser}
                 getFile={getFile}
                 chainUsers={chainUsers}
                 onDeletePost={onDeletePost}
+                onEditPost={onEditPost}
               />
             ) : (
               <RoomNotReady
@@ -482,11 +481,13 @@ export default function Chat() {
             )}
             <span key="top" ref={refScrollTop}></span>
           </div>
-          <ChatInput
-            isOldBulkyItems={selectedOldBulkyItems}
-            onSendMessage={onSendMessageWithCallback}
-            onSendMessageWithImage={onSendMessageWithImageWithCallback}
-          />
+          {selectedChannel || selectedOldBulkyItems ? (
+            <ChatInput
+              isOldBulkyItems={selectedOldBulkyItems}
+              onSendMessage={onSendMessageWithCallback}
+              onSendMessageWithImage={onSendMessageWithImageWithCallback}
+            />
+          ) : null}
         </div>
       </IonContent>
     </IonPage>

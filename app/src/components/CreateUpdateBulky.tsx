@@ -69,6 +69,9 @@ export default function CreateBulky({
     setBulkyTitle("");
     setBulkyMessage("");
     setLoadingUpload(State.idle);
+    setImageData(undefined);
+    setImage(undefined);
+    setError("");
   }
 
   function cancel() {

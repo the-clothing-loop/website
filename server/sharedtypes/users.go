@@ -33,8 +33,9 @@ type User struct {
 	AcceptedTOHJSON       *bool           `json:"accepted_toh,omitempty" gorm:"-:migration;<-:false"`
 	AcceptedDPAJSON       *bool           `json:"accepted_dpa,omitempty" gorm:"-:migration;<-:false"`
 	NotificationChainUIDs []string        `json:"notification_chain_uids,omitempty" gorm:"-"`
-	ChatUserID            *string         `json:"-"`
+	ChatUserID            *string         `json:"chat_id"`
 	ChatPass              *string         `json:"-"`
+	ChatUserName          *string         `json:"chat_user_name"`
 }
 
 type UserCreateRequest struct {

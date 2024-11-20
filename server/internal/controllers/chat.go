@@ -49,9 +49,10 @@ func ChatPatchUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, sharedtypes.ChatPatchUserResponse{
-		ChatTeam: app.ChatTeamId,
-		ChatUser: *user.ChatUserID,
-		ChatPass: *user.ChatPass,
+		ChatTeam:     app.ChatTeamId,
+		ChatUserID:   *user.ChatUserID,
+		ChatPass:     *user.ChatPass,
+		ChatUserName: *user.ChatUserName,
 	})
 }
 

@@ -1,4 +1,3 @@
-import { UserProfile } from "@mattermost/types/users";
 import { User } from "../../api/types";
 import { PaginatedPostList } from "@mattermost/types/posts";
 import { IonActionSheet, useIonAlert } from "@ionic/react";
@@ -9,10 +8,10 @@ import ChatPost from "./ChatPost";
 interface Props {
   isChainAdmin: boolean;
   authUser: User;
-  getMmUser: (mmUserID: string) => Promise<UserProfile>;
   postList: PaginatedPostList;
   chainUsers: User[];
   onDeletePost: (postID: string) => void;
+  onEditPost: (postID: string) => void;
   getFile: (fileId: string, timestamp: number) => void;
 }
 
@@ -20,9 +19,9 @@ export default function ChatPostList({
   postList,
   isChainAdmin,
   authUser,
-  getMmUser,
   chainUsers,
   onDeletePost,
+  onEditPost,
   getFile,
 }: Props) {
   const { t } = useTranslation();
@@ -31,7 +30,7 @@ export default function ChatPostList({
   >(null);
   const [presentAlert] = useIonAlert();
 
-  function onPostOptionSelect(value: "delete") {
+  function onPostOptionSelect(value: "delete" | "edit") {
     if (value == "delete") {
       const postID = isPostActionSheetOpen;
       if (!postID) return;
@@ -48,6 +47,10 @@ export default function ChatPostList({
           },
         ],
       });
+    } else if (value == "edit") {
+      const postID = isPostActionSheetOpen;
+      if (!postID) return;
+      onEditPost(postID);
     }
   }
 
@@ -63,7 +66,6 @@ export default function ChatPostList({
             authUser={authUser}
             onLongPress={(id) => setIsPostActionSheetOpen(id)}
             post={post}
-            getMmUser={getMmUser}
             getFile={getFile}
             key={post.id}
             users={chainUsers}
@@ -79,6 +81,10 @@ export default function ChatPostList({
             role: "destructive",
             handler: () => onPostOptionSelect("delete"),
           },
+          // {
+          //   text: t("edit"),
+          //   handler: () => onPostOptionSelect("edit"),
+          // },
           {
             text: t("cancel"),
             role: "cancel",

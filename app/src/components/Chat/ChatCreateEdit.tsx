@@ -75,10 +75,16 @@ export function useChatCreateEdit(props: {
       });
     }
   }
-  function onOpenCreateChannel() {
-    setChannelColor("#fff");
-    setChannelName("");
-    setChannelEdit(null);
+  function onOpenCreateChannel(o: "edit" | "create") {
+    if (o == "edit") {
+      setChannelColor(props.selectedChannel!.header || "#fff");
+      setChannelName(props.selectedChannel!.display_name);
+      setChannelEdit(props.selectedChannel);
+    } else {
+      setChannelColor("#fff");
+      setChannelName("");
+      setChannelEdit(null);
+    }
     setTimeout(() => {
       modal.current?.present();
     });
@@ -121,6 +127,7 @@ export default function ChatCreateEdit({
     } else {
       onCreateChannel(channelName, channelColor);
     }
+
     modal.current?.dismiss();
   }
 

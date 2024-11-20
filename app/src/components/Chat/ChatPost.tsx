@@ -1,7 +1,6 @@
 import { Post } from "@mattermost/types/posts";
 import { User } from "../../api/types";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { UserProfile } from "@mattermost/types/users";
 import { useLongPress } from "use-long-press";
 import { IonButton, IonIcon, IonItem, IonModal, IonText } from "@ionic/react";
 import { ellipsisVertical } from "ionicons/icons";
@@ -11,7 +10,6 @@ export interface ChatPostProps {
   post: Post;
   users: User[];
   authUser: User | null | undefined;
-  getMmUser: (id: string) => Promise<UserProfile>;
   getFile: (fileId: string, timestamp: number) => void;
   isChainAdmin: boolean;
   onLongPress: (id: string) => void;
@@ -28,17 +26,18 @@ export default function ChatPost(props: ChatPostProps) {
   const [imageURL, setImageURL] = useState("");
   const refModalDesc = useRef<HTMLIonModalElement>(null);
   //const [user, setUser] = useState(User)
-  const message = useMemo(() => {
-    props.getMmUser(props.post.user_id).then((res) => {
-      const user = props.users.find((u) => res.username === u.uid);
-      setUsername(user ? user.name : res.username);
-      setIsMe(user?.uid === props.authUser?.uid);
-    });
+
+  const { message, title, body } = useMemo(() => {
+    const user = props.users.find((u) => u.chat_id === props.post.user_id);
+    console.log("post find user", user?.name, user?.uid);
+    setUsername(user?.name || props.post.user_id);
+    setIsMe(user ? user.uid === props.authUser?.uid : false);
     let message = props.post.message;
     for (let user of props.users) {
       message = message.replaceAll(user.uid, user.name);
     }
-    return message;
+    const [title = "", body = ""] = message.split("\n\n", 2);
+    return { message, title, body };
   }, [props.users, props.post]);
 
   useEffect(() => {
@@ -68,16 +67,8 @@ export default function ChatPost(props: ChatPostProps) {
     refModalDesc.current?.present();
   }
 
-  let shouldExpandText = message.length > 150 || message.split("\n").length > 4;
-
-  const bulkyTitle =
-    message.indexOf("\n") != -1
-      ? message.substring(0, message.indexOf("\n")).trim()
-      : "";
-  const bulkyMessage =
-    message.indexOf("\n") != -1
-      ? message.substring(message.indexOf("\n")).trim()
-      : "";
+  const shouldExpandText = body.length > 150;
+  const isEditable = isMe || props.isChainAdmin;
 
   if (props.post.type != "") {
     return (
@@ -93,30 +84,54 @@ export default function ChatPost(props: ChatPostProps) {
   }
 
   if (imageURL) {
+    console.log("Post image", "message", message, "title", title, "body", body);
     return (
       <>
         <div
-          className="tw-mb-2 tw-flex tw-flex-row"
-          {...(props.isChainAdmin ? longPress : {})}
+          className={"tw-mb-2 tw-flex tw-justify-start".concat(
+            isMe ? " tw-flex-row-reverse" : " tw-flex-row",
+          )}
+          {...(isEditable ? longPress : {})}
         >
           <div
-            className={"tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-inline-block tw-mx-4 tw-relative".concat(
-              isMe ? " tw-bg-purple-shade" : " tw-bg-light",
+            className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-mx-4".concat(
+              isMe
+                ? " tw-bg-purple-shade tw-rounded-bl-xl"
+                : " tw-bg-light tw-rounded-br-xl",
             )}
           >
-            <div className="tw-my-1 tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-text-xs tw-font-bold tw-px-2 tw-text-white">
-              {username}
+            <div className="tw-rounded-tl-xl tw-rounded-tr-xl tw-rounded-br-xl tw-flex tw-justify-between tw-items-center">
+              <div className="tw-p-1 tw-text-xs tw-font-bold">{username}</div>
+
+              {isEditable ? (
+                <IonButton
+                  onClick={() => props.onLongPress(props.post.id)}
+                  color="transparent"
+                  className="tw-sticky tw-top-0 tw-opacity-70 tw-p-0 tw-bg-light-shade"
+                  size="small"
+                  type="button"
+                >
+                  <IonIcon
+                    slot="icon-only"
+                    size="small"
+                    color="dark"
+                    icon={ellipsisVertical}
+                  />
+                </IonButton>
+              ) : null}
             </div>
-            <img
-              className="-tw-px-2 tw-inline-block tw-max-h-60"
-              src={imageURL}
-              alt={bulkyTitle}
-            ></img>
-            {username ? (
-              <div className="tw-text-xs tw-font-bold tw-px-2 tw-absolute tw-top-56 tw-text-white">
-                {bulkyTitle}
-              </div>
-            ) : null}
+            <div className="tw-relative">
+              <img
+                className="-tw-px-2 tw-inline-block tw-max-h-60"
+                src={imageURL}
+                alt={title}
+              ></img>
+              {username ? (
+                <div className="tw-absolute tw-bottom-0 tw-text-sm tw-w-full tw-font-bold tw-px-2 tw-text-[#fff] tw-bg-[#000]/20">
+                  {title}
+                </div>
+              ) : null}
+            </div>
             <IonItem
               lines="none"
               routerLink={"/address/" + props.authUser?.uid}
@@ -133,7 +148,7 @@ export default function ChatPost(props: ChatPostProps) {
                 </p>
               </div>
             </IonItem>
-            {bulkyMessage == "" ? null : (
+            {body != "" ? (
               <IonItem
                 color="background"
                 lines="none"
@@ -141,18 +156,20 @@ export default function ChatPost(props: ChatPostProps) {
                   shouldExpandText ? "-tw-mb-3" : "tw-mb-2"
                 } `}
               >
-                <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
-                  {t("description")}
-                </h3>
-                <p
-                  className={`ion-text-wrap tw-opacity-60 tw-text-xs tw-overflow-hidden ${
-                    shouldExpandText ? "tw-max-h-[48px]" : ""
-                  }`}
-                >
-                  {bulkyMessage}
-                </p>
+                <div>
+                  <h3 className="ion-no-margin !tw-font-bold tw-text-xs tw-leading-5">
+                    {t("description")}
+                  </h3>
+                  <p
+                    className={`ion-text-wrap tw-opacity-60 tw-text-xs tw-overflow-hidden ${
+                      shouldExpandText ? "tw-max-h-[48px]" : ""
+                    }`}
+                  >
+                    {body}
+                  </p>
+                </div>
               </IonItem>
-            )}
+            ) : null}
             {shouldExpandText ? (
               <IonText
                 onClick={
@@ -164,22 +181,6 @@ export default function ChatPost(props: ChatPostProps) {
               </IonText>
             ) : null}
           </div>
-          {props.isChainAdmin ? (
-            <IonButton
-              onClick={() => props.onLongPress(props.post.id)}
-              color="transparent"
-              className="tw-sticky tw-top-0 tw-opacity-70"
-              size="small"
-              type="button"
-            >
-              <IonIcon
-                slot="icon-only"
-                size="small"
-                color="dark"
-                icon={ellipsisVertical}
-              />
-            </IonButton>
-          ) : null}
         </div>
         <IonModal
           ref={refModalDesc}
@@ -187,8 +188,8 @@ export default function ChatPost(props: ChatPostProps) {
           breakpoints={[0, 0.6, 1]}
         >
           <div className="ion-padding tw-text-lg tw-leading-6">
-            <h1 className="tw-mt-0">{bulkyTitle}</h1>
-            {bulkyMessage}
+            <h1 className="tw-mt-0">{title}</h1>
+            {body}
           </div>
         </IonModal>
       </>
@@ -197,12 +198,16 @@ export default function ChatPost(props: ChatPostProps) {
 
   return (
     <div
-      className="tw-mb-2 tw-flex tw-flex-row tw-items-start"
-      {...(props.isChainAdmin ? longPress : {})}
+      className={"tw-mb-2 tw-flex tw-justify-start".concat(
+        isMe ? " tw-flex-row-reverse" : " tw-flex-row",
+      )}
+      {...(isEditable ? longPress : {})}
     >
       <div
-        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-rounded-br-xl tw-mx-4".concat(
-          isMe ? " tw-bg-purple-shade" : " tw-bg-light",
+        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-mx-4".concat(
+          isMe
+            ? " tw-bg-purple-shade tw-rounded-bl-xl"
+            : " tw-bg-light tw-rounded-br-xl",
         )}
       >
         {username ? (
@@ -212,7 +217,7 @@ export default function ChatPost(props: ChatPostProps) {
           {message}
         </div>
       </div>
-      {props.isChainAdmin ? (
+      {isEditable ? (
         <IonButton
           onClick={() => props.onLongPress(props.post.id)}
           color="transparent"

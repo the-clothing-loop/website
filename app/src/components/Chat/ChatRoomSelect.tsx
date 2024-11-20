@@ -1,6 +1,5 @@
-import { IonActionSheet, IonIcon } from "@ionic/react";
+import { IonIcon } from "@ionic/react";
 import { Channel } from "@mattermost/types/channels";
-import { useRef, useState } from "react";
 import { useLongPress } from "use-long-press";
 import { addOutline, build as buildFilled } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
@@ -11,7 +10,7 @@ interface Props {
   selectedChannel: Channel | null;
   isChainAdmin: boolean;
   onSelectChannel: (cr: Channel) => void;
-  onOpenCreateChannel: () => void;
+  onOpenCreateChannel: (_: "edit" | "create") => void;
   selectedOldBulkyItems: boolean;
   onSelectOldBulkyItems: () => void;
   onChannelOptionSelect: (value: "delete" | "rename") => void;
@@ -26,9 +25,7 @@ export default function ChatRoomSelect({
   onSelectChannel,
   selectedOldBulkyItems,
   onSelectOldBulkyItems,
-  onChannelOptionSelect,
   onOpenCreateChannel,
-  isChannelActionSheetOpen,
   setIsChannelActionSheetOpen,
 }: Props) {
   const { t } = useTranslation();
@@ -45,10 +42,10 @@ export default function ChatRoomSelect({
   );
 
   return (
-    <div className="tw-shrink-0 w-full tw-flex tw-px-2 tw-gap-1 tw-overflow-x-auto tw-bg-light">
+    <div className="tw-shrink-0 w-full tw-flex tw-gap-1 tw-overflow-x-auto tw-bg-light">
       <button
         className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
-          selectedOldBulkyItems ? " tw-bg-[#fff]/40" : "",
+          selectedOldBulkyItems ? " tw-bg-light-shade" : "",
         )}
         key="oldBulkyItems"
         onClick={onSelectOldBulkyItems}
@@ -60,10 +57,10 @@ export default function ChatRoomSelect({
               : " tw-ring-transparent",
           )}
         >
-          <span>B</span>
+          <span style={{ color: "#000" }}>B</span>
         </div>
         <div
-          className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
+          className={"tw-text-xs tw-text-center tw-truncate tw-mt-1 tw-w-[80px]".concat(
             selectedOldBulkyItems ? " tw-font-bold" : "",
           )}
         >
@@ -82,7 +79,7 @@ export default function ChatRoomSelect({
         return (
           <button
             className={"tw-p-2 tw-flex tw-flex-col tw-items-center tw-group".concat(
-              isSelected ? " tw-bg-[#fff]/40" : "",
+              isSelected ? " tw-bg-light-shade" : "",
             )}
             key={cr.id}
             {...(isSelected
@@ -102,15 +99,12 @@ export default function ChatRoomSelect({
               )}
             >
               <span style={{ color: textColor }}>{initials}</span>
-              {isSelected && isChainAdmin ? (
-                <div className="tw-absolute tw-bottom-0 tw-right-0 tw-bg-light-shade tw-z-10 tw-w-6 tw-h-6 tw-rounded-full -tw-m-1 tw-flex tw-justify-center tw-items-center">
-                  <IonIcon icon={buildFilled} size="xs" color="dark" />
-                </div>
-              ) : null}
             </div>
             <div
-              className={"tw-text-xs tw-text-center tw-truncate tw-max-w-[3.5rem]".concat(
-                isSelected ? " tw-font-bold" : "",
+              className={"tw-text-xs tw-text-center tw-mt-1".concat(
+                isSelected
+                  ? " tw-font-bold tw-whitespace-nowrap"
+                  : " tw-truncate tw-max-w-[3.5rem]",
               )}
             >
               {cr.display_name!}
@@ -122,7 +116,7 @@ export default function ChatRoomSelect({
       {isChainAdmin ? (
         <div key="plus" className="tw-p-2 tw-me-4 tw-flex tw-shrink-0">
           <button
-            onClick={onOpenCreateChannel}
+            onClick={() => onOpenCreateChannel("create")}
             className="tw-font-bold tw-w-12 tw-h-12 tw-rounded-full tw-bg-light-shade hover:tw-bg-purple-contrast tw-flex tw-items-center tw-justify-center"
           >
             <IonIcon className="tw-text-2xl" src={addOutline} />

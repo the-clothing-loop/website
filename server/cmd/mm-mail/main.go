@@ -44,7 +44,12 @@ func mailHandler(origin net.Addr, from string, to []string, data []byte) error {
 	}
 	slog.Debug("Email received", "to", to, "subject", subject)
 	if strings.Contains(subject, "New Notification") {
-		user, err := models.UserGetByEmail(db, to[0])
+		username, err := models.UserChatEmailToChatUserName(to[0])
+		if err != nil {
+			slog.Error("Unable to find user account by email", "err", err)
+			return nil
+		}
+		user, err := models.UserGetByChatUserName(db, *username)
 		if err != nil {
 			slog.Error("Unable to find user account by email", "err", err)
 			return nil

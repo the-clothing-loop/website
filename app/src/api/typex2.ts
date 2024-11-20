@@ -124,8 +124,9 @@ export interface ChatPatchUserRequest {
 
 export interface ChatPatchUserResponse {
 	chat_team: string
-	chat_user: string
+	chat_user_id: string
 	chat_pass: string
+	chat_user_name: string
 }
 
 export interface ContactMailRequest {
@@ -298,6 +299,8 @@ export interface User {
 	accepted_toh?: (boolean | null)
 	accepted_dpa?: (boolean | null)
 	notification_chain_uids?: string[]
+	chat_id: (string | null)
+	chat_user_name: (string | null)
 }
 
 export interface UserChain {

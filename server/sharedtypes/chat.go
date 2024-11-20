@@ -5,9 +5,10 @@ type ChatPatchUserRequest struct {
 }
 
 type ChatPatchUserResponse struct {
-	ChatTeam string `json:"chat_team"`
-	ChatUser string `json:"chat_user"`
-	ChatPass string `json:"chat_pass"`
+	ChatTeam     string `json:"chat_team"`
+	ChatUserID   string `json:"chat_user_id"`
+	ChatPass     string `json:"chat_pass"`
+	ChatUserName string `json:"chat_user_name"`
 }
 
 type ChatCreateChannelRequest struct {

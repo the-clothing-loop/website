@@ -31,9 +31,14 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 	if mmUser == nil {
 		slog.Info("create Chat user if does not exist")
 
-		username := user.UID
-		p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Upper})
-		password := string(p)
+		username := func() string {
+			p, _ := atoll.NewPassword(10, []atoll.Level{atoll.Digit, atoll.Lower, atoll.Level("-_.")})
+			return "u" + string(p)
+		}()
+		password := func() string {
+			p, _ := atoll.NewPassword(16, []atoll.Level{atoll.Digit, atoll.Lower})
+			return string(p)
+		}()
 		if user.Email == nil {
 			return fmt.Errorf("Email is required")
 		}
@@ -41,7 +46,7 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 			Nickname: user.Name,
 			Username: username,
 			Password: password,
-			Email:    *user.Email,
+			Email:    username + "@example.com",
 		})
 		if err != nil {
 			return err
@@ -55,9 +60,11 @@ func ChatPatchUser(db *gorm.DB, ctx context.Context, mmTeamId string, user *mode
 		// Update database
 		user.ChatUserID = &mmUser.Id
 		user.ChatPass = &password
-		db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ? WHERE id = ?`,
+		user.ChatUserName = &username
+		db.Exec(`UPDATE users SET chat_user_id = ?, chat_pass = ?, chat_user_name = ? WHERE id = ?`,
 			*user.ChatUserID,
 			*user.ChatPass,
+			*user.ChatUserName,
 			user.ID)
 	}
 
