@@ -141,9 +141,8 @@ export default function AddressList() {
   }, [route, chainUsers, routeListView, slowSearch]);
 
   const countActiveMembers = useMemo(() => {
-    if (!chain) return 0;
-    return chainUsers.filter((u) => !IsPaused(u, chain.uid)).length;
-  }, [chainUsers, chain]);
+    return routeListItems.filter((r) => !r.isUserPaused).length;
+  }, [routeListItems]);
 
   function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
     const refreshPromise = setChain(chain?.uid, authUser);
