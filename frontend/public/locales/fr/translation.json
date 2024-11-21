@@ -27,6 +27,7 @@
   "peopleWithCount_one": "{{ count }} personnes",
   "peopleWithCount_other": "{{ count }} personnes",
   "contribute": "Contribuer",
+  "helpUs": "Aidez-nous",
   "copiedToClipboard": "Copié dans le clipboard",
   "loopHost_one": "Gérant de Loop",
   "loopHost_other": "Gérants de Loop",

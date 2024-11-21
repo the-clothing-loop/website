@@ -139,7 +139,7 @@ function SizeCatBadges({
     : t(CatI18nKeys[props.category as string]);
   return (
     <li
-      className={`inline-flex flex-row mb-1 me-1 rounded-full px-2 ${props.color}`}
+      className={`inline-flex flex-row mb-1 me-1 rounded-[14px] px-2 ${props.color}`}
     >
       <div
         className={`flex-shrink-0 ${tooltipClass} font-semibold`}
@@ -147,9 +147,9 @@ function SizeCatBadges({
       >
         <img src={props.icon} className="h-5 my-1" />
       </div>
-      <ul className="font-semibold flex flex-row text-sm cursor-default">
+      <ul className="font-semibold flex flex-row flex-shrink flex-wrap text-sm cursor-default">
         {props.text ? (
-          <li key="text" className="ml-1 py-1">
+          <li key="text" className="ml-1 py-1 whitespace-nowrap">
             {props.text}
           </li>
         ) : null}

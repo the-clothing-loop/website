@@ -32,6 +32,8 @@ const categories: ICategories = {
     Sizes["baby"],
     Sizes["1To4YearsOld"],
     Sizes["5To12YearsOld"],
+    Sizes["teenGirls"],
+    Sizes["teenBoys"],
   ],
   [Categories.women]: [
     Sizes["womenSmall"],
@@ -82,7 +84,7 @@ function BadgeItem({
       <div className="tw-flex tw-flex-row tw-flex-wrap tw-justify-end tw-max-w-[120px]">
         {sizes.map((s) => (
           <span className="tw-m-0.5" key={s}>
-            {sizeLetters[s]}
+            {sizeLetters[s] || ""}
           </span>
         ))}
       </div>

@@ -127,6 +127,8 @@ LIMIT 1
 	}
 	if body.UpdatedAt != nil {
 		bag.UpdatedAt = *(body.UpdatedAt)
+	} else if bag.ID == 0 {
+		bag.UpdatedAt = time.Now()
 	}
 	bag.LastNotifiedAt = nil
 	bag.AddLastUserEmailToUpdateFifo(holder.Email)
