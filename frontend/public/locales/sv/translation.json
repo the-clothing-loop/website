@@ -27,6 +27,7 @@
   "peopleWithCount_one": "{{ count }} person",
   "peopleWithCount_other": "{{ count }} person",
   "contribute": "Bidra",
+  "helpUs": "Hjälp oss",
   "copiedToClipboard": "Kopierade till urklipp",
   "loopHost_one": "Loop host",
   "loopHost_other": "Loop hosts",
