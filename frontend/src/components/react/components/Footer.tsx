@@ -74,6 +74,12 @@ export default function Footer(props: { pathname: string }) {
                 </a>
                 <a
                   className="link link-hover mb-1"
+                  href={localizePath("/#impactreport")}
+                >
+                  {t("readOurImpactReport")}
+                </a>
+                <a
+                  className="link link-hover mb-1"
                   href={localizePath("/contribute")}
                 >
                   {t("contribute")}
