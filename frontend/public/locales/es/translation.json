@@ -27,6 +27,7 @@
   "peopleWithCount_one": "{{ count }} persona",
   "peopleWithCount_other": "{{ count }} personas",
   "contribute": "Contribuir",
+  "helpUs": "Ayúdanos",
   "copiedToClipboard": "Copiado al portapapeles",
   "loopHost_one": "Servidor",
   "loopHost_other": "Servidores",
