@@ -82,7 +82,7 @@ export default function Footer(props: { pathname: string }) {
                   className="link link-hover mb-1"
                   href={localizePath("/contribute")}
                 >
-                  {t("contribute")}
+                  {t("helpUs")}
                 </a>
               </div>
               <div className="flex flex-col items-center md:items-start px-3 pb-6 pt-0">
