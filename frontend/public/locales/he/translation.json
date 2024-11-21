@@ -27,6 +27,7 @@
   "peopleWithCount_one": "{{ count }} אדם",
   "peopleWithCount_other": "{{ count }} אנשים",
   "contribute": "תרומות",
+  "helpUs": "Help us",
   "copiedToClipboard": "העתק ללוח העריכה",
   "loopHost_one": "מארח לולאה",
   "loopHost_other": "מארחי הלולאה",
