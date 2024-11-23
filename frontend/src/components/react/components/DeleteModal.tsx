@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
 
@@ -23,43 +23,31 @@ export default function DeleteModal({
     useState(false);
 
   const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
+  const checkboxesRef = useRef<Record<string, HTMLInputElement | null>>({});
+
   const moved = Object.keys(ReasonsForLeavingI18nKeys)[0];
   const notEnoughItemsILiked = Object.keys(ReasonsForLeavingI18nKeys)[1];
   const primaryOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(2, 6);
   const other = Object.keys(ReasonsForLeavingI18nKeys)[6];
-  console.log(other);
+
   const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(7, 10);
   const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(
     10,
   );
   const [otherExplanation, setOtherExplanation] = useState("");
 
-  function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, checked } = event.target;
-    const updatedReasons = checked
+  function handleCheckboxChange(name: string) {
+    const checkbox = checkboxesRef.current[name];
+    if (!checkbox) return;
+
+    const isChecked = checkbox.checked;
+    const updatedReasons = isChecked
       ? [...selectedReasons, name]
       : selectedReasons.filter((reason) => reason !== name);
-
     setSelectedReasons(updatedReasons);
     onUpdateSelectedReasons(updatedReasons);
   }
 
-  function showMovedOptionsHandler(event: React.ChangeEvent<HTMLInputElement>) {
-    setShowMovedOptions(event.target.checked);
-    handleCheckboxChange(event);
-  }
-  function showNotEnoughItemsOptionsHandler(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    setShowNotEnoughItemsOptions(event.target.checked);
-    handleCheckboxChange(event);
-  }
-  function showOtherTextFieldHandler(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    setShowOtherTextFieldArea(event.target.checked);
-    handleCheckboxChange(event);
-  }
   function handleOtherTextChange(
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) {
@@ -87,8 +75,11 @@ export default function DeleteModal({
               type="checkbox"
               className="checkbox border-black"
               name={moved}
-              id={moved}
-              onChange={(e) => showMovedOptionsHandler(e)}
+              ref={(el) => (checkboxesRef.current[moved] = el)}
+              onChange={() => {
+                setShowMovedOptions(!showMovedOptions);
+                handleCheckboxChange(moved);
+              }}
             />
             <label className="ml-2">
               {t(ReasonsForLeavingI18nKeys[moved])}
@@ -104,7 +95,8 @@ export default function DeleteModal({
                     className="checkbox border-black"
                     name={r}
                     id={r}
-                    onChange={(e) => handleCheckboxChange(e)}
+                    ref={(el) => (checkboxesRef.current[r] = el)}
+                    onChange={() => handleCheckboxChange(r)}
                   />
                   <label className="ml-2">
                     {t(ReasonsForLeavingI18nKeys[r])}
@@ -119,8 +111,11 @@ export default function DeleteModal({
               type="checkbox"
               className="checkbox border-black"
               name={notEnoughItemsILiked}
-              id={notEnoughItemsILiked}
-              onChange={(e) => showNotEnoughItemsOptionsHandler(e)}
+              ref={(el) => (checkboxesRef.current[notEnoughItemsILiked] = el)}
+              onChange={() => {
+                setShowNotEnoughItemsOptions(!showNotEnoughItemsOptions);
+                handleCheckboxChange(notEnoughItemsILiked);
+              }}
             />
             <label className="ml-2">
               {t(ReasonsForLeavingI18nKeys[notEnoughItemsILiked])}
@@ -135,8 +130,8 @@ export default function DeleteModal({
                     type="checkbox"
                     className="checkbox border-black"
                     name={r}
-                    id={r}
-                    onChange={(e) => handleCheckboxChange(e)}
+                    ref={(el) => (checkboxesRef.current[r] = el)}
+                    onChange={() => handleCheckboxChange(r)}
                   />
                   <label className="ml-2">
                     {t(ReasonsForLeavingI18nKeys[r])}
@@ -151,8 +146,8 @@ export default function DeleteModal({
                 type="checkbox"
                 className="checkbox border-black"
                 name={r}
-                id={r}
-                onChange={(e) => handleCheckboxChange(e)}
+                ref={(el) => (checkboxesRef.current[r] = el)}
+                onChange={() => handleCheckboxChange(r)}
               />
               <label className="ml-2">{t(ReasonsForLeavingI18nKeys[r])}</label>
             </li>
@@ -162,8 +157,11 @@ export default function DeleteModal({
               type="checkbox"
               className="checkbox border-black"
               name={other}
-              id={other}
-              onChange={(e) => showOtherTextFieldHandler(e)}
+              ref={(el) => (checkboxesRef.current[other] = el)}
+              onChange={() => {
+                setShowOtherTextFieldArea(!showOtherTextFieldArea);
+                handleCheckboxChange(other);
+              }}
             />
             <label className="ml-2">
               {t(ReasonsForLeavingI18nKeys[other])}
