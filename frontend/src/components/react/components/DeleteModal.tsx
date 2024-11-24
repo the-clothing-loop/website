@@ -67,7 +67,7 @@ export default function DeleteModal({
   if (!(chainNames && chainNames.length))
     return (
       <div className="space-y-2">
-        <p>Please select a reason for leaving</p>
+        <p>{t("selectReasonForLeaving")}</p>
 
         <ul className="list-none">
           <li key={moved} className="flex items-center mb-4">
@@ -94,7 +94,6 @@ export default function DeleteModal({
                     type="checkbox"
                     className="checkbox border-black"
                     name={r}
-                    id={r}
                     ref={(el) => (checkboxesRef.current[r] = el)}
                     onChange={() => handleCheckboxChange(r)}
                   />
@@ -170,10 +169,7 @@ export default function DeleteModal({
           {showOtherTextFieldArea ? (
             <>
               <li key="other_textarea" className="mx-7">
-                <label className="text-sm">
-                  Please let us know why you've decided to leave the Clothing
-                  Loop and if there's anything we could do to improve.
-                </label>
+                <label className="text-sm">{t("leaveFeedback")}</label>
                 <textarea
                   className="bg-grey-light w-full"
                   value={otherExplanation}
