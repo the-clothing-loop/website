@@ -46,13 +46,11 @@ type DeletedUser struct {
 var ErrReasonInvalid = errors.New("Invalid reason enum")
 
 func ValidateAllReasonsEnum(arr []string) bool {
-	fmt.Printf("Validating reasons: %v\n", arr) // Debugging line
 
 	if err := validate.Var(arr, "unique"); err != nil {
 		return false
 	}
 	for _, s := range arr {
-		fmt.Printf("Validating reason: %s\n", s) // Debugging line
 
 		if err := validate.Var(s, "oneof=1 2 3 4 5 6 7 8 9 10 11 12 13,required"); err != nil {
 			return false

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -385,7 +384,6 @@ HAVING COUNT(uc.id) = 1
 		c.String(http.StatusConflict, "Set someone else as host or delete the loop first before deleting your account")
 		return
 	}
-	fmt.Print("im here", query.ReasonsForLeaving)
 
 	deletedUser := models.DeletedUser{
 		Email:            user.Email.String,
@@ -393,17 +391,15 @@ HAVING COUNT(uc.id) = 1
 		UserDeletedAt:    time.Now(),
 		OtherExplanation: query.OtherExplanation,
 	}
+
 	if ok := models.ValidateAllReasonsEnum(query.ReasonsForLeaving); !ok {
 		c.String(http.StatusBadRequest, models.ErrReasonInvalid.Error())
 		return
 	}
 
-	for _, reason := range query.ReasonsForLeaving {
-		reasons := strings.Split(reason, ",")
-		if err := deletedUser.SetReasons(reasons); err != nil {
-			c.String(http.StatusBadRequest, err.Error())
-			return
-		}
+	if err := deletedUser.SetReasons(query.ReasonsForLeaving); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
 	}
 
 	if err := db.Create(&deletedUser).Error; err != nil {
