@@ -326,7 +326,7 @@ func UserPurge(c *gin.Context) {
 	var query struct {
 		UserUID           string   `form:"user_uid" binding:"required,uuid"`
 		ReasonsForLeaving []string `form:"reasons_for_leaving"`
-		OtherExplanation  string   `form:"other_explanation"`
+		OtherExplanation  string   `form:"other_explanation,omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
