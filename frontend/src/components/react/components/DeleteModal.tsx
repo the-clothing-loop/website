@@ -64,124 +64,7 @@ export default function DeleteModal({
         .filter((c) => c && c.total_hosts && !(c.total_hosts > 1))
         .map((c) => c!.name) as string[]);
 
-  if (!(chainNames && chainNames.length))
-    return (
-      <div className="space-y-2">
-        <p>{t("selectReasonForLeaving")}</p>
-
-        <ul className="list-none">
-          <li key={moved} className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              className="checkbox border-black"
-              name={moved}
-              ref={(el) => (checkboxesRef.current[moved] = el)}
-              onChange={() => {
-                setShowMovedOptions(!showMovedOptions);
-                handleCheckboxChange(moved);
-              }}
-            />
-            <label className="ml-2">
-              {t(ReasonsForLeavingI18nKeys[moved])}
-            </label>
-          </li>
-
-          {showMovedOptions ? (
-            <>
-              {movedOptions.map((r) => (
-                <li key={r} className="flex items-center mb-4 ml-8">
-                  <input
-                    type="checkbox"
-                    className="checkbox border-black"
-                    name={r}
-                    ref={(el) => (checkboxesRef.current[r] = el)}
-                    onChange={() => handleCheckboxChange(r)}
-                  />
-                  <label className="ml-2">
-                    {t(ReasonsForLeavingI18nKeys[r])}
-                  </label>
-                </li>
-              ))}
-            </>
-          ) : null}
-
-          <li key={notEnoughItemsILiked} className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              className="checkbox border-black"
-              name={notEnoughItemsILiked}
-              ref={(el) => (checkboxesRef.current[notEnoughItemsILiked] = el)}
-              onChange={() => {
-                setShowNotEnoughItemsOptions(!showNotEnoughItemsOptions);
-                handleCheckboxChange(notEnoughItemsILiked);
-              }}
-            />
-            <label className="ml-2">
-              {t(ReasonsForLeavingI18nKeys[notEnoughItemsILiked])}
-            </label>
-          </li>
-
-          {showNotEnoughItemsOptions ? (
-            <>
-              {notEnoughItemsOptions.map((r) => (
-                <li key={r} className="flex items-center mb-4 ml-8">
-                  <input
-                    type="checkbox"
-                    className="checkbox border-black"
-                    name={r}
-                    ref={(el) => (checkboxesRef.current[r] = el)}
-                    onChange={() => handleCheckboxChange(r)}
-                  />
-                  <label className="ml-2">
-                    {t(ReasonsForLeavingI18nKeys[r])}
-                  </label>
-                </li>
-              ))}
-            </>
-          ) : null}
-          {primaryOptions.map((r: string) => (
-            <li key={r} className="flex items-center mb-4">
-              <input
-                type="checkbox"
-                className="checkbox border-black"
-                name={r}
-                ref={(el) => (checkboxesRef.current[r] = el)}
-                onChange={() => handleCheckboxChange(r)}
-              />
-              <label className="ml-2">{t(ReasonsForLeavingI18nKeys[r])}</label>
-            </li>
-          ))}
-          <li key={other} className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              className="checkbox border-black"
-              name={other}
-              ref={(el) => (checkboxesRef.current[other] = el)}
-              onChange={() => {
-                setShowOtherTextFieldArea(!showOtherTextFieldArea);
-                handleCheckboxChange(other);
-              }}
-            />
-            <label className="ml-2">
-              {t(ReasonsForLeavingI18nKeys[other])}
-            </label>
-          </li>
-          {showOtherTextFieldArea ? (
-            <>
-              <li key="other_textarea" className="mx-7">
-                <label className="text-sm">{t("leaveFeedback")}</label>
-                <textarea
-                  className="bg-grey-light w-full"
-                  value={otherExplanation}
-                  onChange={handleOtherTextChange}
-                />
-              </li>
-            </>
-          ) : null}
-        </ul>
-      </div>
-    );
-  return (
+  return chainNames && chainNames.length ? (
     <div className="space-y-2">
       <p className="">{t("deleteAccountWithLoops")}</p>
       <ul
@@ -192,6 +75,117 @@ export default function DeleteModal({
         {chainNames.map((name) => (
           <li key={name}>{name}</li>
         ))}
+      </ul>
+    </div>
+  ) : (
+    <div className="space-y-2">
+      <p>{t("selectReasonForLeaving")}</p>
+
+      <ul className="list-none">
+        <li key={moved} className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            className="checkbox border-black"
+            name={moved}
+            ref={(el) => (checkboxesRef.current[moved] = el)}
+            onChange={() => {
+              setShowMovedOptions(!showMovedOptions);
+              handleCheckboxChange(moved);
+            }}
+          />
+          <label className="ml-2">{t(ReasonsForLeavingI18nKeys[moved])}</label>
+        </li>
+
+        {showMovedOptions ? (
+          <>
+            {movedOptions.map((r) => (
+              <li key={r} className="flex items-center mb-4 ml-8">
+                <input
+                  type="checkbox"
+                  className="checkbox border-black"
+                  name={r}
+                  ref={(el) => (checkboxesRef.current[r] = el)}
+                  onChange={() => handleCheckboxChange(r)}
+                />
+                <label className="ml-2">
+                  {t(ReasonsForLeavingI18nKeys[r])}
+                </label>
+              </li>
+            ))}
+          </>
+        ) : null}
+
+        <li key={notEnoughItemsILiked} className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            className="checkbox border-black"
+            name={notEnoughItemsILiked}
+            ref={(el) => (checkboxesRef.current[notEnoughItemsILiked] = el)}
+            onChange={() => {
+              setShowNotEnoughItemsOptions(!showNotEnoughItemsOptions);
+              handleCheckboxChange(notEnoughItemsILiked);
+            }}
+          />
+          <label className="ml-2">
+            {t(ReasonsForLeavingI18nKeys[notEnoughItemsILiked])}
+          </label>
+        </li>
+
+        {showNotEnoughItemsOptions ? (
+          <>
+            {notEnoughItemsOptions.map((r) => (
+              <li key={r} className="flex items-center mb-4 ml-8">
+                <input
+                  type="checkbox"
+                  className="checkbox border-black"
+                  name={r}
+                  ref={(el) => (checkboxesRef.current[r] = el)}
+                  onChange={() => handleCheckboxChange(r)}
+                />
+                <label className="ml-2">
+                  {t(ReasonsForLeavingI18nKeys[r])}
+                </label>
+              </li>
+            ))}
+          </>
+        ) : null}
+        {primaryOptions.map((r: string) => (
+          <li key={r} className="flex items-center mb-4">
+            <input
+              type="checkbox"
+              className="checkbox border-black"
+              name={r}
+              ref={(el) => (checkboxesRef.current[r] = el)}
+              onChange={() => handleCheckboxChange(r)}
+            />
+            <label className="ml-2">{t(ReasonsForLeavingI18nKeys[r])}</label>
+          </li>
+        ))}
+        <li key={other} className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            className="checkbox border-black"
+            name={other}
+            ref={(el) => (checkboxesRef.current[other] = el)}
+            onChange={() => {
+              setShowOtherTextFieldArea(!showOtherTextFieldArea);
+              handleCheckboxChange(other);
+            }}
+          />
+          <label className="ml-2">{t(ReasonsForLeavingI18nKeys[other])}</label>
+        </li>
+        {showOtherTextFieldArea ? (
+          <>
+            <li key="other_textarea" className="mx-7">
+              <label className="text-sm">{t("leaveFeedback")}</label>
+              <textarea
+                className="bg-grey-light w-full"
+                value={otherExplanation}
+                onChange={handleOtherTextChange}
+              />
+            </li>
+          </>
+        ) : null}
       </ul>
     </div>
   );
