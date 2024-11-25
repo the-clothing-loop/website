@@ -8,6 +8,12 @@ services:
       - mattermost_prev_db:/var/lib/postgresql/data
       - mattermost_prev_config:/mm/mattermost/config
       - mattermost_prev_data:/mm/mattermost-data
+  mattermost_caddy:
+    # ports:
+    #   - 127.0.0.1:8066:8066
+    build:
+      context: ./mattermost
+
   # mattermost_mail:
   #   build:
   #     context: ./server

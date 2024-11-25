@@ -1,0 +1,9 @@
+:8066 {
+	@originacc header Origin https://app.acc.clothingloop.org
+	@originprod header Origin https://app.acc.clothingloop.org
+
+	header @originacc >Origin-Access-Control-Allow https://app.acc.clothingloop.org
+	header @originprod >Origin-Access-Control-Allow https://app.clothingloop.org
+
+	reverse_proxy http://mattermost:8065
+}
