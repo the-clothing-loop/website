@@ -16,5 +16,9 @@
 	reverse_proxy http://mattermost:8065 {
 		stream_timeout 24h
 		stream_close_delay 5m
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
 	}
 }
