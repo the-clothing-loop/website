@@ -26,10 +26,26 @@ export default function AdminDashboard() {
   );
   const reasonsForLeaving = useRef<string[]>([]);
   const otherExplanation = useRef<string>();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const handleCloseDeleteModal = () => setIsDeleteModalOpen(false);
 
-  const handleSelectReasons = (selectedReasons: string[], other?: string) => {
+  const handleSubmitDelete = (selectedReasons: string[], other?: string) => {
     reasonsForLeaving.current = selectedReasons;
     otherExplanation.current = other;
+
+    userPurge(
+      authUser!.uid,
+      reasonsForLeaving.current,
+      otherExplanation.current,
+    )
+      .then(() => {
+        window.location.href = localizePath("/users/logout");
+      })
+      .catch((err: any) => {
+        console.error("Error purging user:", err);
+        addToastError(GinParseErrors(t, err), err?.status);
+      });
+
   };
 
   function deleteClicked() {
@@ -55,35 +71,7 @@ export default function AdminDashboard() {
         .filter((uc) => uc.is_chain_admin)
         .map((uc) => chains.find((c) => c.uid === uc.chain_uid)),
     );
-
-    addModal({
-      message: t("deleteAccount"),
-      content: () => {
-        return <DeleteModal onUpdateSelectedReasons={handleSelectReasons} />;
-      },
-      actions: [
-        {
-          text: t("delete"),
-          type: "error",
-          fn: () => {
-            otherExplanation.current
-              ? userPurge(
-                  authUser!.uid,
-                  reasonsForLeaving.current,
-                  otherExplanation.current,
-                )
-              : userPurge(authUser!.uid, reasonsForLeaving.current)
-                  .then(() => {
-                    window.location.href = localizePath("/users/logout");
-                  })
-                  .catch((err: any) => {
-                    console.error("Error purging user:", err);
-                    addToastError(GinParseErrors(t, err), err?.status);
-                  });
-          },
-        },
-      ],
-    });
+    setIsDeleteModalOpen(true);
   }
 
   function logoutClicked() {
@@ -205,6 +193,11 @@ export default function AdminDashboard() {
           </label>
         </div>
       </section>
+      <DeleteModal
+        onSubmitReasonForLeaving={handleSubmitDelete}
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+      />
       <ChainsList chains={chains} setChains={setChains} />
     </main>
   );
