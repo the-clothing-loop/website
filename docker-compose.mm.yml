@@ -8,24 +8,24 @@ services:
       - mattermost_prev_db:/var/lib/postgresql/data
       - mattermost_prev_config:/mm/mattermost/config
       - mattermost_prev_data:/mm/mattermost-data
-  mattermost_mail:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.mmmail
-      args:
-        - ENV=production
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:2525/ping || exit 1
-      interval: 30s
-      timeout: 5s
-      retries: 5
-    environment:
-      - DB_HOST=$DB_HOST
-      - DB_PORT=$DB_PORT
-      - DB_NAME=$DB_NAME
-      - DB_USER=$DB_USER
-      - DB_PASS=$DB_PASS
-      - MM_SMTP_HOST=mattermost_mail
-      - MM_SMTP_PORT=2525
-      - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
-      - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
+  # mattermost_mail:
+  #   build:
+  #     context: ./server
+  #     dockerfile: Dockerfile.mmmail
+  #     args:
+  #       - ENV=production
+  #   healthcheck:
+  #     test: wget --no-verbose --tries=1 --spider http://localhost:2525/ping || exit 1
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 5
+  #   environment:
+  #     - DB_HOST=$DB_HOST
+  #     - DB_PORT=$DB_PORT
+  #     - DB_NAME=$DB_NAME
+  #     - DB_USER=$DB_USER
+  #     - DB_PASS=$DB_PASS
+  #     - MM_SMTP_HOST=mattermost_mail
+  #     - MM_SMTP_PORT=2525
+  #     - ONESIGNAL_APP_ID=$ONESIGNAL_APP_ID
+  #     - ONESIGNAL_REST_API_KEY=$ONESIGNAL_REST_API_KEY
