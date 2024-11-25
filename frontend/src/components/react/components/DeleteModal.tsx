@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
 
@@ -11,14 +11,16 @@ interface DeleteModalProps {
   onSubmitReasonForLeaving: (selectedReasons: string[], other?: string) => void;
   isOpen: boolean;
   onClose: () => void;
+  chainNames: string[];
 }
 
 export default function DeleteModal({
   onSubmitReasonForLeaving,
   isOpen,
   onClose,
+  chainNames,
 }: DeleteModalProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const authUser = useStore($authUser);
 
   const [chains, setChains] = useState<Chain[]>([]);
@@ -68,14 +70,6 @@ export default function DeleteModal({
       onClose();
     }
   }
-  if (!authUser) return;
-  const chainNames = authUser.is_root_admin
-    ? undefined
-    : (authUser.chains
-        .filter((uc) => uc.is_chain_admin)
-        .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
-        .filter((c) => c && c.total_hosts && !(c.total_hosts > 1))
-        .map((c) => c!.name) as string[]);
 
   return (
     <dialog
@@ -85,8 +79,8 @@ export default function DeleteModal({
     >
       <div className="space-y-2">
         {chainNames && chainNames.length ? (
-          <>
-            <p className="">{t("deleteAccountWithLoops")}</p>
+          <div>
+            <h5 className="text-lg mx-8 my-8">{t("deleteAccountWithLoops")}</h5>
             <ul
               className={`text-sm font-semibold mx-8 ${
                 chainNames.length > 1 ? "list-disc" : "list-none text-center"
@@ -96,9 +90,17 @@ export default function DeleteModal({
                 <li key={name}>{name}</li>
               ))}
             </ul>
-          </>
+            <button
+              onClick={onClose}
+              key="close"
+              type="reset"
+              className={"btn btn-sm btn-ghost float-end m-6"}
+            >
+              {t("close")}
+            </button>
+          </div>
         ) : (
-          <>
+          <div>
             <h5 className="text-lg mx-6 my-6">{t("selectReasonForLeaving")}</h5>
             <form className="bg-white max-w-screen-sm px-6" onSubmit={onSubmit}>
               <ul className="list-none">
@@ -238,7 +240,7 @@ export default function DeleteModal({
                 </button>
               </div>
             </form>
-          </>
+          </div>
         )}
       </div>
     </dialog>

@@ -28,6 +28,7 @@ export default function AdminDashboard() {
   const otherExplanation = useRef<string>();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const handleCloseDeleteModal = () => setIsDeleteModalOpen(false);
+  const [chainNames, setChainNames] = useState<string[]>([]);
 
   const handleSubmitDelete = (selectedReasons: string[], other?: string) => {
     reasonsForLeaving.current = selectedReasons;
@@ -45,23 +46,22 @@ export default function AdminDashboard() {
         console.error("Error purging user:", err);
         addToastError(GinParseErrors(t, err), err?.status);
       });
-
   };
 
   function deleteClicked() {
     if (!authUser) return;
-    const chainNames = authUser.is_root_admin
+    const _chainNames = authUser.is_root_admin
       ? undefined
       : (authUser.chains
           .filter((uc) => uc.is_chain_admin)
           .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
           .filter((c) => c && c.total_hosts && !(c.total_hosts > 1))
           .map((c) => c!.name) as string[]);
-
+    setChainNames(_chainNames || []);
     console.log(
       "show content",
       "chainNames",
-      chainNames,
+      _chainNames,
       "authUser.is_root_admin",
       authUser.is_root_admin,
       "authUser.chains",
@@ -197,6 +197,7 @@ export default function AdminDashboard() {
         onSubmitReasonForLeaving={handleSubmitDelete}
         isOpen={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
+        chainNames={chainNames}
       />
       <ChainsList chains={chains} setChains={setChains} />
     </main>
