@@ -140,6 +140,10 @@ export default function AddressList() {
     return arr;
   }, [route, chainUsers, routeListView, slowSearch]);
 
+  const countActiveMembers = useMemo(() => {
+    return routeListItems.filter((r) => !r.isUserPaused).length;
+  }, [routeListItems]);
+
   function handleRefresh(e: CustomEvent<RefresherEventDetail>) {
     const refreshPromise = setChain(chain?.uid, authUser);
     const sleepPromise = Sleep(500);
@@ -285,12 +289,17 @@ export default function AddressList() {
               initialHeader={headerText}
             />
           ) : null}
-          <IonIcon
-            aria-hidden="true"
-            icon="/the_clothing_loop_logo_cropped.svg"
-            style={{ fontSize: 150 }}
-            className="tw-w-full -tw-mb-2 tw-invert-[60%] tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
-          />
+          <div className="tw-relative tw-w-full -tw-mb-2">
+            <IonIcon
+              aria-hidden="true"
+              icon="/the_clothing_loop_logo_cropped.svg"
+              style={{ fontSize: 150 }}
+              className="tw-w-full  tw-invert-[60%] tw-overflow-hidden tw-stroke-text dark:tw-stroke-light-tint"
+            />
+            <div className="tw-absolute tw-w-full tw-bottom-0 tw-mb-6 tw-text-center tw-text-sm">
+              {t("activeMembers") + ": " + countActiveMembers}
+            </div>
+          </div>
         </div>
         {isChainAdmin || chain?.allow_map ? (
           <IonFab slot="fixed" horizontal="end" vertical="bottom">

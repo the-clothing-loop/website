@@ -48,8 +48,13 @@ func ContactNewsletter(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+	ctx := c.Request.Context()
 	if app.Brevo != nil {
-		app.Brevo.CreateContact(c.Request.Context(), body.Email)
+		if err = app.Brevo.ExistsContact(ctx, body.Email); err == nil {
+			c.String(http.StatusAlreadyReported, "Already subscribed")
+			return
+		}
+		app.Brevo.CreateContact(ctx, body.Email)
 	}
 
 	views.EmailSubscribeToNewsletter(c, db, name, body.Email)

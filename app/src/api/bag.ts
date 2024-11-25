@@ -7,8 +7,8 @@ export function sortBags(bags: Bag[]) {
   return bags.sort((a, z) => {
     const matchA = regxBag.exec(a.number);
     const matchZ = regxBag.exec(z.number);
-    const noA = matchA?.at(1) ? parseInt(matchA[1]) : NaN;
-    const noZ = matchZ?.at(1) ? parseInt(matchZ[1]) : NaN;
+    const noA = matchA?.[1] ? parseInt(matchA[1]) : NaN;
+    const noZ = matchZ?.[1] ? parseInt(matchZ[1]) : NaN;
 
     if (Number.isNaN(noA) && Number.isNaN(noZ)) {
       const compare = a.number.localeCompare(z.number, "kn");
