@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
@@ -206,10 +207,8 @@ func UserUpdate(c *gin.Context) {
 		if body.Address != nil {
 			userChanges["address"] = *body.Address
 		}
-		if body.Latitude != nil {
+		if lo.FromPtr(body.Latitude) != 0 && lo.FromPtr(body.Longitude) != 0 {
 			userChanges["latitude"] = *body.Latitude
-		}
-		if body.Longitude != nil {
 			userChanges["longitude"] = *body.Longitude
 		}
 		if body.PausedUntil != nil {
