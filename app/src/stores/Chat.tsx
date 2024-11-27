@@ -1,9 +1,10 @@
-import { Client4, WebSocketClient } from "@mattermost/client";
+import { WebSocketClient } from "@mattermost/client";
 import { createContext, PropsWithChildren, useState } from "react";
 import { UID } from "../api/types";
 import * as apiChat from "../api/chat";
 import { Sleep } from "../utils/sleep";
 import { UserProfile } from "@mattermost/types/users";
+import { Client4 } from "../utils/client4";
 
 type State = {
   chat_team: string;
@@ -35,10 +36,14 @@ export function ChatProvider({ children }: PropsWithChildren) {
 
       await Sleep(500);
 
-      await client.loginById(data.chat_user_id, data.chat_pass);
+      const userProfile = await client.login2(
+        data.chat_user_name,
+        data.chat_pass,
+      );
+      client.setToken(userProfile.token);
       const socket = new WebSocketClient();
       const url = client.getWebSocketUrl().replace("http", "ws");
-      socket.initialize(url, client.getToken());
+      socket.initialize(url, userProfile.token);
 
       await apiChat.chatJoinChannels(chainUID);
 
