@@ -42,6 +42,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
         data.chat_pass,
       );
       client.setToken(userProfile.token);
+      client.setHeader("Token", userProfile.token);
       const socket = new WebSocketClient();
       const url = client.getWebSocketUrl().replace("http", "ws");
       socket.initialize(url, userProfile.token);
