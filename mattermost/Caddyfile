@@ -1,25 +1,18 @@
 :8066 {
-	header {
-		Access-Control-Allow-Headers *
-		Access-Control-Allow-Methods *
-		# Access-Control-Allow-Origin *
-	}
-	@options {
-		method OPTIONS
-	}
-
+	@options method OPTIONS
 	@originacc header Origin https://app.acc.clothingloop.org
 	@originprod header Origin https://app.acc.clothingloop.org
 
+	header {
+		>Access-Control-Allow-Methods POST, GET, OPTIONS, PUT, PATCH, DELETE
+		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie,token
+		>Access-Control-Allow-Credentials true
+	}
 	header @originacc {
 		>Access-Control-Allow-Origin https://app.acc.clothingloop.org
-		>Access-Control-Allow-Credentials true
-		# >Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie
 	}
 	header @originprod {
 		>Access-Control-Allow-Origin https://app.clothingloop.org
-		>Access-Control-Allow-Credentials true
-		# >Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie
 	}
 
 	respond @options 204
