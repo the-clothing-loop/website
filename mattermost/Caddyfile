@@ -14,12 +14,12 @@
 	header @originacc {
 		>Access-Control-Allow-Origin https://app.acc.clothingloop.org
 		>Access-Control-Allow-Credentials true
-		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie
+		# >Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie
 	}
 	header @originprod {
 		>Access-Control-Allow-Origin https://app.clothingloop.org
 		>Access-Control-Allow-Credentials true
-		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie
+		# >Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie
 	}
 
 	respond @options 204
