@@ -9,11 +9,13 @@
 	}
 	header @originacc {
 		>Access-Control-Allow-Origin https://app.acc.clothingloop.org
-		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,Authorization
+		>Access-Control-Allow-Headers origin, content-type, x-requested-with, accept, token
+		>Access-Control-Expose-Headers origin, content-type, x-requested-with, accept, token
 	}
 	header @originprod {
 		>Access-Control-Allow-Origin https://app.clothingloop.org
-		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,Authorization
+		>Access-Control-Expose-Headers origin, content-type, x-requested-with, accept, token
+		>Access-Control-Allow-Headers origin, content-type, x-requested-with, accept, token
 	}
 
 	respond @options 204
