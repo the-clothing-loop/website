@@ -49,7 +49,14 @@ export type OnSendMessageWithImage = (
 export default function Chat() {
   const { t } = useTranslation();
   const [presentActionSheet] = useIonActionSheet();
-  const { chain, setChain, isThemeDefault } = useContext(StoreContext);
+  const {
+    chain,
+    setChain,
+    isThemeDefault,
+    authUser,
+    chainUsers,
+    isChainAdmin,
+  } = useContext(StoreContext);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedOldBulkyItems, setSelectedOldBulkyItems] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
@@ -62,7 +69,6 @@ export default function Chat() {
     has_next: true,
   });
   const [loadingPostList, setLoadingPostList] = useState(false);
-  const { authUser, chainUsers, isChainAdmin } = useContext(StoreContext);
   const ChatStore = useContext(ChatContext);
   const UseChatCreateEdit = useChatCreateEdit({
     onDeleteChannel,
