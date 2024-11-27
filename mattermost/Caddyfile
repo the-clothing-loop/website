@@ -5,14 +5,15 @@
 
 	header {
 		>Access-Control-Allow-Methods POST, GET, OPTIONS, PUT, PATCH, DELETE
-		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,cookie,token
-		>Access-Control-Allow-Credentials true
+		# >Access-Control-Allow-Credentials true
 	}
 	header @originacc {
 		>Access-Control-Allow-Origin https://app.acc.clothingloop.org
+		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,X-CSRF-Token
 	}
 	header @originprod {
 		>Access-Control-Allow-Origin https://app.clothingloop.org
+		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,X-CSRF-Token
 	}
 
 	respond @options 204

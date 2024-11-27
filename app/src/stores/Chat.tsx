@@ -33,6 +33,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
     return apiChat.chatPatchUser(chainUID).then(async ({ data }) => {
       const client = new Client4();
       client.setUrl(VITE_CHAT_URL);
+      client.setIncludeCookies(false);
 
       await Sleep(500);
 
