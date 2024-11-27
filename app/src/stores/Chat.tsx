@@ -34,19 +34,17 @@ export function ChatProvider({ children }: PropsWithChildren) {
       const client = new Client4();
       client.setUrl(VITE_CHAT_URL);
       client.setIncludeCookies(false);
-
-      await Sleep(500);
-
-      const userProfile = await client.login2(
+      const { token } = await client.login2(
         data.chat_user_name,
         data.chat_pass,
       );
-      client.setToken(userProfile.token);
-      client.setHeader("Token", userProfile.token);
-      console.log("user profile token: ", userProfile.token);
+      console.log("1user profile token: ", token);
+      client.setToken(token);
+      client.setHeader("Token", token);
+      console.log("user profile token: ", token);
       const socket = new WebSocketClient();
       const url = client.getWebSocketUrl().replace("http", "ws");
-      socket.initialize(url, userProfile.token);
+      socket.initialize(url, token);
 
       await apiChat.chatJoinChannels(chainUID);
 
