@@ -1,5 +1,6 @@
 import type { OptimalPath, UID } from "./types";
 import axios from "./axios";
+import { RouteCoordinatesGetResponseItem } from "./typex2";
 
 export function routeGetOrder(chainUID: UID) {
   return axios.get<UID[]>("/v2/route/order", {
@@ -20,12 +21,7 @@ export function routeOptimizeOrder(chainUID: UID) {
   });
 }
 
-export interface RouteCoordinate {
-  user_uid: string;
-  latitude: number;
-  longitude: number;
-  route_order: number;
-}
+export type RouteCoordinate = RouteCoordinatesGetResponseItem;
 
 // user uid will be used for participants to anonymise the route
 export function routeCoordinates(chainUID: UID, userUID?: UID) {

@@ -1,9 +1,9 @@
 import { IonCard } from "@ionic/react";
-import type { Bag, User } from "../../api/types";
 import { useBagTooOld } from "./bag.hook";
 import BagSVG from "./Svg";
 import { useHistory } from "react-router";
 import BagCardDate from "./BagCardDate";
+import { Bag, User } from "../../api/typex2";
 
 interface Props {
   authUser: User | null;

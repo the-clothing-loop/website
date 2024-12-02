@@ -2,7 +2,7 @@ import { IonButton, IonCard, IonCardContent, IonIcon } from "@ionic/react";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { IsChainAdmin, StoreContext } from "../stores/Store";
-import { User } from "../api/types";
+import { User } from "../api/typex2";
 import { openOutline } from "ionicons/icons";
 import { useHistory } from "react-router";
 import { OverlayContainsState, OverlayState } from "../utils/overlay_open";

@@ -42,6 +42,7 @@ const defaultValues: EventCreateBody = {
   date_end: null,
   genders: [],
   image_url: "",
+  image_delete_url: "",
 };
 
 const currencies = [
@@ -135,7 +136,7 @@ export default function EventChangeForm(props: {
     () => values.price_currency || defaultValues.price_currency!,
   );
   const [eventPriceType, _setEventPriceType] = useState<EventPriceType>(
-    () => values.price_type || defaultValues.price_type!,
+    () => (values.price_type || defaultValues.price_type!) as EventPriceType,
   );
   const isValidPrice = useMemo(
     () => validatePrice(eventPriceText),

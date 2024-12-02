@@ -7,8 +7,6 @@ import {
   IonLabel,
   IonList,
   IonModal,
-  IonSegment,
-  IonSegmentButton,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";

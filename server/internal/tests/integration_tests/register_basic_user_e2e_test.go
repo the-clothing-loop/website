@@ -12,6 +12,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
 func TestRegisterBasicUser(t *testing.T) {
@@ -49,7 +50,7 @@ func TestRegisterBasicUser(t *testing.T) {
 	db.Raw("SELECT * FROM users WHERE email = ? LIMIT 1", participantEmail).Scan(testUser)
 	assert.NotEmpty(t, testUser.ID, "user of participant email: %s not found", participantEmail)
 
-	testUserChains := &models.UserChain{}
+	testUserChains := &sharedtypes.UserChain{}
 	db.Raw("SELECT * FROM user_chains WHERE user_id = ? LIMIT 1", testUser.ID).Scan(testUserChains)
 	assert.NotEmpty(t, testUserChains.ID, "chainUser of participant user_id: %d not found", testUser.ID)
 

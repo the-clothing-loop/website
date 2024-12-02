@@ -15,7 +15,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/controllers"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/tests/mocks"
-	"gopkg.in/guregu/null.v3"
 )
 
 func TestUserGetAllOfChainRoutePrivacy(t *testing.T) {
@@ -35,7 +34,7 @@ func TestUserGetAllOfChainRoutePrivacy(t *testing.T) {
 	user8, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 8})
 	user9, token9 := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 9, IsRootAdmin: true})
 	user10, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 10})
-	user10.PausedUntil = null.TimeFrom(time.Now().Add(1 * time.Hour))
+	user10.PausedUntil = lo.ToPtr(time.Now().Add(1 * time.Hour))
 	db.Save(user10)
 	user11, _ := mocks.MockUser(t, db, chain.ID, mocks.MockChainAndUserOptions{RouteOrderIndex: 11})
 
@@ -61,7 +60,7 @@ func TestUserGetAllOfChainRoutePrivacy(t *testing.T) {
 				expectedUser := expectedUsers[index]
 				assert.Equal(t, expectedUser.UID, actualUser.UID)
 
-				assert.Equal(t, expectedUser.Email.String, actualUser.Email.String, "index %d", index)
+				assert.Equal(t, *expectedUser.Email, *actualUser.Email, "index %d", index)
 				assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber, "index %d", index)
 				assert.Equal(t, expectedUser.Address, actualUser.Address, "index %d", index)
 			})
@@ -89,16 +88,16 @@ func TestUserGetAllOfChainRoutePrivacy(t *testing.T) {
 				// The address, Phone and Number of all users should be *** except for users 2 and 3. Also, 6 because it is admin and 0 because it is the logged user
 				switch index {
 				case 3 /* one before me */, 4 /* me */, 5 /* one after me */ :
-					assert.Equal(t, expectedUser.Email.String, actualUser.Email.String, "index %d", index)
+					assert.Equal(t, *expectedUser.Email, *actualUser.Email, "index %d", index)
 					assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber, "index %d", index)
 					assert.Equal(t, expectedUser.Address, actualUser.Address, "index %d", index)
 				case 0, 6 /* hosts */ :
 					assert.Equal(t, "***", actualUser.Address, "index %d", index)
-					assert.Equal(t, expectedUser.Email.String, actualUser.Email.String, "index %d", index)
+					assert.Equal(t, *expectedUser.Email, *actualUser.Email, "index %d", index)
 					assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber, "index %d", index)
 				default:
 					assert.Equal(t, "***", actualUser.Address, "index %d", index)
-					assert.Equal(t, "***", actualUser.Email.String, "index %d", index)
+					assert.Equal(t, "***", *actualUser.Email, "index %d", index)
 					assert.Equal(t, "***", actualUser.PhoneNumber, "index %d", index)
 				}
 			})
@@ -119,7 +118,7 @@ func TestUserGetAllOfChainRoutePrivacy(t *testing.T) {
 				expectedUser := expectedUsers[index]
 				assert.Equal(t, expectedUser.UID, actualUser.UID)
 
-				assert.Equal(t, expectedUser.Email.String, actualUser.Email.String, "index %d", index)
+				assert.Equal(t, *expectedUser.Email, *actualUser.Email, "index %d", index)
 				assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber, "index %d", index)
 				assert.Equal(t, expectedUser.Address, actualUser.Address, "index %d", index)
 			})
@@ -157,11 +156,11 @@ func TestUserGetAllOfChainRoutePrivacyOverflowCase(t *testing.T) {
 
 		// testing Route Privacy. The address, Phone and Number of all users should be *** except for users 1,2 and 5,6. Also, 0 because it is the logged user
 		if index != 0 && index != 1 && index != 2 && index != 5 && index != 6 {
-			assert.Equal(t, "***", actualUser.Email.String)
+			assert.Equal(t, "***", *actualUser.Email)
 			assert.Equal(t, "***", actualUser.PhoneNumber)
 			assert.Equal(t, "***", actualUser.Address)
 		} else {
-			assert.Equal(t, expectedUser.Email.String, actualUser.Email.String)
+			assert.Equal(t, *expectedUser.Email, *actualUser.Email)
 			assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber)
 			assert.Equal(t, expectedUser.Address, actualUser.Address)
 		}
@@ -190,7 +189,7 @@ func TestUserGetAllOfChainRoutePrivacySmallChain(t *testing.T) {
 		for index, actualUser := range *actualUsers {
 			expectedUser := expectedUsers[index]
 			assert.Equal(t, expectedUser.UID, actualUser.UID)
-			assert.Equal(t, expectedUser.Email.String, actualUser.Email.String)
+			assert.Equal(t, *expectedUser.Email, *actualUser.Email)
 			assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber)
 			assert.Equal(t, expectedUser.Address, actualUser.Address)
 		}
@@ -211,7 +210,7 @@ func TestUserGetAllOfChainRoutePrivacySmallChain(t *testing.T) {
 		for index, actualUser := range *actualUsers {
 			expectedUser := expectedUsers[index]
 			assert.Equal(t, expectedUser.UID, actualUser.UID)
-			assert.Equal(t, expectedUser.Email.String, actualUser.Email.String)
+			assert.Equal(t, *expectedUser.Email, *actualUser.Email)
 			assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber)
 			assert.Equal(t, expectedUser.Address, actualUser.Address)
 		}
@@ -244,11 +243,11 @@ func TestUserGetAllOfChainRoutePrivacyEqual0(t *testing.T) {
 
 		// testing Route Privacy. The address, Phone and Number of all users should be *** except for users 2 because is admin, 0 because it is the logged user
 		if index != 0 && index != 2 {
-			assert.Equal(t, "***", actualUser.Email.String)
+			assert.Equal(t, "***", *actualUser.Email)
 			assert.Equal(t, "***", actualUser.PhoneNumber)
 			assert.Equal(t, "***", actualUser.Address)
 		} else {
-			assert.Equal(t, expectedUser.Email.String, actualUser.Email.String)
+			assert.Equal(t, *expectedUser.Email, *actualUser.Email)
 			assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber)
 			if index != 2 { // cant see chain admin address
 				assert.Equal(t, expectedUser.Address, actualUser.Address)
@@ -283,7 +282,7 @@ func TestUserGetAllOfChainRoutePrivacyEqualMinusOne(t *testing.T) {
 	for index, actualUser := range *actualUsers {
 		expectedUser := expectedUsers[index]
 		assert.Equal(t, expectedUser.UID, actualUser.UID)
-		assert.Equal(t, expectedUser.Email.String, actualUser.Email.String)
+		assert.Equal(t, *expectedUser.Email, *actualUser.Email)
 		assert.Equal(t, expectedUser.PhoneNumber, actualUser.PhoneNumber)
 		assert.Equal(t, expectedUser.Address, actualUser.Address)
 	}

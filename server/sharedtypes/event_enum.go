@@ -4,7 +4,7 @@
 // Build Date:
 // Built By:
 
-package models
+package sharedtypes
 
 import (
 	"database/sql/driver"

@@ -96,22 +96,22 @@ export default function Counters() {
           <div className="opacity-80">{t("lWaterAvoided")}</div>
         </div>
 
-        <div>
-          <div className="h-20 text-6xl font-serif text-stroke-base-100 flex items-center">
-            <a
-              href="https://heyzine.com/flip-book/a8c1962269.html"
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn-primary btn-circle"
-              aria-label="our impact"
-            >
+        <div className="col-span-2 xl:col-span-1">
+          <a
+            className="inline-flex items-center gap-4 my-6 group"
+            href="https://heyzine.com/flip-book/a8c1962269.html"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="our impact"
+          >
+            <div className="flex-shrink-0 h-16 w-16 rounded-full flex justify-center items-center text-2xl bg-yellow-dark group-hover:bg-yellow-darker text-stroke-base-100">
               <span className="icon-arrow-right rtl:hidden" />
               <span className="icon-arrow-left ltr:hidden" />
-            </a>
-          </div>
-          <div className="opacity-100 whitespace-normal">
-            {t("readOurImpactReport")}
-          </div>
+            </div>
+            <div className="text-lg md:text-xl opacity-100 whitespace-normal">
+              {t("readOurImpactReport")}
+            </div>
+          </a>
         </div>
       </div>
     </div>

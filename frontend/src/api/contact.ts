@@ -1,3 +1,4 @@
+import type { Response } from "redaxios";
 import axios from "./axios";
 export function contactNewsletterSet(
   name: string,
@@ -12,7 +13,7 @@ export function contactNewsletterSet(
 }
 
 export function contactMailSend(name: string, email: string, message: string) {
-  return axios.post<never>("/v2/contact/email", {
+  return axios.post<string>("/v2/contact/email", {
     name,
     email,
     message,

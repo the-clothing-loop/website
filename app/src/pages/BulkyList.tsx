@@ -18,7 +18,7 @@ import {
 import { Fragment, useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
-import { BulkyItem, User } from "../api/types";
+import { BulkyItem, User } from "../api/typex2";
 import { bulkyItemRemove } from "../api/bulky";
 import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../stores/Store";

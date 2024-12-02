@@ -43,16 +43,8 @@ export default function UserEdit() {
       try {
         let userUpdateBody: UserUpdateBody = {
           user_uid: userUID,
-          name: values.name,
-          phone_number: values.phone,
-          newsletter: values.newsletter,
-          address: values.address,
-          sizes: values.sizes,
+          ...values,
         };
-        if (values.latitude && values.longitude) {
-          userUpdateBody.latitude = values.latitude;
-          userUpdateBody.longitude = values.longitude;
-        }
         if (chainUID) userUpdateBody.chain_uid = chainUID;
         console.info(userUpdateBody);
 

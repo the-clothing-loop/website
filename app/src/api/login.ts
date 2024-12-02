@@ -1,47 +1,32 @@
 import { Sizes } from "./enums";
-import type { UID, User } from "./types";
+import type { UID } from "./types";
 import axios from "./axios";
-
-export interface RequestRegisterUser {
-  name: string;
-  email: string;
-  address: string;
-  phone_number: string;
-  newsletter: boolean;
-  sizes: Array<Sizes | string>;
-  longitude: number;
-  latitude: number;
-}
-
-export interface RequestRegisterChain {
-  name: string;
-  description: string;
-  address: string;
-  country_code?: string;
-  latitude: number;
-  longitude: number;
-  radius: number;
-  open_to_new_members: boolean;
-  sizes: Array<Sizes | string> | null;
-  genders: Array<Sizes | string> | null;
-  allow_toh: boolean;
-}
+import {
+  ChainCreateRequest,
+  RegisterBasicUserRequest,
+  RegisterChainAdminRequest,
+  User,
+  UserCreateRequest,
+} from "./typex2";
 
 export function registerChainAdmin(
-  user: RequestRegisterUser,
-  chain: RequestRegisterChain,
+  user: UserCreateRequest,
+  chain: ChainCreateRequest,
 ) {
-  return axios.post<never>("/v2/register/chain-admin", { user, chain });
+  return axios.post<never>("/v2/register/chain-admin", {
+    user,
+    chain,
+  } satisfies RegisterChainAdminRequest);
 }
 
-export function registerBasicUser(user: RequestRegisterUser, chainUID: UID) {
+export function registerBasicUser(user: UserCreateRequest, chainUID: UID) {
   return axios.post<never>("/v2/register/basic-user", {
     user,
     chain_uid: chainUID,
-  });
+  } satisfies RegisterBasicUserRequest);
 }
 
-export function registerOrphanedUser(user: RequestRegisterUser) {
+export function registerOrphanedUser(user: UserCreateRequest) {
   return axios.post<never>("/v2/register/orphaned-user", {
     user,
   });

@@ -19,13 +19,14 @@ import {
   flag,
 } from "ionicons/icons";
 import { useTranslation } from "react-i18next";
-import { Chain, User } from "../api/types";
+import { Chain } from "../api/types";
 import IsPrivate from "../utils/is_private";
 import { IsChainAdmin, IsChainWarden } from "../stores/Store";
 import { useMemo, useRef, useState } from "react";
 import { Share } from "@capacitor/share";
 import { isPlatform } from "@ionic/core";
 import { useLongPress } from "use-long-press";
+import { User } from "../api/typex2";
 
 interface MessagingApp {
   icon: string;
