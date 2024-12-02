@@ -34,7 +34,10 @@ export function ChatProvider({ children }: PropsWithChildren) {
       const client = new Client4();
       client.setUrl(VITE_CHAT_URL);
       client.setIncludeCookies(false);
-      const { token } = await client.login2(data.chat_user_id, data.chat_pass);
+      const { token } = await client.login2(
+        data.chat_user_name + "@example.com",
+        data.chat_pass,
+      );
       console.log("1user profile token: ", token);
       client.setToken(token);
       client.setHeader("Token", token);

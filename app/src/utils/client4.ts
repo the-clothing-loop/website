@@ -11,7 +11,7 @@ export class Client4 extends BaseClient4 {
   // Below is a simplified version of `login` with no fuss
   // https://github.com/mattermost/mattermost-redux/blob/master/src/client/client4.ts#L678
   async login2(
-    username: string,
+    login_id: string,
     password: string,
   ): Promise<UserProfile & { token: string }> {
     this.trackEvent("api", "api_users_login");
@@ -21,7 +21,7 @@ export class Client4 extends BaseClient4 {
       {
         method: "POST",
         body: JSON.stringify({
-          login_id: username,
+          login_id,
           password,
         }),
       },
