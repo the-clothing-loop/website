@@ -38,12 +38,14 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
   });
 }
 
-export function userPurge(userUID: string) {
-  return axios.delete<never>("v2/user/purge", {
-    params: {
-      user_uid: userUID,
-    },
-  });
+export function userPurge(
+  userUID: string,
+  reasonsForLeaving: string[],
+  otherExplanation?: string,
+) {
+  return axios.delete<never>(
+    `v2/user/purge?user_uid=${userUID}&reasons=${reasonsForLeaving}&otherExplanation=${otherExplanation}`,
+  );
 }
 
 export function userHasNewsletter(

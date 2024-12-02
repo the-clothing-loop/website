@@ -299,7 +299,9 @@ func UserPurge(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID string `form:"user_uid" binding:"required,uuid"`
+		UserUID           string   `form:"user_uid" binding:"required,uuid"`
+		ReasonsForLeaving []string `form:"reasons_for_leaving"`
+		OtherExplanation  string   `form:"other_explanation,omitempty"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
@@ -358,6 +360,27 @@ HAVING COUNT(uc.id) = 1
 		return
 	}
 
+	deletedUser := models.DeletedUser{
+		Email:            user.Email.String,
+		UserCreatedAt:    user.CreatedAt,
+		UserDeletedAt:    time.Now(),
+		OtherExplanation: query.OtherExplanation,
+	}
+
+	if ok := models.ValidateAllReasonsEnum(query.ReasonsForLeaving); !ok {
+		c.String(http.StatusBadRequest, models.ErrReasonInvalid.Error())
+		return
+	}
+
+	if err := deletedUser.SetReasons(query.ReasonsForLeaving); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := db.Create(&deletedUser).Error; err != nil {
+		c.String(http.StatusInternalServerError, "Failed to add deleted user to database")
+		return
+	}
 	tx := db.Begin()
 
 	err = user.DeleteUserChainDependenciesAllChains(tx)
