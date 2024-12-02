@@ -5,7 +5,7 @@
 
 	header {
 		>Access-Control-Allow-Methods POST, GET, OPTIONS, PUT, PATCH, DELETE
-		>Access-Control-Allow-Credentials true
+		# >Access-Control-Allow-Credentials true
 	}
 	header @originacc {
 		>Access-Control-Allow-Origin https://app.acc.clothingloop.org
