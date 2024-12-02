@@ -14,8 +14,8 @@
 	}
 	header @originprod {
 		>Access-Control-Allow-Origin https://app.clothingloop.org
-		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token
-		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token
+		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token,authorization
+		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,authorization
 	}
 
 	respond @options 204
