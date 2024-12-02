@@ -6,14 +6,16 @@
 	header {
 		>Access-Control-Allow-Methods POST, GET, OPTIONS, PUT, PATCH, DELETE
 		>Access-Control-Allow-Credentials true
-		>Access-Control-Allow-Headers Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Access-Control-Request-Method,Access-Control-Request-Headers,Referer,Origin,DNT,Sec-GPC,Connection,Sec-Fetch-Dest,Sec-Fetch-Mode,Sec-Fetch-Site,Priority,Token
-		>Access-Control-Expose-Headers Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Access-Control-Request-Method,Access-Control-Request-Headers,Referer,Origin,DNT,Sec-GPC,Connection,Sec-Fetch-Dest,Sec-Fetch-Mode,Sec-Fetch-Site,Priority,Token
 	}
 	header @originacc {
 		>Access-Control-Allow-Origin https://app.acc.clothingloop.org
+		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token
+		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token
 	}
 	header @originprod {
 		>Access-Control-Allow-Origin https://app.clothingloop.org
+		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token
+		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token
 	}
 
 	respond @options 204
