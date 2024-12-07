@@ -117,7 +117,7 @@ export default function Chat() {
   useEffect(() => {
     if (!chain || !ChatStore.state.client) return;
     getChannels(chain.chat_room_ids || []);
-  }, [ChatStore.state]);
+  }, [ChatStore.state, chain]);
 
   // useEffect(() => {
   //   if (!selectedChannel) {
