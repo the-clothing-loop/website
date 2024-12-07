@@ -71,16 +71,20 @@ export default function ChatPost(props: ChatPostProps) {
   const isEditable = isMe || props.isChainAdmin;
 
   if (props.post.type != "") {
-    return (
-      <div className="tw-flex tw-justify-center">
-        <div
-          className="tw-rounded tw-max-w-xs tw-text-center tw-text-sm tw-p-1 tw-my-2 tw-opacity-70 focus:tw-opacity-100 tw-bg-light"
-          tabIndex={-1}
-        >
-          {message}
+    if (props.authUser?.is_root_admin) {
+      return (
+        <div className="tw-flex tw-justify-center">
+          <div
+            className="tw-rounded tw-max-w-xs tw-text-center tw-text-sm tw-p-1 tw-my-2 tw-opacity-70 focus:tw-opacity-100 tw-bg-light"
+            tabIndex={-1}
+          >
+            {message}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 
   if (imageURL) {
