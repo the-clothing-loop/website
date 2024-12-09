@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import LogoutPage from "../../../components/react/pages/Logout";
+import Base from "../../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Logout">
+  <LogoutPage client:load />
+</Base>
