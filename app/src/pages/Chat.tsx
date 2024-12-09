@@ -399,6 +399,11 @@ export default function Chat() {
           handler: () => UseChatCreateEdit.onOpenCreateChannel("edit"),
         },
         {
+          text: t("delete"),
+          role: "destructive",
+          handler: () => UseChatCreateEdit.onChannelOptionSelect("delete"),
+        },
+        {
           text: t("cancel"),
           role: "cancel",
         },
