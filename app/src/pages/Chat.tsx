@@ -455,9 +455,6 @@ export default function Chat() {
               onSelectOldBulkyItems={onSelectOldBulkyItems}
               onOpenCreateChannel={UseChatCreateEdit.onOpenCreateChannel}
               onChannelOptionSelect={UseChatCreateEdit.onChannelOptionSelect}
-              isChannelActionSheetOpen={
-                UseChatRoomActions.isChannelActionSheetOpen
-              }
             />
           </div>
 
