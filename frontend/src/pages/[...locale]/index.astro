@@ -1,0 +1,15 @@
+---
+import HomePage from "../../components/react/pages/Home";
+import Base from "../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+
+---
+
+<Base title="Home">
+  <HomePage client:load />
+</Base>

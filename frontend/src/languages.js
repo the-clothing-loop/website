@@ -38,3 +38,19 @@ export function getLanguageFlags(isProduction) {
   }
   return flags;
 }
+
+/**
+ *
+ * @param {string} lang
+ * @param {string} path
+ * @returns string
+ */
+export function localizePath(lang, path) {
+  if (/^\/[a-z]{2}\//.test(path)) {
+    return path;
+  }
+  if (!path.startsWith("/")) {
+    path = "/" + path;
+  }
+  return "/" + lang + path;
+}

@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import NewChainSignupPage from "../../../../../components/react/pages/NewChainSignup";
+import Base from "../../../../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Create user for new Loop">
+  <NewChainSignupPage client:load />
+</Base>

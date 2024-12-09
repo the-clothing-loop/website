@@ -1,0 +1,21 @@
+---
+import { changeLanguage } from "i18next";
+import FAQPage from "../../components/react/pages/FAQ";
+import Base from "../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="FAQ's">
+  <script type="text/javascript" is:inline>
+    window?.goatcounter?.count({
+      path: "accessed-page-faq",
+      title: "Accessed Page:FAQ",
+      event: true,
+    });
+  </script>
+  <FAQPage client:load />
+</Base>
