@@ -164,8 +164,6 @@ export default function BulkyList() {
 
   return (
     <IonPage>
-      <OverlayPaused />
-      <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{headerText}</IonTitle>

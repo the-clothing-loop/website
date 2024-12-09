@@ -38,6 +38,8 @@ import BulkyList from "../components/Chat/BulkyList";
 import { uploadImageFile } from "../api/imgbb";
 import { bulkyItemPut } from "../api/bulky";
 import { menuOutline } from "ionicons/icons";
+import OverlayPaused from "../components/OverlayPaused";
+import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 
 export type OnSendMessageWithImage = (
   title: string,
@@ -414,6 +416,9 @@ export default function Chat() {
     !selectedOldBulkyItems && selectedChannel && isChainAdmin;
   return (
     <IonPage>
+      <OverlayPaused />
+      <OverlayAppDisabled />
+
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons>
@@ -442,6 +447,7 @@ export default function Chat() {
           <div className="tw-shrink-0 w-full">
             <ChatRoomActions {...UseChatRoomActions} />
             <ChatRoomSelect
+              isChatEnabled={!chain?.is_app_disabled}
               chainChannels={channels}
               selectedChannel={selectedChannel}
               isChainAdmin={isChainAdmin}
