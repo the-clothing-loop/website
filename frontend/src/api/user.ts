@@ -43,9 +43,13 @@ export function userPurge(
   reasonsForLeaving: string[],
   otherExplanation?: string,
 ) {
-  return axios.delete<never>(
-    `v2/user/purge?user_uid=${userUID}&reasons=${reasonsForLeaving}&otherExplanation=${otherExplanation}`,
-  );
+  return axios.delete<never>("v2/user/purge", {
+    params: {
+      user_uid: userUID,
+      reasons: reasonsForLeaving,
+      otherExplanation,
+    },
+  });
 }
 
 export function userHasNewsletter(

@@ -58,9 +58,13 @@ export enum ReasonsForLeaving {
   planToJoinNewLoop = "8",
   planToStartNewLoop = "9",
   dontPlanToParticipate = "10",
+  /** sub of notEnoughItemsILiked */
   qualityDidntMatch = "11",
+  /** sub of notEnoughItemsILiked */
   sizesDidntMatch = "12",
+  /** sub of notEnoughItemsILiked */
   stylesDidntMatch = "13",
+  dontWantToShare = "14",
 }
 
 export const ReasonsForLeavingI18nKeys: Record<
@@ -80,4 +84,5 @@ export const ReasonsForLeavingI18nKeys: Record<
   "11": "qualityDidntMatch",
   "12": "sizesDidntMatch",
   "13": "stylesDidntMatch",
+  "14": "dontWantToShare",
 };

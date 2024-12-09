@@ -24,29 +24,24 @@ export default function AdminDashboard() {
     () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
     [authUser],
   );
-  const reasonsForLeaving = useRef<string[]>([]);
-  const otherExplanation = useRef<string>();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const handleCloseDeleteModal = () => setIsDeleteModalOpen(false);
   const [chainNames, setChainNames] = useState<string[]>([]);
 
-  const handleSubmitDelete = (selectedReasons: string[], other?: string) => {
-    reasonsForLeaving.current = selectedReasons;
-    otherExplanation.current = other;
-
-    userPurge(
-      authUser!.uid,
-      reasonsForLeaving.current,
-      otherExplanation.current,
-    )
+  async function handleSubmitDelete(
+    selectedReasons: string[],
+    other: string | undefined,
+  ) {
+    return userPurge(authUser!.uid, selectedReasons, other)
       .then(() => {
         window.location.href = localizePath("/users/logout");
       })
       .catch((err: any) => {
         console.error("Error purging user:", err);
         addToastError(GinParseErrors(t, err), err?.status);
+        throw err;
       });
-  };
+  }
 
   function deleteClicked() {
     if (!authUser) return;

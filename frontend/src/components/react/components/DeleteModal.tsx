@@ -1,18 +1,41 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent, type InputHTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
-import { useStore } from "@nanostores/react";
-
-import type { Chain } from "../../../api/types";
-import { $authUser } from "../../../stores/auth";
-import { ReasonsForLeavingI18nKeys } from "../../../api/enums";
+import {
+  ReasonsForLeaving,
+  ReasonsForLeavingI18nKeys,
+} from "../../../api/enums";
 import { addToastError } from "../../../stores/toast";
 
 interface DeleteModalProps {
-  onSubmitReasonForLeaving: (selectedReasons: string[], other?: string) => void;
+  onSubmitReasonForLeaving: (
+    selectedReasons: string[],
+    other: string | undefined,
+  ) => Promise<void>;
   isOpen: boolean;
   onClose: () => void;
   chainNames: string[];
 }
+
+const NAME_PREFIX = "delete-";
+
+const PRIMARY_OPTIONS = [
+  ReasonsForLeaving.addressTooFar,
+  ReasonsForLeaving.tooTimeConsuming,
+  ReasonsForLeaving.doneSwapping,
+  ReasonsForLeaving.didntFitIn,
+];
+
+const FILTER_MOVED_OPTIONS = [
+  ReasonsForLeaving.planToJoinNewLoop,
+  ReasonsForLeaving.planToStartNewLoop,
+  ReasonsForLeaving.dontPlanToParticipate,
+];
+
+const FILTER_NOT_ENOUGH_ITEMS_OPTIONS = [
+  ReasonsForLeaving.qualityDidntMatch,
+  ReasonsForLeaving.sizesDidntMatch,
+  ReasonsForLeaving.stylesDidntMatch,
+];
 
 export default function DeleteModal({
   onSubmitReasonForLeaving,
@@ -21,53 +44,46 @@ export default function DeleteModal({
   chainNames,
 }: DeleteModalProps) {
   const { t } = useTranslation();
-  const authUser = useStore($authUser);
-
-  const [chains, setChains] = useState<Chain[]>([]);
   const [showOtherTextFieldArea, setShowOtherTextFieldArea] = useState(false);
   const [showMovedOptions, setShowMovedOptions] = useState(false);
   const [showNotEnoughItemsOptions, setShowNotEnoughItemsOptions] =
     useState(false);
 
-  const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
-  const checkboxesRef = useRef<Record<string, HTMLInputElement | null>>({});
-
-  const moved = Object.keys(ReasonsForLeavingI18nKeys)[0];
-  const notEnoughItemsILiked = Object.keys(ReasonsForLeavingI18nKeys)[1];
-  const primaryOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(2, 6);
-  const other = Object.keys(ReasonsForLeavingI18nKeys)[6];
-
-  const movedOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(7, 10);
-  const notEnoughItemsOptions = Object.keys(ReasonsForLeavingI18nKeys).slice(
-    10,
-  );
-  const [otherExplanation, setOtherExplanation] = useState("");
-
-  function handleCheckboxChange(name: string) {
-    const checkbox = checkboxesRef.current[name];
-    if (!checkbox) return;
-
-    const isChecked = checkbox.checked;
-    const updatedReasons = isChecked
-      ? [...selectedReasons, name]
-      : selectedReasons.filter((reason) => reason !== name);
-    setSelectedReasons(updatedReasons);
-  }
-
-  function handleOtherTextChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) {
-    const updatedOther = event.target.value;
-    setOtherExplanation(updatedOther);
-  }
-
-  function onSubmit(e: FormEvent) {
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    let selectedReasons: string[] = [];
+    for (let n in Object.keys(ReasonsForLeavingI18nKeys)) {
+      //@ts-expect-error e.target should be a form element with the name of each checkbox as a index
+      const elCheckbox = e.target[NAME_PREFIX + n] as
+        | null
+        | undefined
+        | HTMLInputElement;
+      if (!elCheckbox) continue;
+      if (elCheckbox.checked) {
+        selectedReasons.push(n);
+      }
+    }
+
+    const otherExplanation: string | undefined =
+      //@ts-expect-error
+      (e.target["other_explanation"]?.value as string | undefined) || undefined;
+
     if (selectedReasons.length == 0) {
       addToastError(t("selectReasonForLeaving"));
     } else {
-      onSubmitReasonForLeaving(selectedReasons);
-      onClose();
+      console.info(
+        "Submit selectReasonForLeaving:",
+        selectedReasons.map((r) => ReasonsForLeavingI18nKeys[r]).join(", "),
+      );
+      onSubmitReasonForLeaving(selectedReasons, otherExplanation).then(() => {
+        setShowMovedOptions(false);
+        setShowNotEnoughItemsOptions(false);
+        setShowOtherTextFieldArea(false);
+
+        //@ts-expect-error Missing react dom types
+        e.target.reset();
+        onClose();
+      });
     }
   }
 
@@ -104,132 +120,92 @@ export default function DeleteModal({
           <div>
             <h5 className="text-md my-6">{t("selectReasonForLeaving")}</h5>
             <ul className="list-none">
-              <li key={moved} className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  className="checkbox border-black"
-                  name={moved}
-                  ref={(el) => (checkboxesRef.current[moved] = el)}
-                  onChange={() => {
-                    setShowMovedOptions(!showMovedOptions);
-                    handleCheckboxChange(moved);
-                  }}
+              <li key={ReasonsForLeaving.moved} className="mb-4">
+                <InputCheckbox
+                  label={t(ReasonsForLeavingI18nKeys[ReasonsForLeaving.moved])}
+                  name={ReasonsForLeaving.moved}
+                  checked={showMovedOptions}
+                  onChange={(e) => setShowMovedOptions(e.target.checked)}
                 />
-                <label className="ml-2">
-                  {t(ReasonsForLeavingI18nKeys[moved])}
-                </label>
               </li>
 
               {showMovedOptions ? (
                 <>
-                  {movedOptions.map((r) => (
-                    <li key={r} className="flex items-center mb-4 ml-8">
-                      <input
-                        type="checkbox"
-                        className="checkbox border-black"
+                  {FILTER_MOVED_OPTIONS.map((r) => (
+                    <li key={r} className="mb-4 ml-8">
+                      <InputCheckbox
+                        label={t(ReasonsForLeavingI18nKeys[r])}
                         name={r}
-                        ref={(el) => (checkboxesRef.current[r] = el)}
-                        onChange={() => handleCheckboxChange(r)}
                       />
-                      <label className="ml-2">
-                        {t(ReasonsForLeavingI18nKeys[r])}
-                      </label>
                     </li>
                   ))}
                 </>
               ) : null}
 
-              <li key={notEnoughItemsILiked} className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  className="checkbox border-black"
-                  name={notEnoughItemsILiked}
-                  ref={(el) =>
-                    (checkboxesRef.current[notEnoughItemsILiked] = el)
+              <li key={ReasonsForLeaving.notEnoughItemsILiked} className="mb-4">
+                <InputCheckbox
+                  label={t(
+                    ReasonsForLeavingI18nKeys[
+                      ReasonsForLeaving.notEnoughItemsILiked
+                    ],
+                  )}
+                  name={ReasonsForLeaving.notEnoughItemsILiked}
+                  checked={showNotEnoughItemsOptions}
+                  onChange={(e) =>
+                    setShowNotEnoughItemsOptions(e.target.checked)
                   }
-                  onChange={() => {
-                    setShowNotEnoughItemsOptions(!showNotEnoughItemsOptions);
-                    handleCheckboxChange(notEnoughItemsILiked);
-                  }}
                 />
-                <label className="ml-2">
-                  {t(ReasonsForLeavingI18nKeys[notEnoughItemsILiked])}
-                </label>
               </li>
 
               {showNotEnoughItemsOptions ? (
                 <>
-                  {notEnoughItemsOptions.map((r) => (
-                    <li key={r} className="flex items-center mb-4 ml-8">
-                      <input
-                        type="checkbox"
-                        className="checkbox border-black"
+                  {FILTER_NOT_ENOUGH_ITEMS_OPTIONS.map((r) => (
+                    <li key={r} className="mb-4 ml-8">
+                      <InputCheckbox
+                        label={t(ReasonsForLeavingI18nKeys[r])}
                         name={r}
-                        ref={(el) => (checkboxesRef.current[r] = el)}
-                        onChange={() => handleCheckboxChange(r)}
                       />
-                      <label className="ml-2">
-                        {t(ReasonsForLeavingI18nKeys[r])}
-                      </label>
                     </li>
                   ))}
                 </>
               ) : null}
-              {primaryOptions.map((r: string) => (
-                <li key={r} className="flex items-center mb-4">
-                  <input
-                    type="checkbox"
-                    className="checkbox border-black"
+              {PRIMARY_OPTIONS.map((r) => (
+                <li key={r} className="mb-4">
+                  <InputCheckbox
+                    label={t(ReasonsForLeavingI18nKeys[r])}
                     name={r}
-                    ref={(el) => (checkboxesRef.current[r] = el)}
-                    onChange={() => handleCheckboxChange(r)}
                   />
-                  <label className="ml-2">
-                    {t(ReasonsForLeavingI18nKeys[r])}
-                  </label>
                 </li>
               ))}
-              <li key={other} className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  className="checkbox border-black"
-                  name={other}
-                  ref={(el) => (checkboxesRef.current[other] = el)}
-                  onChange={() => {
-                    setShowOtherTextFieldArea(!showOtherTextFieldArea);
-                    handleCheckboxChange(other);
-                  }}
+              <li key="other" className="mb-4">
+                <InputCheckbox
+                  label={t(ReasonsForLeavingI18nKeys[ReasonsForLeaving.other])}
+                  name={ReasonsForLeaving.other}
+                  checked={showOtherTextFieldArea}
+                  onChange={(e) => setShowOtherTextFieldArea(e.target.checked)}
                 />
-                <label className="ml-2">
-                  {t(ReasonsForLeavingI18nKeys[other])}
-                </label>
+
+                {showOtherTextFieldArea ? (
+                  <div className="mx-7">
+                    <label className="text-sm">
+                      <p className="my-2">{t("leaveFeedback")}</p>
+                      <textarea
+                        name="other_explanation"
+                        className="textarea bg-grey-light w-full"
+                        required
+                        minLength={5}
+                      />
+                    </label>
+                  </div>
+                ) : null}
               </li>
-              {showOtherTextFieldArea ? (
-                <>
-                  <li key="other_textarea" className="mx-7">
-                    <label className="text-sm">{t("leaveFeedback")}</label>
-                    <textarea
-                      required
-                      className="bg-grey-light w-full"
-                      value={otherExplanation}
-                      minLength={5}
-                      onChange={handleOtherTextChange}
-                    />
-                  </li>
-                </>
-              ) : null}
             </ul>
             <div className="flex justify-between my-6">
-              <button
-                key={"submit"}
-                className="btn btn-sm btn-error"
-                onClick={onSubmit}
-              >
+              <button type="submit" className="btn btn-sm btn-error">
                 {t("delete")}
               </button>
               <button
                 onClick={onClose}
-                key="close"
                 type="reset"
                 className={"btn btn-sm btn-ghost"}
               >
@@ -237,8 +213,29 @@ export default function DeleteModal({
               </button>
             </div>
           </div>
-        )}{" "}
+        )}
       </form>
     </dialog>
+  );
+}
+
+function InputCheckbox({
+  name,
+  label,
+  ...props
+}: {
+  name: ReasonsForLeaving;
+  label: string;
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "name">) {
+  return (
+    <label className="flex gap-2">
+      <input
+        name={NAME_PREFIX + name}
+        type="checkbox"
+        className="checkbox border-black"
+        {...props}
+      />
+      <span>{label}</span>
+    </label>
   );
 }
