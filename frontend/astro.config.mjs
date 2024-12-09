@@ -9,6 +9,9 @@ import reactI18next from "astro-react-i18next";
 export default defineConfig({
   output: "static",
   site: import.meta.env.PUBLIC_BASE_URL,
+  devToolbar: {
+    enabled: false,
+  },
   integrations: [
     reactI18next({
       defaultLocale: "en",

@@ -38,10 +38,24 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
   });
 }
 
-export function userPurge(userUID: string) {
+export function userPurge(
+  userUID: string,
+  reasonsForLeaving: string[],
+  otherExplanation?: string,
+) {
+  const baseOE = otherExplanation ? btoa(otherExplanation) : undefined;
+  console.log(
+    "Purging user",
+    userUID,
+    reasonsForLeaving.join(","),
+    otherExplanation,
+    baseOE,
+  );
   return axios.delete<never>("v2/user/purge", {
     params: {
       user_uid: userUID,
+      rfl: reasonsForLeaving,
+      oe: baseOE,
     },
   });
 }
