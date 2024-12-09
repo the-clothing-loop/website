@@ -458,9 +458,6 @@ export default function Chat() {
               isChannelActionSheetOpen={
                 UseChatRoomActions.isChannelActionSheetOpen
               }
-              setIsChannelActionSheetOpen={
-                UseChatRoomActions.setIsChannelActionSheetOpen
-              }
             />
           </div>
 

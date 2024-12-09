@@ -15,7 +15,6 @@ interface Props {
   onSelectOldBulkyItems: () => void;
   onChannelOptionSelect: (value: "delete" | "rename") => void;
   isChannelActionSheetOpen: boolean;
-  setIsChannelActionSheetOpen: (_: boolean) => void;
 }
 
 export default function ChatRoomSelect({
@@ -26,7 +25,6 @@ export default function ChatRoomSelect({
   selectedOldBulkyItems,
   onSelectOldBulkyItems,
   onOpenCreateChannel,
-  setIsChannelActionSheetOpen,
 }: Props) {
   const { t } = useTranslation();
 
