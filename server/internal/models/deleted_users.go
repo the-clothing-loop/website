@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/samber/lo"
 )
 
 const (
@@ -43,19 +45,19 @@ type DeletedUser struct {
 	OtherExplanation        string
 }
 
-var ErrReasonInvalid = errors.New("Invalid reason enum")
+var ErrReasonInvalid = errors.New("Please select at least one reason")
 
-func ValidateAllReasonsEnum(arr []string) bool {
-
-	if err := validate.Var(arr, "unique"); err != nil {
+func ValidateAllReasonsEnum(arr []string, otherExplanation string) bool {
+	err := validate.Var(arr, "unique,gt=0,dive,oneof=1 2 3 4 5 6 7 8 9 10 11 12 13")
+	if err != nil {
 		return false
 	}
-	for _, s := range arr {
-
-		if err := validate.Var(s, "oneof=1 2 3 4 5 6 7 8 9 10 11 12 13,required"); err != nil {
+	if lo.Contains(arr, ReasonEnumOther) {
+		if len(otherExplanation) < 5 {
 			return false
 		}
 	}
+
 	return true
 }
 

@@ -308,6 +308,11 @@ func UserPurge(c *gin.Context) {
 		return
 	}
 
+	if ok := models.ValidateAllReasonsEnum(query.ReasonsForLeaving, query.OtherExplanation); !ok {
+		c.String(http.StatusBadRequest, models.ErrReasonInvalid.Error())
+		return
+	}
+
 	ok, user, _ := auth.Authenticate(c, db, auth.AuthState1AnyUser, "")
 	if !ok {
 		return
@@ -361,15 +366,10 @@ HAVING COUNT(uc.id) = 1
 	}
 
 	deletedUser := models.DeletedUser{
-		Email:            user.Email.String,
+		Email:            lo.FromPtr(user.Email),
 		UserCreatedAt:    user.CreatedAt,
 		UserDeletedAt:    time.Now(),
 		OtherExplanation: query.OtherExplanation,
-	}
-
-	if ok := models.ValidateAllReasonsEnum(query.ReasonsForLeaving); !ok {
-		c.String(http.StatusBadRequest, models.ErrReasonInvalid.Error())
-		return
 	}
 
 	if err := deletedUser.SetReasons(query.ReasonsForLeaving); err != nil {
