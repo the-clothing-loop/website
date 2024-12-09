@@ -1,0 +1,21 @@
+---
+import { changeLanguage } from "i18next";
+import ContributePage from "../../components/react/pages/Contribute";
+import Base from "../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="How to Contribute">
+  <script type="text/javascript" is:inline>
+    window?.goatcounter?.count({
+      path: "accessed-page-contribute",
+      title: "Accessed Page:Contribute",
+      event: true,
+    });
+    </script>
+  <ContributePage client:load />
+</Base>

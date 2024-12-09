@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import TermsOfHostsPage from "../../components/react/pages/TermsOfHosts";
+import Base from "../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Terms of Hosts">
+  <TermsOfHostsPage client:load />
+</Base>
