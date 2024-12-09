@@ -30,17 +30,6 @@ export default function ChatRoomSelect({
 }: Props) {
   const { t } = useTranslation();
 
-  const longPressChannel = useLongPress(
-    (e) => {
-      setIsChannelActionSheetOpen(true);
-    },
-    {
-      onCancel: (e) => {
-        setIsChannelActionSheetOpen(false);
-      },
-    },
-  );
-
   return (
     <div className="tw-shrink-0 w-full tw-flex tw-gap-1 tw-overflow-x-auto tw-bg-light">
       <button
@@ -82,13 +71,7 @@ export default function ChatRoomSelect({
               isSelected ? " tw-bg-light-shade" : "",
             )}
             key={cr.id}
-            {...(isSelected
-              ? isChainAdmin
-                ? longPressChannel(isSelected)
-                : {}
-              : {
-                  onClick: () => onSelectChannel(cr),
-                })}
+            onClick={() => onSelectChannel(cr)}
           >
             <div
               style={{ backgroundColor: cr.header || "#fff" }}
