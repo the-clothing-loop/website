@@ -29,7 +29,7 @@ export default function ChatPost(props: ChatPostProps) {
 
   const { message, title, body } = useMemo(() => {
     const user = props.users.find((u) => u.chat_id === props.post.user_id);
-    console.log("post find user", user?.name, user?.uid);
+    // console.log("post find user", user?.name, user?.uid);
     setUsername(user?.name || props.post.user_id);
     setIsMe(user ? user.uid === props.authUser?.uid : false);
     let message = props.post.message;
@@ -88,7 +88,7 @@ export default function ChatPost(props: ChatPostProps) {
   }
 
   if (imageURL) {
-    console.log("Post image", "message", message, "title", title, "body", body);
+    // console.log("Post image", "message", message, "title", title, "body", body);
     return (
       <>
         <div
