@@ -249,13 +249,20 @@ function AppRoute() {
           ) : null}
           <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="chat" href="/chat" disabled={!chain}>
-          <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
-          {showNotification ? (
-            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
-          ) : null}
-          <IonLabel>{t("chat")}</IonLabel>
-        </IonTabButton>
+        {chain?.is_app_disabled ? (
+          <IonTabButton tab="chat" href="/chat" disabled={!chain}>
+            <IonIcon aria-hidden="true" icon={cubeOutline} />
+            <IonLabel>{t("bulkyItems")}</IonLabel>
+          </IonTabButton>
+        ) : (
+          <IonTabButton tab="chat" href="/chat" disabled={!chain}>
+            <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
+            {showNotification ? (
+              <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
+            ) : null}
+            <IonLabel>{t("chat")}</IonLabel>
+          </IonTabButton>
+        )}
 
         <IonTabButton tab="settings" href="/settings">
           <IonIcon aria-hidden="true" icon={peopleCircleOutline} />
