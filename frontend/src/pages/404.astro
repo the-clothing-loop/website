@@ -3,8 +3,11 @@ import { localizePath } from "../languages";
 import Base from "../layouts/Base.astro";
 import { t, changeLanguage } from "i18next";
 
-const { lang = "en" } = Astro.params;
-changeLanguage(lang);
+import { buildStaticPaths } from "astro-react-i18next/utils";
+
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
 ---
 
 <Base title="404">
@@ -14,7 +17,7 @@ changeLanguage(lang);
     <h1 class="font-serif text-secondary text-4xl font-bold my-10">
       404 File not found
     </h1>
-    <a href={localizePath(lang, "/")} class="btn btn-primary">
+    <a href={localizePath("en", "/")} class="btn btn-primary">
       {t("home")}
     </a>
   </div>

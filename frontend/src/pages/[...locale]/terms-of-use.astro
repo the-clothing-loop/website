@@ -3,8 +3,11 @@ import { changeLanguage } from "i18next";
 import TermsOfUsePage from "../../components/react/pages/TermsOfUse";
 import Base from "../../layouts/Base.astro";
 
-const { lang = "en" } = Astro.params;
-changeLanguage(lang);
+import { buildStaticPaths } from "astro-react-i18next/utils";
+
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
 ---
 
 <Base title="Terms of Use">
