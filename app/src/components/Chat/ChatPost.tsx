@@ -98,7 +98,7 @@ export default function ChatPost(props: ChatPostProps) {
           {...(isEditable ? longPress : {})}
         >
           <div
-            className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-mx-4".concat(
+            className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-px-2 tw-py-1 tw-mx-4".concat(
               isMe
                 ? " tw-bg-purple-shade tw-rounded-bl-xl"
                 : " tw-bg-light tw-rounded-br-xl",
@@ -111,7 +111,7 @@ export default function ChatPost(props: ChatPostProps) {
                 <IonButton
                   onClick={() => props.onLongPress(props.post.id)}
                   color="transparent"
-                  className="tw-sticky tw-top-0 tw-opacity-70 tw-p-0 tw-bg-light-shade"
+                  className="tw-sticky tw-top-0 tw-opacity-70 tw-p-0 tw-bg-light-shade tw-rounded-full"
                   size="small"
                   type="button"
                 >
@@ -208,10 +208,10 @@ export default function ChatPost(props: ChatPostProps) {
       {...(isEditable ? longPress : {})}
     >
       <div
-        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2 tw-mx-4".concat(
+        className={"tw-max-w-full tw-overflow-hidden tw-rounded-tl-xl tw-rounded-tr-xl tw-inline-block tw-p-2".concat(
           isMe
-            ? " tw-bg-purple-shade tw-rounded-bl-xl"
-            : " tw-bg-light tw-rounded-br-xl",
+            ? "  tw-me-4 tw-bg-purple-shade tw-rounded-bl-xl"
+            : "  tw-ms-4 tw-bg-light tw-rounded-br-xl",
         )}
       >
         {username ? (
@@ -222,20 +222,22 @@ export default function ChatPost(props: ChatPostProps) {
         </div>
       </div>
       {isEditable ? (
-        <IonButton
-          onClick={() => props.onLongPress(props.post.id)}
-          color="transparent"
-          className="tw-sticky tw-top-0 tw-opacity-70"
-          size="small"
-          type="button"
-        >
-          <IonIcon
-            slot="icon-only"
+        <div className="relative">
+          <IonButton
+            onClick={() => props.onLongPress(props.post.id)}
+            color="transparent"
+            className="tw-sticky tw-top-0 tw-opacity-70"
             size="small"
-            color="dark"
-            icon={ellipsisVertical}
-          />
-        </IonButton>
+            type="button"
+          >
+            <IonIcon
+              slot="icon-only"
+              size="small"
+              color="dark"
+              icon={ellipsisVertical}
+            />
+          </IonButton>
+        </div>
       ) : null}
     </div>
   );
