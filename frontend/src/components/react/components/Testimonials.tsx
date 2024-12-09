@@ -18,7 +18,10 @@ export default function Testimonials() {
   const { t } = useTranslation("testimonials");
 
   let testimonials: Testimonial[] =
-    t("arrTestimonials", { defaultValue: [], returnObjects: true }) || [];
+    (t("arrTestimonials", {
+      defaultValue: [],
+      returnObjects: true,
+    }) as any[]) || [];
 
   function click(o: CarouselOperation) {
     let e = document.getElementById("home-carousel");

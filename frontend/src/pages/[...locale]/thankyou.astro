@@ -3,8 +3,11 @@ import { changeLanguage } from "i18next";
 import { JoinLoopConfirmation as JoinLoopConfirmationPage } from "../../components/react/pages/Thankyou";
 import Base from "../../layouts/Base.astro";
 
-const { lang = "en" } = Astro.params;
-changeLanguage(lang);
+import { buildStaticPaths } from "astro-react-i18next/utils";
+
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
 ---
 
 <Base title="Thank you for joining">
