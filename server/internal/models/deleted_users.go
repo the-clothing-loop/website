@@ -2,8 +2,9 @@ package models
 
 import (
 	// "log/slog"
-	"errors"
+
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/samber/lo"
@@ -23,6 +24,7 @@ const (
 	ReasonEnumQualityDidntMatch     = "11"
 	ReasonEnumSizesDidntMatch       = "12"
 	ReasonEnumStylesDidntMatch      = "13"
+	ReasonEnumStylesDontWantToShare = "14"
 )
 
 type DeletedUser struct {
@@ -42,18 +44,19 @@ type DeletedUser struct {
 	IsQualityDidntMatch     bool
 	IsSizesDidntMatch       bool
 	IsStylesDidntMatch      bool
+	IsDontWantToShare       bool
 	OtherExplanation        string
 }
 
-var ErrReasonInvalid = errors.New("Please select at least one reason")
-
 func ValidateAllReasonsEnum(arr []string, otherExplanation string) bool {
-	err := validate.Var(arr, "unique,gt=0,dive,oneof=1 2 3 4 5 6 7 8 9 10 11 12 13")
+	err := validate.Var(arr, "unique,gt=0,dive,oneof=1 2 3 4 5 6 7 8 9 10 11 12 13 14")
 	if err != nil {
+		// slog.Debug("validations failed array", "error", err, "array", arr)
 		return false
 	}
 	if lo.Contains(arr, ReasonEnumOther) {
 		if len(otherExplanation) < 5 {
+			// slog.Debug("validations failed other length")
 			return false
 		}
 	}
@@ -90,6 +93,8 @@ func (d *DeletedUser) SetReasons(reasons []string) error {
 			d.IsSizesDidntMatch = true
 		case ReasonEnumStylesDidntMatch:
 			d.IsStylesDidntMatch = true
+		case ReasonEnumStylesDontWantToShare:
+			d.IsDontWantToShare = true
 		default:
 			return fmt.Errorf("Invalid reason: %s", reason)
 		}

@@ -43,11 +43,19 @@ export function userPurge(
   reasonsForLeaving: string[],
   otherExplanation?: string,
 ) {
+  const baseOE = otherExplanation ? btoa(otherExplanation) : undefined;
+  console.log(
+    "Purging user",
+    userUID,
+    reasonsForLeaving.join(","),
+    otherExplanation,
+    baseOE,
+  );
   return axios.delete<never>("v2/user/purge", {
     params: {
       user_uid: userUID,
-      reasons: reasonsForLeaving,
-      otherExplanation,
+      rfl: reasonsForLeaving,
+      oe: baseOE,
     },
   });
 }
