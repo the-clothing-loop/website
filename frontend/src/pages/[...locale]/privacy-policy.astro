@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import PrivacyPolicyPage from "../../components/react/pages/PrivacyPolicy";
+import Base from "../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Privacy Policy">
+  <PrivacyPolicyPage client:load />
+</Base>
