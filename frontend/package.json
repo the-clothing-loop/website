@@ -22,7 +22,7 @@
     "@astrojs/check": "^0.5.6",
     "@astrojs/react": "^3.6.3",
     "@astrojs/tailwind": "^5.1.0",
-    "@mapbox/mapbox-gl-geocoder": "^4.7.4",
+    "@mapbox/mapbox-gl-geocoder": "^5.0.3",
     "@nanostores/react": "^0.7.2",
     "@stripe/react-stripe-js": "^2.5.1",
     "@stripe/stripe-js": "^3.0.6",
