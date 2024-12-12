@@ -25,7 +25,7 @@ export default defineConfig({
         "contribute",
         "survey",
       ],
-      prefixDefaultLocale: true,
+      // prefixDefaultLocale: true,
       // localesDir: "/locales/",
     }),
     react(),
