@@ -70,8 +70,8 @@
 	}
 
 	handle {
-		import astro_url
 		import astro_i18n
+		import astro_url
 		file_server
 		try_files {path} {path}/ =404
 		encode zstd gzip
