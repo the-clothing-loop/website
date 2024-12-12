@@ -25,7 +25,7 @@ export default defineConfig({
         "contribute",
         "survey",
       ],
-      // prefixDefaultLocale: true,
+      prefixDefaultLocale: true,
       // localesDir: "/locales/",
     }),
     react(),
@@ -40,9 +40,9 @@ export default defineConfig({
   //     prefixDefaultLocale: true,
   //   },
   // },
-  redirects: {
-    "/": "/en/",
-  },
+  // redirects: {
+  //   "/": "/en/",
+  // },
   vite: {
     server: {
       proxy: {
