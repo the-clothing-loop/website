@@ -223,52 +223,69 @@ function AppRoute() {
           component={OpenSource}
         ></Route>
       </IonRouterOutlet>
-      <IonTabBar slot="bottom" onIonTabsWillChange={handleTabsWillChange}>
-        <IonTabButton tab="help" href="/help">
-          <IonIcon aria-hidden="true" icon={bookOutline} />
-          <IonLabel>{t("rules")}</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="address" href="/address" disabled={!chain}>
-          {isPaused ? (
-            <IonIcon
-              aria-hidden="true"
-              icon={pauseCircleOutline}
-              color="medium"
-            />
-          ) : (
-            <IonIcon aria-hidden="true" icon={homeOutline} />
-          )}
-          <IonLabel>{t("route")}</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="bags" href="/bags" disabled={!chain}>
-          <div className="tw-w-[30px] tw-h-[30px] tw-mt-1 tw-mb-0.5">
-            <BagSVG bag={{ number: "", color: "currentColor" }} isList />
-          </div>
-          {hasBagTooOldMe ? (
-            <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
-          ) : null}
-          <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
-        </IonTabButton>
-        {chain?.is_app_disabled ? (
-          <IonTabButton tab="chat" href="/chat" disabled={!chain}>
-            <IonIcon aria-hidden="true" icon={cubeOutline} />
-            <IonLabel>{t("bulkyItems")}</IonLabel>
+      <div slot="bottom" className="tw-bg-primary">
+        <IonTabBar onIonTabsWillChange={handleTabsWillChange}>
+          <IonTabButton
+            tab="help"
+            href="/help"
+            className="!tw-overflow-visible"
+          >
+            <IonIcon aria-hidden="true" icon={bookOutline} />
+            <IonLabel>{t("rules")}</IonLabel>
           </IonTabButton>
-        ) : (
-          <IonTabButton tab="chat" href="/chat" disabled={!chain}>
-            <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
-            {showNotification ? (
+          <IonTabButton tab="address" href="/address" disabled={!chain}>
+            {isPaused ? (
+              <IonIcon
+                aria-hidden="true"
+                icon={pauseCircleOutline}
+                color="medium"
+              />
+            ) : (
+              <IonIcon aria-hidden="true" icon={homeOutline} />
+            )}
+            <IonLabel>{t("route")}</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="bags" href="/bags" disabled={!chain}>
+            <div className="tw-w-[24px] tw-h-[24px] tw-my-0.5 tw-scale-110">
+              <BagSVG bag={{ number: "", color: "currentColor" }} isList />
+            </div>
+            {hasBagTooOldMe ? (
               <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
             ) : null}
-            <IonLabel>{t("chat")}</IonLabel>
+            <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
           </IonTabButton>
-        )}
+          {chain?.is_app_disabled ? (
+            <IonTabButton tab="chat" href="/chat" disabled={!chain}>
+              <IonIcon aria-hidden="true" icon={cubeOutline} />
+              <IonLabel>{t("bulkyItems")}</IonLabel>
+            </IonTabButton>
+          ) : (
+            <IonTabButton tab="chat" href="/chat" disabled={!chain}>
+              <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
+              {showNotification ? (
+                <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
+              ) : null}
+              <IonLabel>{t("chat")}</IonLabel>
+            </IonTabButton>
+          )}
 
-        <IonTabButton tab="settings" href="/settings">
-          <IonIcon aria-hidden="true" icon={peopleCircleOutline} />
-          <IonLabel>{t("info")}</IonLabel>
-        </IonTabButton>
-      </IonTabBar>
+          <IonTabButton tab="settings" href="/settings">
+            <IonIcon aria-hidden="true" icon={peopleCircleOutline} />
+            <IonLabel>{t("info")}</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
+        <div className="tw-h-4 tw-relative">
+          {chain ? (
+            <div className="tw-inset-0 tw-absolute tw-text-xs tw-text-center tw-text-background tw-font-bold tw-bg-primary">
+              {chain.name}
+            </div>
+          ) : (
+            <div className="tw-inset-0 tw-absolute tw-text-xs tw-text-center tw-text-background tw-italic tw-bg-danger">
+              {"No Loop selected"}
+            </div>
+          )}
+        </div>
+      </div>
     </IonTabs>
   );
 }
