@@ -55,6 +55,7 @@ export interface BagHistoryItem {
   history: BagHistoryHistoryItem[];
 }
 export interface BagHistoryHistoryItem {
+  uid?: UID;
   name: string;
   date?: string;
 }
