@@ -295,33 +295,23 @@ export default function Home() {
               src="https://www.instagram.com/p/DDZ5jrdxoRy/embed"
             ></iframe>
             <div className="mx-auto my-auto w-1/2 px-6">
-              {}
-              <progress
-                className="progress progress-secondary w-full"
-                value="100"
-                max="100"
-              ></progress>
-              <progress
-                className="progress progress-secondary w-full"
-                value="70"
-                max="100"
-              ></progress>
-              <progress
-                className="progress progress-secondary w-full"
-                value="40"
-                max="100"
-              ></progress>
-              <progress
-                className="progress progress-secondary w-full"
-                value="10"
-                max="100"
-              ></progress>
-
-              <progress
-                className="progress progress-secondary"
-                value={0}
-                max="100"
-              ></progress>
+              {/* MAX must be updated before PR */}
+              {topLoops?.map((tp) => {
+                console.log(tp.description);
+                return (
+                  <div className="mb-4">
+                    <div className="flex justify-between">
+                      <div className="font-bold text-xs">{tp.name}</div>{" "}
+                      <div className="text-xs ">{tp.description}</div>
+                    </div>
+                    <progress
+                      className="progress progress-secondary w-full"
+                      value={tp.number_of_participants}
+                      max="15"
+                    ></progress>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

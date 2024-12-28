@@ -743,7 +743,7 @@ func ChainGetLargest(c *gin.Context) {
 	db := getDB(c)
 	type body struct {
 		Name                 string `json:"name"`
-		Description          string `json:"Description"`
+		Description          string `json:"description"`
 		NumberOfParticipants int    `json:"number_of_participants"`
 	}
 
