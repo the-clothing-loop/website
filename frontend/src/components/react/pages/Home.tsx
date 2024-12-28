@@ -9,7 +9,7 @@ import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 import { $authUser } from "../../../stores/auth";
 import getLanguages from "../../../languages";
-import { chainGetLargest } from "../../../api/chain";
+import { chainGet, chainGetLargest } from "../../../api/chain";
 import type { Chain } from "../../../api/types";
 
 const IS_PRODUCTION =
@@ -23,12 +23,16 @@ interface Supporter {
   alt: string;
   class: string;
 }
-
+interface TopLoop {
+  name: string;
+  description: string;
+  number_of_participants: number;
+}
 export default function Home() {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
   const ref = useRef() as any;
-  const [topLoops, setTopLoops] = useState<Chain[]>([]);
+  const [topLoops, setTopLoops] = useState<TopLoop[]>();
 
   const isVisible = useIntersectionObserver(ref, {
     root: null,
@@ -50,7 +54,9 @@ export default function Home() {
   async function fetchLargestLoops() {
     try {
       const largest_loops = await chainGetLargest();
-      console.log(largest_loops);
+
+      setTopLoops(largest_loops.data);
+      console.log(topLoops);
     } catch (err: any) {
       console.warn(err);
     }

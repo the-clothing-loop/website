@@ -111,5 +111,5 @@ export function chainPoke(chainUID: UID) {
   });
 }
 export function chainGetLargest() {
-  return axios.get<Chain[]>("/v2/chain/largest");
+  return axios.get<{name: string; description: string; number_of_participants: number}[]>("/v2/chain/largest");
 }

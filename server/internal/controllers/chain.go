@@ -739,25 +739,23 @@ func ChainChangeUserWarden(c *gin.Context) {
 }
 
 func ChainGetLargest(c *gin.Context) {
-	db := getDB(c)
-	var chainSizes [5]string
 
-	if err := db.Raw(`SELECT COUNT(*) as number_of_users FROM user_chains GROUP BY chain_id ORDER BY COUNT(*) DESC LIMIT 5`).Scan(&chainSizes).Error; err != nil {
+	db := getDB(c)
+	type body struct {
+		Name                 string `json:"name"`
+		Description          string `json:"Description"`
+		NumberOfParticipants int    `json:"number_of_participants"`
+	}
+
+	var result []body
+
+	if err := db.Raw(`SELECT name, description, number_of_participants FROM chains c JOIN (SELECT chain_id, COUNT(*) as number_of_participants FROM user_chains GROUP BY chain_id ORDER BY COUNT(*) DESC LIMIT 5) AS top_chains ON c.id = top_chains.chain_id ORDER BY number_of_participants DESC `).Scan(&result).Error; err != nil {
 		slog.Warn("Unable to fetch chains sizes", "err", err)
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
+	fmt.Printf("result of query is: %+v\n", result)
 
-	fmt.Printf("size of biggest chains: %+v\n", chainSizes)
+	c.JSON(200, result)
 
-	chains := []*sharedtypes.ChainResponse{}
-	sql := `SELECT * FROM chains c JOIN (SELECT chain_id FROM user_chains GROUP BY chain_id LIMIT 5) AS top_chains ON c.id = top_chains.chain_id`
-	if err := db.Raw(sql).Scan(&chains).Error; err != nil {
-		slog.Warn("Unable to fetch chains", "err", err)
-		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
-		return
-	}
-	fmt.Println("result of query is: \n", &chains)
-
-	c.JSON(200, chains)
 }
