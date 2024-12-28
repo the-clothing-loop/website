@@ -754,7 +754,6 @@ func ChainGetLargest(c *gin.Context) {
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return
 	}
-	fmt.Printf("result of query is: %+v\n", result)
 
 	c.JSON(200, result)
 

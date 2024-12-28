@@ -54,14 +54,11 @@ export default function Home() {
   async function fetchLargestLoops() {
     try {
       const largest_loops = await chainGetLargest();
-
       setTopLoops(largest_loops.data);
-      console.log(topLoops);
     } catch (err: any) {
       console.warn(err);
     }
   }
-
   useEffect(() => {
     fetchLargestLoops();
   }, []);
@@ -297,17 +294,16 @@ export default function Home() {
             <div className="mx-auto my-auto w-1/2 px-6">
               {/* MAX must be updated before PR */}
               {topLoops?.map((tp) => {
-                console.log(tp.description);
                 return (
                   <div className="mb-4">
                     <div className="flex justify-between">
-                      <div className="font-bold text-xs">{tp.name}</div>{" "}
+                      <div className="font-bold text-xs">{tp.name}</div>
                       <div className="text-xs ">{tp.description}</div>
                     </div>
                     <progress
                       className="progress progress-secondary w-full"
                       value={tp.number_of_participants}
-                      max="15"
+                      max="10"
                     ></progress>
                   </div>
                 );
