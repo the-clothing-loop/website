@@ -110,3 +110,6 @@ export function chainPoke(chainUID: UID) {
     chain_uid: chainUID,
   });
 }
+export function chainGetLargest() {
+  return axios.get<Chain[]>("/v2/chain/largest");
+}

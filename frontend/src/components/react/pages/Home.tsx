@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
@@ -9,6 +9,8 @@ import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 import { $authUser } from "../../../stores/auth";
 import getLanguages from "../../../languages";
+import { chainGetLargest } from "../../../api/chain";
+import type { Chain } from "../../../api/types";
 
 const IS_PRODUCTION =
   import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
@@ -26,6 +28,7 @@ export default function Home() {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
   const ref = useRef() as any;
+  const [topLoops, setTopLoops] = useState<Chain[]>([]);
 
   const isVisible = useIntersectionObserver(ref, {
     root: null,
@@ -44,6 +47,18 @@ export default function Home() {
       window.location.href = localizePath("/", lang);
     }
   });
+  async function fetchLargestLoops() {
+    try {
+      const largest_loops = await chainGetLargest();
+      console.log(largest_loops);
+    } catch (err: any) {
+      console.warn(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchLargestLoops();
+  }, []);
 
   const supporters: Supporter[] = [
     {
@@ -262,6 +277,45 @@ export default function Home() {
                 </h2>
                 <p className="text-lg">{t("getReadyToSwapMessage")}</p>
               </div>
+            </div>
+          </div>
+        </section>
+        <section className="mb-12 md:mb-24">
+          <div className="flex mx-6">
+            <iframe
+              className="w-1/2 h-[800px] px-6 overflow-hidden border-4 border-secondary"
+              scrolling="no"
+              id="instagram-embed"
+              src="https://www.instagram.com/p/DDZ5jrdxoRy/embed"
+            ></iframe>
+            <div className="mx-auto my-auto w-1/2 px-6">
+              {}
+              <progress
+                className="progress progress-secondary w-full"
+                value="100"
+                max="100"
+              ></progress>
+              <progress
+                className="progress progress-secondary w-full"
+                value="70"
+                max="100"
+              ></progress>
+              <progress
+                className="progress progress-secondary w-full"
+                value="40"
+                max="100"
+              ></progress>
+              <progress
+                className="progress progress-secondary w-full"
+                value="10"
+                max="100"
+              ></progress>
+
+              <progress
+                className="progress progress-secondary"
+                value={0}
+                max="100"
+              ></progress>
             </div>
           </div>
         </section>
