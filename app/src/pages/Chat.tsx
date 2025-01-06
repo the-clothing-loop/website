@@ -472,6 +472,7 @@ export default function Chat() {
             {selectedOldBulkyItems ? (
               <BulkyList
                 key="BulkyList"
+                createOnlyImage={false}
                 onSendMessageWithImage={onSendMessageWithImage}
               />
             ) : ChatStore.state.client ? (

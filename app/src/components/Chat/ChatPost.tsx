@@ -126,7 +126,7 @@ export default function ChatPost(props: ChatPostProps) {
             </div>
             <div className="tw-relative">
               <img
-                className="-tw-px-2 tw-inline-block tw-max-h-60"
+                className="-tw-px-2 tw-block tw-max-h-60 tw-min-h-40 tw-bg-medium-shade tw-text-background"
                 src={imageURL}
                 alt={title}
               ></img>
