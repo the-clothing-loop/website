@@ -749,7 +749,7 @@ func ChainGetLargest(c *gin.Context) {
 
 	var result []body
 
-	if err := db.Raw(`SELECT name, description, number_of_participants FROM chains c JOIN (SELECT chain_id, COUNT(*) as number_of_participants FROM user_chains GROUP BY chain_id ORDER BY COUNT(*) DESC LIMIT 5) AS top_chains ON c.id = top_chains.chain_id ORDER BY number_of_participants DESC `).Scan(&result).Error; err != nil {
+	if err := db.Raw(`SELECT name, description, number_of_participants FROM chains c JOIN (SELECT chain_id, COUNT(*) as number_of_participants FROM user_chains GROUP BY chain_id ORDER BY COUNT(*) DESC LIMIT 10) AS top_chains ON c.id = top_chains.chain_id ORDER BY number_of_participants DESC `).Scan(&result).Error; err != nil {
 		slog.Warn("Unable to fetch chains sizes", "err", err)
 		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
 		return

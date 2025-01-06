@@ -9,8 +9,7 @@ import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 import { $authUser } from "../../../stores/auth";
 import getLanguages from "../../../languages";
-import { chainGet, chainGetLargest } from "../../../api/chain";
-import type { Chain } from "../../../api/types";
+import { chainGetLargest } from "../../../api/chain";
 
 const IS_PRODUCTION =
   import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
@@ -59,9 +58,12 @@ export default function Home() {
       console.warn(err);
     }
   }
+
   useEffect(() => {
     fetchLargestLoops();
   }, []);
+
+  const maxValue = topLoops ? topLoops[0].number_of_participants / 0.9 : 100;
 
   const supporters: Supporter[] = [
     {
@@ -284,26 +286,27 @@ export default function Home() {
           </div>
         </section>
         <section className="mb-12 md:mb-24">
-          <div className="flex mx-6">
+          <div className="flex flex-col md:flex-row mx-6">
             <iframe
-              className="w-1/2 h-[800px] px-6 overflow-hidden border-4 border-secondary"
+              className="w-full h-[800px] px-6 overflow-hidden border-8 border-secondary sm:w-[600px] aspect-video mx-auto mb-16"
               scrolling="no"
               id="instagram-embed"
               src="https://www.instagram.com/p/DDZ5jrdxoRy/embed"
             ></iframe>
-            <div className="mx-auto my-auto w-1/2 px-6">
-              {/* MAX must be updated before PR */}
+            <div className="mx-auto my-auto w-full md:w-1/2 px-6">
               {topLoops?.map((tp) => {
                 return (
                   <div className="mb-4">
                     <div className="flex justify-between">
-                      <div className="font-bold text-xs">{tp.name}</div>
-                      <div className="text-xs ">{tp.description}</div>
+                      <div className="font-bold text-sm">{tp.name}</div>
+                      <div className="text-xs">
+                        {tp.number_of_participants} {t("participants")}
+                      </div>
                     </div>
                     <progress
                       className="progress progress-secondary w-full"
                       value={tp.number_of_participants}
-                      max="10"
+                      max={maxValue}
                     ></progress>
                   </div>
                 );
