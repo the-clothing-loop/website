@@ -1,10 +1,10 @@
 host: "0.0.0.0"
 port: 8084
 
-site_base_url_api: "http://localhost:3000/api"
-site_base_url_fe: "http://localhost:3000"
+site_base_url_api: "http://www.clothingloop.localhost:8080/api"
+site_base_url_fe: "http://www.clothingloop.localhost:8080"
 
-cookie_domain: "localhost"
+cookie_domain: "clothingloop.localhost"
 cookie_https_only: false
 
 stripe_secret_key: "secret"

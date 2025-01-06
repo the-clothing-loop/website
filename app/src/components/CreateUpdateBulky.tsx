@@ -24,10 +24,8 @@ import {
   hourglassOutline,
   imageOutline,
 } from "ionicons/icons";
-import { ChangeEvent, RefObject, useContext, useRef, useState } from "react";
-import { bulkyItemPut } from "../api/bulky";
+import { ChangeEvent, RefObject, useRef, useState } from "react";
 import { BulkyItem } from "../api/typex2";
-import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
@@ -42,11 +40,13 @@ enum State {
 }
 
 export default function CreateBulky({
+  onlyImage,
   bulky,
   didDismiss,
   modal,
   onSendBulkyItem,
 }: {
+  onlyImage: boolean;
   bulky: BulkyItem | null;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (
@@ -81,13 +81,15 @@ export default function CreateBulky({
     setLoadingUpload(State.idle);
   }
   async function createOrUpdate() {
-    if (!bulkyTitle) {
-      setError("title");
-      return;
-    }
-    if (!bulkyMessage) {
-      setError("message");
-      return;
+    if (!onlyImage) {
+      if (!bulkyTitle) {
+        setError("title");
+        return;
+      }
+      if (!bulkyMessage) {
+        setError("message");
+        return;
+      }
     }
     if (!image) {
       setError("image-url");
@@ -200,49 +202,57 @@ export default function CreateBulky({
             <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
           <IonTitle>
-            {bulky ? t("updateBulkyItem") : t("createBulkyItem")}
+            {bulky
+              ? t("updateBulkyItem")
+              : onlyImage
+                ? t("sendPicture")
+                : t("createBulkyItem")}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {t("save")}
+              {bulky ? t("save") : onlyImage ? t("send") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          <IonItem color={error === "title" ? "danger" : undefined}>
-            <IonInput
-              type="text"
-              autoCorrect="on"
-              autoCapitalize="words"
-              enterkeyhint="next"
-              label={t("title")}
-              labelPlacement="start"
-              value={bulkyTitle}
-              onIonInput={(e) => setBulkyTitle(e.detail.value + "")}
-            ></IonInput>
-          </IonItem>
-          <IonItem
-            lines="inset"
-            color={error === "message" ? "danger" : undefined}
-          >
-            <IonTextarea
-              className="ion-margin-bottom"
-              label={t("message")}
-              labelPlacement="start"
-              spellCheck="true"
-              autoGrow
-              autoCapitalize="sentences"
-              autoCorrect="on"
-              enterkeyhint="next"
-              value={bulkyMessage}
-              onIonInput={(e) => setBulkyMessage(e.detail.value + "")}
-            />
-          </IonItem>
+          {onlyImage ? null : (
+            <>
+              <IonItem color={error === "title" ? "danger" : undefined}>
+                <IonInput
+                  type="text"
+                  autoCorrect="on"
+                  autoCapitalize="words"
+                  enterkeyhint="next"
+                  label={t("title")}
+                  labelPlacement="start"
+                  value={bulkyTitle}
+                  onIonInput={(e) => setBulkyTitle(e.detail.value + "")}
+                ></IonInput>
+              </IonItem>
+              <IonItem
+                lines="inset"
+                color={error === "message" ? "danger" : undefined}
+              >
+                <IonTextarea
+                  className="ion-margin-bottom"
+                  label={t("message")}
+                  labelPlacement="start"
+                  spellCheck="true"
+                  autoGrow
+                  autoCapitalize="sentences"
+                  autoCorrect="on"
+                  enterkeyhint="next"
+                  value={bulkyMessage}
+                  onIonInput={(e) => setBulkyMessage(e.detail.value + "")}
+                />
+              </IonItem>
+            </>
+          )}
           <IonItem
             color={error === "image-url" ? "danger" : undefined}
             lines="none"

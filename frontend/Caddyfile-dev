@@ -45,15 +45,15 @@
 	redir /users/* /en{uri} 302
 }
 
-:80 {
+{
+	http_port 8080
+	auto_https off
+	admin off
+}
+
+http://www.clothingloop.localhost:8080 {
 	handle_path /api/* {
 		reverse_proxy server:8084
-	}
-
-	redir /mailpit /mailpit/
-	handle_path /mailpit/* {
-		rewrite * /mailpit{path}
-		reverse_proxy mailpit:8025
 	}
 	handle_path /toolkit {
 		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
@@ -62,6 +62,25 @@
 	handle {
 		import astro_i18n
 		import astro_url
-		reverse_proxy frontend:3000
+		reverse_proxy frontend:8085
 	}
+}
+
+http://app.clothingloop.localhost:8080 {
+	reverse_proxy app:8081
+}
+
+http://mm.clothingloop.localhost:8080 {
+	@options method OPTIONS
+	@origindev header Origin http://app.clothingloop.localhost:8080
+
+	header @origindev {
+		>Access-Control-Allow-Methods "POST,GET,OPTIONS,PUT,PATCH,DELETE"
+		>Access-Control-Allow-Origin http://app.clothingloop.localhost:8080
+		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,authorization
+		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token,authorization
+	}
+	respond @options 204
+
+	reverse_proxy mattermost:8065
 }

@@ -23,6 +23,7 @@ import { uploadImage, uploadImageFile } from "../../api/imgbb";
 
 interface Props {
   onSendMessageWithImage: OnSendMessageWithImage;
+  createOnlyImage: boolean;
 }
 
 export default function BulkyList(props: Props) {
@@ -45,6 +46,7 @@ export default function BulkyList(props: Props) {
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const [modalDesc, setModalDesc] = useState({ title: "", message: "" });
   const refModalDesc = useRef<HTMLIonModalElement>(null);
+  const [onlyImage, setOnlyImage] = useState(false);
   // const headerSheetModal = useRef<HTMLIonModalElement>(null);
 
   // const headerKey = "bulkyList";
@@ -317,6 +319,7 @@ export default function BulkyList(props: Props) {
         />
       </div>
       <CreateBulky
+        onlyImage={props.createOnlyImage}
         modal={modal}
         didDismiss={() => refresh("bulky-items")}
         bulky={updateBulky}

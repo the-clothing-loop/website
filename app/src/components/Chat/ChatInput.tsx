@@ -1,5 +1,4 @@
 import {
-  IonButton,
   IonFab,
   IonFabButton,
   IonFabList,
@@ -7,9 +6,8 @@ import {
   IonInput,
   IonItem,
   IonLabel,
-  IonPopover,
 } from "@ionic/react";
-import { cubeOutline, sendOutline } from "ionicons/icons";
+import { camera, cubeOutline, sendOutline } from "ionicons/icons";
 import { MouseEvent, useContext, useRef, useState } from "react";
 import { Sleep } from "../../utils/sleep";
 import { addOutline } from "ionicons/icons";
@@ -40,6 +38,7 @@ export default function ChatInput(props: Props) {
   const [updateBulky, setUpdateBulky] = useState<BulkyItem | null>(null);
   const { refresh } = useContext(StoreContext);
   const refChatInput = useRef<HTMLIonInputElement>(null);
+  const [onlyPicture, setOnlyPicture] = useState(false);
 
   async function sendMessage() {
     setStatus(SendingMsgState.SENDING);
@@ -66,8 +65,14 @@ export default function ChatInput(props: Props) {
     }, 100);
   }
 
-  function handleClickPlus(e: MouseEvent) {
+  function onClickCreateBulky(e: MouseEvent) {
     setUpdateBulky(null);
+    setOnlyPicture(false);
+    modal.current?.present();
+  }
+  function onClickCreateOnlyPicture(e: MouseEvent) {
+    setUpdateBulky(null);
+    setOnlyPicture(true);
     modal.current?.present();
   }
   function handleClickFabText(
@@ -86,7 +91,7 @@ export default function ChatInput(props: Props) {
             lines="none"
             color="light"
             button
-            onClick={handleClickPlus}
+            onClick={onClickCreateBulky}
             detail={false}
             detailIcon={addOutline}
             style={{
@@ -118,7 +123,7 @@ export default function ChatInput(props: Props) {
             <IonFabList side="top" className="tw-mb-14">
               <div className="tw-relative">
                 <IonFabButton
-                  onClick={handleClickPlus}
+                  onClick={onClickCreateBulky}
                   size="small"
                   id="fab-bulky"
                 >
@@ -131,10 +136,29 @@ export default function ChatInput(props: Props) {
                 </IonFabButton>
                 <div className="tw-absolute tw-top-0 tw-bottom-0 tw-left-full tw-w-[max-content] tw-flex tw-items-center">
                   <button
-                    onClick={(e) => handleClickFabText(e, handleClickPlus)}
+                    onClick={(e) => handleClickFabText(e, onClickCreateBulky)}
                     className="tw-py-1 tw-px-4 tw-bg-light tw-rounded tw-opacity-80 hover:tw-opacity-100 tw-font-bold tw-text-sm"
                   >
                     {t("createBulkyItem")}
+                  </button>
+                </div>
+              </div>
+              <div className="tw-relative">
+                <IonFabButton
+                  onClick={onClickCreateOnlyPicture}
+                  size="small"
+                  id="fab-bulky"
+                >
+                  <IonIcon size="lg" icon={camera} color="primary" />
+                </IonFabButton>
+                <div className="tw-absolute tw-top-0 tw-bottom-0 tw-left-full tw-w-[max-content] tw-flex tw-items-center">
+                  <button
+                    onClick={(e) =>
+                      handleClickFabText(e, onClickCreateOnlyPicture)
+                    }
+                    className="tw-py-1 tw-px-4 tw-bg-light tw-rounded tw-opacity-80 hover:tw-opacity-100 tw-font-bold tw-text-sm"
+                  >
+                    {t("sendPicture")}
                   </button>
                 </div>
               </div>
@@ -178,6 +202,7 @@ export default function ChatInput(props: Props) {
         </div>
       )}
       <CreateBulky
+        onlyImage={onlyPicture}
         modal={modal}
         didDismiss={() => refresh("bulky-items")}
         bulky={updateBulky}
