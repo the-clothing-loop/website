@@ -218,9 +218,9 @@ export default function Chat() {
       await apiChat.chatDeleteChannel(chain.uid, channelID);
 
       const _channels = channels.filter((c) => c.id != channelID);
-      const _channel = _channels.at(-1) || null;
-
-      await setChain(chain.uid, authUser);
+      const _channel = _channels.at(0) || null;
+      setChannels(_channels);
+      setSelectedChannel(_channel);
     } catch (err) {
       console.error(err);
     }
@@ -391,23 +391,6 @@ export default function Chat() {
     ChatStore.init(chain.uid);
   }
 
-  function onOpenMenu() {
-    presentActionSheet({
-      header: t("chatRoom"),
-
-      buttons: [
-        {
-          text: t("edit"),
-          handler: () => UseChatCreateEdit.onOpenCreateChannel("edit"),
-        },
-        {
-          text: t("cancel"),
-          role: "cancel",
-        },
-      ],
-    });
-  }
-
   if (!authUser) {
     return <Loading />;
   }
@@ -423,7 +406,11 @@ export default function Chat() {
         <IonToolbar>
           <IonButtons>
             {showEditButton ? (
-              <IonButton onClick={onOpenMenu}>
+              <IonButton
+                onClick={() =>
+                  UseChatRoomActions.setIsChannelActionSheetOpen(true)
+                }
+              >
                 <IonIcon icon={menuOutline} />
               </IonButton>
             ) : null}
