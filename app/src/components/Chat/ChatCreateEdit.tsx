@@ -54,7 +54,7 @@ export function useChatCreateEdit(props: {
         props.onDeleteChannel(props.selectedChannel!.id);
       };
       presentAlert({
-        header: "Delete chat room?",
+        header: t("deleteRoom?"),
         buttons: [
           {
             text: t("cancel"),
