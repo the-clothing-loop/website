@@ -307,8 +307,10 @@ export default function Home() {
                 return (
                   <div className="mb-4">
                     <div className="flex justify-between">
-                      <div className="font-bold text-sm">{tp.name}</div>
-                      <div className="text-xs">
+                      <div className="font-bold text-sm truncate">
+                        {tp.name}
+                      </div>
+                      <div className="text-xs min-w-24 text-right">
                         {tp.number_of_participants} {t("participants")}
                       </div>
                     </div>
