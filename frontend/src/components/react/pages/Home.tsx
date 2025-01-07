@@ -63,9 +63,15 @@ export default function Home() {
     fetchLargestLoops();
   }, []);
 
-  const maxValue = topLoops ? topLoops[0].number_of_participants : 100;
-  const minValue = topLoops ? topLoops[9].number_of_participants : 100;
-  const range = 9 - 5;
+  const maxInput = topLoops ? topLoops[0].number_of_participants : 100;
+  const minInput = topLoops ? topLoops[9].number_of_participants : 50;
+
+  function adjustValue(inputValue: number) {
+    const range = 9 - 5;
+    return range + ((inputValue - minInput) / (maxInput - minInput)) * range;
+  }
+
+  const maxOuput = adjustValue(maxInput) / 0.9;
 
   const supporters: Supporter[] = [
     {
@@ -297,12 +303,7 @@ export default function Home() {
             ></iframe>
             <div className="mx-auto my-auto w-full md:w-1/2 px-6">
               {topLoops?.map((tp) => {
-                const value =
-                  range +
-                  ((tp.number_of_participants - minValue) /
-                    (maxValue - minValue)) *
-                    range;
-
+                const value = adjustValue(tp.number_of_participants);
                 return (
                   <div className="mb-4">
                     <div className="flex justify-between">
@@ -314,7 +315,7 @@ export default function Home() {
                     <progress
                       className="progress progress-secondary w-full"
                       value={value}
-                      max={maxValue}
+                      max={maxOuput}
                     ></progress>
                   </div>
                 );
