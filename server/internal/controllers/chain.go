@@ -741,20 +741,22 @@ func ChainChangeUserWarden(c *gin.Context) {
 func ChainGetLargest(c *gin.Context) {
 
 	db := getDB(c)
-	type body struct {
+	type ChainSummary struct {
 		Name                 string `json:"name"`
 		Description          string `json:"description"`
 		NumberOfParticipants int    `json:"number_of_participants"`
 	}
+	const limit = 10
+	var result []ChainSummary
 
-	var result []body
+	query := `SELECT name, description, number_of_participants FROM chains c JOIN (SELECT chain_id, COUNT(*) as number_of_participants FROM user_chains GROUP BY chain_id ORDER BY COUNT(*) DESC LIMIT ?) AS top_chains ON c.id = top_chains.chain_id ORDER BY number_of_participants DESC `
 
-	if err := db.Raw(`SELECT name, description, number_of_participants FROM chains c JOIN (SELECT chain_id, COUNT(*) as number_of_participants FROM user_chains GROUP BY chain_id ORDER BY COUNT(*) DESC LIMIT 10) AS top_chains ON c.id = top_chains.chain_id ORDER BY number_of_participants DESC `).Scan(&result).Error; err != nil {
-		slog.Warn("Unable to fetch chains sizes", "err", err)
-		c.String(http.StatusBadRequest, models.ErrChainNotFound.Error())
+	if err := db.Raw(query, limit).Scan(&result).Error; err != nil {
+		slog.Warn("Unable to fetch largest chains", "err", err)
+		c.String(http.StatusInternalServerError, "Unable to fetch largest chains")
 		return
 	}
 
-	c.JSON(200, result)
+	c.JSON(http.StatusOK, result)
 
 }
