@@ -1,5 +1,6 @@
-import type { UID, User } from "./types";
+import type { UID } from "./types";
 import axios from "./axios";
+import { User, UserUpdateRequest } from "./typex2";
 
 export function userGetByUID(
   chainUID: string | undefined,
@@ -25,22 +26,7 @@ export function userGetAllByChain(chainUID: string) {
   });
 }
 
-export interface UserUpdateBody {
-  user_uid: UID;
-  chain_uid?: UID;
-  name?: string;
-  phone_number?: string;
-  newsletter?: boolean;
-  sizes?: string[];
-  address?: string;
-  paused_until?: string;
-  i18n?: string;
-  longitude?: number;
-  latitude?: number;
-  accepted_legal?: boolean;
-  chain_paused?: boolean;
-}
-export function userUpdate(user: UserUpdateBody) {
+export function userUpdate(user: UserUpdateRequest) {
   return axios.patch<never>("/v2/user", user);
 }
 

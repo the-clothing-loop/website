@@ -53,7 +53,7 @@ export function UserDataExport(props: {
     ).map<UserData>((u) => ({
       name: u.name,
       address: u.address,
-      email: u.email,
+      email: u.email!,
       phoneNumber: u.phone_number,
       interestedSizes: u.sizes.map((s) => SizeNames[s]).join(","),
     }));

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gopkg.in/guregu/null.v3/zero"
 	"gorm.io/gorm"
 )
@@ -33,7 +34,7 @@ type Chain struct {
 	AllowMap                      bool
 	Sizes                         []string `gorm:"serializer:json"`
 	Genders                       []string `gorm:"serializer:json"`
-	UserChains                    []UserChain
+	UserChains                    []sharedtypes.UserChain
 	CreatedAt                     time.Time
 	UpdatedAt                     time.Time
 	DeletedAt                     zero.Time
@@ -42,29 +43,6 @@ type Chain struct {
 	RoutePrivacy                  int
 	LastAbandonedAt               sql.NullTime
 	LastAbandonedRecruitmentEmail sql.NullTime
-}
-
-type ChainResponse struct {
-	UID              string   `json:"uid" gorm:"chains.uid"`
-	Name             string   `json:"name" gorm:"chains.name"`
-	Description      string   `json:"description" gorm:"chains.description"`
-	Address          string   `json:"address" gorm:"chains.address"`
-	Image            *string  `json:"image" gorm:"chains.image"`
-	Latitude         float64  `json:"latitude" gorm:"chains.latitude"`
-	Longitude        float64  `json:"longitude" gorm:"chains.longitude"`
-	Radius           float32  `json:"radius" gorm:"chains.radius"`
-	Sizes            []string `json:"sizes" gorm:"chains.sizes;serializer:json"`
-	Genders          []string `json:"genders" gorm:"chains.genders;serializer:json"`
-	Published        bool     `json:"published" gorm:"chains.published"`
-	OpenToNewMembers bool     `json:"open_to_new_members" gorm:"chains.open_to_new_members"`
-	TotalMembers     *int     `json:"total_members,omitempty" gorm:"total_members"`
-	TotalHosts       *int     `json:"total_hosts,omitempty" gorm:"total_hosts"`
-	RulesOverride    *string  `json:"rules_override,omitempty" gorm:"chains.rules_override"`
-	HeadersOverride  *string  `json:"headers_override,omitempty" gorm:"chains.headers_override"`
-	Theme            *string  `json:"theme,omitempty" gorm:"chains.theme"`
-	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
-	RoutePrivacy     *int     `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
-	AllowMap         *bool    `json:"allow_map,omitempty" gorm:"chains.allow_map"`
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members

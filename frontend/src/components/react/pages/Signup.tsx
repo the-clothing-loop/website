@@ -66,31 +66,10 @@ export default function Signup() {
     (async () => {
       try {
         if (chainUID) {
-          await registerBasicUser(
-            {
-              name: values.name,
-              email: values.email,
-              phone_number: values.phone,
-              newsletter: values.newsletter,
-              address: values.address,
-              sizes: values.sizes,
-              latitude: values.latitude || 0,
-              longitude: values.longitude || 0,
-            },
-            chainUID,
-          );
+          await registerBasicUser(values, chainUID);
         } else {
           console.info("register orphaned user");
-          await registerOrphanedUser({
-            name: values.name,
-            email: values.email,
-            phone_number: values.phone,
-            newsletter: values.newsletter,
-            address: values.address,
-            sizes: values.sizes,
-            latitude: values.latitude || 0,
-            longitude: values.longitude || 0,
-          });
+          await registerOrphanedUser(values);
         }
 
         setSubmitted(true);

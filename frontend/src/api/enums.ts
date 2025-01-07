@@ -47,3 +47,42 @@ export const CatI18nKeys: Record<Categories | string, string> = {
   "4": "toys",
   "5": "books",
 };
+export enum ReasonsForLeaving {
+  moved = "1",
+  notEnoughItemsILiked = "2",
+  addressTooFar = "3",
+  tooTimeConsuming = "4",
+  doneSwapping = "5",
+  didntFitIn = "6",
+  other = "7",
+  planToJoinNewLoop = "8",
+  planToStartNewLoop = "9",
+  dontPlanToParticipate = "10",
+  /** sub of notEnoughItemsILiked */
+  qualityDidntMatch = "11",
+  /** sub of notEnoughItemsILiked */
+  sizesDidntMatch = "12",
+  /** sub of notEnoughItemsILiked */
+  stylesDidntMatch = "13",
+  dontWantToShare = "14",
+}
+
+export const ReasonsForLeavingI18nKeys: Record<
+  ReasonsForLeaving | string,
+  string
+> = {
+  "1": "moved",
+  "2": "notEnoughItemsILiked",
+  "3": "addressTooFar",
+  "4": "tooTimeConsuming",
+  "5": "doneSwapping",
+  "6": "didntFitIn",
+  "7": "other",
+  "8": "planToJoinNewLoop",
+  "9": "planToStartNewLoop",
+  "10": "dontPlanToParticipate",
+  "11": "qualityDidntMatch",
+  "12": "sizesDidntMatch",
+  "13": "stylesDidntMatch",
+  "14": "dontWantToShare",
+};

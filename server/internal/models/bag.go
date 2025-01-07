@@ -4,21 +4,10 @@ import (
 	"strings"
 	"time"
 
-	"gopkg.in/guregu/null.v3/zero"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
-type Bag struct {
-	ID                    uint      `json:"id"`
-	Number                string    `json:"number"`
-	Color                 string    `json:"color"`
-	UserChainID           uint      `json:"-"`
-	ChainUID              string    `json:"chain_uid" gorm:"-:migration;<-:false"`
-	UserUID               string    `json:"user_uid" gorm:"-:migration;<-:false"`
-	UpdatedAt             time.Time `json:"updated_at"`
-	LastNotifiedAt        zero.Time `json:"-"`
-	LastUserEmailToUpdate string    `json:"-"`
-	LastUserDateToUpdate  string    `json:"-"`
-}
+type Bag sharedtypes.Bag
 
 func (b *Bag) AddLastUserEmailToUpdateFifo(email string) {
 	var shouldAppendDate bool

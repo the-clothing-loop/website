@@ -7,6 +7,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,11 +15,7 @@ import (
 func ContactNewsletter(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Name      string `json:"name" binding:"required"`
-		Email     string `json:"email" binding:"required,email"`
-		Subscribe bool   `json:"subscribe"`
-	}
+	var body sharedtypes.ContactNewsletterRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -51,8 +48,13 @@ func ContactNewsletter(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
+	ctx := c.Request.Context()
 	if app.Brevo != nil {
-		app.Brevo.CreateContact(c.Request.Context(), body.Email)
+		if err = app.Brevo.ExistsContact(ctx, body.Email); err == nil {
+			c.String(http.StatusAlreadyReported, "Already subscribed")
+			return
+		}
+		app.Brevo.CreateContact(ctx, body.Email)
 	}
 
 	views.EmailSubscribeToNewsletter(c, db, name, body.Email)
@@ -61,11 +63,7 @@ func ContactNewsletter(c *gin.Context) {
 func ContactMail(c *gin.Context) {
 	db := getDB(c)
 
-	var body struct {
-		Name    string `json:"name" binding:"required"`
-		Email   string `json:"email" binding:"required,email"`
-		Message string `json:"message" binding:"required"`
-	}
+	var body sharedtypes.ContactMailRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return

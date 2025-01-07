@@ -1,5 +1,6 @@
 import { Dayjs } from "dayjs";
-import { UID, User } from "../api/types";
+import { UID } from "../api/types";
+import { User } from "../api/typex2";
 import dayjs from "../dayjs";
 
 export default function IsPaused(

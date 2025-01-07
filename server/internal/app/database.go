@@ -8,6 +8,7 @@ import (
 
 	cache "github.com/patrickmn/go-cache"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -48,7 +49,7 @@ func CacheFindOrUpdate[V any](key string, duration time.Duration, update func() 
 }
 
 func DatabaseAutoMigrate(db *gorm.DB) {
-	hadIsApprovedColumn := db.Migrator().HasColumn(&models.UserChain{}, "is_approved")
+	hadIsApprovedColumn := db.Migrator().HasColumn(&sharedtypes.UserChain{}, "is_approved")
 	hadEventPriceTypeColumn := db.Migrator().HasColumn(&models.Event{}, "price_type")
 	hadAllowMapColumn := db.Migrator().HasColumn(&models.Chain{}, "allow_map")
 
@@ -62,7 +63,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 					if t == "bigint(20)" {
 						tx := db.Begin()
 
-						if !db.Migrator().HasColumn(&models.UserToken{}, "new_created_at") {
+						if !db.Migrator().HasColumn(&sharedtypes.UserToken{}, "new_created_at") {
 							err := tx.Exec(`ALTER TABLE user_tokens ADD new_created_at datetime(3) DEFAULT NULL`).Error
 							if err != nil {
 								tx.Rollback()
@@ -117,13 +118,14 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Newsletter{},
 		&models.User{},
 		&models.Event{},
-		&models.UserToken{},
-		&models.UserChain{},
+		&sharedtypes.UserToken{},
+		&sharedtypes.UserChain{},
 		&models.UserOnesignal{},
 		&models.Bag{},
 		&models.BulkyItem{},
 		&models.Payment{},
 		&models.Mail{},
+		&models.DeletedUser{},
 	)
 
 	if !db.Migrator().HasConstraint("user_chains", "uci_user_id_chain_id") {

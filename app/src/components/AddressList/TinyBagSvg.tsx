@@ -1,4 +1,4 @@
-import { Bag } from "../../api/types";
+import { Bag } from "../../api/typex2";
 import BagSVG from "../Bags/Svg";
 
 type BagType = "" | "👻" | "🐰" | "👟" | "📖";

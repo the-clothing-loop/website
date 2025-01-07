@@ -1,7 +1,7 @@
 import { IonItem, IonText, IonIcon } from "@ionic/react";
 import { shield, pauseCircleSharp, flag, arrowUpSharp } from "ionicons/icons";
-import { Bag, User } from "../../api/types";
 import TinyBagSvg, { getBagType } from "./TinyBagSvg";
+import { Bag, User } from "../../api/typex2";
 
 export interface AddressListItemProps {
   user: User;

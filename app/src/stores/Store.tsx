@@ -3,7 +3,7 @@ import { Storage } from "@ionic/storage";
 
 import dayjs from "../dayjs";
 import { OverlayContainsState, OverlayState } from "../utils/overlay_open";
-import { Bag, BulkyItem, Chain, UID, User } from "../api/types";
+import { Chain, UID } from "../api/types";
 import { bagGetAllByChain } from "../api/bag";
 import { bulkyItemGetAllByChain } from "../api/bulky";
 import { chainGet, chainUpdate } from "../api/chain";
@@ -13,6 +13,7 @@ import { userGetByUID, userGetAllByChain, userUpdate } from "../api/user";
 import { chainRemoveUser } from "../api/chain";
 import { IS_WEB } from "../utils/is_web";
 import { cookieUserUID } from "./browser_storage";
+import { Bag, BulkyItem, User } from "../api/typex2";
 
 type ChainHeaders = Record<string, string>;
 

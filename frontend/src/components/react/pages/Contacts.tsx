@@ -29,8 +29,16 @@ const Contacts = () => {
 
     (async () => {
       try {
-        await contactMailSend(values.name, values.email, values.message);
-        setSubmitted(true);
+        const res = await contactMailSend(
+          values.name,
+          values.email,
+          values.message,
+        );
+        if (res.status === 208) {
+          setError("Already subscribed");
+        } else {
+          setSubmitted(true);
+        }
       } catch (err: any) {
         console.error("Unable to send contact mail", err, values);
         setError("submit");

@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import DataProcessingAgreementPage from "../../components/react/pages/DataProcessingAgreement";
+import Base from "../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Data Processing Agreement">
+  <DataProcessingAgreementPage client:load />
+</Base>

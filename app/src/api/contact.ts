@@ -1,4 +1,5 @@
 import axios from "./axios";
+import { ContactMailRequest, ContactNewsletterRequest } from "./typex2";
 export function contactNewsletterSet(
   name: string,
   email: string,
@@ -8,7 +9,7 @@ export function contactNewsletterSet(
     name,
     email,
     subscribe,
-  });
+  } satisfies ContactNewsletterRequest);
 }
 
 export function contactMailSend(name: string, email: string, message: string) {
@@ -16,5 +17,5 @@ export function contactMailSend(name: string, email: string, message: string) {
     name,
     email,
     message,
-  });
+  } satisfies ContactMailRequest);
 }

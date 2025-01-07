@@ -15,7 +15,6 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
-	"gopkg.in/guregu/null.v3/zero"
 )
 
 func BagGetAll(c *gin.Context) {
@@ -128,8 +127,10 @@ LIMIT 1
 	}
 	if body.UpdatedAt != nil {
 		bag.UpdatedAt = *(body.UpdatedAt)
+	} else if bag.ID == 0 || bag.UserChainID != holder.UserChainID {
+		bag.UpdatedAt = time.Now()
 	}
-	bag.LastNotifiedAt = zero.Time{}
+	bag.LastNotifiedAt = nil
 	bag.AddLastUserEmailToUpdateFifo(holder.Email)
 
 	bag.UserChainID = holder.UserChainID

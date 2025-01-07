@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import SignupPage from "../../../../components/react/pages/Signup";
+import Base from "../../../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Signup user">
+  <SignupPage client:load />
+</Base>

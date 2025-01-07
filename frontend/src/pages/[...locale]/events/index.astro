@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import EventsPage from "../../../components/react/pages/Events";
+import Base from "../../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Home">
+  <EventsPage client:load />
+</Base>

@@ -328,7 +328,10 @@ export default function Home() {
       </div>
       <div className="bg-turquoise">
         <div className="w-full sm:max-md:max-w-screen-sm md:max-w-screen-xl mx-auto">
-          <section className="flex flex-col md:flex-row items-center mb-6 md:mb-20 font-bold">
+          <section
+            className="flex flex-col md:flex-row items-center mb-6 md:mb-20 font-bold"
+            id="impactreport"
+          >
             <div className="w-full md:w-1/2 flex justify-end p-6 md:px-10 text-base-100">
               <div className="w-full md:max-w-screen-sm">
                 <h2 className="text-6xl md:text-8xl font-serif mb-6">

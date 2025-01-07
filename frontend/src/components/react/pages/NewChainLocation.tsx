@@ -61,12 +61,13 @@ export default function NewChainLocation() {
   }, [clientValues]);
 
   async function onSubmit(values: RegisterChainForm) {
-    let user = clientValues?.isOnlyCreateChain
-      ? authUser
-      : clientValues?.registerUser;
-    if (!user) {
-      addToastError("User is not availible", 400);
-      return;
+    let user = undefined;
+    if (!clientValues?.isOnlyCreateChain) {
+      user = clientValues?.registerUser;
+      if (!user) {
+        addToastError("User is not availible", 400);
+        return;
+      }
     }
     const newChain: RequestRegisterChain = {
       name: values.name,

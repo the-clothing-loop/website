@@ -1,5 +1,6 @@
 import type { UID, User } from "./types";
 import axios from "./axios";
+import type { UserUpdateRequest } from "./typex2";
 
 export function userGetByUID(
   chainUID: string | undefined,
@@ -25,20 +26,7 @@ export function userGetAllByChain(chainUID: string) {
   });
 }
 
-export interface UserUpdateBody {
-  user_uid: UID;
-  chain_uid?: UID;
-  name?: string;
-  phone_number?: string;
-  newsletter?: boolean;
-  sizes?: string[];
-  address?: string;
-  paused_until?: string;
-  i18n?: string;
-  longitude?: number;
-  latitude?: number;
-  accepted_legal?: boolean;
-}
+export type UserUpdateBody = UserUpdateRequest;
 export function userUpdate(user: UserUpdateBody) {
   return axios.patch<never>("/v2/user", user);
 }
@@ -50,10 +38,24 @@ export function userAddAsChainAdmin(chainUID: string, userUID: string) {
   });
 }
 
-export function userPurge(userUID: string) {
+export function userPurge(
+  userUID: string,
+  reasonsForLeaving: string[],
+  otherExplanation?: string,
+) {
+  const baseOE = otherExplanation ? btoa(otherExplanation) : undefined;
+  console.log(
+    "Purging user",
+    userUID,
+    reasonsForLeaving.join(","),
+    otherExplanation,
+    baseOE,
+  );
   return axios.delete<never>("v2/user/purge", {
     params: {
       user_uid: userUID,
+      rfl: reasonsForLeaving,
+      oe: baseOE,
     },
   });
 }
