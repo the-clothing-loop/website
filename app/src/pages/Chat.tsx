@@ -184,7 +184,7 @@ export default function Chat() {
     if (!chain) return;
     try {
       console.info("Creating channel", name);
-      const res = await apiChat.chatCreateChannel(chain.uid, name, color);
+      await apiChat.chatCreateChannel(chain.uid, name, color);
       // update chain object from server to update chain.room_ids value
       await setChain(chain.uid, authUser);
     } catch (err) {
@@ -217,8 +217,10 @@ export default function Chat() {
       console.info("Deleting channel", channelID);
       await apiChat.chatDeleteChannel(chain.uid, channelID);
 
+      const oldChannelIndex = channels.findIndex((c) => c.id === channelID);
+      const oldPrevChannelIndex = oldChannelIndex > 0 ? oldChannelIndex - 1 : 0;
       const _channels = channels.filter((c) => c.id != channelID);
-      const _channel = _channels.at(0) || null;
+      const _channel = channels.at(oldPrevChannelIndex) || null;
       setChannels(_channels);
       setSelectedChannel(_channel);
     } catch (err) {
@@ -236,9 +238,9 @@ export default function Chat() {
   }
 
   // todo:
-  function onEditPost(postID: string) {
-    console.warn("TODO!!!", "onEditPost", postID);
-  }
+  // function onEditPost(postID: string) {
+  //   console.warn("TODO!!!", "onEditPost", postID);
+  // }
 
   function onSelectChannel(channel: Channel, _mmClient?: Client4) {
     setSelectedChannel(channel);
@@ -321,10 +323,26 @@ export default function Chat() {
 
     const formData = new FormData();
     formData.append("channel_id", selectedChannel.id);
-    formData.append("files", image);
+    // formData.append("client_ids", "");
+    formData.append(
+      "files",
+      new Blob([await image.arrayBuffer()], { type: image.type }),
+    );
 
     try {
-      const res = await ChatStore.state.client.uploadFile(formData);
+      // https://github.com/mattermost/mattermost/issues/26323
+      // const res = await ChatStore.state.client.uploadFile(formData);
+      const res: any = await fetch(
+        import.meta.env.VITE_CHAT_URL + "/api/v4/files",
+        {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            Authorization: "Bearer " + ChatStore.state.client.getToken(),
+          },
+          body: formData,
+        },
+      ).then((res) => res.json());
       const file_id = res.file_infos[0].id;
       await ChatStore.state.client.createPost({
         channel_id: selectedChannel.id,
@@ -471,7 +489,7 @@ export default function Chat() {
                 getFile={getFile}
                 chainUsers={chainUsers}
                 onDeletePost={onDeletePost}
-                onEditPost={onEditPost}
+                // onEditPost={onEditPost}
               />
             ) : (
               <RoomNotReady

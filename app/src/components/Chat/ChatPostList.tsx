@@ -11,7 +11,7 @@ interface Props {
   postList: PaginatedPostList;
   chainUsers: User[];
   onDeletePost: (postID: string) => void;
-  onEditPost: (postID: string) => void;
+  // onEditPost: (postID: string) => void;
   getFile: (fileId: string, timestamp: number) => void;
 }
 
@@ -21,7 +21,7 @@ export default function ChatPostList({
   authUser,
   chainUsers,
   onDeletePost,
-  onEditPost,
+  // onEditPost,
   getFile,
 }: Props) {
   const { t } = useTranslation();
@@ -50,7 +50,7 @@ export default function ChatPostList({
     } else if (value == "edit") {
       const postID = isPostActionSheetOpen;
       if (!postID) return;
-      onEditPost(postID);
+      // onEditPost(postID);
     }
   }
 
