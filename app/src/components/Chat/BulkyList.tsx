@@ -205,13 +205,7 @@ export default function BulkyList(props: {}) {
                   color={"background"}
                 >
                   {bulkyItem.image_url ? (
-                    <div
-                      className={`tw-relative tw-min-h-[124px] ${
-                        i % 2 === 0
-                          ? "tw-bg-primary-shade"
-                          : "tw-bg-secondary-shade"
-                      }`}
-                    >
+                    <div className="tw-relative tw-flex tw-justify-center tw-min-h-[124px] tw-bg-dark-contrast">
                       <img
                         alt={bulkyItem.title}
                         src={bulkyItem.image_url}
