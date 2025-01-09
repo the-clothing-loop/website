@@ -469,37 +469,42 @@ export default function Chat() {
             />
           </div>
 
-          <div
-            ref={refScrollRoot}
-            className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto"
-          >
-            {selectedOldBulkyItems ? (
-              <BulkyList key="BulkyList" />
-            ) : ChatStore.state.client ? (
-              <ChatPostList
-                key="ChatPostList"
-                isChainAdmin={isChainAdmin}
-                authUser={authUser}
-                postList={postList}
-                getFile={getFile}
-                chainUsers={chainUsers}
-                onDeletePost={onDeletePost}
-                // onEditPost={onEditPost}
-              />
-            ) : (
-              <RoomNotReady
-                isChainAdmin={isChainAdmin}
-                onClickEnable={onClickEnableChat}
-              />
-            )}
-            <span key="top" ref={refScrollTop}></span>
-          </div>
-          {selectedChannel ? (
-            <ChatInput
-              onSendMessage={onSendMessageWithCallback}
-              onSendMessageWithImage={onSendMessageWithImageWithCallback}
-            />
-          ) : null}
+          {selectedOldBulkyItems ? (
+            <BulkyList key="BulkyList" />
+          ) : (
+            <>
+              {ChatStore.state.client ? (
+                <div
+                  key="ChatPostList"
+                  ref={refScrollRoot}
+                  className="tw-flex tw-flex-1 tw-flex-col-reverse tw-overflow-y-auto"
+                >
+                  <ChatPostList
+                    isChainAdmin={isChainAdmin}
+                    authUser={authUser}
+                    postList={postList}
+                    getFile={getFile}
+                    chainUsers={chainUsers}
+                    onDeletePost={onDeletePost}
+                    // onEditPost={onEditPost}
+                  />
+                  <span key="top" ref={refScrollTop}></span>
+                </div>
+              ) : (
+                <RoomNotReady
+                  isChainAdmin={isChainAdmin}
+                  onClickEnable={onClickEnableChat}
+                />
+              )}
+
+              {selectedChannel ? (
+                <ChatInput
+                  onSendMessage={onSendMessageWithCallback}
+                  onSendMessageWithImage={onSendMessageWithImageWithCallback}
+                />
+              ) : null}
+            </>
+          )}
         </div>
       </IonContent>
     </IonPage>
