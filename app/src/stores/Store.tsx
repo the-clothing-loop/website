@@ -396,7 +396,7 @@ export function StoreProvider({
         setChainUsers(_chainUsers.data);
         setRoute(_route.data);
         setBags(_bags.data);
-      } else if (tab === "bulky-items") {
+      } else if (tab === "bulky-items" || tab == "chat") {
         if (!chain) throw errLoopMustBeSelected;
         const [_chainUsers, _bulkyItems] = await Promise.all([
           userGetAllByChain(chain.uid),
