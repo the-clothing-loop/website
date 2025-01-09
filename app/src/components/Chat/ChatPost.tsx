@@ -10,7 +10,7 @@ export interface ChatPostProps {
   post: Post;
   users: User[];
   authUser: User | null | undefined;
-  getFile: (fileId: string, timestamp: number) => void;
+  getFile: (fileId: string, timestamp: number) => Promise<Blob>;
   isChainAdmin: boolean;
   onLongPress: (id: string) => void;
 }
@@ -23,7 +23,7 @@ export default function ChatPost(props: ChatPostProps) {
   });
   const [username, setUsername] = useState("");
   const [isMe, setIsMe] = useState(false);
-  const [imageURL, setImageURL] = useState("");
+  const [imageURL, setImageURL] = useState<Blob>();
   const refModalDesc = useRef<HTMLIonModalElement>(null);
   //const [user, setUser] = useState(User)
 
@@ -55,8 +55,7 @@ export default function ChatPost(props: ChatPostProps) {
     const fileid = props.post.file_ids[0];
     const timestamp = props.post.create_at;
     try {
-      const _image = await props.getFile(fileid, timestamp);
-      return _image as unknown as string;
+      return await props.getFile(fileid, timestamp);
     } catch (err) {
       console.error("Error retrieving image from post", err);
       throw err;
@@ -127,7 +126,7 @@ export default function ChatPost(props: ChatPostProps) {
             <div className="tw-relative">
               <img
                 className="-tw-px-2 tw-block tw-max-h-60 tw-min-h-40 tw-bg-medium-shade tw-text-background"
-                src={imageURL}
+                src={URL.createObjectURL(imageURL)}
                 alt={title}
               ></img>
               {username ? (

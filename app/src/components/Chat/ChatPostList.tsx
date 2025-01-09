@@ -12,7 +12,7 @@ interface Props {
   chainUsers: User[];
   onDeletePost: (postID: string) => void;
   // onEditPost: (postID: string) => void;
-  getFile: (fileId: string, timestamp: number) => void;
+  getFile: (fileId: string, timestamp: number) => Promise<Blob>;
 }
 
 export default function ChatPostList({

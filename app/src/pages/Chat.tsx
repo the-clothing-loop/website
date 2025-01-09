@@ -304,10 +304,16 @@ export default function Chat() {
   function onScrollTop(lastPostId: string) {
     reqPostList(lastPostId);
   }
-  async function getFile(fileId: string, timestamp: number) {
-    if (!selectedChannel || !ChatStore.state.client) return;
-    const fileUrl = await ChatStore.state.client.getFileUrl(fileId, timestamp);
-    return fileUrl.toString();
+  async function getFile(fileId: string, timestamp: number): Promise<Blob> {
+    if (!selectedChannel || !ChatStore.state.client) throw "No room selected";
+    const fileUrl = ChatStore.state.client.getFileUrl(fileId, timestamp);
+    const image = await fetch(fileUrl.toString(), {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + ChatStore.state.client.getToken(),
+      },
+    }).then((res) => res.blob());
+    return image;
   }
 
   async function onSendMessageWithImage(
@@ -315,18 +321,14 @@ export default function Chat() {
     message: string,
     image: File,
   ): Promise<void> {
-    if (!selectedChannel || !ChatStore.state.client) {
-      return createOldBulkyItem(title, message, image);
-    }
+    if (!selectedChannel || !ChatStore.state.client)
+      throw "chat root not selected";
     console.log("reqPostList", selectedChannel.id);
 
     const formData = new FormData();
     formData.append("channel_id", selectedChannel.id);
     // formData.append("client_ids", "");
-    formData.append(
-      "files",
-      new Blob([await image.arrayBuffer()], { type: image.type }),
-    );
+    formData.append("files", image);
 
     try {
       // https://github.com/mattermost/mattermost/issues/26323
