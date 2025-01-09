@@ -50,7 +50,6 @@ export type OnSendMessageWithImage = (
 // This follows the controller / view component pattern
 export default function Chat() {
   const { t } = useTranslation();
-  const [presentActionSheet] = useIonActionSheet();
   const {
     chain,
     setChain,
@@ -434,7 +433,7 @@ export default function Chat() {
             ) : null}
           </IonButtons>
           <IonTitle className={isThemeDefault ? "tw-text-purple" : ""}>
-            Chat
+            {t("chat")}
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -475,11 +474,7 @@ export default function Chat() {
             className="tw-flex-grow tw-flex tw-flex-col-reverse tw-overflow-y-auto"
           >
             {selectedOldBulkyItems ? (
-              <BulkyList
-                key="BulkyList"
-                createOnlyImage={false}
-                onSendMessageWithImage={onSendMessageWithImage}
-              />
+              <BulkyList key="BulkyList" />
             ) : ChatStore.state.client ? (
               <ChatPostList
                 key="ChatPostList"
@@ -499,9 +494,8 @@ export default function Chat() {
             )}
             <span key="top" ref={refScrollTop}></span>
           </div>
-          {selectedChannel || selectedOldBulkyItems ? (
+          {selectedChannel ? (
             <ChatInput
-              isOldBulkyItems={selectedOldBulkyItems}
               onSendMessage={onSendMessageWithCallback}
               onSendMessageWithImage={onSendMessageWithImageWithCallback}
             />
