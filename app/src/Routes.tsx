@@ -170,7 +170,8 @@ const ChangeTabs = ["help", "address", "bags", "bulky-items", "settings"];
 
 function AppRoute() {
   const { t } = useTranslation();
-  const { refresh, bags, authUser, chain } = useContext(StoreContext);
+  const { refresh, bags, authUser, chain, listOfChains } =
+    useContext(StoreContext);
   const { showNotification } = useContext(ChatContext);
   const isPaused = IsPaused(authUser, chain?.uid);
 
@@ -200,6 +201,7 @@ function AppRoute() {
     refresh(tab);
   }
 
+  const hasOneChain = listOfChains?.length === 1;
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -223,8 +225,11 @@ function AppRoute() {
           component={OpenSource}
         ></Route>
       </IonRouterOutlet>
-      <div slot="bottom" className="tw-bg-primary">
-        <IonTabBar onIonTabsWillChange={handleTabsWillChange}>
+      <div slot="bottom" className="">
+        <IonTabBar
+          onIonTabsWillChange={handleTabsWillChange}
+          className={hasOneChain ? "" : "tw-mb-4"}
+        >
           <IonTabButton
             tab="help"
             href="/help"
@@ -274,17 +279,24 @@ function AppRoute() {
             <IonLabel>{t("info")}</IonLabel>
           </IonTabButton>
         </IonTabBar>
-        <div className="tw-h-4 tw-relative">
-          {chain ? (
-            <div className="tw-inset-0 tw-absolute tw-text-xs tw-text-center tw-text-background tw-font-bold tw-bg-primary">
-              {chain.name}
+        {hasOneChain ? null : (
+          <div className="tw-absolute tw-bottom-0 tw-w-full tw-bg-primary">
+            <div
+              className="tw-h-4 tw-w-full"
+              style={{ marginBottom: "var(--ion-safe-area-bottom, 0)" }}
+            >
+              {chain ? (
+                <div className="tw-text-xs tw-text-center tw-text-background tw-font-bold tw-bg-primary">
+                  {chain.name}
+                </div>
+              ) : (
+                <div className="tw-text-xs tw-text-center tw-text-background tw-italic tw-bg-danger">
+                  {"No Loop selected"}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="tw-inset-0 tw-absolute tw-text-xs tw-text-center tw-text-background tw-italic tw-bg-danger">
-              {"No Loop selected"}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </IonTabs>
   );
