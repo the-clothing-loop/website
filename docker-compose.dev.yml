@@ -3,8 +3,8 @@ name: cl-dev
 services:
   app:
     image: node:22-alpine
-    # ports:
-    #   - 127.0.0.1:8081:8081
+    ports:
+      - 127.0.0.1:8081:8081
     volumes:
       - ./app:/app
       - npm_cache:/root/.npm/
@@ -25,8 +25,10 @@ services:
       - db
       - mailpit
       - mattermost
-    # ports:
-    #   - 127.0.0.1:8084:8084
+    ports:
+      - 127.0.0.1:8084:8084
+      # Mobile testing
+      # - 0.0.0.0:8084:8084
     volumes:
       - ./server:/app
       - go_cache:/go/pkg/mod/
@@ -90,6 +92,8 @@ services:
     # network_mode: host
     ports:
       - 127.0.0.1:8080:8080
+      # Mobile testing
+      # - 0.0.0.0:8080:8080
     volumes:
       - ./frontend/Caddyfile-dev:/etc/caddy/Caddyfile
       - caddy_data:/data

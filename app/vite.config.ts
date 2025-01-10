@@ -20,7 +20,7 @@ export default defineConfig((mode) => {
         "/mm": {
           target: IS_DOCKER
             ? "http://mattermost:8065"
-            : "http://127.0.0.1:8065",
+            : "http://mm.clothingloop.localhost:8080",
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/mm/, ""),
           ws: true,

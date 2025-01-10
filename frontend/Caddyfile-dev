@@ -66,21 +66,40 @@ http://www.clothingloop.localhost:8080 {
 	}
 }
 
-http://app.clothingloop.localhost:8080 {
+http://app.clothingloop.localhost:8080, http://localhost:8080 {
+	handle_path /api/* {
+		reverse_proxy server:8084
+	}
+
+	handle_path /mm/* {
+		reverse_proxy http://mm.clothingloop.localhost:8080
+	}
+
 	reverse_proxy app:8081
 }
 
+# Mobile testing
 http://mm.clothingloop.localhost:8080 {
 	@options method OPTIONS
-	@origindev header Origin http://app.clothingloop.localhost:8080
+	@allowedOrigin {
+		header Origin "https://app.acc.clothingloop.org"
+		header Origin "https://app.clothingloop.org"
+		header Origin "http://app.clothingloop.localhost:8080"
+		header Origin "http://localhost:8080"
+		header Origin "http://localhost:8081"
+		header Origin "http://localhost"
+		header Origin "capacitor://localhost"
+	}
 
-	header @origindev {
+	header @allowedOrigin {
 		>Access-Control-Allow-Methods "POST,GET,OPTIONS,PUT,PATCH,DELETE"
-		>Access-Control-Allow-Origin http://app.clothingloop.localhost:8080
+		>Access-Control-Allow-Origin {http.request.header.Origin}
 		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,authorization
 		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token,authorization
 	}
 	respond @options 204
 
-	reverse_proxy mattermost:8065
+	reverse_proxy mattermost:8065 {
+		header_down -Access-Control-Allow-Origin
+	}
 }

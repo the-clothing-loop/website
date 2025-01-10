@@ -1,29 +1,31 @@
 :8066 {
 	@options method OPTIONS
-	@originacc header Origin https://app.acc.clothingloop.org
-	@originprod header Origin https://app.acc.clothingloop.org
-
-	header @originacc {
-		>Access-Control-Allow-Methods "POST,GET,OPTIONS,PUT,PATCH,DELETE"
-		>Access-Control-Allow-Origin https://app.acc.clothingloop.org
-		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,authorization
-		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token,authorization
+	@allowedOrigin {
+		header Origin "https://app.acc.clothingloop.org"
+		header Origin "https://app.clothingloop.org"
+		header Origin "http://app.clothingloop.localhost:8080"
+		header Origin "http://localhost:8080"
+		header Origin "http://localhost:8081"
+		header Origin "http://localhost"
+		header Origin "capacitor://localhost"
 	}
-	header @originprod {
+
+	header @allowedOrigin {
 		>Access-Control-Allow-Methods "POST,GET,OPTIONS,PUT,PATCH,DELETE"
-		>Access-Control-Allow-Origin https://app.clothingloop.org
-		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token,authorization
+		>Access-Control-Allow-Origin {http.request.header.Origin}
 		>Access-Control-Allow-Headers origin,content-type,x-requested-with,accept,token,authorization
+		>Access-Control-Expose-Headers origin,content-type,x-requested-with,accept,token,authorization
 	}
 
 	respond @options 204
 
-	reverse_proxy http://mattermost:8065 {
-		stream_timeout 24h
-		stream_close_delay 5m
-		header_up Host {host}
-		header_up X-Real-IP {remote_host}
-		header_up X-Forwarded-For {remote_host}
-		header_up X-Forwarded-Proto {scheme}
+	reverse_proxy mattermost:8065 {
+		# stream_timeout 24h
+		# stream_close_delay 5m
+		# header_up Host {host}
+		# header_up X-Real-IP {remote_host}
+		# header_up X-Forwarded-For {remote_host}
+		# header_up X-Forwarded-Proto {scheme}
+		header_down -Access-Control-Allow-Origin
 	}
 }
