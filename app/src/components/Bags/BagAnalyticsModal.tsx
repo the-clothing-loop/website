@@ -64,7 +64,7 @@ import { useTranslation } from "react-i18next";
 
 export default function BagAnalyticsModal() {
   const { t } = useTranslation();
-  const { chain } = useContext(StoreContext);
+  const { chain, route } = useContext(StoreContext);
   const ref = useRef<HTMLIonModalElement>(null);
   // const [segmentType, setSegmentType] = useState<"bags" | "members">("bags");
   /*  const list = useMemo<ListBags | ListMembers>(() => {
@@ -200,16 +200,30 @@ export default function BagAnalyticsModal() {
                   <span className="tw-text-medium">{t("dateReceived")}</span>
                 </p>
                 <IonList>
-                  {item.history.map((histItem, i) => (
-                    <IonItem lines="full" color="light" key={i}>
-                      <IonLabel>{histItem.name}</IonLabel>
-                      {histItem.date ? (
-                        <span slot="end" className="tw-text-medium-shade">
-                          {textDate(histItem.date)}
-                        </span>
-                      ) : null}
-                    </IonItem>
-                  ))}
+                  {item.history.map((histItem, i) => {
+                    /** -1 if not present */
+                    const routeUserIndex: number = histItem.uid
+                      ? route.indexOf(histItem.uid)
+                      : -1;
+                    return (
+                      <IonItem lines="full" color="light" key={i}>
+                        <div
+                          slot="start"
+                          className="tw-flex tw-items-center tw-text-medium-shade"
+                        >
+                          {routeUserIndex === -1 ? null : (
+                            <span className="!tw-font-bold">{`#${routeUserIndex + 1}`}</span>
+                          )}
+                        </div>
+                        <IonLabel>{histItem.name}</IonLabel>
+                        {histItem.date ? (
+                          <span slot="end" className="tw-text-medium-shade">
+                            {textDate(histItem.date)}
+                          </span>
+                        ) : null}
+                      </IonItem>
+                    );
+                  })}
                 </IonList>
               </IonLabel>
             </IonItem>

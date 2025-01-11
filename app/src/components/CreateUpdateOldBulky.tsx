@@ -24,15 +24,13 @@ import {
   hourglassOutline,
   imageOutline,
 } from "ionicons/icons";
-import { ChangeEvent, RefObject, useContext, useState } from "react";
-import { bulkyItemPut } from "../api/bulky";
+import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
 import { BulkyItem } from "../api/typex2";
-import { StoreContext } from "../stores/Store";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import { uploadImage } from "../api/imgbb";
+import { OnSendMessageWithImage } from "../pages/Chat";
 
 enum State {
   idle,
@@ -41,39 +39,49 @@ enum State {
   loading,
 }
 
-export default function CreateUpdateBulky({
+export type OnSubmitOldBulky = (
+  title: string,
+  message: string,
+  file?: File | undefined | null,
+) => Promise<void>;
+
+export default function CreateUpdateOldBulky({
   bulky,
   didDismiss,
   modal,
+  onSubmitBulky,
 }: {
   bulky: BulkyItem | null;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (
     e: IonModalCustomEvent<OverlayEventDetail<BulkyItem | null>>,
   ) => void;
+  onSubmitBulky: OnSubmitOldBulky;
 }) {
   const { t } = useTranslation();
-  const { chain, authUser } = useContext(StoreContext);
   const [bulkyTitle, setBulkyTitle] = useState("");
   const [bulkyMessage, setBulkyMessage] = useState("");
-  const [bulkyImageURL, setBulkyImageURL] = useState("");
+  const [imageData, setImageData] = useState<string>();
+  const [image, setImage] = useState<File>();
   const [error, setError] = useState("");
   const [isCapacitor] = useState(() => isPlatform("capacitor"));
   const [loadingUpload, setLoadingUpload] = useState(State.loading);
   const [present] = useIonToast();
+  const refScrollRoot = useRef<HTMLDivElement>(null);
 
   function modalInit() {
     setBulkyTitle(bulky?.title || "");
     setBulkyMessage(bulky?.message || "");
-    setBulkyImageURL(bulky?.image_url || "");
     setLoadingUpload(State.idle);
+    setImageData(undefined);
+    setImage(undefined);
+    setError("");
   }
 
   function cancel() {
     modal.current?.dismiss();
     setBulkyTitle("");
     setBulkyMessage("");
-    setBulkyImageURL("");
     setLoadingUpload(State.idle);
   }
   async function createOrUpdate() {
@@ -85,23 +93,19 @@ export default function CreateUpdateBulky({
       setError("message");
       return;
     }
-    if (!bulkyImageURL) {
+    if (!bulky && !image) {
       setError("image-url");
       return;
     }
+
     try {
-      let body: Parameters<typeof bulkyItemPut>[0] = {
-        chain_uid: chain!.uid,
-        user_uid: bulky?.user_uid || authUser!.uid,
-        title: bulkyTitle,
-        message: bulkyMessage,
-        image_url: bulkyImageURL,
-      };
-      if (bulky) body.id = bulky.id;
-      await bulkyItemPut(body);
+      await onSubmitBulky(bulkyTitle, bulkyMessage, image);
+
+      refScrollRoot.current?.scrollTo({
+        top: 0,
+      });
 
       setError("");
-
       modal.current?.dismiss("", "confirm");
     } catch (err: any) {
       setError(err.status);
@@ -134,27 +138,22 @@ export default function CreateUpdateBulky({
   function handleWebUpload(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setLoadingUpload(State.loading);
 
-    function getBase64(file: File) {
+    // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
+    function getDataUrl(file: File) {
       return new Promise<string>((resolve, reject) => {
         let reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () =>
-          resolve(
-            (reader.result as string).replace("data:", "").replace(/^.+,/, ""),
-          );
+        reader.onload = () => resolve(reader.result as string);
         reader.onerror = (error) => reject(error);
       });
     }
 
     (async () => {
-      // https://pqina.nl/blog/convert-a-file-to-a-base64-string-with-javascript/#encoding-the-file-as-a-base-string
-      const image64 = await getBase64(file);
-
-      const res = await uploadImage(image64, 800);
-      setBulkyImageURL(res.data.image);
+      const image64 = await getDataUrl(file);
+      setImageData(image64);
+      setImage(file);
     })()
       .then(() => {
         setLoadingUpload(State.success);
@@ -171,10 +170,26 @@ export default function CreateUpdateBulky({
     const photo = await Camera.getPhoto({
       resultType: CameraResultType.Base64,
     });
-    if (!photo.base64String) throw "Image not found";
 
-    const res = await uploadImage(photo.base64String, 800);
-    setBulkyImageURL(res.data.image);
+    // https://stackoverflow.com/a/38935990/19100899
+    function dataURLtoFile(dataurl: string, filename: string) {
+      const arr = dataurl.split(",");
+      const mime = arr[0].match(/:(.*?);/)![1];
+      const bstr = atob(arr[arr.length - 1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    }
+    if (!photo.dataUrl) throw "Image not found";
+    const f = dataURLtoFile(
+      photo.dataUrl,
+      photo.webPath?.replace(/^.*[\\\/]/, "") + "." + photo.format,
+    );
+    setImage(f);
+    setImageData(photo.dataUrl);
   }
 
   return (
@@ -196,7 +211,7 @@ export default function CreateUpdateBulky({
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {t("save")}
+              {bulky ? t("save") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -232,6 +247,7 @@ export default function CreateUpdateBulky({
               onIonInput={(e) => setBulkyMessage(e.detail.value + "")}
             />
           </IonItem>
+
           <IonItem
             color={error === "image-url" ? "danger" : undefined}
             lines="none"
@@ -240,7 +256,8 @@ export default function CreateUpdateBulky({
               <IonLabel className="tw-mt-2 tw-mb-0">{t("image")}</IonLabel>
 
               <div className="tw-text-center tw-w-full">
-                {!(loadingUpload === State.loading) && bulkyImageURL ? (
+                {!(loadingUpload === State.loading) &&
+                (imageData || bulky?.image_url) ? (
                   <IonCard
                     onClick={handleClickUpload}
                     className={`tw-my-8 tw-mx-[50px] tw-border tw-border-solid ${
@@ -248,7 +265,7 @@ export default function CreateUpdateBulky({
                     }`}
                   >
                     <IonImg
-                      src={bulkyImageURL}
+                      src={imageData || bulky?.image_url}
                       alt={t("loading")}
                       className="tw-max-w-full"
                     />

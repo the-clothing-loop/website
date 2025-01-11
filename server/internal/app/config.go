@@ -3,7 +3,6 @@ package app
 import (
 	"encoding/base64"
 	"flag"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -48,6 +47,10 @@ var Config struct {
 	ONESIGNAL_REST_API_KEY  string `yaml:"onesignal_rest_api_key" env:"ONESIGNAL_REST_API_KEY"`
 	APPSTORE_REVIEWER_EMAIL string `yaml:"appstore_reviewer_email" env:"APPSTORE_REVIEWER_EMAIL"`
 	IMAGES_DIR              string `yaml:"images_dir" env:"IMAGES_DIR"`
+	MM_URL                  string `yaml:"mattermost_url" env:"MM_URL"`
+	MM_TOKEN                string `yaml:"mattermost_token" env:"MM_TOKEN"`
+	MM_SMTP_HOST            string `yaml:"mattermost_smtp_host" env:"MM_SMTP_HOST"`
+	MM_SMTP_PORT            string `yaml:"mattermost_smtp_port" env:"MM_SMTP_PORT"`
 }
 
 func ConfigInit(pwd string, files ...string) {
@@ -76,22 +79,11 @@ func ConfigInit(pwd string, files ...string) {
 		Config.JWT_SECRET = string(b)
 	}
 
-	// var fname string
-	// switch env {
-	// case EnvEnumDevelopment:
-	// 	fname = "config.dev.yml"
-	// case EnvEnumTesting:
-	// 	fname = "config.test.yml"
-	// case EnvEnumAcceptance:
-	// 	fname = "config.acc.yml"
-	// case EnvEnumProduction:
-	// 	fname = "config.prod.yml"
-	// }
-
-	if Config.JWT_SECRET == "" {
-		panic(fmt.Errorf("no jwt secret in config file: %s", *fFile))
-	}
 	stripe.Key = Config.STRIPE_SECRET_KEY
+	if Config.ENV == "" {
+		slog.Error("Config ENV is empty")
+		os.Exit(1)
+	}
 }
 
 func ConfigTestInit(path string) {

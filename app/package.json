@@ -8,7 +8,7 @@
     "install:globals": "npm install -g @ionic/cli",
     "dev": "npm run build:generate-open-source-page; VITE_APP_VERSION=$(git describe --tags --always) vite",
     "dev:android": "ionic capacitor copy android && ionic capacitor run android -l --external",
-    "dev:docker": "VITE_DOCKER=true vite --host",
+    "dev:docker": "VITE_DOCKER=true vite --host 0.0.0.0",
     "dev:ios": "ionic capacitor copy ios && ionic capacitor run ios -l --external",
     "build:development": "npm run build:generate-open-source-page; tsc && VITE_APP_VERSION=$(git describe --tags --always) vite build --mode development",
     "build:acceptance": "npm run build:generate-open-source-page; tsc && vite build --mode acceptance",
@@ -43,9 +43,12 @@
     "@ionic/react-router": "^8.4.1",
     "@ionic/storage": "^4.0.0",
     "@mapbox/mapbox-gl-geocoder": "^5.0.3",
+    "@mattermost/client": "9.7.0-0",
+    "@mattermost/types": "9.7.0-0",
     "@uidotdev/usehooks": "^2.4.1",
     "autoprefixer": "^10.4.20",
     "beautiful-react-hooks": "^5.0.2",
+    "color2k": "^2.0.3",
     "dayjs": "^1.11.13",
     "deck.gl": "^9.0.38",
     "i18next": "^23.14.0",
@@ -63,7 +66,8 @@
     "react-router-dom": "*",
     "react-transition-group": "^4.4.5",
     "redaxios": "^0.5.1",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^3.4.10",
+    "use-debounce": "^10.0.0",
     "use-long-press": "^3.2.0"
   },
   "devDependencies": {
@@ -87,5 +91,13 @@
     "vite": "^5.4.2",
     "vite-plugin-pwa": "^0.21.1",
     "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "@mattermost/client": {
+      "@mattermost/types": "$@mattermost/types"
+    },
+    "@mattermost/types": {
+      "typescript": "$typescript"
+    }
   }
 }

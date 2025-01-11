@@ -68,8 +68,8 @@ type webhookUnsubscribeResponse struct {
 }
 
 func (sib *brevo) WebhookUnsubscribed(c *gin.Context) (email string, err error) {
-	var body *webhookUnsubscribeResponse
-	if err = c.BindJSON(body); err != nil {
+	var body webhookUnsubscribeResponse
+	if err = c.BindJSON(&body); err != nil {
 		return "", err
 	}
 

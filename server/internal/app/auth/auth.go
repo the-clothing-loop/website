@@ -18,6 +18,8 @@ const (
 	AuthState4RootUser       = 4
 )
 
+// if the minimumAuthState is higher than 1AnyUser, AddUserChainsToObject is called
+//
 // There are 4 different states to authenticate
 // 0. Guest - this middleware is then not required
 // 1. User of a different/unknown chain
