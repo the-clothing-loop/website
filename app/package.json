@@ -14,6 +14,7 @@
     "build:acceptance": "npm run build:generate-open-source-page; tsc && vite build --mode acceptance",
     "build:production": "npm run build:generate-open-source-page; tsc && vite build --mode production",
     "build:android:production": "npm run build:production && ionic capacitor copy --no-build android; echo 'open android studio and build a bundle\nBuild -> Generate Signed Bundle/APK -> Android App Bundle -> '",
+    "build:android:acceptance": "npm run build:acceptance && ionic capacitor copy --no-build android; echo 'open android studio and build a bundle\nBuild -> Generate Signed Bundle/APK -> Android App Bundle -> '",
     "build:ios:production": "npm run build:production && ionic capacitor copy --no-build ios; echo 'open xcode and build a bundle\nRun -> Archive -> Submit -> '",
     "build:ios:acceptance": "npm run build:acceptance && ionic capacitor copy --no-build ios; echo 'open xcode and build a bundle\nRun -> Archive -> Submit -> '",
     "build:generate-open-source-page": "cd generate-oss; npm ci --no-audit; npm run start",
