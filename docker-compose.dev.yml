@@ -5,28 +5,33 @@ services:
     image: node:22-alpine
     ports:
       - 127.0.0.1:8081:8081
-    #   - 5173:5173
     volumes:
       - ./app:/app
+      - npm_cache:/root/.npm/
     working_dir: /app
     command: sh -c 'npm i && npm run dev:docker'
   frontend:
     image: node:22-alpine
     # ports:
-    #   - 3000:3000
+    #   - 127.0.0.1:8085:8085
     volumes:
       - ./frontend:/app
+      - npm_cache:/root/.npm/
     working_dir: /app
-    command: sh -c 'npm i; npm run start:lan'
+    command: sh -c 'npm i; npm run start:docker'
   server:
     image: golang:1.23-alpine
     depends_on:
       - db
       - mailpit
+      - mattermost
     ports:
-      - 8084:8084
+      - 127.0.0.1:8084:8084
+      # Mobile testing
+      # - 0.0.0.0:8084:8084
     volumes:
       - ./server:/app
+      - go_cache:/go/pkg/mod/
     environment:
       - ENV=development
     working_dir: /app
@@ -39,7 +44,6 @@ services:
     environment:
       - "MP_SMTP_AUTH_ACCEPT_ANY=true"
       - "MP_SMTP_AUTH_ALLOW_INSECURE=true"
-      - "MP_WEBROOT=/mailpit/"
   pma:
     image: phpmyadmin:apache
     ports:
@@ -60,13 +64,46 @@ services:
       - MYSQL_PASSWORD=72bd3937e91363a747f810e7
     volumes:
       - mysql:/var/lib/mysql
-      - ./server/sql:/scripts
-  caddy:
-    build:
-      context: ./frontend/
-      dockerfile: dev.Dockerfile
+      - ../../server/sql:/scripts
+  mattermost:
+    platform: linux/amd64
+    image: mattermost/mattermost-preview:10.1.3
+    ports: 
+      # - 127.0.0.1:8065:8065
+      - 127.0.0.1:5432:5432
+    volumes:
+      - mattermost_prev_db:/var/lib/postgresql/data
+      - mattermost_prev_config:/mm/mattermost/config
+      - mattermost_prev_data:/mm/mattermost-data
+  mattermost_mail:
+    image: golang:1.22.3-alpine
     ports:
-      # website
-      - 127.0.0.1:8080:80
+      - 2525:2525
+    depends_on:
+      - db
+    volumes:
+      - ./server:/app
+    environment:
+      - ENV=development
+    working_dir: /app
+    command: "go run cmd/mm-mail/main.go -c config.dev.yml"
+  caddy:
+    image: caddy:alpine
+    # network_mode: host
+    ports:
+      - 127.0.0.1:8080:8080
+      # Mobile testing
+      # - 0.0.0.0:8080:8080
+    volumes:
+      - ./frontend/Caddyfile-dev:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
 volumes:
+  caddy_data:
+  caddy_config:
   mysql:
+  mattermost_prev_db:
+  mattermost_prev_config:
+  mattermost_prev_data:
+  go_cache:
+  npm_cache:

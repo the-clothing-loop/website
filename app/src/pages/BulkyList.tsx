@@ -20,10 +20,7 @@ import { useTranslation } from "react-i18next";
 import toastError from "../../toastError";
 import { BulkyItem, User } from "../api/typex2";
 import { bulkyItemRemove } from "../api/bulky";
-import CreateUpdateBulky from "../components/CreateUpdateBulky";
 import { StoreContext } from "../stores/Store";
-import OverlayPaused from "../components/OverlayPaused";
-import OverlayAppDisabled from "../components/OverlayChainAppDisabled";
 import EditHeaders from "../components/EditHeaders";
 import HeaderTitle from "../components/HeaderTitle";
 
@@ -164,8 +161,6 @@ export default function BulkyList() {
 
   return (
     <IonPage>
-      <OverlayPaused />
-      <OverlayAppDisabled />
       <IonHeader translucent>
         <IonToolbar>
           <IonTitle>{headerText}</IonTitle>
@@ -357,12 +352,12 @@ export default function BulkyList() {
           />
         </div>
       </IonContent>
-
+      {/*}
       <CreateUpdateBulky
         modal={modal}
         didDismiss={() => refresh("bulky-items")}
         bulky={updateBulky}
-      />
+        />*/}
     </IonPage>
   );
 }

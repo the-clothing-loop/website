@@ -135,6 +135,7 @@ export function StoreProvider({
     if (version !== 1) {
       await _storage.set("version", 1);
     }
+    setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     _setBagListView((await _storage.get("bag_list_view")) || "dynamic");
     _setBagSort((await _storage.get("bag_sort")) || "aToZ");
     _setRouteListView((await _storage.get("route_list_view")) || "dynamic");
@@ -149,6 +150,7 @@ export function StoreProvider({
     window.axios.defaults.auth = undefined;
     await storage.remove("auth");
     await storage.remove("chain_uid");
+    await storage.remove("mm_token");
     setAuthUser(null);
     _setChain(null);
     setChainHeaders(undefined);
@@ -394,7 +396,7 @@ export function StoreProvider({
         setChainUsers(_chainUsers.data);
         setRoute(_route.data);
         setBags(_bags.data);
-      } else if (tab === "bulky-items") {
+      } else if (tab === "bulky-items" || tab == "chat") {
         if (!chain) throw errLoopMustBeSelected;
         const [_chainUsers, _bulkyItems] = await Promise.all([
           userGetAllByChain(chain.uid),
