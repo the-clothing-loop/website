@@ -54,6 +54,7 @@
   "addressTooFar": "Nästa adress är för långt borta",
   "tooTimeConsuming": "Loopen tog upp för mycket tid",
   "doneSwapping": "Jag är klar att byta",
+  "didntFitIn": "Jag anslöt inte till människorna i min loop (er)",
   "didntMeanToRegister": "Jag menade inte att registrera mig med denna loop",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
@@ -357,5 +358,10 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "chatRoomOptions": "Alternativ för chattrum",
+  "createRoom": "Skapa rum",
+  "editRoom": "Redigera rum",
+  "roomName": "Rummets namn",
+  "roomColor": "Rummets färg"
 }
