@@ -1,0 +1,14 @@
+---
+import { changeLanguage } from "i18next";
+import LoginEmailFinishedPage from "../../../../components/react/pages/LoginEmailFinished";
+import Base from "../../../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="Login finishing">
+  <LoginEmailFinishedPage client:load />
+</Base>

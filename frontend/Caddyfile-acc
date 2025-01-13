@@ -3,6 +3,10 @@
 }
 
 (astro_url) {
+	# /contact -> /contact-us/
+	@oldcontactseo path_regexp contactseo ^/(\w{2}/)?contact/?$
+	redir @oldcontactseo /{re.contactseo.1}contact-us/ 302
+
 	# /event/:uid/ -> /event/?event=
 	@oldevent path_regexp eventp ^/(\w{2}/)?events/([\w-]{36})/?$
 	redir @oldevent /{re.eventp.1}events/details/?event={re.eventp.2} 302
@@ -29,6 +33,26 @@
 	redir @olduserseditme /{re.userseditme.1}users/edit/?user=me 302
 }
 
+(astro_i18n) {
+	redir / /en/ 302
+	redir /about/* /en{uri} 302
+	redir /admin/* /en{uri} 302
+	redir /events/* /en{uri} 302
+	redir /contact-us/* /en{uri} 302
+	redir /contribute/* /en{uri} 302
+	redir /data-processing-agreement/* /en{uri} 302
+	redir /donate/* /en{uri} 302
+	redir /events/* /en{uri} 302
+	redir /faq/* /en{uri} 302
+	redir /loops/* /en{uri} 302
+	redir /message-submitted/* /en{uri} 302
+	redir /privacy-policy/* /en{uri} 302
+	redir /terms-of-hosts/* /en{uri} 302
+	redir /terms-of-use/* /en{uri} 302
+	redir /thankyou/* /en{uri} 302
+	redir /users/* /en{uri} 302
+}
+
 :80 {
 	import hsts
 	header X-Robots-Tag noindex
@@ -48,8 +72,9 @@
 	handle_path /toolkit {
 		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
 	}
-	
+
 	handle {
+		import astro_i18n
 		import astro_url
 		file_server
 		try_files {path} {path}/ =404

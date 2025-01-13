@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/samber/lo"
@@ -299,10 +301,27 @@ func UserPurge(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		UserUID string `form:"user_uid" binding:"required,uuid"`
+		UserUID           string `form:"user_uid" binding:"required,uuid"`
+		ReasonsForLeaving string `form:"rfl"`
+		OtherExplanation  string `form:"oe,omitempty,base64"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	otherExplanation := ""
+	if query.OtherExplanation != "" {
+		b, err := base64.StdEncoding.DecodeString(query.OtherExplanation)
+		if err == nil {
+			otherExplanation = string(b)
+		}
+	}
+	reasonsForLeaving := strings.Split(query.ReasonsForLeaving, ",")
+
+	// slog.Debug("UserPurge", "user_uid", query.UserUID, "reasons_for_leaving", query.ReasonsForLeaving, "other_explanation", otherExplanation, "len other_explanations", len(otherExplanation))
+
+	if ok := models.ValidateAllReasonsEnum(reasonsForLeaving, otherExplanation); !ok {
+		c.String(http.StatusBadRequest, "Please select at least one reason")
 		return
 	}
 
@@ -358,7 +377,25 @@ HAVING COUNT(uc.id) = 1
 		return
 	}
 
+	deletedUser := models.DeletedUser{
+		Email:            lo.FromPtr(user.Email),
+		UserCreatedAt:    user.CreatedAt,
+		UserDeletedAt:    time.Now(),
+		OtherExplanation: otherExplanation,
+	}
+
+	if err := deletedUser.SetReasons(reasonsForLeaving); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
 	tx := db.Begin()
+
+	if err := tx.Create(&deletedUser).Error; err != nil {
+		tx.Rollback()
+		c.String(http.StatusInternalServerError, "Failed to add deleted user to database")
+		return
+	}
 
 	err = user.DeleteUserChainDependenciesAllChains(tx)
 	if err != nil {

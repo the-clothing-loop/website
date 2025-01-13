@@ -1,0 +1,21 @@
+---
+import { changeLanguage } from "i18next";
+import AboutPagePage from "../../components/react/pages/About";
+import Base from "../../layouts/Base.astro";
+
+import { buildStaticPaths } from "astro-react-i18next/utils";
+export function getStaticPaths() {
+  return buildStaticPaths();
+}
+---
+
+<Base title="About">
+  <script type="text/javascript" is:inline>
+    window?.goatcounter?.count({
+      path: "accessed-page-about",
+      title: "Accessed Page:About",
+      event: true,
+    });
+  </script>
+  <AboutPagePage />
+</Base>

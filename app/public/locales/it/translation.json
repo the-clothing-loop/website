@@ -22,6 +22,7 @@
   "contact": "Contact",
   "settings": "Settings",
   "cancel": "Cancel",
+  "rename": "Rinomina",
   "close": "Close",
   "bagAnalytics": "Analisi Borsa",
   "history": "Storico",
@@ -158,5 +159,12 @@
   "updateHeaderDesc": "This change will be visible to all loop members.",
   "resetHeaders": "Reset headers",
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
-  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?"
+  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
+  "chat": "Chat",
+  "deleteRoom?": "Eliminare la stanza?",
+  "editRoom": "Modifica stanza",
+  "roomName": "Nome Stanza",
+  "roomColor": "Colore Stanza",
+  "sendPicture": "Invia immagine",
+  "chatRoomOptions": "Opzioni Stanza Chat"
 }

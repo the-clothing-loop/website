@@ -22,6 +22,7 @@
   "contact": "Kontakt",
   "settings": "Einstellungen",
   "cancel": "Abrufen",
+  "rename": "Umbenennen",
   "close": "Schließen",
   "bagAnalytics": "Taschenanalytik",
   "history": "Verlauf",
@@ -158,5 +159,12 @@
   "updateHeaderDesc": "Diese Änderung ist für alle Loop-Mitglieder sichtbar.",
   "resetHeaders": "Kopfzeilen zurücksetzen",
   "resetHeadersDesc": "Setzen Sie die Schleife-Header auf die Standard-Header.",
-  "areYouSureYouWantToResetHeaders": "Sind Sie sicher, dass Sie die Schleife-Header auf Abgas zurücksetzen möchten?"
+  "areYouSureYouWantToResetHeaders": "Sind Sie sicher, dass Sie die Schleife-Header auf Abgas zurücksetzen möchten?",
+  "chat": "Chat",
+  "deleteRoom?": "Raum löschen?",
+  "editRoom": "Raum bearbeiten",
+  "roomName": "Raumname",
+  "roomColor": "Raumfarbe",
+  "sendPicture": "Bild senden",
+  "chatRoomOptions": "Chatraumoptionen"
 }

@@ -1,10 +1,10 @@
 host: "0.0.0.0"
 port: 8084
 
-site_base_url_api: "http://localhost:3000/api"
-site_base_url_fe: "http://localhost:3000"
+site_base_url_api: "http://www.clothingloop.localhost:8080/api"
+site_base_url_fe: "http://www.clothingloop.localhost:8080"
 
-cookie_domain: "localhost"
+cookie_domain: "clothingloop.localhost"
 cookie_https_only: false
 
 stripe_secret_key: "secret"
@@ -26,3 +26,12 @@ smtp_pass: ""
 
 goscope2_user: "admin"
 goscope2_pass: "admin"
+
+mattermost_url: "http://mattermost:8065"
+# 1. Enable personal access tokens in System Console > Integrations > Integration Management.
+# 2. Sign in to the admin user account to create a personal access token.
+# 3. Go to Profile > Security > Personal Access Tokens, then select Create Token.
+mattermost_token: "secret"
+mattermost_smtp_host: "mattermost_mail"
+mattermost_smtp_port: 2525
+images_dir: "./images"

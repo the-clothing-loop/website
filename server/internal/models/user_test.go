@@ -15,3 +15,21 @@ func TestHideUserInformation(t *testing.T) {
 	assert.Equal(t, lo.FromPtr(u.Email), "***")
 	assert.Equal(t, u.PhoneNumber, "***")
 }
+
+func TestChatEmailToChatUserName(t *testing.T) {
+	f := func(chatEmail, chatUserName string, expectErr bool) {
+		t.Helper()
+
+		s, err := UserChatEmailToChatUserName(chatEmail)
+		if expectErr {
+			assert.NotNil(t, err)
+			assert.Nil(t, s)
+		} else {
+			assert.NoError(t, err)
+			assert.Equal(t, chatUserName, *s)
+		}
+	}
+
+	f("ayfpdh@example.com", "ayfpdh", false)
+	f("ayfpdh@hotmail.com", "ayfpdh", true)
+}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@nanostores/react";
 
@@ -11,6 +11,7 @@ import { addModal, addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import { useLegal } from "../util/user.hooks";
 import { GinParseErrors } from "../util/gin-errors";
+import DeleteModal from "../components/DeleteModal";
 
 export default function AdminDashboard() {
   const { t, i18n } = useTranslation();
@@ -23,21 +24,39 @@ export default function AdminDashboard() {
     () => !!authUser?.chains.find((uc) => uc.is_chain_admin),
     [authUser],
   );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const handleCloseDeleteModal = () => setIsDeleteModalOpen(false);
+  const [chainNames, setChainNames] = useState<string[]>([]);
+
+  async function handleSubmitDelete(
+    selectedReasons: string[],
+    other: string | undefined,
+  ) {
+    return userPurge(authUser!.uid, selectedReasons, other)
+      .then(() => {
+        window.location.href = localizePath("/users/logout");
+      })
+      .catch((err: any) => {
+        console.error("Error purging user:", err);
+        addToastError(GinParseErrors(t, err), err?.status);
+        throw err;
+      });
+  }
 
   function deleteClicked() {
     if (!authUser) return;
-    const chainNames = authUser.is_root_admin
+    const _chainNames = authUser.is_root_admin
       ? undefined
       : (authUser.chains
           .filter((uc) => uc.is_chain_admin)
           .map((uc) => chains.find((c) => c.uid === uc.chain_uid))
           .filter((c) => c && c.total_hosts && !(c.total_hosts > 1))
           .map((c) => c!.name) as string[]);
-
+    setChainNames(_chainNames || []);
     console.log(
       "show content",
       "chainNames",
-      chainNames,
+      _chainNames,
       "authUser.is_root_admin",
       authUser.is_root_admin,
       "authUser.chains",
@@ -47,43 +66,7 @@ export default function AdminDashboard() {
         .filter((uc) => uc.is_chain_admin)
         .map((uc) => chains.find((c) => c.uid === uc.chain_uid)),
     );
-
-    addModal({
-      message: t("deleteAccount"),
-      content: () => {
-        if (!(chainNames && chainNames.length)) return <></>;
-        return (
-          <div className="space-y-2">
-            <p className="">{t("deleteAccountWithLoops")}</p>
-            <ul
-              className={`text-sm font-semibold mx-8 ${
-                chainNames.length > 1 ? "list-disc" : "list-none text-center"
-              }`}
-            >
-              {chainNames.map((name) => (
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
-          </div>
-        );
-      },
-      actions: [
-        {
-          text: t("delete"),
-          type: "error",
-          fn: () => {
-            userPurge(authUser!.uid)
-              .then(() => {
-                window.location.href = localizePath("/users/logout");
-              })
-              .catch((err: any) => {
-                console.error("Error purging user:", err);
-                addToastError(GinParseErrors(t, err), err?.status);
-              });
-          },
-        },
-      ],
-    });
+    setIsDeleteModalOpen(true);
   }
 
   function logoutClicked() {
@@ -205,6 +188,12 @@ export default function AdminDashboard() {
           </label>
         </div>
       </section>
+      <DeleteModal
+        onSubmitReasonForLeaving={handleSubmitDelete}
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        chainNames={chainNames}
+      />
       <ChainsList chains={chains} setChains={setChains} />
     </main>
   );

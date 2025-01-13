@@ -22,6 +22,7 @@
   "contact": "Contact",
   "settings": "Instellingen",
   "cancel": "Annuleren",
+  "rename": "Hernoem",
   "close": "Sluiten",
   "bagAnalytics": "Tas Analytics",
   "history": "Geschiedenis",
@@ -158,5 +159,12 @@
   "updateHeaderDesc": "This change will be visible to all loop members.",
   "resetHeaders": "Reset headers",
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
-  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?"
+  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
+  "chat": "Chatten",
+  "deleteRoom?": "Ruimte verwijderen?",
+  "editRoom": "Ruimte bewerken",
+  "roomName": "Kamer Naam",
+  "roomColor": "Kleur kamer",
+  "sendPicture": "Afbeelding verzenden",
+  "chatRoomOptions": "Chatruimte opties"
 }
