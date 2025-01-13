@@ -31,10 +31,26 @@
 	# /users/me/edit -> /users/edit/?user=me
 	@olduserseditme path_regexp userseditme ^/(\w{2}/)?users/me/edit$
 	redir @olduserseditme /{re.userseditme.1}users/edit/?user=me 302
+}
 
-	file_server
-	try_files {path} {path}/ =404
-	encode zstd gzip
+(astro_i18n) {
+	redir / /en/ 302
+	redir /about/* /en{uri} 302
+	redir /admin/* /en{uri} 302
+	redir /events/* /en{uri} 302
+	redir /contact-us/* /en{uri} 302
+	redir /contribute/* /en{uri} 302
+	redir /data-processing-agreement/* /en{uri} 302
+	redir /donate/* /en{uri} 302
+	redir /events/* /en{uri} 302
+	redir /faq/* /en{uri} 302
+	redir /loops/* /en{uri} 302
+	redir /message-submitted/* /en{uri} 302
+	redir /privacy-policy/* /en{uri} 302
+	redir /terms-of-hosts/* /en{uri} 302
+	redir /terms-of-use/* /en{uri} 302
+	redir /thankyou/* /en{uri} 302
+	redir /users/* /en{uri} 302
 }
 
 :80 {
@@ -89,7 +105,11 @@
 		redir https://drive.google.com/drive/folders/1iMJzIcBxgApKx89hcaHhhuP5YAs_Yb27
 	}
 	handle {
+		import astro_i18n
 		import astro_url
+		file_server
+		try_files {path} {path}/ =404
+		encode zstd gzip
 		root * /srv/
 	}
 }
