@@ -3,6 +3,10 @@
 }
 
 (astro_url) {
+	# /contact -> /contact-us/
+	@oldcontactseo path_regexp contactseo ^/(\w{2}/)?contact/?$
+	redir @oldcontactseo /{re.contactseo.1}contact-us/ 302
+
 	# /event/:uid/ -> /event/?event=
 	@oldevent path_regexp eventp ^/(\w{2}/)?events/([\w-]{36})/?$
 	redir @oldevent /{re.eventp.1}events/details/?event={re.eventp.2} 302
