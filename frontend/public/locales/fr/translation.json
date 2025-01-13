@@ -54,6 +54,7 @@
   "addressTooFar": "L'adresse suivante est trop éloignée",
   "tooTimeConsuming": "La boucle a pris trop de temps",
   "doneSwapping": "J'ai terminé le swapping",
+  "didntFitIn": "Je ne me suis pas connecté aux personnes de ma boucle(s)",
   "didntMeanToRegister": "Je ne voulais pas m'inscrire avec cette boucle",
   "areYouSureRemoveEvent": "Êtes-vous sûr de vouloir supprimer définitivement cet événement ?",
   "areYouSureLogout": "Êtes-vous sûr de vouloir vous déconnecter ?",
@@ -357,5 +358,10 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "chatRoomOptions": "Options du Salon de Discussion",
+  "createRoom": "Créer une salle",
+  "editRoom": "Modifier la salle",
+  "roomName": "Nom de la pièce",
+  "roomColor": "Couleur de la pièce"
 }

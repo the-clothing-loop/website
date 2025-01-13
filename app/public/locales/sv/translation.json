@@ -22,6 +22,7 @@
   "contact": "Contact",
   "settings": "Settings",
   "cancel": "Cancel",
+  "rename": "Döp om",
   "close": "Close",
   "bagAnalytics": "Väska Analytics",
   "history": "Historik",
@@ -158,5 +159,12 @@
   "updateHeaderDesc": "This change will be visible to all loop members.",
   "resetHeaders": "Reset headers",
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
-  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?"
+  "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
+  "chat": "Chatt",
+  "deleteRoom?": "Ta bort rum?",
+  "editRoom": "Redigera rum",
+  "roomName": "Rummets namn",
+  "roomColor": "Rummets färg",
+  "sendPicture": "Skicka bild",
+  "chatRoomOptions": "Alternativ för chattrum"
 }

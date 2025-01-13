@@ -22,6 +22,7 @@
   "contact": "الاتصال",
   "settings": "الإعدادات",
   "cancel": "إلغاء",
+  "rename": "إعادة تسمية",
   "close": "أغلق",
   "bagAnalytics": "تحليلات السلة",
   "history": "التاريخ",
@@ -158,5 +159,12 @@
   "updateHeaderDesc": "هذا التغيير سيكون مرئيًا لجميع أعضاء الحلقات.",
   "resetHeaders": "إعادة تعيين الترويسات",
   "resetHeadersDesc": "إعادة تعيين رؤوس الحلقة إلى الرؤوس الافتراضية.",
-  "areYouSureYouWantToResetHeaders": "هل أنت متأكد من رغبتك في إعادة تعيين رؤوس الحلقة لتنزيل؟"
+  "areYouSureYouWantToResetHeaders": "هل أنت متأكد من رغبتك في إعادة تعيين رؤوس الحلقة لتنزيل؟",
+  "chat": "الدردشة",
+  "deleteRoom?": "حذف الغرفة؟",
+  "editRoom": "تحرير الغرفة",
+  "roomName": "اسم الغرفة",
+  "roomColor": "لون الغرفة",
+  "sendPicture": "إرسال صورة",
+  "chatRoomOptions": "خيارات غرفة الدردشة"
 }

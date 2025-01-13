@@ -22,6 +22,7 @@
   "contact": "Contacts",
   "settings": "Paramètres",
   "cancel": "Annuler",
+  "rename": "Renommer",
   "close": "À proximité",
   "bagAnalytics": "Analyses de sac",
   "history": "Historique",
@@ -158,5 +159,12 @@
   "updateHeaderDesc": "Ce changement sera visible à tous les membres de la boucle.",
   "resetHeaders": "Retour de la mise en marche",
   "resetHeadersDesc": "Retournez les en-têtes de votre boucle aux en-têtes par défaut.",
-  "areYouSureYouWantToResetHeaders": "Vous êtes sûr de réinitialiser les en-têtes de la boucle à la défuel?"
+  "areYouSureYouWantToResetHeaders": "Vous êtes sûr de réinitialiser les en-têtes de la boucle à la défuel?",
+  "chat": "Discuter",
+  "deleteRoom?": "Supprimer la salle?",
+  "editRoom": "Modifier la salle",
+  "roomName": "Nom de la pièce",
+  "roomColor": "Couleur de la pièce",
+  "sendPicture": "Envoyer une photo",
+  "chatRoomOptions": "Options du Salon de Discussion"
 }
