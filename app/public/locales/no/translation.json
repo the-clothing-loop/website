@@ -22,6 +22,7 @@
   "contact": "Kontakt",
   "settings": "Innstillinger",
   "cancel": "Avbryt",
+  "rename": "Omdøp",
   "close": "Lukk",
   "bagAnalytics": "Analyse av handlekurv",
   "history": "Historikk",
@@ -158,5 +159,12 @@
   "updateHeaderDesc": "Denne endringen vil være synlig for alle loopmedlemmer.",
   "resetHeaders": "Tilbakestill topptekster",
   "resetHeadersDesc": "Sett loopens topptekster på standardsidene.",
-  "areYouSureYouWantToResetHeaders": "Er du sikker på at du vil tilbakestille loopens topptekster for å deaktivere?"
+  "areYouSureYouWantToResetHeaders": "Er du sikker på at du vil tilbakestille loopens topptekster for å deaktivere?",
+  "chat": "Samtale",
+  "deleteRoom?": "Slette rom?",
+  "editRoom": "Rediger rom",
+  "roomName": "Navn på rom",
+  "roomColor": "Rommets farge",
+  "sendPicture": "Send bilde",
+  "chatRoomOptions": "Chat rom-innstillinger"
 }
