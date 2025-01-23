@@ -136,14 +136,16 @@ func JwtGenerate(user *models.User) (string, error) {
 
 func AuthenticateToken(db *gorm.DB, tokenString string) (*models.User, bool, error) {
 	usedOldToken := false
-	user, err := authenticateOldToken(db, tokenString)
-	if err == nil {
+	var user *models.User
+	user1, err1 := authenticateOldToken(db, tokenString)
+	user2, err2 := authenticateJwt(db, tokenString)
+	if err1 == nil && err2 != nil {
+		user = user1
 		usedOldToken = true
+	} else if err2 == nil {
+		user = user2
 	} else {
-		user, err = authenticateJwt(db, tokenString)
-		if err != nil {
-			return nil, false, err
-		}
+		return nil, false, err2
 	}
 
 	shouldUpdateLastSignedInAt := true
@@ -207,7 +209,7 @@ LIMIT 1
 		return nil, fmt.Errorf("User not fount in database")
 	}
 
-	db.Exec(`DELETE FROM user_tokens WHERE token = ?`, token)
+	// db.Exec(`DELETE FROM user_tokens WHERE token = ?`, token)
 
 	return user, nil
 }
