@@ -202,7 +202,7 @@ func ChainGetAll(c *gin.Context) {
 		return
 	}
 
-	chains := []*sharedtypes.ChainResponse{}
+	chains := []sharedtypes.ChainResponse{}
 	sql := models.ChainResponseSQLSelect
 	whereOrSql := []string{}
 	args := []any{}
