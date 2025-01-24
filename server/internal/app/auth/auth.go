@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/the-clothing-loop/website/server/internal/models"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -77,8 +78,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	err = authUser.AddUserChainsToObject(db)
 	if err != nil {
-		slog.Error(models.ErrAddUserChainsToObject.Error(), "err", err)
-		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, models.ErrAddUserChainsToObject.Error())
 		return false, nil, nil
 	}
 
@@ -184,8 +184,7 @@ func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, a
 	} else if event.ChainUID != nil {
 		err = authUser.AddUserChainsToObject(db)
 		if err != nil {
-			slog.Error("Unable to retrieve user related loops", "err", err)
-			c.String(http.StatusInternalServerError, "Unable to retrieve user related loops")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to retrieve user related loops")
 			return false, nil, nil
 		}
 

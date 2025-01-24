@@ -18,6 +18,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -104,8 +105,7 @@ func ImageDeleteDeprecated(c *gin.Context) {
 
 	resp, err := http.DefaultClient.Get(query.Url)
 	if err != nil {
-		slog.Error("Unable to use default client on delete image url", "url", query.Url, "err", err)
-		c.String(http.StatusInternalServerError, "Unable to use default client on delete image url")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, fmt.Errorf("url: %s, error: %w", query.Url, err), "Unable to use default client on delete image url")
 		return
 	}
 
@@ -148,7 +148,7 @@ func ImagePurge(c *gin.Context) {
 		} else {
 			c.String(http.StatusInternalServerError, "Unexpected error")
 		}
-		slog.Error("Error removing image", "err", err)
+		c.Error(fmt.Errorf("Error removing image: %w", err))
 		return
 	}
 }

@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
 	"github.com/the-clothing-loop/website/server/internal/app"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
@@ -36,8 +36,7 @@ func InfoGet(c *gin.Context) {
 		return &data, nil
 	})
 	if err != nil {
-		slog.Error("Unable to retrieve information", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to retrieve information")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to retrieve information")
 		return
 	}
 
@@ -47,7 +46,7 @@ func InfoGet(c *gin.Context) {
 func InfoTopTen(c *gin.Context) {
 	db := getDB(c)
 
-	data, err := app.CacheFindOrUpdate[[]sharedtypes.InfoTopLoop]("info", cache.DefaultExpiration, func() (*[]sharedtypes.InfoTopLoop, error) {
+	data, err := app.CacheFindOrUpdate("info", cache.DefaultExpiration, func() (*[]sharedtypes.InfoTopLoop, error) {
 		data := []sharedtypes.InfoTopLoop{}
 		err := db.Raw(`
 SELECT uid, name, COUNT(uc.id) AS members_count
@@ -64,8 +63,7 @@ LIMIT 10
 	})
 
 	if err != nil {
-		slog.Error("Unable to retrieve information", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to retrieve information")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to retrieve information")
 		return
 	}
 
