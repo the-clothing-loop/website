@@ -15,6 +15,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 )
 
 func BagGetAll(c *gin.Context) {
@@ -54,8 +55,7 @@ WHERE user_chain_id IN (
 ORDER BY bags.id ASC
 	`, "`", "`", "`", "`"), chain.ID).Scan(&bags).Error
 	if err != nil {
-		slog.Error("Unable to find bags", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to find bags")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find bags")
 		return
 	}
 
@@ -146,8 +146,7 @@ LIMIT 1
 		}
 	}
 	if err != nil {
-		slog.Error("Unable to create or update bag", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to create or update bag")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create or update bag")
 		return
 	}
 
@@ -186,8 +185,7 @@ WHERE id = ? AND user_chain_id IN (
 )
 	`, query.BagID, chain.ID).Error
 	if err != nil {
-		slog.Error("Bag could not be removed", "err", err)
-		c.String(http.StatusInternalServerError, "Bag could not be removed")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Bag could not be removed")
 		return
 	}
 }
@@ -230,7 +228,7 @@ WHERE user_chain_id IN (
 )
 	`, chain.ID).Scan(&bags).Error
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find bags in loop")
 		return
 	}
 
@@ -256,7 +254,7 @@ WHERE c.id = ?
 	`, chain.ID).Scan(&chainUsers).Error
 
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find loop members")
 		return
 	}
 	res := []*BagsHistoryResponseBag{}

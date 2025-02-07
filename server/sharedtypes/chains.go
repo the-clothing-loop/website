@@ -21,7 +21,7 @@ type ChainResponse struct {
 	IsAppDisabled    *bool    `json:"is_app_disabled,omitempty" gorm:"chains.is_app_disabled"`
 	RoutePrivacy     *int     `json:"route_privacy,omitempty" gorm:"chains.route_privacy"`
 	AllowMap         *bool    `json:"allow_map,omitempty" gorm:"chains.allow_map"`
-	ChatRoomIDs      []string `json:"chat_room_ids,omitempty" gorm:"chains.chat_room_ids"`
+	ChatRoomIDs      []string `json:"chat_room_ids,omitempty" gorm:"chains.chat_room_ids;serializer:json"`
 }
 
 type ChainCreateRequest struct {

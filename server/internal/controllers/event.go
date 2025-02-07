@@ -23,7 +23,7 @@ func EventCreate(c *gin.Context) {
 
 	var body sharedtypes.EventCreateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	if ok := models.ValidateAllGenderEnum(body.Genders); !ok {
@@ -84,7 +84,7 @@ func EventGet(c *gin.Context) {
 		UID string `uri:"uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindUri(&uri); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -108,7 +108,7 @@ func EventGetAll(c *gin.Context) {
 		Radius    float32 `form:"radius"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	if query.Radius == 5000 {
@@ -142,7 +142,7 @@ func EventGetPrevious(c *gin.Context) {
 		IncludeTotal bool    `form:"include_total"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	if query.Radius == 5000 {
@@ -191,7 +191,7 @@ func EventDelete(c *gin.Context) {
 		UID string `uri:"uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindUri(&uri); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -217,7 +217,7 @@ func EventUpdate(c *gin.Context) {
 
 	var body sharedtypes.EventUpdateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	if body.Genders != nil {
@@ -327,7 +327,7 @@ func EventICal(c *gin.Context) {
 		UID string `uri:"uid" binding:"required,uuid"`
 	}
 	if err := c.ShouldBindUri(&uri); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 

@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
@@ -44,8 +44,7 @@ func ContactNewsletter(c *gin.Context) {
 	}
 	err := n.CreateOrUpdate(db)
 	if err != nil {
-		slog.Error(err.Error())
-		c.String(http.StatusInternalServerError, "Internal Server Error")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to add to newsletter database backup")
 		return
 	}
 	ctx := c.Request.Context()
@@ -71,15 +70,13 @@ func ContactMail(c *gin.Context) {
 
 	err := views.EmailContactReceived(db, body.Name, body.Email, body.Message)
 	if err != nil {
-		slog.Error("Unable to send email", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to send email")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to send email")
 		return
 	}
 
 	err = views.EmailContactConfirmation(c, db, body.Name, body.Email, body.Message)
 	if err != nil {
-		slog.Error("Unable to send email", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to send email")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to send email")
 		return
 	}
 }

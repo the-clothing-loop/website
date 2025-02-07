@@ -1,27 +1,32 @@
 package services
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/the-clothing-loop/website/server/pkg/httperror"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"gorm.io/gorm"
 )
 
-func ChainDelete(db *gorm.DB, chain *models.Chain) *httperror.HttpError {
+func ChainDelete(c *gin.Context, db *gorm.DB, chain *models.Chain) bool {
 	users, err := chain.GetUserContactData(db)
 	if err != nil {
-		slog.Error("Error notifying loop deletion", "chainUID", chain.UID, "err", err)
-		return httperror.New(http.StatusInternalServerError, "Unable to notify loop members, please contact us.")
+		err = fmt.Errorf("chain uid: %s, err: %w", chain.UID, err)
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to notify loop members, please contact us.")
+		return false
 	}
 
 	err = chain.Delete(db)
 	if err != nil {
+		err = fmt.Errorf("chain uid: %s, err: %w", chain.UID, err)
 		slog.Error("Error deleting loop:", "chainUID", chain.UID)
-		return httperror.New(http.StatusInternalServerError, "Unable to delete loop, please contact us.")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to delete loop, please contact us.")
+		return false
 	}
 
 	emailLoopHasBeenDeleted(db, users, chain.Name)
-	return nil
+	return true
 }

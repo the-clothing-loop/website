@@ -78,6 +78,10 @@ func ConfigInit(pwd string, files ...string) {
 		}
 		Config.JWT_SECRET = string(b)
 	}
+	if Config.JWT_SECRET == "" {
+		slog.Error("no jwt secret in config file", "file", *fFile)
+		os.Exit(1)
+	}
 
 	stripe.Key = Config.STRIPE_SECRET_KEY
 	if Config.ENV == "" {

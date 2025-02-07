@@ -8,7 +8,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/services"
-	"github.com/the-clothing-loop/website/server/pkg/httperror"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
@@ -17,7 +17,7 @@ func ChatPatchUser(c *gin.Context) {
 
 	var body sharedtypes.ChatPatchUserRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -28,7 +28,7 @@ func ChatPatchUser(c *gin.Context) {
 
 	err := services.ChatPatchUser(db, c.Request.Context(), app.ChatTeamId, user)
 	if err != nil {
-		httperror.New(http.StatusInternalServerError, err).StatusWithError(c)
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to add user to chat server")
 		return
 	}
 	if user.ChatPass == nil {
@@ -42,7 +42,7 @@ func ChatPatchUser(c *gin.Context) {
 		if isChainAdmin {
 			_, err := services.ChatCreateChannel(db, c.Request.Context(), chain, *user.ChatUserID, "General", "#fff")
 			if err != nil {
-				c.String(http.StatusInternalServerError, err.Error())
+				ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create chat room")
 				return
 			}
 		}
@@ -61,7 +61,7 @@ func ChatCreateChannel(c *gin.Context) {
 
 	var body sharedtypes.ChatCreateChannelRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -72,7 +72,7 @@ func ChatCreateChannel(c *gin.Context) {
 
 	mmChannel, err := services.ChatCreateChannel(db, c.Request.Context(), chain, *user.ChatUserID, body.Name, body.Color)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create chat room")
 		return
 	}
 
@@ -97,7 +97,7 @@ func ChatDeleteChannel(c *gin.Context) {
 
 	err := services.ChatDeleteChannel(db, c.Request.Context(), chain, body.ChannelID)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove chat room")
 		return
 	}
 
@@ -109,7 +109,7 @@ func ChatJoinChannels(c *gin.Context) {
 
 	var body sharedtypes.ChatJoinChannelsRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -127,7 +127,7 @@ func ChatJoinChannels(c *gin.Context) {
 	for _, mmChannelId := range chain.ChatRoomIDs {
 		err := services.ChatJoinChannel(db, c.Request.Context(), chain, user, isChainAdmin, mmChannelId)
 		if err != nil {
-			httperror.New(http.StatusInternalServerError, err).StatusWithError(c)
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to add to chat room")
 			return
 		}
 	}
