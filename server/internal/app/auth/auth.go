@@ -40,20 +40,10 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	var err error
-	var usedOldToken bool
-	authUser, usedOldToken, err = AuthenticateToken(db, token)
+	authUser, err = AuthenticateToken(db, token)
 	if err != nil {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return false, nil, nil
-	}
-
-	if usedOldToken {
-		token, err := JwtGenerate(authUser)
-		if err != nil {
-			c.String(http.StatusUnauthorized, "Invalid token")
-			return false, nil, nil
-		}
-		CookieSet(c, authUser.UID, token)
 	}
 
 	// 1. User of a different/unknown chain
