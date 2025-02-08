@@ -2,7 +2,7 @@
 	header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
 }
 :80 {
-   import hsts
+	import hsts
 	header X-Robots-Tag noindex
 
 	handle_path /api/* {
@@ -11,7 +11,7 @@
 		}
 		respond @options 200
 
-		reverse_proxy server:8084
+		reverse_proxy server:80
 		header Access-Control-Allow-Origin "*"
 		header Access-Control-Allow-Methods "*"
 		header Access-Control-Allow-Headers "Content-Type, Origin, Authorization, X-Requested-With, Accept"
