@@ -13,6 +13,9 @@ import {
   IonTextarea,
   IonIcon,
   IonToggle,
+  useIonActionSheet,
+  IonRouterLink,
+  useIonRouter,
 } from "@ionic/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
@@ -28,7 +31,9 @@ import {
 } from "../api/chain";
 import { checkmarkCircle, flag } from "ionicons/icons";
 import {
+  IonModalCustomEvent,
   IonTextareaCustomEvent,
+  OverlayEventDetail,
   TextareaInputEventDetail,
 } from "@ionic/core/dist/types/components";
 import { userUpdate } from "../api/user";
@@ -60,6 +65,8 @@ export default function AddressItem({
     () => [IsChainWarden(user, chain?.uid), IsChainAdmin(user, chain?.uid)],
     [user, chain],
   );
+  const [presentActionSheet] = useIonActionSheet();
+
   useEffect(() => {
     if (!chain || !user) return;
     chainGetUserNote(chain.uid, user.uid).then((n) => {
@@ -85,13 +92,39 @@ export default function AddressItem({
       }, 1300) as any,
     );
   }
-  async function handlePauseButton(isUserPaused: boolean) {
+  const router = useIonRouter();
+
+  function handlePauseButton(isUserPaused: boolean) {
     if (!user || !chain) return;
+
+    if (userBags.length > 0 && !isUserPaused) {
+      presentActionSheet({
+        header: "You are holding a bag. Are you sure you want to pause?",
+
+        buttons: [
+          {
+            text: t("Go to bags"),
+            handler: () => router.push("/bags", "root"),
+          },
+          {
+            text: t("Continue"),
+            handler: () => updateUser(isUserPaused),
+          },
+          {
+            text: t("cancel"),
+            role: "cancel",
+          },
+        ],
+      });
+    } else updateUser(isUserPaused);
+  }
+
+  async function updateUser(isUserPaused: boolean) {
     await userUpdate({
-      user_uid: user.uid,
-      chain_uid: chain.uid,
+      user_uid: user?.uid,
+      chain_uid: chain?.uid,
       chain_paused: !isUserPaused,
-    }).catch((err) => console.error);
+    }).catch((err) => console.error(err));
     await refresh("address");
   }
 
@@ -137,7 +170,10 @@ export default function AddressItem({
               lines="none"
               onClick={() => handlePauseButton(isUserPaused.chain)}
             >
-              <IonLabel className="ion-text-wrap">
+              <IonLabel
+                className="ion-text-wrap"
+                onClick={() => console.log(userBags.length)}
+              >
                 <h3 className="!tw-font-bold">{t("pauseParticipation")}</h3>
                 <p className="ion-no-wrap">{t("onlyForThisLoop")}</p>
               </IonLabel>
