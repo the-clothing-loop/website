@@ -23,6 +23,7 @@ import {
   SelectChangeEventDetail,
   useIonActionSheet,
   useIonAlert,
+  useIonRouter,
   useIonToast,
 } from "@ionic/react";
 import {
@@ -70,6 +71,7 @@ import {
   OneSignalCheckPermissions,
   OneSignalRequestPermissions,
 } from "../onesignal";
+import { userUpdate } from "../api/user";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -87,6 +89,8 @@ export default function Settings() {
     isChainAdmin,
     isThemeDefault,
     listOfChains,
+    bags,
+    refresh,
   } = useContext(StoreContext);
   const [present] = useIonToast();
   const { state } = useLocation<State>();
@@ -102,6 +106,8 @@ export default function Settings() {
   const [notificationPermission, setNotificationPermission] = useState<
     null | boolean
   >(null);
+  const userBags = bags.filter((b) => b.user_uid === authUser?.uid);
+  const router = useIonRouter();
 
   // Check notification permissions every 3 seconds
   useEffect(() => {
@@ -170,6 +176,25 @@ export default function Settings() {
           role: "destructive",
         },
       ]);
+    } else if (userBags.length > 0) {
+      presentActionSheet({
+        header: "You are holding a bag. Are you sure you want to pause?",
+
+        buttons: [
+          {
+            text: t("Go to bags"),
+            handler: () => router.push("/bags", "root"),
+          },
+          {
+            text: t("Continue"),
+            handler: () => updateUser(isUserPaused),
+          },
+          {
+            text: t("cancel"),
+            role: "cancel",
+          },
+        ],
+      });
     } else {
       presentActionSheet({
         header: t("pauseUntil"),
@@ -201,7 +226,14 @@ export default function Settings() {
       });
     }
   }
-
+  async function updateUser(isUserPaused: boolean) {
+    await userUpdate({
+      user_uid: authUser?.uid,
+      chain_uid: chain?.uid,
+      chain_paused: !isUserPaused,
+    }).catch((err) => console.error(err));
+    await refresh("settings");
+  }
   async function handleChangeRoutePrivacy(rp: number) {
     if (!chain) return;
     await chainUpdate({
