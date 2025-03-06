@@ -30,7 +30,8 @@
 }
 
 (astro_i18n) {
-	redir / /en/ 302
+	# commented out for development as it conflicts with vite HMR
+	# redir / /en/ 302
 	redir /about/* /en{uri} 302
 	redir /admin/* /en{uri} 302
 	redir /events/* /en{uri} 302
@@ -55,7 +56,7 @@
 	admin off
 }
 
-http://www.clothingloop.localhost:8080 {
+www.clothingloop.localhost:8080 {
 	handle_path /api/* {
 		reverse_proxy server:8084
 	}
@@ -66,24 +67,24 @@ http://www.clothingloop.localhost:8080 {
 	handle {
 		import astro_i18n
 		import astro_url
-		reverse_proxy frontend:8085
+		reverse_proxy frontend:8080
 	}
 }
 
-http://app.clothingloop.localhost:8080, http://localhost:8080 {
+app.clothingloop.localhost:8080, localhost:8080 {
 	handle_path /api/* {
 		reverse_proxy server:8084
 	}
 
 	handle_path /mm/* {
-		reverse_proxy http://mm.clothingloop.localhost:8080
+		reverse_proxy mm.clothingloop.localhost:8080
 	}
 
 	reverse_proxy app:8081
 }
 
 # Mobile testing
-http://mm.clothingloop.localhost:8080 {
+mm.clothingloop.localhost:8080 {
 	@options method OPTIONS
 	@allowedOrigin {
 		header Origin "https://app.acc.clothingloop.org"
