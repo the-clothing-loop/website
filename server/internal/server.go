@@ -14,9 +14,13 @@ import (
 var Scheduler *cron.Scheduler
 
 func Routes() *gin.Engine {
+	slog.SetLogLoggerLevel(slog.LevelDebug)
 	// initialization
 	db := app.DatabaseInit()
 	app.MailInit()
+
+	app.ChatInit(app.Config.MM_URL, app.Config.MM_TOKEN)
+	app.ChatSetDefaultSettings(app.ChatClient)
 
 	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
 		app.BrevoInit()
@@ -142,6 +146,12 @@ func Routes() *gin.Engine {
 	v2.GET("/chain/user/note", controllers.ChainGetUserNote)
 	v2.PATCH("/chain/user/warden", controllers.ChainChangeUserWarden)
 	v2.GET("/chain/largest", controllers.ChainGetLargest)
+
+	// chat
+	v2.PATCH("/chat/user", controllers.ChatPatchUser)
+	v2.POST("/chat/channel/create", controllers.ChatCreateChannel)
+	v2.POST("/chat/channel/join", controllers.ChatJoinChannels)
+	v2.POST("/chat/channel/delete", controllers.ChatDeleteChannel)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)

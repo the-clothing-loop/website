@@ -9,6 +9,7 @@ import (
 
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
@@ -87,8 +88,7 @@ func PaymentsInitiate(c *gin.Context) {
 		SessionStripeID: zero.StringFrom(session.ID),
 		Status:          string(session.Status),
 	}).Error; err != nil {
-		slog.Warn("Unable to add payment to database", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to add payment to database")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to add payment to database")
 		return
 	}
 
@@ -132,8 +132,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 	session := new(stripe.CheckoutSession)
 	err := json.Unmarshal(event.Data.Raw, session)
 	if err != nil {
-		slog.Warn("Incorrect response from stripe", "err", err)
-		c.String(http.StatusInternalServerError, "Incorrect response from stripe")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Incorrect response from stripe")
 		return
 	}
 
@@ -142,8 +141,7 @@ func paymentsWebhookCheckoutSessionCompleted(c *gin.Context, event stripe.Event)
 		Email:  session.CustomerEmail,
 	}).Error
 	if err != nil {
-		slog.Warn("Unable to update payment in database", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to update payment in database")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to update payment in database")
 		return
 	}
 

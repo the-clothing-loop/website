@@ -10,6 +10,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 )
 
 func BulkyGetAll(c *gin.Context) {
@@ -49,8 +50,7 @@ WHERE user_chain_id IN (
 )
 	`, chain.ID).Scan(&bulkyItems).Error
 	if err != nil {
-		slog.Error("Unable to find bulky items", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to find bulky items")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find bulky items")
 		return
 	}
 
@@ -132,8 +132,7 @@ LIMIT 1
 		err = db.Updates(*bulkyItem).Error
 	}
 	if err != nil {
-		slog.Error("Unable to create or update bulky item", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to create or update bulky item")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create or update bulky item")
 		return
 	}
 }
@@ -163,8 +162,7 @@ WHERE id = ? AND user_chain_id IN (
 )
 	`, query.ID, chain.ID).Error
 	if err != nil {
-		slog.Error("Bulky Item could not be removed", "err", err)
-		c.String(http.StatusInternalServerError, "Bulky Item could not be removed")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Bulky Item could not be removed")
 		return
 	}
 }

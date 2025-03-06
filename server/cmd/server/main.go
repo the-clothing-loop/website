@@ -13,6 +13,9 @@ import (
 
 func main() {
 	app.ConfigInit(".")
+	if app.Config.JWT_SECRET == "" {
+		panic(fmt.Errorf("no jwt secret in config file: %v", app.Config))
+	}
 
 	if app.Config.ENV == app.EnvEnumProduction || app.Config.ENV == app.EnvEnumAcceptance {
 		flag.Set("log_dir", "/var/log/clothingloop-api/")

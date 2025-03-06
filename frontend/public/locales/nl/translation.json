@@ -54,7 +54,7 @@
   "addressTooFar": "Het volgende adres is te ver weg",
   "tooTimeConsuming": "De lus heeft te veel tijd in beslag genomen",
   "doneSwapping": "Ik ben klaar met wisselen",
-  "didntFitIn": "Ik heb geen verbinding gemaakt met de Clothing Loop community",
+  "didntFitIn": "Ik heb geen verbinding gemaakt met mensen in mijn Loop(s)",
   "didntMeanToRegister": "Het was niet mijn bedoeling me te registreren met deze Loop",
   "areYouSureRemoveEvent": "Weet je zeker dat je deze gebeurtenis permanent wilt verwijderen?",
   "areYouSureLogout": "Weet je zeker dat je wilt uitloggen?",
@@ -358,5 +358,10 @@
   "clickHereToRegister": "<1>Klik hier</1> om te registreren",
   "clickHereToLogin": "<1>Klik hier</1> om in te loggen",
   "mustBeRegistered": "Je moet geregistreerd zijn om een evenement aan te maken",
-  "userExists": "Gebruiker bestaat al"
+  "userExists": "Gebruiker bestaat al",
+  "chatRoomOptions": "Chatruimte opties",
+  "createRoom": "Kamer aanmaken",
+  "editRoom": "Chatruimte bewerken",
+  "roomName": "Kamer Naam",
+  "roomColor": "Kleur kamer"
 }

@@ -34,6 +34,8 @@ export default function RoutePrivacyExample(props: {
       is_root_admin: false,
       paused_until: i === pausedIndex - 1 ? "2104-06-12T15:23:23Z" : null,
       i18n: "en",
+      chat_id: "",
+      chat_user_name: "",
     }));
 
     const arr1 = exampleList.slice(undefined, 2);
@@ -50,6 +52,8 @@ export default function RoutePrivacyExample(props: {
       is_root_admin: false,
       paused_until: null,
       i18n: "en",
+      chat_id: "",
+      chat_user_name: "",
     };
     return [...arr1, me, ...arr2];
   }, [props.authUserName]);

@@ -15,6 +15,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 )
 
 func BagGetAll(c *gin.Context) {
@@ -54,8 +55,7 @@ WHERE user_chain_id IN (
 ORDER BY bags.id ASC
 	`, "`", "`", "`", "`"), chain.ID).Scan(&bags).Error
 	if err != nil {
-		slog.Error("Unable to find bags", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to find bags")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find bags")
 		return
 	}
 
@@ -146,8 +146,7 @@ LIMIT 1
 		}
 	}
 	if err != nil {
-		slog.Error("Unable to create or update bag", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to create or update bag")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create or update bag")
 		return
 	}
 
@@ -186,8 +185,7 @@ WHERE id = ? AND user_chain_id IN (
 )
 	`, query.BagID, chain.ID).Error
 	if err != nil {
-		slog.Error("Bag could not be removed", "err", err)
-		c.String(http.StatusInternalServerError, "Bag could not be removed")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Bag could not be removed")
 		return
 	}
 }
@@ -199,6 +197,7 @@ type BagsHistoryResponseBag struct {
 	History []BagsHistoryResponseBagHistory `json:"history"`
 }
 type BagsHistoryResponseBagHistory struct {
+	UID   string    `json:"uid,omitempty"`
 	Name  string    `json:"name"`
 	Email string    `json:"-"`
 	Date  string    `json:"date,omitempty"`
@@ -229,13 +228,33 @@ WHERE user_chain_id IN (
 )
 	`, chain.ID).Scan(&bags).Error
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find bags in loop")
 		return
 	}
 
-	chainUsers, err := chain.GetUserContactData(db)
+	type ChainUser struct {
+		UID        string
+		Name       string
+		Email      string
+		ChainName  string
+		IsApproved bool
+	}
+	var chainUsers []ChainUser
+	err = db.Raw(`
+SELECT
+	u.uid AS uid,
+	u.name AS name,
+	u.email AS email,
+	c.name AS chain_name,
+	uc.is_approved as is_approved
+FROM user_chains AS uc
+LEFT JOIN users AS u ON u.id = uc.user_id
+LEFT JOIN chains AS c ON c.id = uc.chain_id
+WHERE c.id = ?
+	`, chain.ID).Scan(&chainUsers).Error
+
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find loop members")
 		return
 	}
 	res := []*BagsHistoryResponseBag{}
@@ -251,14 +270,19 @@ WHERE user_chain_id IN (
 			date, _ := lo.Nth(lastUserDateToUpdate, i)
 			_date, _ := time.Parse(time.RFC3339, date)
 
-			user, found := lo.Find(chainUsers, func(u models.UserContactData) bool {
-				if !u.Email.Valid {
-					return false
-				}
-				return u.Email.String == email
-			})
+			var user ChainUser
+			var found bool
+			if email != "" {
+				user, found = lo.Find(chainUsers, func(u ChainUser) bool {
+					if u.Email == "" {
+						return false
+					}
+					return u.Email == email
+				})
+			}
 			if found {
 				resBag.History = append(resBag.History, BagsHistoryResponseBagHistory{
+					UID:   user.UID,
 					Name:  user.Name,
 					Email: email,
 					Date:  date,

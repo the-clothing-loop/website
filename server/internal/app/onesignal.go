@@ -43,6 +43,10 @@ func (e OneSignalErrorResponse) GetInvalidExternalUserIds() []string {
 var OneSignalClient *onesignal.APIClient
 
 func OneSignalInit() {
+	if Config.ONESIGNAL_REST_API_KEY == "" {
+		return
+	}
+
 	configuration := onesignal.NewConfiguration()
 	OneSignalClient = onesignal.NewAPIClient(configuration)
 }
@@ -56,6 +60,7 @@ const notificationUserLimit = 15
 // Chunk notifications
 func OneSignalCreateNotification(db *gorm.DB, userUIDs []string, notificationTitle, notificationContent onesignal.StringMap) error {
 	if OneSignalClient == nil {
+		slog.Info("Send onesignal notification", "userids", userUIDs, "title", *notificationTitle.En)
 		return nil
 	}
 	lenUserUIDs := len(userUIDs)

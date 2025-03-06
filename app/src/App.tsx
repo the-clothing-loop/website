@@ -6,6 +6,7 @@ import Routes from "./Routes";
 import { logout } from "./api/login";
 import { useEffect } from "react";
 import dayjs from "./dayjs";
+import { ChatProvider } from "./stores/Chat";
 
 export default function App() {
   const [presentAlert] = useIonAlert();
@@ -50,9 +51,11 @@ export default function App() {
 
   return (
     <StoreProvider onIsOffline={handleIsOffline}>
-      <IonReactRouter>
-        <Routes />
-      </IonReactRouter>
+      <ChatProvider>
+        <IonReactRouter>
+          <Routes />
+        </IonReactRouter>
+      </ChatProvider>
     </StoreProvider>
   );
 }

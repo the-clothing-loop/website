@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"log/slog"
+	"strings"
 
 	// "log/slog"
 	"time"
@@ -197,6 +198,19 @@ func UserGetByEmail(db *gorm.DB, userEmail string) (*User, error) {
 	return user, nil
 }
 
+func UserGetByChatUserName(db *gorm.DB, userName string) (*User, error) {
+	if userName == "" {
+		return nil, errors.New("Chat username is required")
+	}
+	query := `SELECT * FROM users	WHERE chat_user_name = ? LIMIT 1`
+	user := &User{}
+	err := db.Raw(query, userName).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func UserGetAdminsByChain(db *gorm.DB, chainId ...uint) ([]UserContactData, error) {
 	results := []UserContactData{}
 	err := db.Raw(`
@@ -370,6 +384,14 @@ func UserOmitData(db *gorm.DB, chain *Chain, users []User, authUserID uint) ([]U
 	}
 
 	return users, nil
+}
+
+func UserChatEmailToChatUserName(chatEmail string) (*string, error) {
+	b, ok := strings.CutSuffix(chatEmail, "@example.com")
+	if !ok {
+		return nil, errors.New("Invalid chat email")
+	}
+	return &b, nil
 }
 
 func hideUserInformation(isChainAdmin bool, user *User) {

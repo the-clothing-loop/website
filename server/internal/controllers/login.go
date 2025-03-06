@@ -12,6 +12,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 
 	"github.com/gin-gonic/gin"
@@ -36,7 +37,7 @@ func LoginEmail(c *gin.Context) {
 
 	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Unable to create token")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create token")
 		return
 	}
 	if body.Email == app.Config.APPSTORE_REVIEWER_EMAIL {
@@ -46,8 +47,7 @@ func LoginEmail(c *gin.Context) {
 
 	err = views.EmailLoginVerification(c, db, user.Name, *user.Email, token, body.IsApp, body.ChainUID)
 	if err != nil {
-		slog.Error("Unable to send email", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to send email")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to send email")
 		return
 	}
 }
@@ -77,8 +77,7 @@ func LoginValidate(c *gin.Context) {
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
-		slog.Error(models.ErrAddUserChainsToObject.Error(), "err", err)
-		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, models.ErrAddUserChainsToObject.Error())
 		return
 	}
 
@@ -112,8 +111,7 @@ func LoginValidate(c *gin.Context) {
 	} else if query.ChainUID != "" {
 		chainID, found, err := models.ChainCheckIfExist(db, query.ChainUID, true)
 		if err != nil {
-			slog.Error("Chain cannot be found", "err", err)
-			c.String(http.StatusInternalServerError, "Loop does not exist")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Loop does not exist")
 			return
 		}
 		if !found {
@@ -122,8 +120,7 @@ func LoginValidate(c *gin.Context) {
 		}
 		_, found, err = models.UserChainCheckIfRelationExist(db, chainID, user.ID, false)
 		if err != nil {
-			slog.Error("Chain connection unable to lookup", "err", err)
-			c.String(http.StatusInternalServerError, "Loop connection unable to lookup")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Loop connection unable to lookup")
 			return
 		}
 		if !found {
@@ -233,8 +230,7 @@ func RegisterChainAdmin(c *gin.Context) {
 
 	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
-		slog.Error("Unable to create token", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to create token")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create token")
 		return
 	}
 
@@ -304,8 +300,7 @@ func RegisterBasicUser(c *gin.Context) {
 
 	token, err := auth.OtpCreate(db, user.ID)
 	if err != nil {
-		slog.Error("Unable to create token", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to create token")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create token")
 		return
 	}
 	views.EmailRegisterVerification(c, db, user.Name, *user.Email, token, body.ChainUID)
@@ -348,7 +343,7 @@ func LoginSuperAsGenerateLink(c *gin.Context) {
 
 	var body sharedtypes.LoginSuperAsGenerateLinkRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -359,13 +354,13 @@ func LoginSuperAsGenerateLink(c *gin.Context) {
 
 	user, err := models.UserGetByUID(db, body.UserUID, true)
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to get user for generating a token")
 		return
 	}
 
 	token, err := auth.JwtGenerate(user)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("Unable to generate token"))
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to generate token")
 		return
 	}
 
@@ -392,7 +387,7 @@ func LoginSuperAsRedirect(c *gin.Context) {
 
 	b, err := base64.URLEncoding.DecodeString(query.Token)
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		ginext.AbortWithErrorInBody(c, http.StatusBadRequest, err, "Token is not valid base64")
 		return
 	}
 	token := string(b)
@@ -401,7 +396,7 @@ func LoginSuperAsRedirect(c *gin.Context) {
 
 	_, err = models.UserGetByUID(db, query.UserUID, true)
 	if err != nil {
-		c.AbortWithError(http.StatusExpectationFailed, err)
+		ginext.AbortWithErrorInBody(c, http.StatusExpectationFailed, err, "User not found")
 		return
 	}
 

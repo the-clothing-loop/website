@@ -74,6 +74,7 @@ export interface ChainResponse {
 	is_app_disabled?: (boolean | null)
 	route_privacy?: (number | null)
 	allow_map?: (boolean | null)
+	chat_room_ids?: string[]
 }
 
 export interface ChainUpdateRequest {
@@ -96,6 +97,36 @@ export interface ChainUpdateRequest {
 	route_privacy: (number | null)
 	allow_map?: (boolean | null)
 	is_app_disabled?: (boolean | null)
+}
+
+export interface ChatCreateChannelRequest {
+	chain_uid: string
+	name: string
+	color: string
+}
+
+export interface ChatCreateChannelResponse {
+	chat_channel: string
+}
+
+export interface ChatDeleteChannelRequest {
+	chain_uid: string
+	channel_id: string
+}
+
+export interface ChatJoinChannelsRequest {
+	chain_uid: string
+}
+
+export interface ChatPatchUserRequest {
+	chain_uid: string
+}
+
+export interface ChatPatchUserResponse {
+	chat_team: string
+	chat_user_id: string
+	chat_pass: string
+	chat_user_name: string
 }
 
 export interface ContactMailRequest {
@@ -268,6 +299,8 @@ export interface User {
 	accepted_toh?: (boolean | null)
 	accepted_dpa?: (boolean | null)
 	notification_chain_uids?: string[]
+	chat_id: (string | null)
+	chat_user_name: (string | null)
 }
 
 export interface UserChain {

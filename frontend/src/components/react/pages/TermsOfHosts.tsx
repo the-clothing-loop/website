@@ -344,17 +344,7 @@ export function TermsOfHostsHTML(props: { className: string }) {
           the extent legally permissible.
         </li>
       </ol>
-
-      <h2>Contact details</h2>
-
-      <p>Do you have any questions? Then contact us at:</p>
-      <p>
-        Email:{" "}
-        <a tabIndex={-1} href="mailto:hello@clothingloop.org">
-          hello@clothingloop.org
-        </a>
-      </p>
-      <p>Or by post:</p>
+      <h2>Address</h2>
       <p>The Clothing Loop</p>
       <p>
         <address>
@@ -368,6 +358,16 @@ export function TermsOfHostsHTML(props: { className: string }) {
       </p>
       <p>
         <i>(KVK 85110701)</i>
+      </p>
+
+      <h2>Contact details</h2>
+
+      <p>Do you have any questions? Then contact us at:</p>
+      <p>
+        Email:{" "}
+        <a tabIndex={-1} href="mailto:hello@clothingloop.org">
+          hello@clothingloop.org
+        </a>
       </p>
     </div>
   );

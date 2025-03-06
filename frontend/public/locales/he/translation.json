@@ -54,7 +54,7 @@
   "addressTooFar": "The next address is too far away",
   "tooTimeConsuming": "The loop took up too much time",
   "doneSwapping": "I'm done swapping",
-  "didntFitIn": "I didn't connect to the Clothing Loop community",
+  "didntFitIn": "I didn't connect to the people in my Loop(s)",
   "didntMeanToRegister": "I didn't mean to register with this Loop",
   "areYouSureRemoveEvent": "האם הינכם בטוחים שברצונכם למחוק את האירוע הזה לצמיתות?",
   "areYouSureLogout": "האם אתם בטוחים שאתם רוצים להתנתק?",
@@ -358,5 +358,10 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "chatRoomOptions": "Chat Room Options",
+  "createRoom": "Create Room",
+  "editRoom": "Edit Room",
+  "roomName": "Room Name",
+  "roomColor": "Room Color"
 }

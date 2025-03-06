@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 )
 
 func Poke(c *gin.Context) {
@@ -64,8 +64,7 @@ WHERE uc.is_chain_admin = TRUE AND u.email IS NOT NULL AND uc.chain_id IN (
 	}
 
 	if err := user.SetLastPokeToNow(db); err != nil {
-		slog.Error("Unable to poke this Loop", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to poke this Loop")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to poke this Loop")
 		return
 	}
 }

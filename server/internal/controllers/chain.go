@@ -13,6 +13,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/pkg/tsp"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 
@@ -78,13 +79,13 @@ func ChainCreate(c *gin.Context) {
 		RoutePrivacy: 2, // default route_privacy
 	}
 	if err := db.Create(&chain).Error; err != nil {
-		slog.Warn("Unable to create chain", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to create chain")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to create chain")
 		return
 	}
 
 	if err := user.AcceptLegal(db); err != nil {
-		slog.Error("Unable to set toh to true, during chain creation", "err", err)
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to set toh to true, during chain creation")
+		return
 	}
 
 	c.Status(200)
@@ -124,7 +125,8 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		sql += `,
-		chains.is_app_disabled`
+		chains.is_app_disabled,
+		chains.chat_room_ids`
 	}
 	if query.AddRoutePrivacy {
 		sql += `,
@@ -170,6 +172,7 @@ func ChainGet(c *gin.Context) {
 	}
 	if query.AddIsAppDisabled {
 		body.IsAppDisabled = &chain.IsAppDisabled
+		body.ChatRoomIDs = chain.ChatRoomIDs
 	}
 	if query.AddRoutePrivacy {
 		body.RoutePrivacy = &chain.RoutePrivacy
@@ -200,7 +203,7 @@ func ChainGetAll(c *gin.Context) {
 		return
 	}
 
-	chains := []*sharedtypes.ChainResponse{}
+	chains := []sharedtypes.ChainResponse{}
 	sql := models.ChainResponseSQLSelect
 	whereOrSql := []string{}
 	args := []any{}
@@ -387,8 +390,8 @@ func ChainUpdate(c *gin.Context) {
 	}
 	err := db.Model(chain).Updates(valuesToUpdate).Error
 	if err != nil {
-		slog.Error("Unable to update loop values", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to update loop values")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to update loop values")
+		return
 	}
 }
 
@@ -416,9 +419,7 @@ func ChainDelete(c *gin.Context) {
 		return
 	}
 
-	httperr := services.ChainDelete(db, chain)
-	if httperr != nil {
-		c.AbortWithError(httperr.Status, httperr)
+	if ok := services.ChainDelete(c, db, chain); !ok {
 		return
 	}
 }
@@ -474,14 +475,12 @@ LIMIT 1
 			ChainID:      chain.ID,
 			IsChainAdmin: false,
 		}).Error; err != nil {
-			slog.Error("User could not be added to chain", "err", err)
-			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "User could not be added to chain")
 			return
 		}
 		err := services.EmailLoopAdminsOnUserJoin(db, user, chain.ID)
 		if err != nil {
-			slog.Error("Unable to send email to associated loop admins", "err", err)
-			c.String(http.StatusInternalServerError, err.Error())
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to send email to associated loop admins")
 			return
 		}
 		services.EmailYouSignedUpForLoop(db, user, chain.Name)
@@ -517,8 +516,7 @@ func ChainRemoveUser(c *gin.Context) {
 
 	err := chain.RemoveUser(db, user.ID)
 	if err != nil {
-		slog.Error("User could not be removed from chain", "err", err)
-		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "User could not be removed from chain")
 		return
 	}
 
@@ -584,8 +582,7 @@ func ChainDeleteUnapproved(c *gin.Context) {
 
 	err := chain.RemoveUserUnapproved(db, user.ID)
 	if err != nil {
-		slog.Error("User could not be removed from chain", "err", err)
-		c.String(http.StatusInternalServerError, "User could not be removed from chain due to unknown error")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "User could not be removed from chain")
 		return
 	}
 
@@ -616,8 +613,7 @@ func ChainChangeUserNote(c *gin.Context) {
 
 	err := models.UserChainSetNote(db, user.ID, chain.ID, body.Note)
 	if err != nil {
-		slog.Error("Unable to change user note", "error", err)
-		c.String(http.StatusInternalServerError, "Unable to change user note")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to change user note")
 		return
 	}
 }
@@ -644,8 +640,7 @@ func ChainGetUserNote(c *gin.Context) {
 
 	note, err := models.UserChainGetNote(db, user.ID, chain.ID)
 	if err != nil {
-		slog.Error("Unable to change user note", "error", err)
-		c.String(http.StatusInternalServerError, "Unable to change user note")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to change user note")
 		return
 	}
 	c.String(http.StatusOK, note)
@@ -665,12 +660,12 @@ func ChainChangeUserWarden(c *gin.Context) {
 	}
 	user, err := models.UserGetByUID(db, body.UserUID, true)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find user from request")
 		return
 	}
-	user.AddUserChainsToObject(db)
+	err = user.AddUserChainsToObject(db)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to attach loop details to user")
 		return
 	}
 	ok, isUserChainAdmin := user.IsPartOfChain(body.ChainUID)
@@ -679,14 +674,13 @@ func ChainChangeUserWarden(c *gin.Context) {
 		return
 	}
 	if isUserChainAdmin {
-		c.String(http.StatusInternalServerError, "Hosts cannot be assigned wardens")
+		c.String(http.StatusBadRequest, "Hosts cannot be assigned wardens")
 		return
 	}
 
 	err = models.UserChainSetWarden(db, user.ID, chain.ID, body.Warden)
 	if err != nil {
-		slog.Error("Unable to change user warden", "error", err)
-		c.String(http.StatusInternalServerError, "Unable to change user warden")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to change user warden")
 		return
 	}
 }

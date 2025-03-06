@@ -1024,7 +1024,7 @@ export function DataProcessingAgreementHTML(
       <p>&nbsp;</p>
       <p className="font-semibold">Processor(s):</p>
       <p>Name: Clothing Loop</p>
-      <p>Address: Hyacintenlaan 25, 2015BA Haarlem </p>
+      <p>Address: Wethouder Frankeweg 22 H, 1098 LA Amsterdam</p>
       <p>
         Contact person’s name, postion and contact details:&nbsp;Nichon Glerum
         (founder &amp; CEO)

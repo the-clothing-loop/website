@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/the-clothing-loop/website/server/internal/models"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -18,6 +19,8 @@ const (
 	AuthState4RootUser       = 4
 )
 
+// if the minimumAuthState is higher than 1AnyUser, AddUserChainsToObject is called
+//
 // There are 4 different states to authenticate
 // 0. Guest - this middleware is then not required
 // 1. User of a different/unknown chain
@@ -37,20 +40,10 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 	}
 
 	var err error
-	var usedOldToken bool
-	authUser, usedOldToken, err = AuthenticateToken(db, token)
+	authUser, err = AuthenticateToken(db, token)
 	if err != nil {
 		c.String(http.StatusUnauthorized, "Invalid token")
 		return false, nil, nil
-	}
-
-	if usedOldToken {
-		token, err := JwtGenerate(authUser)
-		if err != nil {
-			c.String(http.StatusUnauthorized, "Invalid token")
-			return false, nil, nil
-		}
-		CookieSet(c, authUser.UID, token)
 	}
 
 	// 1. User of a different/unknown chain
@@ -75,8 +68,7 @@ func Authenticate(c *gin.Context, db *gorm.DB, minimumAuthState int, chainUID st
 
 	err = authUser.AddUserChainsToObject(db)
 	if err != nil {
-		slog.Error(models.ErrAddUserChainsToObject.Error(), "err", err)
-		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, models.ErrAddUserChainsToObject.Error())
 		return false, nil, nil
 	}
 
@@ -182,8 +174,7 @@ func AuthenticateEvent(c *gin.Context, db *gorm.DB, eventUID string) (ok bool, a
 	} else if event.ChainUID != nil {
 		err = authUser.AddUserChainsToObject(db)
 		if err != nil {
-			slog.Error("Unable to retrieve user related loops", "err", err)
-			c.String(http.StatusInternalServerError, "Unable to retrieve user related loops")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to retrieve user related loops")
 			return false, nil, nil
 		}
 

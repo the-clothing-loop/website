@@ -54,7 +54,7 @@
   "addressTooFar": "La siguiente dirección está demasiado lejos",
   "tooTimeConsuming": "El bucle ha tardado demasiado tiempo",
   "doneSwapping": "He terminado de intercambiar",
-  "didntFitIn": "No me conecté con la comunidad de Clothing Loop",
+  "didntFitIn": "No me conecté con la gente en mi Bucle (s)",
   "didntMeanToRegister": "No quería registrarme en este bucle",
   "areYouSureRemoveEvent": "¿Está seguro que desea eliminar permanentemente este evento?",
   "areYouSureLogout": "¿Estás seguro de que quieres cerrar sesión?",
@@ -358,5 +358,10 @@
   "clickHereToRegister": "<1>Haz clic aquí</1> para registrarte",
   "clickHereToLogin": "<1>Haz clic aquí</1> para registrarte",
   "mustBeRegistered": "Debes estar registrado para crear un evento",
-  "userExists": "El usuario ya existe"
+  "userExists": "El usuario ya existe",
+  "chatRoomOptions": "Opciones de Sala de Chat",
+  "createRoom": "Crear sala",
+  "editRoom": "Editar sala",
+  "roomName": "Nombre de sala",
+  "roomColor": "Color de la sala"
 }

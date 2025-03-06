@@ -54,7 +54,7 @@
   "addressTooFar": "次のアドレスが遠すぎます",
   "tooTimeConsuming": "ループに時間がかかりすぎました",
   "doneSwapping": "交換が完了しました",
-  "didntFitIn": "Clothing Loopコミュニティに接続していません",
+  "didntFitIn": "Loop(s) の人たちとつながりませんでした。",
   "didntMeanToRegister": "このループに登録するつもりはありません",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
@@ -358,5 +358,10 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "chatRoomOptions": "チャットルームオプション",
+  "createRoom": "部屋を作成",
+  "editRoom": "部屋を編集",
+  "roomName": "部屋名",
+  "roomColor": "部屋の色"
 }

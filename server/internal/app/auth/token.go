@@ -23,16 +23,15 @@ type MyJwtClaims struct {
 }
 
 func TokenReadFromRequest(c *gin.Context) (string, bool) {
-	// read cookie first
-	token, ok := cookieRead(c)
+	// if no cookie set then read authorization header
+	a := c.Request.Header.Get("Authorization")
+	_, token, ok := strings.Cut(a, "Bearer ")
 	if ok {
 		return token, true
 	}
 
-	// if no cookie set then read authorization header
-	prefix := "Bearer "
-	a := c.Request.Header.Get("Authorization")
-	_, token, ok = strings.Cut(a, prefix)
+	// read cookie first
+	token, ok = cookieRead(c)
 	if ok {
 		return token, true
 	}
@@ -134,16 +133,11 @@ func JwtGenerate(user *models.User) (string, error) {
 	return tokenString, nil
 }
 
-func AuthenticateToken(db *gorm.DB, tokenString string) (*models.User, bool, error) {
-	usedOldToken := false
-	user, err := authenticateOldToken(db, tokenString)
-	if err == nil {
-		usedOldToken = true
-	} else {
-		user, err = authenticateJwt(db, tokenString)
-		if err != nil {
-			return nil, false, err
-		}
+func AuthenticateToken(db *gorm.DB, tokenString string) (*models.User, error) {
+	var user *models.User
+	user, err := authenticateJwt(db, tokenString)
+	if err != nil {
+		return nil, err
 	}
 
 	shouldUpdateLastSignedInAt := true
@@ -159,7 +153,7 @@ WHERE users.id = ?
 	`, user.ID)
 	}
 
-	return user, usedOldToken, nil
+	return user, nil
 }
 
 func authenticateJwt(db *gorm.DB, tokenString string) (*models.User, error) {
@@ -184,30 +178,6 @@ func authenticateJwt(db *gorm.DB, tokenString string) (*models.User, error) {
 	if user.JwtTokenPepper != claims.Pepper {
 		return nil, fmt.Errorf("pepper incorrect: %d vs %d\n", user.JwtTokenPepper, claims.Pepper)
 	}
-
-	return user, nil
-}
-func authenticateOldToken(db *gorm.DB, token string) (*models.User, error) {
-	if len(token) != 36 {
-		return nil, fmt.Errorf("Not the length of a uuid")
-	}
-	err := validate.Var(token, "uuid")
-	if err != nil {
-		return nil, fmt.Errorf("Not a uuid by standards of validator/v10")
-	}
-
-	user := &models.User{}
-	db.Raw(`
-SELECT u.* FROM user_tokens AS ut
-JOIN users AS u ON ut.user_id = u.id
-WHERE ut.token = ? AND ut.verified = TRUE
-LIMIT 1
-	`, token).Scan(user)
-	if user.ID == 0 {
-		return nil, fmt.Errorf("User not fount in database")
-	}
-
-	db.Exec(`DELETE FROM user_tokens WHERE token = ?`, token)
 
 	return user, nil
 }

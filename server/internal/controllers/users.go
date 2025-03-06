@@ -15,6 +15,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/internal/services"
 	"github.com/the-clothing-loop/website/server/internal/views"
+	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gopkg.in/guregu/null.v3"
 	"gorm.io/gorm"
@@ -71,15 +72,14 @@ func UserGet(c *gin.Context) {
 
 	err = user.AddUserChainsToObject(db)
 	if err != nil {
-		slog.Error(models.ErrAddUserChainsToObject.Error(), "err", err)
-		c.String(http.StatusInternalServerError, models.ErrAddUserChainsToObject.Error())
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, models.ErrAddUserChainsToObject.Error())
 		return
 	}
 
 	if query.AddNotification && (isMe || authUser.IsRootAdmin) {
 		err := user.AddNotificationChainUIDs(db)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, err)
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find loops for notifications")
 			return
 		}
 	}
@@ -113,16 +113,13 @@ func UserGetAllOfChain(c *gin.Context) {
 	// retrieve user from query
 	tx := db.Begin()
 	allUserChains, err := models.UserChainGetIndirectByChain(tx, chain.ID)
-
 	if err != nil {
-		slog.Error("Unable to retrieve associations between a loop and its users", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to retrieve associations between a loop and its users")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to retrieve associations between a loop and its users")
 		return
 	}
 	users, errUsersByChain := models.UserGetAllUsersByChain(tx, chain.ID)
 	if errUsersByChain != nil {
-		slog.Error("Unable to retrieve associated users of a loop", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to retrieve associated users of a loop")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to retrieve associated users of a loop")
 		return
 	}
 	tx.Commit()
@@ -142,10 +139,8 @@ func UserGetAllOfChain(c *gin.Context) {
 	// omit user data from participants
 	if !isAuthState3AdminChainUser {
 		users, err = models.UserOmitData(db, chain, users, authUser.ID)
-
 		if err != nil {
-			slog.Error("Unable to omit user data", "err", err)
-			c.String(http.StatusInternalServerError, "Internal error hiding user information")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Internal error hiding user information")
 			return
 		}
 	}
@@ -258,7 +253,7 @@ WHERE uc.user_id = ? AND c.id IN (
 		if len(userChanges) > 0 {
 			if err := db.Model(user).Updates(userChanges).Error; err != nil {
 				slog.Error("Unable to update user", "err", err)
-				c.String(http.StatusInternalServerError, "Unable to update user")
+				ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to update user")
 				return
 			}
 		}
@@ -274,8 +269,7 @@ WHERE uc.user_id = ? AND c.id IN (
 
 			err := n.CreateOrUpdate(db)
 			if err != nil {
-				slog.Error("", "err", err)
-				c.String(http.StatusInternalServerError, "Internal Server Error")
+				ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to add to newsletter")
 				return
 			}
 		} else {
@@ -286,8 +280,7 @@ WHERE uc.user_id = ? AND c.id IN (
 
 			err := db.Exec("DELETE FROM newsletters WHERE email = ?", user.Email).Error
 			if err != nil {
-				slog.Error("", "err", err)
-				c.String(http.StatusInternalServerError, "Internal Server Error")
+				ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove from newsletter")
 				return
 			}
 			if app.Brevo != nil && user.Email != nil {
@@ -393,7 +386,7 @@ HAVING COUNT(uc.id) = 1
 
 	if err := tx.Create(&deletedUser).Error; err != nil {
 		tx.Rollback()
-		c.String(http.StatusInternalServerError, "Failed to add deleted user to database")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Failed to add deleted user to database")
 		return
 	}
 
@@ -401,7 +394,7 @@ HAVING COUNT(uc.id) = 1
 	if err != nil {
 		tx.Rollback()
 		slog.Error("UserPurge", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to disconnect bag connections")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to disconnect bag connections")
 		return
 	}
 
@@ -412,36 +405,31 @@ UPDATE events SET user_id = (
 	`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		slog.Error("UserPurge: Unable to remove event connections", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to remove event connections")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove event connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM user_chains WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		slog.Error("UserPurge: Unable to remove loop connections", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to remove loop connections")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove loop connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM user_tokens WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		slog.Error("UserPurge: Unable to remove token connections", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to remove token connections")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove token connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM user_onesignals WHERE user_id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		slog.Error("UserPurge: Unable to remove onesignal connections", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to remove onesignal connections")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove onesignal connections")
 		return
 	}
 	err = tx.Exec(`DELETE FROM users WHERE id = ?`, user.ID).Error
 	if err != nil {
 		tx.Rollback()
-		slog.Error("UserPurge: Unable to user", "err", err)
-		c.String(http.StatusInternalServerError, "Unable to user")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to user")
 		return
 	}
 
@@ -452,22 +440,19 @@ UPDATE events SET user_id = (
 		)`, chainIDsToDelete).Error
 		if err != nil {
 			tx.Rollback()
-			slog.Error("UserPurge", "err", err)
-			c.String(http.StatusInternalServerError, "Unable to disconnect all loop bag connections")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to disconnect all loop bag connections")
 			return
 		}
 		err = tx.Exec(`DELETE FROM user_chains WHERE chain_id IN ?`, chainIDsToDelete).Error
 		if err != nil {
 			tx.Rollback()
-			slog.Error("UserPurge: Unable to remove hosted loop connections", "err", err)
-			c.String(http.StatusInternalServerError, "Unable to remove hosted loop connections")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove hosted loop connections")
 			return
 		}
 		err = tx.Exec(`DELETE FROM chains WHERE id IN ?`, chainIDsToDelete).Error
 		if err != nil {
 			tx.Rollback()
-			slog.Error("UserPurge: Unable to remove hosted loop", "err", err)
-			c.String(http.StatusInternalServerError, "Unable to remove hosted loop")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove hosted loop")
 			return
 		}
 	}
@@ -476,8 +461,7 @@ UPDATE events SET user_id = (
 		err = tx.Exec(`DELETE FROM newsletters WHERE email = ?`, user.Email).Error
 		if err != nil {
 			tx.Rollback()
-			slog.Error("UserPurge: Unable to remove newsletter", "err", err)
-			c.String(http.StatusInternalServerError, "Unable to remove newsletter")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to remove newsletter")
 			return
 		}
 
@@ -615,8 +599,7 @@ LIMIT 1
 		}).Error
 		if err != nil {
 			tx.Rollback()
-			slog.Error("User could not be added to chain", "err", err)
-			c.String(http.StatusInternalServerError, "User could not be added to chain due to unknown error")
+			ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "User could not be added to chain due to unknown error")
 			return
 		}
 	} else {
@@ -649,7 +632,7 @@ func UserCheckIfEmailExists(c *gin.Context) {
 
 	_, found, err := models.UserCheckEmail(db, query.Email)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Error Checking user email")
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Error Checking user email")
 		return
 	}
 	c.JSON(200, found)

@@ -54,7 +54,7 @@
   "addressTooFar": "Następny adres jest zbyt daleko",
   "tooTimeConsuming": "Pętla zajęła zbyt dużo czasu",
   "doneSwapping": "Zakończyłem zamianę",
-  "didntFitIn": "Nie połączyłem się ze społecznością w pętli odzieżowej",
+  "didntFitIn": "Nie połączyłem się z osobami w pętli",
   "didntMeanToRegister": "Nie miałem zamiaru zarejestrować się w tej pętli",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
@@ -358,5 +358,10 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "chatRoomOptions": "Opcje pokoju czatu",
+  "createRoom": "Utwórz pokój",
+  "editRoom": "Edytuj pokój",
+  "roomName": "Nazwa pokoju",
+  "roomColor": "Kolor pokoju"
 }

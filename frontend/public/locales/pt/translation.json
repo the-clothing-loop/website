@@ -54,7 +54,7 @@
   "addressTooFar": "O próximo endereço está muito longe",
   "tooTimeConsuming": "O laço demorou muito tempo",
   "doneSwapping": "Terminei de trocar",
-  "didntFitIn": "Eu não me conectei à comunidade Loop do Clothing",
+  "didntFitIn": "Eu não me conectei às pessoas dos meus laços",
   "didntMeanToRegister": "Não quis me registrar com este laço",
   "areYouSureRemoveEvent": "Are you sure you want to permanently delete this event?",
   "areYouSureLogout": "Are you sure you want to logout?",
@@ -358,5 +358,10 @@
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
   "mustBeRegistered": "You must be registered to create an event",
-  "userExists": "User already exists"
+  "userExists": "User already exists",
+  "chatRoomOptions": "Opções da sala de chat",
+  "createRoom": "Criar Sala",
+  "editRoom": "Editar Sala",
+  "roomName": "Nome da Sala",
+  "roomColor": "Cor do cômodo"
 }

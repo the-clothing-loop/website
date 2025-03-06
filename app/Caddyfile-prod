@@ -2,7 +2,7 @@
 	header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
 }
 :80 {
-   import hsts
+	import hsts
 	header X-Robots-Tag noindex
 
 	handle_path /api/* {
