@@ -4,14 +4,9 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonItem,
-  IonList,
   IonPage,
-  IonPopover,
   IonTitle,
   IonToolbar,
-  useIonActionSheet,
-  useIonPopover,
 } from "@ionic/react";
 import { useTranslation } from "react-i18next";
 import { StoreContext } from "../stores/Store";
