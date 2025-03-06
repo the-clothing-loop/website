@@ -60,6 +60,5 @@ coords-migrate:
 
 .PHONY: typex2
 typex2:
-	@go install github.com/lil5/typex2@v1.2.0
-	@typex2 -l typescript -i ./sharedtypes -o ../frontend/src/api/typex2.ts
-	@typex2 -l typescript -i ./sharedtypes -o ../app/src/api/typex2.ts
+	@go tool typex2 -l typescript -i ./sharedtypes -o ../frontend/src/api/typex2.ts
+	@go tool typex2 -l typescript -i ./sharedtypes -o ../app/src/api/typex2.ts
