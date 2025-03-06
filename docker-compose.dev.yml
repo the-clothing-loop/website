@@ -20,7 +20,7 @@ services:
     working_dir: /app
     command: sh -c 'npm i; npm run start:docker'
   server:
-    image: golang:1.23-alpine
+    image: golang:alpine
     depends_on:
       - db
       - mailpit

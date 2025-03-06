@@ -49,7 +49,7 @@ func InfoTopTen(c *gin.Context) {
 	data, err := app.CacheFindOrUpdate("info", cache.DefaultExpiration, func() (*[]sharedtypes.InfoTopLoop, error) {
 		data := []sharedtypes.InfoTopLoop{}
 		err := db.Raw(`
-SELECT uid, name, COUNT(uc.id) AS members_count
+SELECT uid, name, description, COUNT(uc.id) AS members_count
 FROM chains
 JOIN user_chains AS uc ON uc.chain_id = chains.id AND uc.is_approved = TRUE
 GROUP BY chains.id

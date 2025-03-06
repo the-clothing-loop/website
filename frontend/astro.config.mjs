@@ -45,6 +45,11 @@ export default defineConfig({
   // },
   vite: {
     server: {
+      port: 8080,
+      strictPort: true,
+      hmr: {
+        port: 8080,
+      },
       proxy: {
         "/api": {
           target: "http://server:8084",

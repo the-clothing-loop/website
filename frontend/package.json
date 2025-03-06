@@ -5,7 +5,7 @@
   "scripts": {
     "start": "astro dev",
     "start:lan": "astro dev --host=0.0.0.0",
-    "start:docker": "astro dev --host=0.0.0.0 --port=8085",
+    "start:docker": "astro dev --host=0.0.0.0 --port=8080",
     "lint": "astro check && prettier --write .",
     "lint:test": "astro check && prettier --check .",
     "build": "astro check && astro build",
