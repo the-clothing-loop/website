@@ -61,3 +61,12 @@ The following dummy accounts are available:
 - Super user: `admin@example.com`
 - Host: `host@example.com`
 - Participant: `user@example.com`
+
+## Development links
+
+| Name | Link |
+| ---- | ----- |
+| mailpit | http://localhost:8025/ |
+| website | http://www.clothingloop.localhost:8080/ |
+| app | http://app.clothingloop.localhost:8080/ |
+| mattermost | http://mm.clothingloop.localhost:8080/ |
