@@ -14,6 +14,7 @@ import {
   IonFabButton,
   isPlatform,
   IonImg,
+  IonLabel,
 } from "@ionic/react";
 import {
   arrowBack,
@@ -163,22 +164,23 @@ export default function Login(props: { isLoggedIn: boolean }) {
             <IonItem lines="none">
               <IonText>{t("pleaseEnterYourEmailAddress")}</IonText>
             </IonItem>
-            <IonItem lines="none">
-              <IonInput
-                label={t("email")!}
-                labelPlacement="fixed"
-                ref={inputEmail}
-                type="email"
-                autocomplete="email"
-                autoSave="on"
-                autofocus
-                enterkeyhint="send"
-                onKeyUp={handleInputEmailEnter}
-                aria-autocomplete="list"
-                required
-                placeholder={t("yourEmailAddress")!}
-              />
-            </IonItem>
+            <div className="tw-flex tw-flex-row tw-justify-between tw-items-center tw-px-4 tw-pt-4">
+              <IonLabel>{t("email")}</IonLabel>
+              <div className="tw-border tw-border-light-shade">
+                <IonInput
+                  ref={inputEmail}
+                  type="email"
+                  autocomplete="email"
+                  autoSave="on"
+                  autofocus
+                  fill="outline"
+                  enterkeyhint="send"
+                  onKeyUp={handleInputEmailEnter}
+                  aria-autocomplete="list"
+                  placeholder={t("yourEmailAddress")!}
+                />
+              </div>
+            </div>
             <IonItem
               lines="none"
               className="tw-text-right tw-mt-4 tw-bg-transparent"
@@ -227,18 +229,20 @@ export default function Login(props: { isLoggedIn: boolean }) {
                     {t("enterThePasscodeYouReceivedInYourEmail")}
                   </IonText>
                 </IonItem>
-                <IonItem lines="none">
-                  <IonInput
-                    type="number"
-                    ref={inputToken}
-                    autoCorrect="off"
-                    placeholder="••••••"
-                    label={t("passcode")!}
-                    enterkeyhint="enter"
-                    onKeyUp={handleInputTokenEnter}
-                    labelPlacement="fixed"
-                  />
-                </IonItem>
+                <div className="tw-flex tw-flex-row tw-justify-between tw-items-center tw-px-4 tw-py-4">
+                  <IonLabel>{t("passcode")}</IonLabel>
+                  <div className="tw-border tw-border-light-shade">
+                    <IonInput
+                      type="number"
+                      ref={inputToken}
+                      autoCorrect="off"
+                      fill="outline"
+                      placeholder="••••••"
+                      enterkeyhint="enter"
+                      onKeyUp={handleInputTokenEnter}
+                    />
+                  </div>
+                </div>
                 <IonItem lines="none">
                   <IonButton
                     shape="round"
