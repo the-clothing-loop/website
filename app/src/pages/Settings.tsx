@@ -182,12 +182,15 @@ export default function Settings() {
 
         buttons: [
           {
-            text: t("Go to bags"),
-            handler: () => router.push("/bags", "root"),
+            text: t("Yes, pause participation"),
+            handler: async () => {
+              await dismissCurrentActionSheet();
+              showPauseOptions();
+            },
           },
           {
-            text: t("Continue"),
-            handler: () => updateUser(isUserPaused),
+            text: t("No, go to bags"),
+            handler: () => router.push("/bags", "root"),
           },
           {
             text: t("cancel"),
@@ -196,34 +199,42 @@ export default function Settings() {
         ],
       });
     } else {
-      presentActionSheet({
-        header: t("pauseUntil"),
+      showPauseOptions();
+    }
+  }
 
-        buttons: [
-          {
-            text: t("selectPauseDuration"),
-            handler: () =>
-              setTimeout(
-                () => refSelectPauseExpiryModal.current?.present(),
-                100,
-              ),
+  async function showPauseOptions() {
+    console.log("here");
+    await presentActionSheet({
+      header: t("pauseUntil"),
+
+      buttons: [
+        {
+          text: t("selectPauseDuration"),
+          handler: () =>
+            setTimeout(() => refSelectPauseExpiryModal.current?.present(), 100),
+        },
+        {
+          text: t("pauseOnlyLoop"),
+          handler: () => setPause(true, chain!.uid),
+        },
+        {
+          text: t("untilITurnItBackOn"),
+          handler: () => {
+            setPause(true);
           },
-          {
-            text: t("pauseOnlyLoop"),
-            handler: () => setPause(true, chain!.uid),
-          },
-          {
-            text: t("untilITurnItBackOn"),
-            handler: () => {
-              setPause(true);
-            },
-          },
-          {
-            text: t("cancel"),
-            role: "cancel",
-          },
-        ],
-      });
+        },
+        {
+          text: t("cancel"),
+          role: "cancel",
+        },
+      ],
+    });
+  }
+  async function dismissCurrentActionSheet() {
+    const actionSheet = document.querySelector("ion-action-sheet");
+    if (actionSheet) {
+      await actionSheet.dismiss();
     }
   }
   async function updateUser(isUserPaused: boolean) {
