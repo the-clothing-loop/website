@@ -182,14 +182,14 @@ export default function Settings() {
 
         buttons: [
           {
-            text: t("Yes, pause participation"),
+            text: t("YesPauseParticipation"),
             handler: async () => {
               await dismissCurrentActionSheet();
               showPauseOptions();
             },
           },
           {
-            text: t("No, go to bags"),
+            text: t("NoGoToBags"),
             handler: () => router.push("/bags", "root"),
           },
           {

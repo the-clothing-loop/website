@@ -166,5 +166,7 @@
   "roomName": "Room Name",
   "roomColor": "Room Color",
   "sendPicture": "Send picture",
-  "chatRoomOptions": "Chat Room Options"
+  "chatRoomOptions": "Chat Room Options",
+  "YesPauseParticipation": "Yes, pause participation",
+  "NoGoToBags": "No, go to bags"
 }

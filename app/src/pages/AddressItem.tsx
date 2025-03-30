@@ -103,11 +103,11 @@ export default function AddressItem({
 
         buttons: [
           {
-            text: t("Yes, pause participation"),
+            text: t("YesPauseParticipation"),
             handler: () => updateUser(isUserPaused),
           },
           {
-            text: t("No, go to bags"),
+            text: t("NoGoToBags"),
             handler: () => router.push("/bags", "root"),
           },
 
