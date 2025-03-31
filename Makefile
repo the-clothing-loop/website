@@ -41,3 +41,10 @@ test-prepush:
 	cd server && make lint-test test-ci
 	cd frontend && npm run lint:test
 	cd app && npm run test && npm run lint:test
+
+
+dev:
+	make docker-start
+	echo "sleeping 20 seconds"
+	sleep 20
+	make server-restart
