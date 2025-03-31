@@ -12,6 +12,51 @@ import (
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 )
 
+func ChatGetType(c *gin.Context) {
+	db := getDB(c)
+	var body sharedtypes.ChatGetTypeRequest
+	if err := c.BindQuery(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState2UserOfChain, body.ChainUID)
+	if !ok {
+		return
+	}
+
+	chatTypeUrl, err := chain.GetChatType(db)
+	if err != nil {
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find chat type")
+		return
+	}
+
+	c.JSON(http.StatusOK, chatTypeUrl)
+}
+
+func ChatPatchType(c *gin.Context) {
+	db := getDB(c)
+	var body sharedtypes.ChatPatchTypeRequest
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	if !ok {
+		return
+	}
+
+	err := chain.SaveChatType(db, sharedtypes.ChatGetTypeResponse{
+		ChatType: body.ChatType,
+		ChatUrl:  body.ChatUrl,
+	})
+	if err != nil {
+		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find chat type")
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
 func ChatPatchUser(c *gin.Context) {
 	db := getDB(c)
 

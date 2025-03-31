@@ -1,0 +1,19 @@
+meta {
+  name: type save
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base}}v2/chat/type
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "chain_uid":"{{chainUID}}",
+    "chat_type":"signal",
+    "chat_url": "https://signal.group/#code"
+  }
+}

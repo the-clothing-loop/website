@@ -45,6 +45,8 @@ type Chain struct {
 	LastAbandonedAt               sql.NullTime
 	LastAbandonedRecruitmentEmail sql.NullTime
 	ChatRoomIDs                   []string `gorm:"column:chat_room_ids;serializer:json"`
+	ChatType                      string
+	ChatUrl                       string
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
@@ -277,4 +279,17 @@ func (c *Chain) SaveChannelIDs(db *gorm.DB) error {
 		return err
 	}
 	return db.Exec(`UPDATE chains SET chat_room_ids = ? WHERE id = ?`, string(b), c.ID).Error
+}
+
+func (c *Chain) GetChatType(db *gorm.DB) (*sharedtypes.ChatGetTypeResponse, error) {
+	res := &sharedtypes.ChatGetTypeResponse{}
+	err := db.Raw(`SELECT chat_type, chat_url FROM chains WHERE id = ?`, c.ID).Scan(res).Error
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (c *Chain) SaveChatType(db *gorm.DB, chatTypeUrl sharedtypes.ChatGetTypeResponse) error {
+	return db.Exec(`UPDATE chains SET chat_type = ?, chat_url = ? WHERE id = ?`, chatTypeUrl.ChatType, chatTypeUrl.ChatUrl, c.ID).Error
 }

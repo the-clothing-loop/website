@@ -3,6 +3,19 @@ package sharedtypes
 type ChatPatchUserRequest struct {
 	ChainUID string `json:"chain_uid" binding:"required,uuid"`
 }
+type ChatGetTypeRequest struct {
+	ChainUID string `form:"chain_uid" binding:"required,uuid"`
+}
+
+type ChatGetTypeResponse struct {
+	ChatType string `gorm:"chat_type" json:"chat_type" binding:"required,oneof=off clothingloop signal whatsapp whatsapp discord telegram"`
+	ChatUrl  string `gorm:"chat_url" json:"chat_url"`
+}
+type ChatPatchTypeRequest struct {
+	ChainUID string `json:"chain_uid" binding:"required,uuid"`
+	ChatType string `json:"chat_type" binding:"required,oneof=off clothingloop signal whatsapp whatsapp discord telegram"`
+	ChatUrl  string `json:"chat_url"`
+}
 
 type ChatPatchUserResponse struct {
 	ChatTeam     string `json:"chat_team"`
