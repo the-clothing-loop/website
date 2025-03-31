@@ -64,7 +64,7 @@ const messagingApps: MessagingApp[] = [
   {
     icon: "/icons/signal.svg",
     name: "Signal",
-    link: (n) => `https://signal.me/+${n}`,
+    link: (n) => `https://signal.me/#p/+${n}`,
     color: "#3a76f0",
     colorTint: "#2259c8",
     colorFade: "#3c3744",
