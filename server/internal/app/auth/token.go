@@ -7,15 +7,12 @@ import (
 
 	"github.com/GGP1/atoll"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/models"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gorm.io/gorm"
 )
-
-var validate = validator.New()
 
 type MyJwtClaims struct {
 	jwt.RegisteredClaims
