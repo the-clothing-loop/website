@@ -18,6 +18,7 @@ var validate = validator.New()
 func CronMonthly(db *gorm.DB) {
 	closeChainsWithOldPendingParticipants(db)
 	emailHostsOldPendingParticipants(db)
+	removeOldChatMessages(db)
 }
 
 func CronDaily(db *gorm.DB) {
@@ -266,4 +267,10 @@ func emailSendAgain(db *gorm.DB) {
 			}
 		}
 	}
+}
+
+func removeOldChatMessages(db *gorm.DB) {
+	slog.Info("Running removeOldChatMessages")
+
+	db.Exec(`DELETE FROM chat_messages WHERE created_at < (NOW() - INTERVAL 30 DAY)`)
 }
