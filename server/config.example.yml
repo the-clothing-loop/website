@@ -27,11 +27,4 @@ smtp_pass: ""
 goscope2_user: "admin"
 goscope2_pass: "admin"
 
-mattermost_url: "http://mattermost:8065"
-# 1. Enable personal access tokens in System Console > Integrations > Integration Management.
-# 2. Sign in to the admin user account to create a personal access token.
-# 3. Go to Profile > Security > Personal Access Tokens, then select Create Token.
-mattermost_token: "secret"
-mattermost_smtp_host: "mattermost_mail"
-mattermost_smtp_port: 2525
 images_dir: "./images"

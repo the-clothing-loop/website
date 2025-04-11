@@ -70,7 +70,7 @@ type ChatRoomMessageListQuery struct {
 type ChatRoom struct {
 	ID        uint      `json:"id"`
 	Name      string    `json:"name" binding:"required,min=3"`
-	Color     string    `json:"color"`
+	Color     string    `json:"color" binding:"hexcolor"`
 	CreatedAt time.Time `json:"created_at"`
 	ChainID   uint      `json:"-"`
 	ChainUID  string    `json:"chain_uid" gorm:"-:migration;<-:false"`

@@ -191,13 +191,6 @@ acc.app.clothingloop.org {
 	}
 }
 
-mm.clothingloop.org {
-	import hsts
-
-	header Cache-Control no-cache
-	reverse_proxy 127.0.0.1:8065
-}
-
 # images.clothingloop.org {
 # 	import hsts
 # 	header Cache-Control max-age=1209600
