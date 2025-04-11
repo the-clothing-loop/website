@@ -1,0 +1,27 @@
+meta {
+  name: room messages get
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base}}v2/chat/room/messages?chain_uid={{chainUID}}&chat_room_id=1&start_from=1744388577&page=0
+  body: none
+  auth: inherit
+}
+
+params:query {
+  chain_uid: {{chainUID}}
+  chat_room_id: 1
+  start_from: 1744388577
+  page: 0
+}
+
+body:json {
+  {
+    "id": 1,
+    "name": "my edited chat room",
+    "color": "#00ffee",
+    "chain_uid": "{{chainUID}}"
+  }
+}

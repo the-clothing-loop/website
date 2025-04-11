@@ -1,0 +1,20 @@
+meta {
+  name: room edit
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{base}}v2/chat/room/edit
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": 1,
+    "name": "my edited chat room",
+    "color": "#00ffee",
+    "chain_uid": "{{chainUID}}"
+  }
+}
