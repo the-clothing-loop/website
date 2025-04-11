@@ -248,6 +248,28 @@ WHERE user_chains.chain_id = ? AND users.is_email_verified = TRUE
 	return results, nil
 }
 
+func UserGetAllApprovedUserUIDsByChain(db *gorm.DB, chainID uint) ([]string, error) {
+	results := []struct {
+		UID string `gorm:"uid"`
+	}{}
+
+	err := db.Raw(`
+SELECT users.uid
+FROM users
+JOIN user_chains ON user_chains.user_id = users.id AND user_chains.is_approved = TRUE
+WHERE user_chains.chain_id = ? AND users.is_email_verified = TRUE
+	`, chainID).Scan(&results).Error
+
+	if err != nil {
+		return nil, err
+	}
+	uids := []string{}
+	for _, result := range results {
+		uids = append(uids, result.UID)
+	}
+	return uid, nil
+}
+
 func UserCheckEmail(db *gorm.DB, userEmail string) (userID uint, found bool, err error) {
 	if userEmail == "" {
 		return 0, false, errors.New("Email is required")

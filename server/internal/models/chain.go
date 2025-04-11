@@ -47,6 +47,7 @@ type Chain struct {
 	ChatRoomIDs                   []string `gorm:"column:chat_room_ids;serializer:json"`
 	ChatType                      string
 	ChatUrl                       string
+	ChatRooms                     []sharedtypes.ChatRoom
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members

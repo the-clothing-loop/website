@@ -130,6 +130,8 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Payment{},
 		&models.Mail{},
 		&models.DeletedUser{},
+		&sharedtypes.ChatRoom{},
+		&sharedtypes.ChatMessage{},
 	)
 
 	if !db.Migrator().HasConstraint("user_chains", "uci_user_id_chain_id") {
