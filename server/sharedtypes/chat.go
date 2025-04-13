@@ -1,7 +1,5 @@
 package sharedtypes
 
-import "time"
-
 type ChatPatchUserRequest struct {
 	ChainUID string `json:"chain_uid" binding:"required,uuid"`
 }
@@ -60,20 +58,23 @@ type ChatRoomEditRequest struct {
 }
 
 type ChatRoomMessageListQuery struct {
-	ChainUID   string    `form:"chain_uid" binding:"required,uuid"`
-	ChatRoomID uint      `form:"chat_room_id" binding:"required"`
-	StartFrom  time.Time `form:"start_from"`
+	ChainUID   string `form:"chain_uid" binding:"required,uuid"`
+	ChatRoomID uint   `form:"chat_room_id" binding:"required"`
+	StartFrom  int64  `form:"start_from"`
 	// starts at 0
 	Page int64 `form:"page" binding:"gte=0"`
 }
+type ChatRoomMessageListResponse struct {
+	Messages []ChatMessage `json:"messages"`
+}
 
 type ChatRoom struct {
-	ID        uint      `json:"id"`
-	Name      string    `json:"name" binding:"required,min=3"`
-	Color     string    `json:"color" binding:"hexcolor"`
-	CreatedAt time.Time `json:"created_at"`
-	ChainID   uint      `json:"-"`
-	ChainUID  string    `json:"chain_uid" gorm:"-:migration;<-:false"`
+	ID        uint   `json:"id"`
+	Name      string `json:"name" binding:"required,min=3"`
+	Color     string `json:"color" binding:"hexcolor"`
+	CreatedAt int64  `json:"created_at"`
+	ChainID   uint   `json:"-"`
+	ChainUID  string `json:"chain_uid" gorm:"-:migration;<-:false"`
 
 	ChatMessages []ChatMessage `json:"-"`
 }
@@ -85,9 +86,9 @@ type ChatMessageCreateRequest struct {
 }
 
 type ChatMessage struct {
-	ID         uint      `json:"id"`
-	Message    string    `json:"message"`
-	SendBy     string    `json:"sent_by"`
-	ChatRoomID uint      `json:"chat_room_id"`
-	CreatedAt  time.Time `json:"created_at"`
+	ID         uint   `json:"id"`
+	Message    string `json:"message"`
+	SendByUID  string `json:"sent_by"`
+	ChatRoomID uint   `json:"chat_room_id"`
+	CreatedAt  int64  `json:"created_at"`
 }

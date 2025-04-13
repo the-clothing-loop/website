@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{base}}v2/chat/room/messages?chain_uid={{chainUID}}&chat_room_id=1&start_from=1744388577&page=0
+  url: {{base}}v2/chat/room/messages?chain_uid={{chainUID}}&chat_room_id=1&start_from={{now_milli}}&page=0
   body: none
   auth: inherit
 }
@@ -13,7 +13,7 @@ get {
 params:query {
   chain_uid: {{chainUID}}
   chat_room_id: 1
-  start_from: 1744388577
+  start_from: {{now_milli}}
   page: 0
 }
 
@@ -24,4 +24,8 @@ body:json {
     "color": "#00ffee",
     "chain_uid": "{{chainUID}}"
   }
+}
+
+script:pre-request {
+  bru.setVar("now_milli",new Date().valueOf())
 }

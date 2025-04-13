@@ -132,7 +132,7 @@ export interface ChatMessage {
 	message: string
 	sent_by: string
 	chat_room_id: number
-	created_at: string
+	created_at: number
 }
 
 export interface ChatMessageCreateRequest {
@@ -162,7 +162,7 @@ export interface ChatRoom {
 	id: number
 	name: string
 	color: string
-	created_at: string
+	created_at: number
 	chain_uid: string
 }
 
@@ -184,7 +184,7 @@ export interface ChatRoomListResponse {
 export interface ChatRoomMessageListQuery {
 	ChainUID: string
 	ChatRoomID: number
-	StartFrom: string
+	StartFrom: number
 	Page: number
 }
 

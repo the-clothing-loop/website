@@ -267,7 +267,7 @@ WHERE user_chains.chain_id = ? AND users.is_email_verified = TRUE
 	for _, result := range results {
 		uids = append(uids, result.UID)
 	}
-	return uid, nil
+	return uids, nil
 }
 
 func UserCheckEmail(db *gorm.DB, userEmail string) (userID uint, found bool, err error) {

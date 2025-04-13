@@ -44,3 +44,6 @@ test-prepush:
 
 
 dev: docker-start
+
+gen-typex:
+	cd server && make gen-typex

@@ -97,7 +97,7 @@ func ChatRoomCreate(c *gin.Context) {
 	}
 
 	body.ChainID = chain.ID
-	body.CreatedAt = time.Now()
+	body.CreatedAt = time.Now().UnixMilli()
 	body.ID = 0
 	body.ChatMessages = nil
 	err := db.Save(&body).Error
@@ -140,21 +140,19 @@ func ChatRoomMessageList(c *gin.Context) {
 		return
 	}
 
-	db.Raw(`
+	chatRoomMessageList := []sharedtypes.ChatMessage{}
+	err := db.Debug().Raw(`
 SELECT msg.* FROM chat_messages msg
 LEFT JOIN chat_rooms room ON room.id = msg.chat_room_id AND room.id = ? AND room.chain_id = ?
 WHERE msg.created_at < ?
 LIMIT ?, 20 
-`, body.ChatRoomID, chain.ID, body.StartFrom, body.Page)
-
-	chatRoomList := []sharedtypes.ChatRoom{}
-	err := db.Raw(`SELECT * FROM chat_rooms WHERE chain_id = ?`, chain.ID).Scan(&chatRoomList).Error
+`, body.ChatRoomID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatRoomMessageList).Error
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, sharedtypes.ChatRoomListResponse{List: chatRoomList})
+	c.JSON(http.StatusOK, sharedtypes.ChatRoomMessageListResponse{Messages: chatRoomMessageList})
 }
 
 func ChatRoomMessageCreate(c *gin.Context) {
@@ -169,8 +167,8 @@ func ChatRoomMessageCreate(c *gin.Context) {
 		return
 	}
 
-	count := -1
-	db.Raw(`SELECT COUNT(*) FROM chat_rooms WHERE id = ? AND chain_uid = ?`, body.ChatRoomID, chain.ID).Scan(&count)
+	count := int64(-1)
+	db.Raw(`SELECT COUNT(*) FROM chat_rooms WHERE id = ? AND chain_id = ?`, body.ChatRoomID, chain.ID).Count(&count)
 	if count <= 0 {
 		c.String(http.StatusBadRequest, fmt.Sprintf("chat room %d is not part of this Loop", body.ChatRoomID))
 		return
@@ -178,8 +176,9 @@ func ChatRoomMessageCreate(c *gin.Context) {
 
 	chatMessage := sharedtypes.ChatMessage{
 		Message:    body.Message,
-		SendBy:     authUser.UID,
+		SendByUID:  authUser.UID,
 		ChatRoomID: body.ChatRoomID,
+		CreatedAt:  time.Now().UnixMilli(),
 	}
 	err := db.Save(&chatMessage).Error
 	if err != nil {
