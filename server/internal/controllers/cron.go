@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/the-clothing-loop/website/server/internal/app"
@@ -272,5 +273,10 @@ func emailSendAgain(db *gorm.DB) {
 func removeOldChatMessages(db *gorm.DB) {
 	slog.Info("Running removeOldChatMessages")
 
-	db.Exec(`DELETE FROM chat_messages WHERE created_at < (NOW() - INTERVAL 30 DAY)`)
+	oldestAllowedMessageDateMilli := time.Now().Add(-30 * 24 * time.Hour).UnixMilli()
+
+	affected := db.Debug().Exec(`DELETE FROM chat_messages WHERE created_at < ?`, oldestAllowedMessageDateMilli).RowsAffected
+	if affected > 0 {
+		slog.Warn("old chat messages removed", "affected", affected)
+	}
 }
