@@ -43,8 +43,7 @@ test-prepush:
 	cd app && npm run test && npm run lint:test
 
 
-dev:
-	make docker-start
-	echo "sleeping 20 seconds"
-	sleep 20
-	make server-restart
+dev: docker-start
+
+gen-typex:
+	cd server && make gen-typex

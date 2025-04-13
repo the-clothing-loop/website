@@ -47,10 +47,6 @@ var Config struct {
 	ONESIGNAL_REST_API_KEY  string `yaml:"onesignal_rest_api_key" env:"ONESIGNAL_REST_API_KEY"`
 	APPSTORE_REVIEWER_EMAIL string `yaml:"appstore_reviewer_email" env:"APPSTORE_REVIEWER_EMAIL"`
 	IMAGES_DIR              string `yaml:"images_dir" env:"IMAGES_DIR"`
-	MM_URL                  string `yaml:"mattermost_url" env:"MM_URL"`
-	MM_TOKEN                string `yaml:"mattermost_token" env:"MM_TOKEN"`
-	MM_SMTP_HOST            string `yaml:"mattermost_smtp_host" env:"MM_SMTP_HOST"`
-	MM_SMTP_PORT            string `yaml:"mattermost_smtp_port" env:"MM_SMTP_PORT"`
 }
 
 func ConfigInit(pwd string, files ...string) {

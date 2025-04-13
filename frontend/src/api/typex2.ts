@@ -114,8 +114,37 @@ export interface ChatDeleteChannelRequest {
 	channel_id: string
 }
 
+export interface ChatGetTypeRequest {
+	ChainUID: string
+}
+
+export interface ChatGetTypeResponse {
+	chat_type: string
+	chat_url: string
+}
+
 export interface ChatJoinChannelsRequest {
 	chain_uid: string
+}
+
+export interface ChatMessage {
+	id: number
+	message: string
+	sent_by: string
+	chat_room_id: number
+	created_at: number
+}
+
+export interface ChatMessageCreateRequest {
+	chain_uid: string
+	chat_room_id: number
+	message: string
+}
+
+export interface ChatPatchTypeRequest {
+	chain_uid: string
+	chat_type: string
+	chat_url: string
 }
 
 export interface ChatPatchUserRequest {
@@ -127,6 +156,36 @@ export interface ChatPatchUserResponse {
 	chat_user_id: string
 	chat_pass: string
 	chat_user_name: string
+}
+
+export interface ChatRoom {
+	id: number
+	name: string
+	color: string
+	created_at: number
+	chain_uid: string
+}
+
+export interface ChatRoomEditRequest {
+	chain_uid: string
+	id: number
+	name?: (string | null | undefined)
+	color?: (string | null | undefined)
+}
+
+export interface ChatRoomListQuery {
+	ChainUID: string
+}
+
+export interface ChatRoomListResponse {
+	list: ChatRoom[]
+}
+
+export interface ChatRoomMessageListQuery {
+	ChainUID: string
+	ChatRoomID: number
+	StartFrom: number
+	Page: number
 }
 
 export interface ContactMailRequest {

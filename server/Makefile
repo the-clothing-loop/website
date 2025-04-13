@@ -62,3 +62,5 @@ coords-migrate:
 typex2:
 	@go tool typex2 -l typescript -i ./sharedtypes -o ../frontend/src/api/typex2.ts
 	@go tool typex2 -l typescript -i ./sharedtypes -o ../app/src/api/typex2.ts
+
+gen-typex: typex2
