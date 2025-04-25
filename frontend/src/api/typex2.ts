@@ -115,7 +115,7 @@ export interface ChatDeleteChannelRequest {
 }
 
 export interface ChatGetTypeRequest {
-	ChainUID: string
+	chain_uid: string
 }
 
 export interface ChatGetTypeResponse {
@@ -174,7 +174,7 @@ export interface ChatRoomEditRequest {
 }
 
 export interface ChatRoomListQuery {
-	ChainUID: string
+	chain_uid: string
 }
 
 export interface ChatRoomListResponse {
@@ -182,10 +182,14 @@ export interface ChatRoomListResponse {
 }
 
 export interface ChatRoomMessageListQuery {
-	ChainUID: string
-	ChatRoomID: number
-	StartFrom: number
-	Page: number
+	chain_uid: string
+	chat_room_id: number
+	start_from: number
+	page: number
+}
+
+export interface ChatRoomMessageListResponse {
+	messages: ChatMessage[]
 }
 
 export interface ContactMailRequest {
