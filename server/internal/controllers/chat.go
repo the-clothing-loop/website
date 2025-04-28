@@ -193,6 +193,9 @@ func ChatChannelMessageCreate(c *gin.Context) {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
+	userUIDs = lo.Filter(userUIDs, func(uid string, _ int) bool {
+		return uid != authUser.UID
+	})
 	notificationMessage := lo.Ellipsis(body.Message, 10)
 	err = app.OneSignalCreateNotification(db, userUIDs, *views.Notifications[views.NotificationEnumTitleChatMessage], onesignal.StringMap{
 		En: &notificationMessage,
