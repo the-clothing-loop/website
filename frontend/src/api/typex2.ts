@@ -99,19 +99,38 @@ export interface ChainUpdateRequest {
 	is_app_disabled?: (boolean | null | undefined)
 }
 
-export interface ChatCreateChannelRequest {
-	chain_uid: string
+export interface ChatChannel {
+	id: number
 	name: string
 	color: string
-}
-
-export interface ChatCreateChannelResponse {
-	chat_channel: string
-}
-
-export interface ChatDeleteChannelRequest {
+	created_at: number
 	chain_uid: string
-	channel_id: string
+}
+
+export interface ChatChannelEditRequest {
+	chain_uid: string
+	id: number
+	name?: (string | null | undefined)
+	color?: (string | null | undefined)
+}
+
+export interface ChatChannelListQuery {
+	chain_uid: string
+}
+
+export interface ChatChannelListResponse {
+	list: ChatChannel[]
+}
+
+export interface ChatChannelMessageListQuery {
+	chain_uid: string
+	chat_channel_id: number
+	start_from: number
+	page: number
+}
+
+export interface ChatChannelMessageListResponse {
+	messages: ChatMessage[]
 }
 
 export interface ChatGetTypeRequest {
@@ -121,23 +140,20 @@ export interface ChatGetTypeRequest {
 export interface ChatGetTypeResponse {
 	chat_type: string
 	chat_url: string
-}
-
-export interface ChatJoinChannelsRequest {
-	chain_uid: string
+	chat_in_app_disabled: boolean
 }
 
 export interface ChatMessage {
 	id: number
 	message: string
 	sent_by: string
-	chat_room_id: number
+	chat_channel_id: number
 	created_at: number
 }
 
 export interface ChatMessageCreateRequest {
 	chain_uid: string
-	chat_room_id: number
+	chat_channel_id: number
 	message: string
 }
 
@@ -145,51 +161,11 @@ export interface ChatPatchTypeRequest {
 	chain_uid: string
 	chat_type: string
 	chat_url: string
+	chat_in_app_disabled: boolean
 }
 
 export interface ChatPatchUserRequest {
 	chain_uid: string
-}
-
-export interface ChatPatchUserResponse {
-	chat_team: string
-	chat_user_id: string
-	chat_pass: string
-	chat_user_name: string
-}
-
-export interface ChatRoom {
-	id: number
-	name: string
-	color: string
-	created_at: number
-	chain_uid: string
-}
-
-export interface ChatRoomEditRequest {
-	chain_uid: string
-	id: number
-	name?: (string | null | undefined)
-	color?: (string | null | undefined)
-}
-
-export interface ChatRoomListQuery {
-	chain_uid: string
-}
-
-export interface ChatRoomListResponse {
-	list: ChatRoom[]
-}
-
-export interface ChatRoomMessageListQuery {
-	chain_uid: string
-	chat_room_id: number
-	start_from: number
-	page: number
-}
-
-export interface ChatRoomMessageListResponse {
-	messages: ChatMessage[]
 }
 
 export interface ContactMailRequest {
