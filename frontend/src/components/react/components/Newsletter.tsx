@@ -90,12 +90,21 @@ export const Newsletter = () => {
                 />
               </label>
             </div>
-            <div className="inline-block">
+            <div className="inline-flex gap-5">
               <button
                 className="btn btn-primary w-full sm:w-auto"
                 type="submit"
               >
                 {t("submit")}
+                <span className="icon-arrow-right ml-3 rtl:hidden"></span>
+                <span className="icon-arrow-left mr-3 ltr:hidden"></span>
+              </button>
+              <button
+                className="btn btn-primary w-full sm:w-auto"
+                type="button"
+                onClick={() => window.open('/newsletter.pdf', '_blank')} //placeholder for newsletter URL, update once backend is ready
+              >
+                {t("download newsletter")}
                 <span className="icon-arrow-right ml-3 rtl:hidden"></span>
                 <span className="icon-arrow-left mr-3 ltr:hidden"></span>
               </button>
