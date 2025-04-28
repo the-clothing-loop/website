@@ -147,12 +147,12 @@ func Routes() *gin.Engine {
 	v2.GET("/chat/type", controllers.ChatGetType)
 	v2.PATCH("/chat/type", controllers.ChatPatchType)
 
-	// chat room
-	v2.GET("/chat/rooms", controllers.ChatRoomList)
-	v2.POST("/chat/room/create", controllers.ChatRoomCreate)
-	v2.PATCH("/chat/room/edit", controllers.ChatRoomEdit)
-	v2.GET("/chat/room/messages", controllers.ChatRoomMessageList)
-	v2.POST("/chat/room/message/create", controllers.ChatRoomMessageCreate)
+	// chat channel
+	v2.GET("/chat/channels", controllers.ChatChannelList)
+	v2.POST("/chat/channel/create", controllers.ChatChannelCreate)
+	v2.PATCH("/chat/channel/edit", controllers.ChatChannelEdit)
+	v2.GET("/chat/channel/messages", controllers.ChatChannelMessageList)
+	v2.POST("/chat/channel/message/create", controllers.ChatChannelMessageCreate)
 
 	// bag
 	v2.GET("/bag/all", controllers.BagGetAll)

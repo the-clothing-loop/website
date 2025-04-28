@@ -5,15 +5,16 @@ meta {
 }
 
 patch {
-  url: {{base}}v2/chat/type
+  url: {{base}}/v2/chat/type
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "chain_uid":"{{chainUID}}",
-    "chat_type":"signal",
-    "chat_url": "https://signal.group/#code"
+    "chain_uid": "{{chainUID}}",
+    "chat_type": "signal",
+    "chat_url": "https://signal.group/#code",
+    "chat_in_app_disabled": false
   }
 }

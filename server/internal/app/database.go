@@ -112,6 +112,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 			}
 		}
 	}
+
 	// Mail removed
 	if db.Migrator().HasTable("mails") {
 		db.Exec(`DROP TABLE mails`)
@@ -130,7 +131,7 @@ func DatabaseAutoMigrate(db *gorm.DB) {
 		&models.Payment{},
 		&models.Mail{},
 		&models.DeletedUser{},
-		&sharedtypes.ChatRoom{},
+		&sharedtypes.ChatChannel{},
 		&sharedtypes.ChatMessage{},
 	)
 

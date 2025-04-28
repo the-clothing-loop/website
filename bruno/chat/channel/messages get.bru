@@ -1,11 +1,11 @@
 meta {
-  name: room messages get
+  name: messages get
   type: http
-  seq: 6
+  seq: 4
 }
 
 get {
-  url: {{base}}v2/chat/room/messages?chain_uid={{chainUID}}&chat_room_id=1&start_from={{now_milli}}&page=0
+  url: {{base}}/v2/chat/channel/messages?chain_uid={{chainUID}}&chat_room_id=1&start_from={{now_milli}}&page=0
   body: none
   auth: inherit
 }

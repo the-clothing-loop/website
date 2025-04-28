@@ -51,8 +51,9 @@ func ChatPatchType(c *gin.Context) {
 	}
 
 	err := chain.SaveChatType(db, sharedtypes.ChatGetTypeResponse{
-		ChatType: body.ChatType,
-		ChatUrl:  body.ChatUrl,
+		ChatType:          body.ChatType,
+		ChatUrl:           body.ChatUrl,
+		ChatInAppDisabled: body.ChatInAppDisabled,
 	})
 	if err != nil {
 		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to find chat type")
@@ -62,9 +63,9 @@ func ChatPatchType(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func ChatRoomList(c *gin.Context) {
+func ChatChannelList(c *gin.Context) {
 	db := getDB(c)
-	var body sharedtypes.ChatRoomListQuery
+	var body sharedtypes.ChatChannelListQuery
 	if err := c.ShouldBindQuery(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -74,19 +75,19 @@ func ChatRoomList(c *gin.Context) {
 		return
 	}
 
-	chatRoomList := []sharedtypes.ChatRoom{}
-	err := db.Raw(`SELECT * FROM chat_rooms WHERE chain_id = ?`, chain.ID).Scan(&chatRoomList).Error
+	chatChannelList := []sharedtypes.ChatChannel{}
+	err := db.Raw(`SELECT * FROM chat_channels WHERE chain_id = ?`, chain.ID).Scan(&chatChannelList).Error
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, sharedtypes.ChatRoomListResponse{List: chatRoomList})
+	c.JSON(http.StatusOK, sharedtypes.ChatChannelListResponse{List: chatChannelList})
 }
 
-func ChatRoomCreate(c *gin.Context) {
+func ChatChannelCreate(c *gin.Context) {
 	db := getDB(c)
-	var body sharedtypes.ChatRoom
+	var body sharedtypes.ChatChannel
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -108,9 +109,9 @@ func ChatRoomCreate(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func ChatRoomEdit(c *gin.Context) {
+func ChatChannelEdit(c *gin.Context) {
 	db := getDB(c)
-	var body sharedtypes.ChatRoomEditRequest
+	var body sharedtypes.ChatChannelEditRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -120,7 +121,7 @@ func ChatRoomEdit(c *gin.Context) {
 		return
 	}
 
-	err := db.Exec(`UPDATE chat_rooms SET name = ?, color = ? WHERE id = ? AND chain_id = ?`, body.Name, body.Color, body.ID, chain.ID).Error
+	err := db.Exec(`UPDATE chat_channels SET name = ?, color = ? WHERE id = ? AND chain_id = ?`, body.Name, body.Color, body.ID, chain.ID).Error
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
@@ -128,9 +129,9 @@ func ChatRoomEdit(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func ChatRoomMessageList(c *gin.Context) {
+func ChatChannelMessageList(c *gin.Context) {
 	db := getDB(c)
-	var body sharedtypes.ChatRoomMessageListQuery
+	var body sharedtypes.ChatChannelMessageListQuery
 	if err := c.ShouldBindQuery(&body); err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
@@ -140,22 +141,22 @@ func ChatRoomMessageList(c *gin.Context) {
 		return
 	}
 
-	chatRoomMessageList := []sharedtypes.ChatMessage{}
+	chatChannelMessageList := []sharedtypes.ChatMessage{}
 	err := db.Debug().Raw(`
 SELECT msg.* FROM chat_messages msg
-LEFT JOIN chat_rooms room ON room.id = msg.chat_room_id AND room.id = ? AND room.chain_id = ?
+LEFT JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
 WHERE msg.created_at < ?
 LIMIT ?, 20 
-`, body.ChatRoomID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatRoomMessageList).Error
+`, body.ChatChannelID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatChannelMessageList).Error
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, sharedtypes.ChatRoomMessageListResponse{Messages: chatRoomMessageList})
+	c.JSON(http.StatusOK, sharedtypes.ChatChannelMessageListResponse{Messages: chatChannelMessageList})
 }
 
-func ChatRoomMessageCreate(c *gin.Context) {
+func ChatChannelMessageCreate(c *gin.Context) {
 	db := getDB(c)
 	var body sharedtypes.ChatMessageCreateRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -168,17 +169,17 @@ func ChatRoomMessageCreate(c *gin.Context) {
 	}
 
 	count := int64(-1)
-	db.Raw(`SELECT COUNT(*) FROM chat_rooms WHERE id = ? AND chain_id = ?`, body.ChatRoomID, chain.ID).Count(&count)
+	db.Raw(`SELECT COUNT(*) FROM chat_channels WHERE id = ? AND chain_id = ? LIMIT 1`, body.ChatChannelID, chain.ID).Count(&count)
 	if count <= 0 {
-		c.String(http.StatusBadRequest, fmt.Sprintf("chat room %d is not part of this Loop", body.ChatRoomID))
+		c.String(http.StatusBadRequest, fmt.Sprintf("chat room %d is not part of this Loop", body.ChatChannelID))
 		return
 	}
 
 	chatMessage := sharedtypes.ChatMessage{
-		Message:    body.Message,
-		SendByUID:  authUser.UID,
-		ChatRoomID: body.ChatRoomID,
-		CreatedAt:  time.Now().UnixMilli(),
+		Message:       body.Message,
+		SendByUID:     authUser.UID,
+		ChatChannelID: body.ChatChannelID,
+		CreatedAt:     time.Now().UnixMilli(),
 	}
 	err := db.Save(&chatMessage).Error
 	if err != nil {

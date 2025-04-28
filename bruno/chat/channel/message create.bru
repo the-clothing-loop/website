@@ -1,18 +1,18 @@
 meta {
-  name: room message create
+  name: message create
   type: http
-  seq: 7
+  seq: 5
 }
 
 post {
-  url: {{base}}v2/chat/room/message/create
+  url: {{base}}/v2/chat/channel/message/create
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "id": 1,
+    "chat_channel_id": 1,
     "message": "my mocha is cold",
     "chain_uid": "{{chainUID}}"
   }

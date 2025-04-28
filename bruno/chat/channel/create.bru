@@ -1,11 +1,11 @@
 meta {
-  name: room create
+  name: create
   type: http
-  seq: 3
+  seq: 1
 }
 
 post {
-  url: {{base}}v2/chat/room/create
+  url: {{base}}/v2/chat/channel/create
   body: json
   auth: inherit
 }

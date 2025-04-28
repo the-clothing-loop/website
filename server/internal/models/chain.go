@@ -47,7 +47,8 @@ type Chain struct {
 	ChatRoomIDs                   []string `gorm:"column:chat_room_ids;serializer:json"`
 	ChatType                      string
 	ChatUrl                       string
-	ChatRooms                     []sharedtypes.ChatRoom
+	ChatInAppDisabled             bool
+	ChatChannel                   []sharedtypes.ChatChannel
 }
 
 // Selects chain; id, uid, name, description, address, latitude, longitude, radius, sizes, genders, published, open_to_new_members
@@ -284,7 +285,7 @@ func (c *Chain) SaveChannelIDs(db *gorm.DB) error {
 
 func (c *Chain) GetChatType(db *gorm.DB) (*sharedtypes.ChatGetTypeResponse, error) {
 	res := &sharedtypes.ChatGetTypeResponse{}
-	err := db.Raw(`SELECT chat_type, chat_url FROM chains WHERE id = ?`, c.ID).Scan(res).Error
+	err := db.Raw(`SELECT chat_type, chat_url, chat_in_app_disabled FROM chains WHERE id = ?`, c.ID).Scan(res).Error
 	if err != nil {
 		return nil, err
 	}
@@ -292,5 +293,5 @@ func (c *Chain) GetChatType(db *gorm.DB) (*sharedtypes.ChatGetTypeResponse, erro
 }
 
 func (c *Chain) SaveChatType(db *gorm.DB, chatTypeUrl sharedtypes.ChatGetTypeResponse) error {
-	return db.Exec(`UPDATE chains SET chat_type = ?, chat_url = ? WHERE id = ?`, chatTypeUrl.ChatType, chatTypeUrl.ChatUrl, c.ID).Error
+	return db.Exec(`UPDATE chains SET chat_type = ?, chat_url = ?, chat_in_app_disabled = ? WHERE id = ?`, chatTypeUrl.ChatType, chatTypeUrl.ChatUrl, chatTypeUrl.ChatInAppDisabled, c.ID).Error
 }
