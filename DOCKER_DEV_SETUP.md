@@ -49,12 +49,12 @@ brew install make
 3. In new tab run `make db-setup` to seed the db with dummy data.
 4. If you do not have a MYSQL client, install one, like DBeaver (cross-platform, advised), TablePlus (MacOS) or HeidiSQL (Windows).
    The server is `128.0.0.1` and user: `root` and password is `fb4aeaa6d860dbabe785675e` (from docker-compose.yml). The tables should be populated.
-5. The frontend should be visible at <http://localhost:8086> in your browser of choice.
+5. The frontend should be visible at <http://www.clothingloop.localhost:8080/> in your browser of choice.
 
 ## 4. Login
 
 1. Try logging in using `host@example.com` it will send you a verification email.
-2. go to <http://localhost:8025/mailpit/> to see the self hosted inbox (Mailpit), verify from there, now you should be logged in as a "host".
+2. go to <http://localhost:8025/> to see the self hosted inbox (Mailpit), verify from there, now you should be logged in as a "host".
 
 The following dummy accounts are available:
 

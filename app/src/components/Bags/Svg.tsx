@@ -68,7 +68,7 @@ export default function BagSVG({
               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
             >
               <p
-                text-anchor="middle"
+                // textAnchor="middle"
                 style={{
                   color: bag.color,
                   fontFamily: "'PlayfairDisplay-Bold'",
@@ -86,7 +86,7 @@ export default function BagSVG({
             </foreignObject>
             <text
               transform="matrix(0.887 0 0 1 97.4705 180.6156)"
-              text-anchor="middle"
+              textAnchor="middle"
               alignmentBaseline="middle"
               x="57.30"
               y="3%"
