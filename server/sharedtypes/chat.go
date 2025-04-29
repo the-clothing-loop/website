@@ -33,6 +33,11 @@ type ChatChannelEditRequest struct {
 	Color    *string `json:"color"`
 }
 
+type ChatChannelDeleteQuery struct {
+	ChainUID      string `form:"chain_uid" binding:"required,uuid"`
+	ChatChannelID uint   `form:"chat_channel_id" binding:"required"`
+}
+
 type ChatChannelMessageListQuery struct {
 	ChainUID      string `form:"chain_uid" binding:"required,uuid"`
 	ChatChannelID uint   `form:"chat_channel_id" binding:"required"`

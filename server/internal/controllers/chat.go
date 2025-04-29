@@ -15,6 +15,7 @@ import (
 	"github.com/the-clothing-loop/website/server/internal/views"
 	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
+	"gorm.io/gorm"
 )
 
 func ChatGetType(c *gin.Context) {
@@ -82,6 +83,10 @@ func ChatChannelList(c *gin.Context) {
 		return
 	}
 
+	for i := range chatChannelList {
+		chatChannelList[i].ChainUID = chain.UID
+	}
+
 	c.JSON(http.StatusOK, sharedtypes.ChatChannelListResponse{List: chatChannelList})
 }
 
@@ -129,6 +134,47 @@ func ChatChannelEdit(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+func ChatChannelDelete(c *gin.Context) {
+	db := getDB(c)
+	var body sharedtypes.ChatChannelDeleteQuery
+	if err := c.ShouldBindQuery(&body); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	ok, _, chain := auth.Authenticate(c, db, auth.AuthState3AdminChainUser, body.ChainUID)
+	if !ok {
+		return
+	}
+
+	ok = isChatPartOfChain(c, db, chain.ID, body.ChatChannelID)
+	if !ok {
+		return
+	}
+
+	err := func() (err error) {
+		tx := db.Begin()
+
+		err = tx.Exec("DELETE FROM chat_messages WHERE channel_id = ?", body.ChatChannelID).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+
+		err = tx.Exec("DELETE FROM chat_channels WHERE id = ?", body.ChatChannelID).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+
+		return nil
+	}()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.Status(http.StatusOK)
+}
+
 func ChatChannelMessageList(c *gin.Context) {
 	db := getDB(c)
 	var body sharedtypes.ChatChannelMessageListQuery
@@ -168,10 +214,8 @@ func ChatChannelMessageCreate(c *gin.Context) {
 		return
 	}
 
-	count := int64(-1)
-	db.Raw(`SELECT COUNT(*) FROM chat_channels WHERE id = ? AND chain_id = ? LIMIT 1`, body.ChatChannelID, chain.ID).Count(&count)
-	if count <= 0 {
-		c.String(http.StatusBadRequest, fmt.Sprintf("chat room %d is not part of this Loop", body.ChatChannelID))
+	ok = isChatPartOfChain(c, db, chain.ID, body.ChatChannelID)
+	if !ok {
 		return
 	}
 
@@ -205,4 +249,14 @@ func ChatChannelMessageCreate(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+func isChatPartOfChain(c *gin.Context, db *gorm.DB, chainID, channelID uint) (ok bool) {
+	count := int64(-1)
+	db.Raw(`SELECT COUNT(*) FROM chat_channels WHERE id = ? AND chain_id = ? LIMIT 1`, channelID, chainID).Count(&count)
+	if count <= 0 {
+		c.String(http.StatusBadRequest, fmt.Sprintf("chat room %d is not part of this Loop", channelID))
+		return false
+	}
+	return true
 }
