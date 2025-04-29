@@ -1,5 +1,7 @@
 package sharedtypes
 
+import "time"
+
 type ChatPatchUserRequest struct {
 	ChainUID string `json:"chain_uid" binding:"required,uuid"`
 }
@@ -65,11 +67,18 @@ type ChatMessageCreateRequest struct {
 	ChatChannelID uint   `json:"chat_channel_id" binding:"required"`
 	Message       string `json:"message"`
 }
+type ChatMessageRequest struct {
+	ChainUID      string `json:"chain_uid" form:"chain_uid" binding:"required,uuid"`
+	ChatChannelID uint   `json:"chat_channel_id" form:"chat_channel_id" binding:"required"`
+	ChatMessageID uint   `json:"chat_message_id" form:"chat_message_id" binding:"required"`
+}
 
 type ChatMessage struct {
-	ID            uint   `json:"id"`
-	Message       string `json:"message"`
-	SendByUID     string `json:"sent_by"`
-	ChatChannelID uint   `json:"chat_channel_id"`
-	CreatedAt     int64  `json:"created_at"`
+	ID            uint       `json:"id"`
+	Message       string     `json:"message"`
+	SendByUID     string     `json:"sent_by"`
+	ChatChannelID uint       `json:"chat_channel_id"`
+	IsPinned      bool       `json:"is_pinned,omitempty"`
+	CreatedAt     int64      `json:"created_at"`
+	DeletedAt     *time.Time `json:"-"`
 }

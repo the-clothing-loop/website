@@ -107,6 +107,11 @@ export interface ChatChannel {
 	chain_uid: string
 }
 
+export interface ChatChannelDeleteQuery {
+	chain_uid: string
+	chat_channel_id: number
+}
+
 export interface ChatChannelEditRequest {
 	chain_uid: string
 	id: number
@@ -148,6 +153,7 @@ export interface ChatMessage {
 	message: string
 	sent_by: string
 	chat_channel_id: number
+	is_pinned?: (boolean | null | undefined)
 	created_at: number
 }
 
@@ -155,6 +161,12 @@ export interface ChatMessageCreateRequest {
 	chain_uid: string
 	chat_channel_id: number
 	message: string
+}
+
+export interface ChatMessageRequest {
+	chain_uid: string
+	chat_channel_id: number
+	chat_message_id: number
 }
 
 export interface ChatPatchTypeRequest {

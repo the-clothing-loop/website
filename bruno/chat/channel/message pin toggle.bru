@@ -1,0 +1,19 @@
+meta {
+  name: message pin toggle
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{base}}/v2/chat/channel/message/pin-toggle
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "chat_channel_id": 1,
+    "chat_message_id": 1,
+    "chain_uid": "{{chainUID}}"
+  }
+}

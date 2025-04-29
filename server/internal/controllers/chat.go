@@ -8,6 +8,7 @@ import (
 
 	"github.com/OneSignal/onesignal-go-api"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/samber/lo"
 	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
@@ -154,7 +155,7 @@ func ChatChannelDelete(c *gin.Context) {
 	err := func() (err error) {
 		tx := db.Begin()
 
-		err = tx.Exec("DELETE FROM chat_messages WHERE channel_id = ?", body.ChatChannelID).Error
+		err = tx.Exec("DELETE FROM chat_messages WHERE chat_channel_id = ?", body.ChatChannelID).Error
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -166,7 +167,7 @@ func ChatChannelDelete(c *gin.Context) {
 			return err
 		}
 
-		return nil
+		return tx.Commit().Error
 	}()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -191,7 +192,7 @@ func ChatChannelMessageList(c *gin.Context) {
 	err := db.Debug().Raw(`
 SELECT msg.* FROM chat_messages msg
 LEFT JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
-WHERE msg.created_at < ?
+WHERE msg.created_at < ? AND msg.deleted_at IS NULL
 LIMIT ?, 20 
 `, body.ChatChannelID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatChannelMessageList).Error
 	if err != nil {
@@ -200,6 +201,32 @@ LIMIT ?, 20
 	}
 
 	c.JSON(http.StatusOK, sharedtypes.ChatChannelMessageListResponse{Messages: chatChannelMessageList})
+}
+
+func ChatChannelMessagePinToggle(c *gin.Context) {
+	ok, db, _, _, _, message := chatGenericAlterMessage(c, binding.JSON, auth.AuthState3AdminChainUser)
+	if !ok {
+		return
+	}
+
+	err := db.Exec("UPDATE chat_messages SET is_pinned = ? WHERE id = ?", !message.IsPinned, message.ID).Error
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+}
+
+func ChatChannelMessageDelete(c *gin.Context) {
+	ok, db, _, _, _, message := chatGenericAlterMessage(c, binding.Query, auth.AuthState2UserOfChain)
+	if !ok {
+		return
+	}
+
+	err := db.Exec("UPDATE chat_messages SET deleted_at = NOW() WHERE id = ?", message.ID).Error
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
 }
 
 func ChatChannelMessageCreate(c *gin.Context) {
@@ -259,4 +286,40 @@ func isChatPartOfChain(c *gin.Context, db *gorm.DB, chainID, channelID uint) (ok
 		return false
 	}
 	return true
+}
+
+func chatGenericAlterMessage(c *gin.Context, bindingType binding.Binding, minimumAuthState int) (ok bool, db *gorm.DB, authUser *models.User, chain *models.Chain, channelID uint, message *sharedtypes.ChatMessage) {
+	db = getDB(c)
+	var body sharedtypes.ChatMessageRequest
+	if err := c.ShouldBindWith(&body, bindingType); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	ok, authUser, chain = auth.Authenticate(c, db, minimumAuthState, body.ChainUID)
+	if !ok {
+		return
+	}
+
+	ok = isChatPartOfChain(c, db, chain.ID, body.ChatChannelID)
+	if !ok {
+		return
+	}
+
+	message, err := models.ChatMessageGet(db, body.ChatMessageID, body.ChatChannelID)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if minimumAuthState < auth.AuthState3AdminChainUser {
+		if message.SendByUID != authUser.UID {
+			_, isChainAdmin := authUser.IsPartOfChain(chain.UID)
+			if !isChainAdmin {
+				c.String(http.StatusBadRequest, "Insufficient privileges on selected message")
+				return
+			}
+		}
+	}
+
+	return true, db, authUser, chain, channelID, message
 }
