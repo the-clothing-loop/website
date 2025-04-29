@@ -5,16 +5,16 @@ meta {
 }
 
 get {
-  url: {{base}}/v2/chat/channel/messages?chain_uid={{chainUID}}&chat_room_id=1&start_from={{now_milli}}&page=0
+  url: {{base}}/v2/chat/channel/messages?chain_uid={{chainUID}}&chat_channel_id=1&start_from={{now_milli}}&page=6
   body: none
   auth: inherit
 }
 
 params:query {
   chain_uid: {{chainUID}}
-  chat_room_id: 1
+  chat_channel_id: 1
   start_from: {{now_milli}}
-  page: 0
+  page: 6
 }
 
 body:json {
