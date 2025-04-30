@@ -24,13 +24,12 @@ import {
   hourglassOutline,
   imageOutline,
 } from "ionicons/icons";
-import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { ChangeEvent, RefObject, useRef, useState } from "react";
 import { BulkyItem } from "../api/typex2";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
 import { useTranslation } from "react-i18next";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import { OnSendMessageWithImage } from "../pages/Chat";
 
 enum State {
   idle,
