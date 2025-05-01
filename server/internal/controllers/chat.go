@@ -192,12 +192,19 @@ func ChatChannelMessageList(c *gin.Context) {
 	err := db.Debug().Raw(`
 SELECT msg.* FROM chat_messages msg
 LEFT JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
-WHERE msg.created_at < ? AND msg.deleted_at IS NULL
+WHERE msg.created_at < ?
+ORDER BY msg.created_at DESC
 LIMIT ?, 20 
 `, body.ChatChannelID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatChannelMessageList).Error
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
+	}
+
+	for i, v := range chatChannelMessageList {
+		if v.DeletedAt != nil {
+			chatChannelMessageList[i].Message = "__DELETED__"
+		}
 	}
 
 	c.JSON(http.StatusOK, sharedtypes.ChatChannelMessageListResponse{Messages: chatChannelMessageList})
@@ -222,7 +229,7 @@ func ChatChannelMessageDelete(c *gin.Context) {
 		return
 	}
 
-	err := db.Exec("UPDATE chat_messages SET deleted_at = NOW() WHERE id = ?", message.ID).Error
+	err := db.Exec("UPDATE chat_messages SET deleted_at = NOW(), is_pinned = FALSE WHERE id = ?", message.ID).Error
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
