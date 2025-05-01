@@ -191,7 +191,7 @@ func ChatChannelMessageList(c *gin.Context) {
 	chatChannelMessageList := []sharedtypes.ChatMessage{}
 	err := db.Debug().Raw(`
 SELECT msg.* FROM chat_messages msg
-LEFT JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
+JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
 WHERE msg.created_at < ?
 ORDER BY msg.created_at DESC
 LIMIT ?, 20 
