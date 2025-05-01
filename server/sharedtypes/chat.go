@@ -45,7 +45,7 @@ type ChatChannelMessageListQuery struct {
 	ChatChannelID uint   `form:"chat_channel_id" binding:"required"`
 	StartFrom     int64  `form:"start_from"`
 	// starts at 0
-	Page int64 `form:"page" binding:"gte=0"`
+	Page int64 `form:"page"`
 }
 type ChatChannelMessageListResponse struct {
 	Messages []ChatMessage `json:"messages"`
