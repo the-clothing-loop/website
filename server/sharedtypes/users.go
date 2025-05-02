@@ -36,6 +36,7 @@ type User struct {
 	ChatUserID            *string         `json:"chat_id"`
 	ChatPass              *string         `json:"-"`
 	ChatUserName          *string         `json:"chat_user_name"`
+	LastSetPausedAt       *time.Time      `json:"last_set_paused_at"`
 }
 
 type UserCreateRequest struct {
