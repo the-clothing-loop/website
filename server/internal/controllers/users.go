@@ -217,9 +217,11 @@ func UserUpdate(c *gin.Context) {
 					db.Exec(`UPDATE user_chains SET is_paused = FALSE WHERE user_id = ?`, user.ID)
 				}
 			}
+			userChanges["last_set_paused_at"] = time.Now()
 		}
 		if body.ChainPaused != nil && chain != nil {
 			db.Exec(`UPDATE user_chains SET is_paused = ? WHERE user_id = ? AND chain_id = ?`, *body.ChainPaused, user.ID, chain.ID)
+			userChanges["last_set_paused_at"] = time.Now()
 		}
 		if body.Sizes != nil {
 			j, _ := json.Marshal(body.Sizes)
