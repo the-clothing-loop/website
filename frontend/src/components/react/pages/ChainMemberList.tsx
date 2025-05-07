@@ -1551,19 +1551,23 @@ function RouteTable(props: {
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
 
-  function mapUsersToOrder(users: { uid: string }[]): { [uid: string]: number } {
-    return users.reduce((acc, user, index) => {
+  function mapUsersToOrder(users: { uid: string }[]): {
+    [uid: string]: number;
+  } {
+    return users.reduce<Record<string, number>>((acc, user, index) => {
       acc[user.uid] = index + 1;
       return acc;
-    }, {} as { [uid: string]: number });
+    }, {});
   }
 
-  const [routeOrder,setRouteOrder] = useState<{[uid: string]: number}>(() => mapUsersToOrder(props.users));
+  const [routeOrder, setRouteOrder] = useState<{ [uid: string]: number }>(() =>
+    mapUsersToOrder(props.users),
+  );
 
   useEffect(() => {
     const newRouteOrder = mapUsersToOrder(props.users);
     setRouteOrder(newRouteOrder);
-}, [props.users]);
+  }, [props.users]);
 
   function setRoute(r: typeof props.route) {
     routeSetOrder(props.chain.uid, r);
@@ -1577,7 +1581,7 @@ function RouteTable(props: {
     setRoute(reOrder(props.route, fromIndex, toIndex));
   }
   function handleInputChangeRoute(uid: string) {
-    const toIndex = routeOrder[uid]- 1;
+    const toIndex = routeOrder[uid] - 1;
     const fromIndex = props.route.indexOf(uid);
     setRoute(reOrder(props.route, fromIndex, toIndex));
   }
@@ -1650,14 +1654,18 @@ function RouteTable(props: {
                       </span>
                       <input
                         onClick={(e) => (e.target as any).select()}
-                        onChange={(e) => setRouteOrder({...routeOrder, [u.uid]: e.target.valueAsNumber})}
+                        onChange={(e) =>
+                          setRouteOrder({
+                            ...routeOrder,
+                            [u.uid]: e.target.valueAsNumber,
+                          })
+                        }
                         onBlur={() => handleInputChangeRoute(u.uid)}
                         onKeyUp={(e) => {
                           if (e.key === "Enter") {
                             handleInputChangeRoute(u.uid);
                           }
-                        }
-                        }
+                        }}
                         max={props.route.length + 1}
                         min={1}
                         type="number"
