@@ -100,13 +100,12 @@ export const Newsletter = () => {
                 <span className="icon-arrow-left mr-3 ltr:hidden"></span>
               </button>
               <button
-                className="btn btn-primary w-full sm:w-auto"
+                className="btn btn-ghost w-full sm:w-auto"
                 type="button"
                 onClick={() => window.open('/newsletter.pdf', '_blank')} //placeholder for newsletter URL, update once backend is ready
               >
-                {t("download newsletter")}
-                <span className="icon-arrow-right ml-3 rtl:hidden"></span>
-                <span className="icon-arrow-left mr-3 ltr:hidden"></span>
+                {t("downloadNewsletter")}
+                <span className="icon-download ml-3"></span>
               </button>
             </div>
           </div>
