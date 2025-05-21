@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22BD11980AAF832113A44B25 /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AE15C72015B4C2A154BE6AF /* Pods_App.framework */; };
 		2B6B560E2C773CA000102600 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6B560D2C773CA000102600 /* NotificationService.swift */; };
 		2B6B56122C773CA000102600 /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2B6B560B2C773CA000102600 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2BCAD6C82A66950D00E68351 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2BCAD6CA2A66950D00E68351 /* InfoPlist.strings */; };
@@ -17,8 +18,7 @@
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
-		7D434B38EEDFF4E9E189E771 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0879DD823C49C6764C004A34 /* Pods_OneSignalNotificationServiceExtension.framework */; };
-		D7D49B823D3B73D39ED141B6 /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F282406E0BA792A82D15DD47 /* Pods_App.framework */; };
+		BB62472D04C3C21638B641FD /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1E7152B76FE54A1DE2F627D /* Pods_OneSignalNotificationServiceExtension.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,7 +47,6 @@
 
 /* Begin PBXFileReference section */
 		01CAC5C5E18C4520BAFB662E /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		0879DD823C49C6764C004A34 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B6B560B2C773CA000102600 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B6B560D2C773CA000102600 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		2B6B560F2C773CA000102600 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -67,7 +66,8 @@
 		504EC3111FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
-		F282406E0BA792A82D15DD47 /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AE15C72015B4C2A154BE6AF /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1E7152B76FE54A1DE2F627D /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D434B38EEDFF4E9E189E771 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
+				BB62472D04C3C21638B641FD /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7D49B823D3B73D39ED141B6 /* Pods_App.framework in Frameworks */,
+				22BD11980AAF832113A44B25 /* Pods_App.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,8 +140,8 @@
 		75BA8C49A854F6679AFE3C24 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F282406E0BA792A82D15DD47 /* Pods_App.framework */,
-				0879DD823C49C6764C004A34 /* Pods_OneSignalNotificationServiceExtension.framework */,
+				8AE15C72015B4C2A154BE6AF /* Pods_App.framework */,
+				B1E7152B76FE54A1DE2F627D /* Pods_OneSignalNotificationServiceExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -580,7 +580,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = 75XP25J59A;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = App/Info.plist;
@@ -613,7 +613,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = 75XP25J59A;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = App/Info.plist;

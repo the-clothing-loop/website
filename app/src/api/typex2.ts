@@ -58,7 +58,7 @@ export interface ChainResponse {
 	name: string
 	description: string
 	address: string
-	image?: (string | null | undefined)
+	image: (string | null)
 	latitude: number
 	longitude: number
 	radius: number
@@ -66,37 +66,37 @@ export interface ChainResponse {
 	genders: string[]
 	published: boolean
 	open_to_new_members: boolean
-	total_members?: (number | null | undefined)
-	total_hosts?: (number | null | undefined)
-	rules_override?: (string | null | undefined)
-	headers_override?: (string | null | undefined)
-	theme?: (string | null | undefined)
-	is_app_disabled?: (boolean | null | undefined)
-	route_privacy?: (number | null | undefined)
-	allow_map?: (boolean | null | undefined)
-	chat_room_ids?: (string[] | null | undefined)
+	total_members?: (number | null)
+	total_hosts?: (number | null)
+	rules_override?: (string | null)
+	headers_override?: (string | null)
+	theme?: (string | null)
+	is_app_disabled?: (boolean | null)
+	route_privacy?: (number | null)
+	allow_map?: (boolean | null)
+	chat_room_ids?: string[]
 }
 
 export interface ChainUpdateRequest {
 	uid: string
-	name?: (string | null | undefined)
-	description?: (string | null | undefined)
-	address?: (string | null | undefined)
-	image?: (string | null | undefined)
-	country_code?: (string | null | undefined)
-	latitude?: (number | null | undefined)
-	longitude?: (number | null | undefined)
-	radius?: (number | null | undefined)
-	sizes?: (string[] | null | undefined)
-	genders?: (string[] | null | undefined)
-	rules_override?: (string | null | undefined)
-	headers_override?: (string | null | undefined)
-	published?: (boolean | null | undefined)
-	open_to_new_members?: (boolean | null | undefined)
-	theme?: (string | null | undefined)
-	route_privacy?: (number | null | undefined)
-	allow_map?: (boolean | null | undefined)
-	is_app_disabled?: (boolean | null | undefined)
+	name?: (string | null)
+	description?: (string | null)
+	address?: (string | null)
+	image?: (string | null)
+	country_code?: (string | null)
+	latitude?: (number | null)
+	longitude?: (number | null)
+	radius?: (number | null)
+	sizes?: (string[] | null)
+	genders?: (string[] | null)
+	rules_override?: (string | null)
+	headers_override?: (string | null)
+	published?: (boolean | null)
+	open_to_new_members?: (boolean | null)
+	theme?: (string | null)
+	route_privacy: (number | null)
+	allow_map?: (boolean | null)
+	is_app_disabled?: (boolean | null)
 }
 
 export interface ChatCreateChannelRequest {
@@ -151,18 +151,18 @@ export interface Event {
 	longitude: number
 	address: string
 	price_value: number
-	price_currency?: (string | null | undefined)
-	price_type?: (EventPriceType | null | undefined)
+	price_currency: (string | null)
+	price_type: (EventPriceType | null)
 	link: string
 	date: string
-	date_end?: (string | null | undefined)
+	date_end: (string | null)
 	genders: string[]
-	chain_uid?: (string | null | undefined)
-	user_uid?: (string | null | undefined)
-	user_name?: (string | null | undefined)
-	user_email?: (string | null | undefined)
+	chain_uid: (string | null)
+	user_uid: (string | null)
+	user_name: (string | null)
+	user_email: (string | null)
 	image_url: string
-	chain_name?: (string | null | undefined)
+	chain_name: (string | null)
 }
 
 export interface EventCreateRequest {
@@ -176,9 +176,9 @@ export interface EventCreateRequest {
 	price_type: EventPriceType
 	link: string
 	date: string
-	date_end?: (string | null | undefined)
+	date_end: (string | null)
 	genders: string[]
-	chain_uid?: (string | null | undefined)
+	chain_uid?: string
 	image_url: string
 	image_delete_url: string
 }
@@ -195,21 +195,21 @@ export type EventPriceTypePerswap = string
 
 export interface EventUpdateRequest {
 	uid: string
-	name?: (string | null | undefined)
-	description?: (string | null | undefined)
-	address?: (string | null | undefined)
-	link?: (string | null | undefined)
-	price_value?: (number | null | undefined)
-	price_currency?: (string | null | undefined)
-	price_type?: (EventPriceType | null | undefined)
-	latitude?: (number | null | undefined)
-	longitude?: (number | null | undefined)
-	date?: (string | null | undefined)
-	date_end?: (string | null | undefined)
-	genders?: (string[] | null | undefined)
-	image_url?: (string | null | undefined)
-	image_delete_url?: (string | null | undefined)
-	chain_uid?: (string | null | undefined)
+	name?: (string | null)
+	description?: (string | null)
+	address?: (string | null)
+	link?: (string | null)
+	price_value?: (number | null)
+	price_currency?: (string | null)
+	price_type?: (EventPriceType | null)
+	latitude?: (number | null)
+	longitude?: (number | null)
+	date?: (string | null)
+	date_end?: (string | null)
+	genders?: (string[] | null)
+	image_url?: (string | null)
+	image_delete_url?: (string | null)
+	chain_uid?: (string | null)
 }
 
 export interface ImageUploadResponse {
@@ -227,7 +227,6 @@ export interface Info {
 export interface InfoTopLoop {
 	uid: string
 	name: string
-	description: string
 	members_count: number
 }
 
@@ -287,21 +286,21 @@ export interface RouteOrderSet {
 
 export interface User {
 	uid: string
-	email?: (string | null | undefined)
+	email: (string | null)
 	is_email_verified: boolean
 	is_root_admin: boolean
-	paused_until?: (string | null | undefined)
+	paused_until: (string | null)
 	name: string
 	phone_number: string
 	address: string
 	sizes: string[]
 	chains: UserChain[]
 	i18n: string
-	accepted_toh?: (boolean | null | undefined)
-	accepted_dpa?: (boolean | null | undefined)
-	notification_chain_uids?: (string[] | null | undefined)
-	chat_id?: (string | null | undefined)
-	chat_user_name?: (string | null | undefined)
+	accepted_toh?: (boolean | null)
+	accepted_dpa?: (boolean | null)
+	notification_chain_uids?: string[]
+	chat_id: (string | null)
+	chat_user_name: (string | null)
 }
 
 export interface UserChain {
@@ -348,19 +347,19 @@ export interface UserTransferChainRequest {
 }
 
 export interface UserUpdateRequest {
-	chain_uid?: (string | null | undefined)
-	user_uid?: (string | null | undefined)
-	name?: (string | null | undefined)
-	phone_number?: (string | null | undefined)
-	newsletter?: (boolean | null | undefined)
-	paused_until?: (string | null | undefined)
-	chain_paused?: (boolean | null | undefined)
-	sizes?: (string[] | null | undefined)
-	address?: (string | null | undefined)
-	i18n?: (string | null | undefined)
-	latitude?: (number | null | undefined)
-	longitude?: (number | null | undefined)
-	accepted_legal?: (boolean | null | undefined)
+	chain_uid?: string
+	user_uid?: string
+	name?: (string | null)
+	phone_number?: (string | null)
+	newsletter?: (boolean | null)
+	paused_until?: (string | null)
+	chain_paused?: (boolean | null)
+	sizes?: (string[] | null)
+	address?: (string | null)
+	i18n?: (string | null)
+	latitude?: (number | null)
+	longitude?: (number | null)
+	accepted_legal?: (boolean | null)
 }
 
 type _EventPriceTypeValue = Record<string, EventPriceType>

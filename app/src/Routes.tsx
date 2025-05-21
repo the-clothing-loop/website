@@ -70,8 +70,10 @@ import AddressList from "./pages/AddressList";
 import AddressItem from "./pages/AddressItem";
 import BagsList from "./pages/BagsList";
 import BulkyList from "./pages/BulkyList";
+import Chat from "./pages/Chat";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 
+import { ChatContext } from "./stores/Chat";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 
@@ -93,13 +95,13 @@ export default function Routes() {
   // initialize one signal, run initial calls and capture error events
   useEffect(() => {
     (async () => {
-      //     const platforms = getPlatforms();
-      //     if (platforms.includes("capacitor")) {
-      //       await OneSignalInitCap().catch((err) => {
-      //         console.error(err);
-      //         toastError(present, err, "Notification service is broken");
-      //       });
-      //     }
+      const platforms = getPlatforms();
+      if (platforms.includes("capacitor")) {
+        await OneSignalInitCap().catch((err) => {
+          console.error(err);
+          toastError(present, err, "Notification service is broken");
+        });
+      }
       await auth();
     })();
   }, []);
@@ -127,12 +129,12 @@ export default function Routes() {
     SplashScreen.hide();
     if (err) return connError(err);
 
-    // if (
-    //   success === IsAuthenticated.LoggedIn ||
-    //   success === IsAuthenticated.OfflineLoggedIn
-    // )
-    //   history.replace("/help");
-    // else history.replace("/onboarding");
+    if (
+      success === IsAuthenticated.LoggedIn ||
+      success === IsAuthenticated.OfflineLoggedIn
+    )
+      history.replace("/help");
+    else history.replace("/onboarding");
   }
 
   return (
@@ -170,6 +172,7 @@ function AppRoute() {
   const { t } = useTranslation();
   const { refresh, bags, authUser, chain, listOfChains } =
     useContext(StoreContext);
+  const { showNotification } = useContext(ChatContext);
   const isPaused = IsPaused(authUser, chain?.uid);
 
   const hasBagTooOldMe = useMemo(() => {
@@ -190,13 +193,13 @@ function AppRoute() {
     return hasBagTooOldMe;
   }, [bags]);
 
-  // function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
-  //   const tab = e.detail.tab;
-  //   const tabIndex = ChangeTabs.indexOf(tab);
-  //   // console.log("tab change", tab);
-  //   if (tabIndex === -1) return;
-  //   // refresh(tab);
-  // }
+  function handleTabsWillChange(e: CustomEvent<{ tab: string }>) {
+    const tab = e.detail.tab;
+    const tabIndex = ChangeTabs.indexOf(tab);
+    // console.log("tab change", tab);
+    if (tabIndex === -1) return;
+    refresh(tab);
+  }
 
   const hasOneChain = listOfChains?.length === 1;
   return (
@@ -209,6 +212,7 @@ function AppRoute() {
         <Route path="/address/:uid" component={AddressItem}></Route>
         <Route exact path="/bags" component={BagsList}></Route>
         <Route exact path="/bulky-items" component={BulkyList}></Route>
+        <Route exact path="/chat" component={Chat}></Route>
         <Route exact path="/settings" component={Settings}></Route>
         <Route
           exact
@@ -223,7 +227,7 @@ function AppRoute() {
       </IonRouterOutlet>
       <div slot="bottom" className="">
         <IonTabBar
-          // onIonTabsWillChange={handleTabsWillChange}
+          onIonTabsWillChange={handleTabsWillChange}
           className={hasOneChain ? "" : "tw-mb-4"}
         >
           <IonTabButton
@@ -255,6 +259,20 @@ function AppRoute() {
             ) : null}
             <IonLabel className="tw-text-[10px]">{t("bags")}</IonLabel>
           </IonTabButton>
+          {chain?.is_app_disabled ? (
+            <IonTabButton tab="chat" href="/chat" disabled={!chain}>
+              <IonIcon aria-hidden="true" icon={cubeOutline} />
+              <IonLabel>{t("bulkyItems")}</IonLabel>
+            </IonTabButton>
+          ) : (
+            <IonTabButton tab="chat" href="/chat" disabled={!chain}>
+              <IonIcon aria-hidden="true" icon={chatbubblesOutline} />
+              {showNotification ? (
+                <div className="tw-rounded-full tw-w-2.5 tw-h-2.5 tw-absolute tw-top-[3px] tw-left-[calc(50%+10px)] tw-ring-1 tw-ring-text tw-bg-danger"></div>
+              ) : null}
+              <IonLabel>{t("chat")}</IonLabel>
+            </IonTabButton>
+          )}
 
           <IonTabButton tab="settings" href="/settings">
             <IonIcon aria-hidden="true" icon={peopleCircleOutline} />

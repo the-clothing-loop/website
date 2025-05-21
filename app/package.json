@@ -39,11 +39,13 @@
     "@capacitor/share": "^6.0.3",
     "@capacitor/splash-screen": "^6.0.3",
     "@capacitor/status-bar": "6.0.2",
-    "@ionic/core": "^8.5.5",
-    "@ionic/react": "^8.5.5",
-    "@ionic/react-router": "^8.5.5",
+    "@ionic/core": "^8.4.1",
+    "@ionic/react": "^8.4.1",
+    "@ionic/react-router": "^8.4.1",
     "@ionic/storage": "^4.0.0",
     "@mapbox/mapbox-gl-geocoder": "^5.0.3",
+    "@mattermost/client": "9.7.0-0",
+    "@mattermost/types": "9.7.0-0",
     "@uidotdev/usehooks": "^2.4.1",
     "autoprefixer": "^10.4.20",
     "beautiful-react-hooks": "^5.0.2",
@@ -87,8 +89,16 @@
     "jsdom": "^25.0.0",
     "prettier": "^3.4.2",
     "typescript": "^5.7.3",
-    "vite": "^6.3.3",
+    "vite": "^5.4.2",
     "vite-plugin-pwa": "^0.21.1",
-    "vitest": "^3.1.2"
+    "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "@mattermost/client": {
+      "@mattermost/types": "$@mattermost/types"
+    },
+    "@mattermost/types": {
+      "typescript": "$typescript"
+    }
   }
 }

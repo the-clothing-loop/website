@@ -24,7 +24,7 @@ import {
   hourglassOutline,
   imageOutline,
 } from "ionicons/icons";
-import { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { ChangeEvent, RefObject, useRef, useState } from "react";
 import { BulkyItem } from "../api/typex2";
 import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 import toastError from "../../toastError";
@@ -39,24 +39,18 @@ enum State {
   loading,
 }
 
-export type OnSubmitOldBulky = (
-  title: string,
-  message: string,
-  file?: File | undefined | null,
-) => Promise<void>;
-
-export default function CreateUpdateOldBulky({
-  bulky,
+export default function CreateChatBulky({
+  onlyImage,
   didDismiss,
   modal,
-  onSubmitBulky,
+  onSendBulkyItem,
 }: {
-  bulky: BulkyItem | null;
+  onlyImage: boolean;
   modal: RefObject<HTMLIonModalElement>;
   didDismiss?: (
     e: IonModalCustomEvent<OverlayEventDetail<BulkyItem | null>>,
   ) => void;
-  onSubmitBulky: OnSubmitOldBulky;
+  onSendBulkyItem: OnSendMessageWithImage;
 }) {
   const { t } = useTranslation();
   const [bulkyTitle, setBulkyTitle] = useState("");
@@ -70,8 +64,8 @@ export default function CreateUpdateOldBulky({
   const refScrollRoot = useRef<HTMLDivElement>(null);
 
   function modalInit() {
-    setBulkyTitle(bulky?.title || "");
-    setBulkyMessage(bulky?.message || "");
+    setBulkyTitle("");
+    setBulkyMessage("");
     setLoadingUpload(State.idle);
     setImageData(undefined);
     setImage(undefined);
@@ -85,21 +79,23 @@ export default function CreateUpdateOldBulky({
     setLoadingUpload(State.idle);
   }
   async function createOrUpdate() {
-    if (!bulkyTitle) {
-      setError("title");
-      return;
+    if (!onlyImage) {
+      if (!bulkyTitle) {
+        setError("title");
+        return;
+      }
+      if (!bulkyMessage) {
+        setError("message");
+        return;
+      }
     }
-    if (!bulkyMessage) {
-      setError("message");
-      return;
-    }
-    if (!bulky && !image) {
+    if (!image) {
       setError("image-url");
       return;
     }
 
     try {
-      await onSubmitBulky(bulkyTitle, bulkyMessage, image);
+      await onSendBulkyItem(bulkyTitle, bulkyMessage, image);
 
       refScrollRoot.current?.scrollTo({
         top: 0,
@@ -204,50 +200,53 @@ export default function CreateUpdateOldBulky({
             <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
           <IonTitle>
-            {bulky ? t("updateBulkyItem") : t("createBulkyItem")}
+            {onlyImage ? t("sendPicture") : t("createBulkyItem")}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton
               onClick={createOrUpdate}
               color={!error ? "primary" : "danger"}
             >
-              {bulky ? t("save") : t("create")}
+              {onlyImage ? t("send") : t("create")}
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
-          <IonItem color={error === "title" ? "danger" : undefined}>
-            <IonInput
-              type="text"
-              autoCorrect="on"
-              autoCapitalize="words"
-              enterkeyhint="next"
-              label={t("title")}
-              labelPlacement="start"
-              value={bulkyTitle}
-              onIonInput={(e) => setBulkyTitle(e.detail.value + "")}
-            ></IonInput>
-          </IonItem>
-          <IonItem
-            lines="inset"
-            color={error === "message" ? "danger" : undefined}
-          >
-            <IonTextarea
-              className="ion-margin-bottom"
-              label={t("message")}
-              labelPlacement="start"
-              spellCheck="true"
-              autoGrow
-              autoCapitalize="sentences"
-              autoCorrect="on"
-              enterkeyhint="next"
-              value={bulkyMessage}
-              onIonInput={(e) => setBulkyMessage(e.detail.value + "")}
-            />
-          </IonItem>
-
+          {onlyImage ? null : (
+            <>
+              <IonItem color={error === "title" ? "danger" : undefined}>
+                <IonInput
+                  type="text"
+                  autoCorrect="on"
+                  autoCapitalize="words"
+                  enterkeyhint="next"
+                  label={t("title")}
+                  labelPlacement="start"
+                  value={bulkyTitle}
+                  onIonInput={(e) => setBulkyTitle(e.detail.value + "")}
+                ></IonInput>
+              </IonItem>
+              <IonItem
+                lines="inset"
+                color={error === "message" ? "danger" : undefined}
+              >
+                <IonTextarea
+                  className="ion-margin-bottom"
+                  label={t("message")}
+                  labelPlacement="start"
+                  spellCheck="true"
+                  autoGrow
+                  autoCapitalize="sentences"
+                  autoCorrect="on"
+                  enterkeyhint="next"
+                  value={bulkyMessage}
+                  onIonInput={(e) => setBulkyMessage(e.detail.value + "")}
+                />
+              </IonItem>
+            </>
+          )}
           <IonItem
             color={error === "image-url" ? "danger" : undefined}
             lines="none"
@@ -256,8 +255,7 @@ export default function CreateUpdateOldBulky({
               <IonLabel className="tw-mt-2 tw-mb-0">{t("image")}</IonLabel>
 
               <div className="tw-text-center tw-w-full">
-                {!(loadingUpload === State.loading) &&
-                (imageData || bulky?.image_url) ? (
+                {!(loadingUpload === State.loading) && imageData ? (
                   <IonCard
                     onClick={handleClickUpload}
                     className={`tw-my-8 tw-mx-[50px] tw-border tw-border-solid ${
@@ -265,7 +263,7 @@ export default function CreateUpdateOldBulky({
                     }`}
                   >
                     <IonImg
-                      src={imageData || bulky?.image_url}
+                      src={imageData}
                       alt={t("loading")}
                       className="tw-max-w-full"
                     />

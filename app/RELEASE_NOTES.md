@@ -154,7 +154,3 @@
 - Hosts can pause you on that Loop
 - Show hosts bag history
 - Add german language
-
-# 3.0
-
-- Chat room functionality
