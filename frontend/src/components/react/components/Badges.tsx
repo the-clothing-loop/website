@@ -6,7 +6,7 @@ import {
   SizeI18nKeys,
   Sizes,
 } from "../../../api/enums";
-import categories from "../util/categories";
+import { nonBabyClothingCategories as categories } from "../util/categories";
 import { useTranslation } from "react-i18next";
 
 export const SizeLetters: (t: TFunction) => Record<Sizes | string, string> = (
