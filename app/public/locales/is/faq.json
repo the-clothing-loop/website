@@ -1,0 +1,46 @@
+{
+  "howDoesItWork": {
+    "title": "How does the Clothing Loop work?",
+    "content": "The Clothing Loop is an initiative that allows people to easily exchange clothes with others in their neighborhood. It's fun, free, and sustainable! The idea is simple: (large) bags full of clothes travel along a route with participants in a particular city or neighborhood. Have the bag taken home by the person in the Loop for you. And then it's time to shop! Take items you like and put something back that's in good condition but ready for a new owner. Share a photo of your latest find in the corresponding communication channel. Nice to see where your stuff ends up! Then you take the bag to the next person on the list."
+  },
+  "whereAreTheBags": {
+    "title": "Where are the bags?",
+    "content": "At the bottom of this screen you will see a bag icon. If you click on it you can indicate that a bag is in your home. Click on the bag when you received it and scroll down the list of names until you find your name. Also indicate the date you received the bag. This way we can make sure that we know where the bags are and if they are still well distributed along the route. An overview of the distribution of the bags you can see at the Route."
+  },
+  "whoDoIGiveTheBagTo": {
+    "title": "Who do I pass the bag to?",
+    "content": "At the bottom of the screen you'll see a little bit of a house icon. Here you can see the route of the Loop. The bag goes to the person after you in the list. If you click on that name, you can find their address and contact details. Contact them and make an appointment about when to bring the bag. You can only see the details of the two participants before you and after you. Keep in mind that the route can always change due to the arrival of new participants. So always check the app before you pass the bag. This way we make sure that new participants are not missed and everyone is also meeting someone else. If you haven't received a response to your message from the person after two days, then feel free to contact the next list. So don't try to get this through the system. If someone doesn't respond to this, then give this to the host for a long time."
+  },
+  "whatCanYouTakeFromTheBag": {
+    "title": "What can you get out of the bag?",
+    "content": "Feel free to take out the bag what you like and use. Don't be too modest! Experience teaches that it gets too full faster than it empties. So you don't have to put the same number of clothes in it when you're out of it. If you don't have any supplements, no problem, and be especially picky about what you put in the bag. Better a bag with a few pearls than a full bag of moderate quality. That only brings the level down! If you see clothes in the bag that you've already put in the bag, then you take care of them again. This way we make sure that clothes don't stay in the chain. And finally, if you see clothes in the bag that you think don't meet the chain, you don't wash them and bring this together, and then we can isolate them from the top of the bag and then we can do"
+  },
+  "whatCantYouTakeFromTheBag": {
+    "title": "What can't you put in the bag?",
+    "content": "Put only whole, clean and unwashed clothes in the bag. Be really critical! A good gradometer is to think about whether you would like to put it in the bag yourself. Old shoes, socks, underwear and pants can't be in the bag anyway. If the bag is full, don't put any extra clothes in and wait for the next bag. Also look at the season: thicker wool sweaters in don colors don't want anyone to have in the summer. And you don't have to do everything in one go. It's nice to spread clothes over the bags. Ornaments can be made in a separate bag or box. And accessories can be added. Clothing bags (if they're so hot) or bags can't be made in your home (if they're so hot) or bags (if they're not in your home) can't be"
+  },
+  "whatToDoWithBulkyItems": {
+    "title": "What about clothes that take up a lot of space in the bag (like a winter coat)?",
+    "content": "If something doesn't fit in the bag, click \"Overall bid\" at the bottom of the box, and place a photo of your item. Other participants can contact you directly to pick it up from there. If there are multiple bids, you can lock the item, split it, or give it to the first respondent."
+  },
+  "awayOrBusy": {
+    "title": "- On vacation or too busy?",
+    "content": "So, you can put yourself on a break for a while. You can do this at Info. You can put in a break for how long. The person who is on the route for you can skip you and contact the next person on the route."
+  },
+  "foundSomethingYouLike": {
+    "title": "Sharing photos is fun!",
+    "content": "Show your finds! This is fun, especially for the previous owner of the clothing! It's also fun to show off which pearls you put in your own bags from time to time. Share your finds in the Loop group chat. If you find a really nice find with a good story, we'd love to hear it. Send an email to hello@clothingloop.org and maybe we'll share this story on our social media. This will inspire others to go out and exchange clothes, too."
+  },
+  "newMembers": {
+    "title": "I know someone who wants to join us!",
+    "content": "The more the merrier! Everyone is welcome to join the Clothing Loop. Ask the future exchanges to search for a Loop at their address at www.clothingloop.org. If the person wants to join your Loop, you can also share a specific link to your Loop, which you can find at Info. "
+  },
+  "privacy": {
+    "title": "Privacy",
+    "content": "How do we handle contact details and shared photos? All contact details, photos and other information are for use only within the Loop to which you sign up. They may not be shared outside the Loop without permission. By participating in the Clothing Loop you agree to share your contact details within the Loop. Only people who are allowed into the Loop have access to the app. New people can only participate if they have been added by the host. If you no longer participate, then leave the Loop (and pass this on to the host as well)."
+  },
+  "feedback": {
+    "title": "Feedback and suggestions",
+    "content": "If you have an idea or suggestion for your local Loop, send the host a message. If you have feedback or suggestion for the general website and organization, email hello@clothingloop.org. We would love to hear from you, because together we are creating this project."
+  }
+}

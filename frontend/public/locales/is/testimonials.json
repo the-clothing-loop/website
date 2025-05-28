@@ -1,0 +1,29 @@
+{
+  "testimonials": "Testimonials",
+  "arrTestimonials": [
+    {
+      "name": "Roos",
+      "message": "I think it's great to be able to 'shop' regularly without burdening my wallet or the environment."
+    },
+    {
+      "name": "Unknown",
+      "message": "Never too young to learn! My daughters, aged 13 and 16, regularly pick something cool from the bags. I love how this teaches them that clothes can very well be found second-hand. In my opinion, sustainability and environmental awareness should be an important part of any education!"
+    },
+    {
+      "name": "Participant in Barendrecht",
+      "message": "Someone in my Loop landed a new job. Guess who's dress she wore to her interview?"
+    },
+    {
+      "name": "Nienke",
+      "message": "The best part is being able to try clothes that you would never pick in the store, and realizing that you really like them."
+    },
+    {
+      "name": "Lia",
+      "message": "A nice bonus is that you get to know people in your neighborhood, usually neighbors with pretty green hearts as well. As a result, it is a small step – if you really need something but would rather not buy it – to toss a loan request into the Loop, such as for ski pants or a costume for a theme party!"
+    },
+    {
+      "name": "Ella",
+      "message": "After receiving the third bag, it hits me just what an incredible amount of clothes we have in our closets!"
+    }
+  ]
+}
