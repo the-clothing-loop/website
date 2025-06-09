@@ -51,20 +51,22 @@ type ChatChannelMessageListResponse struct {
 }
 
 type ChatChannel struct {
-	ID        uint   `json:"id"`
-	Name      string `json:"name" binding:"required,min=3"`
-	Color     string `json:"color" binding:"hexcolor"`
-	CreatedAt int64  `json:"created_at"`
-	ChainID   uint   `json:"-"`
-	ChainUID  string `json:"chain_uid" gorm:"-:migration;<-:false"`
+	ID            uint      `json:"id"`
+	Name          string    `json:"name" binding:"required,min=3"`
+	Color         string    `json:"color" binding:"hexcolor"`
+	CreatedAt     int64     `json:"created_at"`
+	ChainID       uint      `json:"-"`
+	ChainUID      string    `json:"chain_uid" gorm:"-:migration;<-:false"`
+	LastMessageAt time.Time `json:"-"`
 
 	ChatMessages []ChatMessage `json:"-"`
 }
 
 type ChatMessageCreateRequest struct {
-	ChainUID      string `json:"chain_uid" binding:"required,uuid"`
-	ChatChannelID uint   `json:"chat_channel_id" binding:"required"`
-	Message       string `json:"message"`
+	ChainUID       string   `json:"chain_uid" binding:"required,uuid"`
+	ChatChannelID  uint     `json:"chat_channel_id" binding:"required"`
+	Message        string   `json:"message"`
+	NotifyUserUIDs []string `json:"notify_user_uids"`
 }
 type ChatMessageRequest struct {
 	ChainUID      string `json:"chain_uid" form:"chain_uid" binding:"required,uuid"`

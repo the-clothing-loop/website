@@ -161,6 +161,7 @@ export interface ChatMessageCreateRequest {
 	chain_uid: string
 	chat_channel_id: number
 	message: string
+	notify_user_uids: string[]
 }
 
 export interface ChatMessageRequest {

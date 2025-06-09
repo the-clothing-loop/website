@@ -2,18 +2,14 @@ package controllers
 
 import (
 	"fmt"
-	"log/slog"
 	"net/http"
 	"time"
 
-	"github.com/OneSignal/onesignal-go-api"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/samber/lo"
-	"github.com/the-clothing-loop/website/server/internal/app"
 	"github.com/the-clothing-loop/website/server/internal/app/auth"
 	"github.com/the-clothing-loop/website/server/internal/models"
-	"github.com/the-clothing-loop/website/server/internal/views"
+	"github.com/the-clothing-loop/website/server/internal/services"
 	ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 	"github.com/the-clothing-loop/website/server/sharedtypes"
 	"gorm.io/gorm"
@@ -253,33 +249,15 @@ func ChatChannelMessageCreate(c *gin.Context) {
 		return
 	}
 
-	chatMessage := sharedtypes.ChatMessage{
-		Message:       body.Message,
-		SendByUID:     authUser.UID,
-		ChatChannelID: body.ChatChannelID,
-		CreatedAt:     time.Now().UnixMilli(),
-	}
-	err := db.Save(&chatMessage).Error
+	err := services.ChatSendMessage(db, services.ChatSendMessageOptions{
+		Message:        body.Message,
+		SendByUID:      authUser.UID,
+		ChatChannelID:  body.ChatChannelID,
+		NotifyUserUIDs: body.NotifyUserUIDs,
+	})
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
-	}
-
-	// send message to one signal
-	userUIDs, err := models.UserGetAllApprovedUserUIDsByChain(db, chain.ID)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-		return
-	}
-	userUIDs = lo.Filter(userUIDs, func(uid string, _ int) bool {
-		return uid != authUser.UID
-	})
-	notificationMessage := lo.Ellipsis(body.Message, 10)
-	err = app.OneSignalCreateNotification(db, userUIDs, *views.Notifications[views.NotificationEnumTitleChatMessage], onesignal.StringMap{
-		En: &notificationMessage,
-	})
-	if err != nil {
-		slog.Error("Unable to send notification", "err", err)
 	}
 
 	c.Status(http.StatusOK)
