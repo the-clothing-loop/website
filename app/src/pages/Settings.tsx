@@ -23,6 +23,7 @@ import {
   SelectChangeEventDetail,
   useIonActionSheet,
   useIonAlert,
+  useIonRouter,
   useIonToast,
 } from "@ionic/react";
 import {
@@ -70,6 +71,7 @@ import {
   OneSignalCheckPermissions,
   OneSignalRequestPermissions,
 } from "../onesignal";
+import { userUpdate } from "../api/user";
 const VERSION = import.meta.env.VITE_APP_VERSION;
 
 type State = { openChainSelect?: boolean } | undefined;
@@ -87,6 +89,8 @@ export default function Settings() {
     isChainAdmin,
     isThemeDefault,
     listOfChains,
+    bags,
+    refresh,
   } = useContext(StoreContext);
   const [present] = useIonToast();
   const { state } = useLocation<State>();
@@ -102,6 +106,8 @@ export default function Settings() {
   const [notificationPermission, setNotificationPermission] = useState<
     null | boolean
   >(null);
+  const userBags = bags.filter((b) => b.user_uid === authUser?.uid);
+  const router = useIonRouter();
 
   // Check notification permissions every 3 seconds
   useEffect(() => {
@@ -170,28 +176,21 @@ export default function Settings() {
           role: "destructive",
         },
       ]);
-    } else {
+    } else if (userBags.length > 0) {
       presentActionSheet({
-        header: t("pauseUntil"),
+        header: "You are holding a bag. Are you sure you want to pause?",
 
         buttons: [
           {
-            text: t("selectPauseDuration"),
-            handler: () =>
-              setTimeout(
-                () => refSelectPauseExpiryModal.current?.present(),
-                100,
-              ),
-          },
-          {
-            text: t("pauseOnlyLoop"),
-            handler: () => setPause(true, chain!.uid),
-          },
-          {
-            text: t("untilITurnItBackOn"),
-            handler: () => {
-              setPause(true);
+            text: t("YesPauseParticipation"),
+            handler: async () => {
+              await dismissCurrentActionSheet();
+              showPauseOptions();
             },
+          },
+          {
+            text: t("NoGoToBags"),
+            handler: () => router.push("/bags", "root"),
           },
           {
             text: t("cancel"),
@@ -199,9 +198,53 @@ export default function Settings() {
           },
         ],
       });
+    } else {
+      showPauseOptions();
     }
   }
 
+  async function showPauseOptions() {
+    console.log("here");
+    await presentActionSheet({
+      header: t("pauseUntil"),
+
+      buttons: [
+        {
+          text: t("selectPauseDuration"),
+          handler: () =>
+            setTimeout(() => refSelectPauseExpiryModal.current?.present(), 100),
+        },
+        {
+          text: t("pauseOnlyLoop"),
+          handler: () => setPause(true, chain!.uid),
+        },
+        {
+          text: t("untilITurnItBackOn"),
+          handler: () => {
+            setPause(true);
+          },
+        },
+        {
+          text: t("cancel"),
+          role: "cancel",
+        },
+      ],
+    });
+  }
+  async function dismissCurrentActionSheet() {
+    const actionSheet = document.querySelector("ion-action-sheet");
+    if (actionSheet) {
+      await actionSheet.dismiss();
+    }
+  }
+  async function updateUser(isUserPaused: boolean) {
+    await userUpdate({
+      user_uid: authUser?.uid,
+      chain_uid: chain?.uid,
+      chain_paused: !isUserPaused,
+    }).catch((err) => console.error(err));
+    await refresh("settings");
+  }
   async function handleChangeRoutePrivacy(rp: number) {
     if (!chain) return;
     await chainUpdate({
