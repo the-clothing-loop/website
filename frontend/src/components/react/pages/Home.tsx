@@ -61,8 +61,15 @@ export default function Home() {
   }, []);
 
   const { maxOuput, topLoopsAdjusted } = useMemo(() => {
+    if (!topLoops?.length) {
+      return {
+        maxOuput: 0,
+        topLoopsAdjusted: [],
+      };
+    }
+    const lastTopLopsIndex = topLoops.length - 1;
     const maxInput = topLoops ? topLoops[0].members_count : 100;
-    const minInput = topLoops ? topLoops[9].members_count : 50;
+    const minInput = topLoops ? topLoops[lastTopLopsIndex].members_count : 50;
 
     const maxOuput = adjustValue(maxInput, minInput, maxInput) / 0.9;
 
@@ -76,7 +83,7 @@ export default function Home() {
         ),
       })) || [];
 
-    return { maxInput, minInput, maxOuput, topLoopsAdjusted };
+    return { maxOuput, topLoopsAdjusted };
   }, [topLoops]);
 
   const supporters: Supporter[] = [
