@@ -161,10 +161,10 @@
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
   "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
   "chat": "Chat",
-  "deleteRoom?": "Delete room?",
-  "editRoom": "Edit room",
-  "roomName": "Room Name",
-  "roomColor": "Room Color",
+  "deleteChannel?": "Delete channel?",
+  "editChannel": "Edit channel",
+  "channelName": "Channel Name",
+  "channelColor": "Channel Color",
   "sendPicture": "Send picture",
-  "chatRoomOptions": "Chat Room Options"
+  "chatChannelOptions": "Chat Channel Options"
 }

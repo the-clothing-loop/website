@@ -161,10 +161,10 @@
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
   "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
   "chat": "チャット",
-  "deleteRoom?": "ルームを削除しますか？",
-  "editRoom": "教室を編集",
-  "roomName": "部屋名",
-  "roomColor": "部屋の色",
+  "deleteChannel?": "ルームを削除しますか？",
+  "editChannel": "教室を編集",
+  "channelName": "部屋名",
+  "channelColor": "部屋の色",
   "sendPicture": "画像を送信",
-  "chatRoomOptions": "チャットルームオプション"
+  "chatChannelOptions": "チャットルームオプション"
 }

@@ -161,10 +161,10 @@
   "resetHeadersDesc": "Retournez les en-têtes de votre boucle aux en-têtes par défaut.",
   "areYouSureYouWantToResetHeaders": "Vous êtes sûr de réinitialiser les en-têtes de la boucle à la défuel?",
   "chat": "Discuter",
-  "deleteRoom?": "Supprimer la salle?",
-  "editRoom": "Modifier la salle",
-  "roomName": "Nom de la pièce",
-  "roomColor": "Couleur de la pièce",
+  "deleteChannel?": "Supprimer la salle?",
+  "editChannel": "Modifier la salle",
+  "channelName": "Nom de la pièce",
+  "channelColor": "Couleur de la pièce",
   "sendPicture": "Envoyer une photo",
-  "chatRoomOptions": "Options du Salon de Discussion"
+  "chatChannelOptions": "Options du Salon de Discussion"
 }

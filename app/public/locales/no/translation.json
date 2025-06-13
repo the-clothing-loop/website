@@ -161,10 +161,10 @@
   "resetHeadersDesc": "Sett loopens topptekster på standardsidene.",
   "areYouSureYouWantToResetHeaders": "Er du sikker på at du vil tilbakestille loopens topptekster for å deaktivere?",
   "chat": "Samtale",
-  "deleteRoom?": "Slette rom?",
-  "editRoom": "Rediger rom",
-  "roomName": "Navn på rom",
-  "roomColor": "Rommets farge",
+  "deleteChannel?": "Slette rom?",
+  "editChannel": "Rediger rom",
+  "channelName": "Navn på rom",
+  "channelColor": "Rommets farge",
   "sendPicture": "Send bilde",
-  "chatRoomOptions": "Chat rom-innstillinger"
+  "chatChannelOptions": "Chat rom-innstillinger"
 }

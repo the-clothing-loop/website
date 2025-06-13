@@ -161,10 +161,10 @@
   "resetHeadersDesc": "Setzen Sie die Schleife-Header auf die Standard-Header.",
   "areYouSureYouWantToResetHeaders": "Sind Sie sicher, dass Sie die Schleife-Header auf Abgas zurücksetzen möchten?",
   "chat": "Chat",
-  "deleteRoom?": "Raum löschen?",
-  "editRoom": "Raum bearbeiten",
-  "roomName": "Raumname",
-  "roomColor": "Raumfarbe",
+  "deleteChannel?": "Raum löschen?",
+  "editChannel": "Raum bearbeiten",
+  "channelName": "Raumname",
+  "channelColor": "Raumfarbe",
   "sendPicture": "Bild senden",
-  "chatRoomOptions": "Chatraumoptionen"
+  "chatChannelOptions": "Chatraumoptionen"
 }

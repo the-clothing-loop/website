@@ -161,10 +161,10 @@
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
   "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
   "chat": "Chatt",
-  "deleteRoom?": "Ta bort rum?",
-  "editRoom": "Redigera rum",
-  "roomName": "Rummets namn",
-  "roomColor": "Rummets färg",
+  "deleteChannel?": "Ta bort rum?",
+  "editChannel": "Redigera rum",
+  "channelName": "Rummets namn",
+  "channelColor": "Rummets färg",
   "sendPicture": "Skicka bild",
-  "chatRoomOptions": "Alternativ för chattrum"
+  "chatChannelOptions": "Alternativ för chattrum"
 }

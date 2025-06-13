@@ -161,10 +161,10 @@
   "resetHeadersDesc": "Reset your loop's headers to the default headers.",
   "areYouSureYouWantToResetHeaders": "Are you sure you want to reset the loop's headers to defualt?",
   "chat": "Chatten",
-  "deleteRoom?": "Ruimte verwijderen?",
-  "editRoom": "Ruimte bewerken",
-  "roomName": "Kamer Naam",
-  "roomColor": "Kleur kamer",
+  "deleteChannel?": "Ruimte verwijderen?",
+  "editChannel": "Ruimte bewerken",
+  "channelName": "Kamer Naam",
+  "channelColor": "Kleur kamer",
   "sendPicture": "Afbeelding verzenden",
-  "chatRoomOptions": "Chatruimte opties"
+  "chatChannelOptions": "Chatruimte opties"
 }

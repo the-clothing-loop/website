@@ -161,10 +161,10 @@
   "resetHeadersDesc": "إعادة تعيين رؤوس الحلقة إلى الرؤوس الافتراضية.",
   "areYouSureYouWantToResetHeaders": "هل أنت متأكد من رغبتك في إعادة تعيين رؤوس الحلقة لتنزيل؟",
   "chat": "الدردشة",
-  "deleteRoom?": "حذف الغرفة؟",
-  "editRoom": "تحرير الغرفة",
-  "roomName": "اسم الغرفة",
-  "roomColor": "لون الغرفة",
+  "deleteChannel?": "حذف الغرفة؟",
+  "editChannel": "تحرير الغرفة",
+  "channelName": "اسم الغرفة",
+  "channelColor": "لون الغرفة",
   "sendPicture": "إرسال صورة",
-  "chatRoomOptions": "خيارات غرفة الدردشة"
+  "chatChannelOptions": "خيارات غرفة الدردشة"
 }
