@@ -149,14 +149,14 @@ function SizeCatBadges({
       </div>
       <ul className="font-semibold flex flex-row flex-shrink flex-wrap text-sm cursor-default">
         {props.text ? (
-          <li key="text" className="ml-1 py-1 whitespace-nowrap">
+          <li key="text" className="ms-1 py-1 whitespace-nowrap">
             {props.text}
           </li>
         ) : null}
         {props.sizes.map((s) => {
           return (
             <li
-              className="ml-1 last:mr-1 tooltip tooltip-top before:text-xs py-1"
+              className="ms-1 last:me-1 tooltip tooltip-top before:text-xs py-1"
               data-tip={t(SizeI18nKeys[s])}
               key={s}
             >

@@ -323,7 +323,7 @@ export default function Home() {
                       <div className="font-bold text-sm truncate">
                         {tp.name}
                       </div>
-                      <div className="text-xs min-w-24 text-right">
+                      <div className="text-xs min-w-24 ltr:text-right rtl:text-left">
                         {tp.members_count} {t("participants")}
                       </div>
                     </div>
