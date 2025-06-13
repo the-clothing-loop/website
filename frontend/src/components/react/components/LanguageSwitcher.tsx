@@ -64,10 +64,15 @@ export default function LanguageSwitcher(props: {
     >
       <label
         tabIndex={0}
-        className="btn btn-outline w-40 justify-between"
+        className="btn btn-outline w-40 justify-between flex flex-row"
         onClick={onToggle}
+        dir="ltr"
       >
-        {btnLabelLanguage.title}
+        <p
+          className={`grow ${btnLabelLanguage.rtl ? "text-right" : "text-left"}`}
+        >
+          {btnLabelLanguage.title}
+        </p>
         <img
           className="w-6 ml-2"
           src={btnLabelLanguage.flag}
