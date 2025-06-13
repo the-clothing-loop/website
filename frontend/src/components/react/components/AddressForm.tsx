@@ -249,7 +249,7 @@ export default function AddressForm(props: {
 
               <input
                 type="checkbox"
-                className="checkbox checkbox-sm checkbox-secondary me-3"
+                className="checkbox checkbox-sm checkbox-secondary ms-3"
                 checked={openAddress}
                 onChange={(e) => setOpenAddress(e.target.checked)}
               />

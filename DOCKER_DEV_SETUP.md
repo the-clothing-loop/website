@@ -46,18 +46,26 @@ brew install make
 
 1. Open a terminal and cd into `clothing-loop`
 2. Run `make docker-start` this will setup and start the container, wait till this finishes (if the docker won't start it might help to open Docker Desktop first and try again, see: [stackoverflow error-during-connect-this-error-may-indicate-that-the-docker-daemon-is-not-runn](https://stackoverflow.com/questions/67788960/error-during-connect-this-error-may-indicate-that-the-docker-daemon-is-not-runn))
-3. In new tab run `make db-setup` to seed the db with dummy data.
+3. Please skip (currently not working): ~~In new tab run `make db-setup` to seed the db with dummy data.~~
 4. If you do not have a MYSQL client, install one, like DBeaver (cross-platform, advised), TablePlus (MacOS) or HeidiSQL (Windows).
    The server is `128.0.0.1` and user: `root` and password is `fb4aeaa6d860dbabe785675e` (from docker-compose.yml). The tables should be populated.
-5. The frontend should be visible at <http://localhost:8086> in your browser of choice.
+5. The frontend should be visible at <http://www.clothingloop.localhost:8080/> in your browser of choice.
 
 ## 4. Login
 
 1. Try logging in using `host@example.com` it will send you a verification email.
-2. go to <http://localhost:8025/mailpit/> to see the self hosted inbox (Mailpit), verify from there, now you should be logged in as a "host".
+2. go to <http://localhost:8025/> to see the self hosted inbox (Mailpit), verify from there, now you should be logged in as a "host".
 
 The following dummy accounts are available:
 
 - Super user: `admin@example.com`
 - Host: `host@example.com`
 - Participant: `user@example.com`
+
+## Development links
+
+| Name | Link |
+| ---- | ----- |
+| mailpit | http://localhost:8025/ |
+| website | http://www.clothingloop.localhost:8080/ |
+| app | http://app.clothingloop.localhost:8080/ |

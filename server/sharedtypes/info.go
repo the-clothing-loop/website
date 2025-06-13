@@ -3,6 +3,7 @@ package sharedtypes
 type InfoTopLoop struct {
 	UID          string `json:"uid" gorm:"uid"`
 	Name         string `json:"name" gorm:"name"`
+	Description  string `json:"description" gorm:"description"`
 	MembersCount int    `json:"members_count" gorm:"members_count"`
 }
 

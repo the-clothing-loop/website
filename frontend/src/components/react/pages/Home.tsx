@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Counters from "../components/Counters/Counters";
 import Carousel from "../components/Carousel";
 import Testimonials from "../components/Testimonials";
@@ -9,6 +9,8 @@ import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 import { $authUser } from "../../../stores/auth";
 import getLanguages from "../../../languages";
+import { infoTopTenGet } from "../../../api/info";
+import type { InfoTopLoop } from "../../../api/typex2";
 
 const IS_PRODUCTION =
   import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
@@ -26,6 +28,7 @@ export default function Home() {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
   const ref = useRef() as any;
+  const [topLoops, setTopLoops] = useState<InfoTopLoop[]>();
 
   const isVisible = useIntersectionObserver(ref, {
     root: null,
@@ -44,6 +47,44 @@ export default function Home() {
       window.location.href = localizePath("/", lang);
     }
   });
+  async function fetchLargestLoops() {
+    try {
+      const largest_loops = await infoTopTenGet();
+      setTopLoops(largest_loops.data);
+    } catch (err: any) {
+      console.warn(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchLargestLoops();
+  }, []);
+
+  const { maxOuput, topLoopsAdjusted } = useMemo(() => {
+    if (!topLoops?.length) {
+      return {
+        maxOuput: 0,
+        topLoopsAdjusted: [],
+      };
+    }
+    const lastTopLopsIndex = topLoops.length - 1;
+    const maxInput = topLoops ? topLoops[0].members_count : 100;
+    const minInput = topLoops ? topLoops[lastTopLopsIndex].members_count : 50;
+
+    const maxOuput = adjustValue(maxInput, minInput, maxInput) / 0.9;
+
+    const topLoopsAdjusted =
+      topLoops?.map((v) => ({
+        ...v,
+        members_count_adjusted: adjustValue(
+          maxInput,
+          minInput,
+          v.members_count,
+        ),
+      })) || [];
+
+    return { maxOuput, topLoopsAdjusted };
+  }, [topLoops]);
 
   const supporters: Supporter[] = [
     {
@@ -265,6 +306,38 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <section className="mb-12 md:mb-24">
+          <div className="flex flex-row flex-wrap items-center justify-center mx-6">
+            <iframe
+              className="w-full h-[800px] px-6 overflow-hidden border-8 border-secondary sm:w-[600px] aspect-video mb-16"
+              scrolling="no"
+              referrerPolicy="no-referrer"
+              id="instagram-embed"
+              src="https://www.instagram.com/p/DDZ5jrdxoRy/embed"
+            ></iframe>
+            <div className="w-full md:w-1/2 px-5 lg:px-20">
+              {topLoopsAdjusted.map((tp) => {
+                return (
+                  <div className="mb-4" key={tp.uid}>
+                    <div className="flex justify-between">
+                      <div className="font-bold text-sm truncate">
+                        {tp.name}
+                      </div>
+                      <div className="text-xs min-w-24 ltr:text-right rtl:text-left">
+                        {tp.members_count} {t("participants")}
+                      </div>
+                    </div>
+                    <progress
+                      className="progress progress-secondary w-full"
+                      value={tp.members_count_adjusted}
+                      max={maxOuput}
+                    ></progress>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
       </div>
       <div className="bg-turquoise">
         <div className="w-full sm:max-md:max-w-screen-sm md:max-w-screen-xl mx-auto">
@@ -402,4 +475,13 @@ export default function Home() {
       <Carousel />
     </>
   );
+}
+
+function adjustValue(
+  maxInput: number,
+  minInput: number,
+  inputValue: number,
+): number {
+  const range = 9 - 5;
+  return range + ((inputValue - minInput) / (maxInput - minInput)) * range;
 }

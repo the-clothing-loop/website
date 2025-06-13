@@ -54,7 +54,7 @@ export function useChatCreateEdit(props: {
         props.onDeleteChannel(props.selectedChannel!.id);
       };
       presentAlert({
-        header: t("deleteRoom?"),
+        header: t("deleteChannel?"),
         buttons: [
           {
             text: t("cancel"),
@@ -138,7 +138,9 @@ export default function ChatCreateEdit({
           <IonButtons slot="start">
             <IonButton onClick={cancel}>{t("cancel")}</IonButton>
           </IonButtons>
-          <IonTitle>{channelEdit ? t("editRoom") : t("createRoom")}</IonTitle>
+          <IonTitle>
+            {channelEdit ? t("editChannel") : t("createRoom")}
+          </IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={onCreateEditChannelSubmit}>
               {channelEdit ? t("edit") : t("create")}
@@ -151,14 +153,14 @@ export default function ChatCreateEdit({
           <IonItem lines="none">
             <IonInput
               type="text"
-              label={t("roomName")}
+              label={t("channelName")}
               labelPlacement="start"
               max={18}
               spellCheck
               autoCapitalize="words"
               maxlength={18}
               counter
-              placeholder={t("roomName")}
+              placeholder={t("channelName")}
               onFocus={(e) => (e.target as any as HTMLInputElement).select()}
               value={channelName}
               onIonInput={(e) =>
@@ -168,7 +170,7 @@ export default function ChatCreateEdit({
           </IonItem>
           <IonItem lines="none">
             <IonLabel>
-              {t("roomColor")}
+              {t("channelColor")}
               <div className="tw-grid tw-grid-cols-[repeat(auto-fill,75px)] tw-justify-center">
                 {channelColors.map((c) => {
                   const selected = c === channelColor;

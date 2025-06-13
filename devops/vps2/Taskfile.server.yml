@@ -3,7 +3,6 @@ version: "3"
 tasks:
   service:caddy:reload: sudo systemctl reload caddy
   service:caddy:restart: sudo systemctl restart caddy
-  service:mm:restart: sudo systemctl restart mattermost
   publish:github:api:acc:
     - task-services stop my_api_acc
     - sudo mv /home/admin/acc.api.clothingloop.org/server.next /home/admin/acc.api.clothingloop.org/server

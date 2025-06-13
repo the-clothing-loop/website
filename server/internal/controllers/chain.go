@@ -419,7 +419,7 @@ func ChainDelete(c *gin.Context) {
 		return
 	}
 
-	if ok := services.ChainDelete(c, db, chain); !ok {
+	if !services.ChainDelete(c, db, chain) {
 		return
 	}
 }

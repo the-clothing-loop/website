@@ -2,14 +2,15 @@ import { useState, useRef, useEffect } from "react";
 
 import SingleCounter from "./SingleCounter";
 import useIntersectionObserver from "./hooks";
-import { type InfoBody, infoGet } from "../../../../api/info";
+import { infoGet } from "../../../../api/info";
 import { useTranslation } from "react-i18next";
+import type { Info } from "../../../../api/typex2";
 
 export default function Counters() {
   const { t } = useTranslation();
   const containerRef = useRef(null);
 
-  const [info, setInfo] = useState<InfoBody>();
+  const [info, setInfo] = useState<Info>();
 
   useEffect(() => {
     infoGet().then((res) => setInfo(res.data));

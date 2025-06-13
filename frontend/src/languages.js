@@ -6,10 +6,8 @@ export default function getLanguages(isProduction) {
   /**
    * @typedef {string[]}
    */
-  let languages = ["en", "nl", "de", "fr", "es", "sv", "he"];
-  if (!isProduction) {
-    languages = languages.concat(["it", "pt"]);
-  }
+  let languages = getLanguageFlags(isProduction).map((f) => f.lng);
+
   return languages;
 }
 
@@ -34,6 +32,7 @@ export function getLanguageFlags(isProduction) {
   if (!isProduction) {
     flags = flags.concat([
       { lng: "pt", title: "Português", flag: "/images/flags/pt.svg" },
+      { lng: "ar", title: "العربية", flag: "/images/flags/ps.svg", rtl: true },
     ]);
   }
   return flags;

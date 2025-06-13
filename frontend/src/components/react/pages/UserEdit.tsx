@@ -95,7 +95,7 @@ export default function UserEdit() {
             isNewsletterRequired={userIsAnyChainAdmin && !user.is_root_admin}
           />
 
-          <div className="flex">
+          <div className="flex flex-row gap-4">
             <button
               type="button"
               onClick={() => window.history.back()}
@@ -106,7 +106,7 @@ export default function UserEdit() {
 
             <button
               type="submit"
-              className="btn btn-primary ml-4"
+              className="btn btn-primary"
               form="address-form"
             >
               {t("submit")}

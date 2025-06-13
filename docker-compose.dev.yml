@@ -20,11 +20,10 @@ services:
     working_dir: /app
     command: sh -c 'npm i; npm run start:docker'
   server:
-    image: golang:1.23-alpine
+    image: golang:alpine
     depends_on:
       - db
       - mailpit
-      - mattermost
     ports:
       - 127.0.0.1:8084:8084
       # Mobile testing
@@ -64,29 +63,7 @@ services:
       - MYSQL_PASSWORD=72bd3937e91363a747f810e7
     volumes:
       - mysql:/var/lib/mysql
-      - ../../server/sql:/scripts
-  mattermost:
-    platform: linux/amd64
-    image: mattermost/mattermost-preview:10.1.3
-    ports: 
-      # - 127.0.0.1:8065:8065
-      - 127.0.0.1:5432:5432
-    volumes:
-      - mattermost_prev_db:/var/lib/postgresql/data
-      - mattermost_prev_config:/mm/mattermost/config
-      - mattermost_prev_data:/mm/mattermost-data
-  mattermost_mail:
-    image: golang:1.22.3-alpine
-    ports:
-      - 2525:2525
-    depends_on:
-      - db
-    volumes:
-      - ./server:/app
-    environment:
-      - ENV=development
-    working_dir: /app
-    command: "go run cmd/mm-mail/main.go -c config.dev.yml"
+      - ./server/sql:/scripts
   caddy:
     image: caddy:alpine
     # network_mode: host
@@ -102,8 +79,5 @@ volumes:
   caddy_data:
   caddy_config:
   mysql:
-  mattermost_prev_db:
-  mattermost_prev_config:
-  mattermost_prev_data:
   go_cache:
   npm_cache:

@@ -20,14 +20,16 @@ https://crowdin.com/project/the-clothing-loop
 
 Go here to setup your computer to run this website locally and create contributions: [docker/dev/README.md](/docker/dev/README.md)
 
-If you want to setup this website on a linux development machine you can use the following documentation: [INSTALL_LINUX.md](/INSTALL_LINUX.md)
+
+Old: ~~If you want to setup this website on a linux development machine you can use the following documentation: [INSTALL_LINUX.md](/INSTALL_LINUX.md)~~
 
 Checkout these readmes for more in-depth documentation:
 
 - Golang Server: [README.md](/server/README.md)
 - React Frontend: [README.md](/frontend/README.md)
-- Ionic App: [README.md](/app/README.md)
-- Ansible Devops: [README.md](/devops/README.md)
+- Old: ~~Ionic App: [README.md](/app/README.md)~~
+- Old: ~~Ansible Devops: [README.md](/devops/vps1/README.md)~~
+- React Native App : [README.md](https://github.com/the-clothing-loop/app2/blob/main/README.md)
 - SQL scripts: [README.md](/server/sql/README.md)
 
 Here are some flow diagrams to demonstrate some complex logic [README.md](/server/docs/README.md)

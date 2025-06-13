@@ -41,3 +41,9 @@ test-prepush:
 	cd server && make lint-test test-ci
 	cd frontend && npm run lint:test
 	cd app && npm run test && npm run lint:test
+
+
+dev: docker-start
+
+gen-typex:
+	cd server && make gen-typex

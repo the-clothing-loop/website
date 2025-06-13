@@ -1,0 +1,16 @@
+meta {
+  name: channel delete
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{base}}/v2/chat/channel/delete?chat_channel_id=2&chain_uid={{chainUID}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  chat_channel_id: 2
+  chain_uid: {{chainUID}}
+}

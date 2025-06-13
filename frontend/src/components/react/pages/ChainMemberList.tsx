@@ -1551,6 +1551,24 @@ function RouteTable(props: {
   const [dragging, setDragging] = useState<string>("");
   const [dragTarget, setDragTarget] = useState<string>("");
 
+  function mapUsersToOrder(users: { uid: string }[]): {
+    [uid: string]: number;
+  } {
+    return users.reduce<Record<string, number>>((acc, user, index) => {
+      acc[user.uid] = index + 1;
+      return acc;
+    }, {});
+  }
+
+  const [routeOrder, setRouteOrder] = useState<{ [uid: string]: number }>(() =>
+    mapUsersToOrder(props.users),
+  );
+
+  useEffect(() => {
+    const newRouteOrder = mapUsersToOrder(props.users);
+    setRouteOrder(newRouteOrder);
+  }, [props.users]);
+
   function setRoute(r: typeof props.route) {
     routeSetOrder(props.chain.uid, r);
     props.setRoute(r);
@@ -1562,8 +1580,8 @@ function RouteTable(props: {
     setDragTarget("");
     setRoute(reOrder(props.route, fromIndex, toIndex));
   }
-  function handleInputChangeRoute(e: ChangeEvent<HTMLInputElement>, uid: UID) {
-    const toIndex = e.target.valueAsNumber - 1;
+  function handleInputChangeRoute(uid: string) {
+    const toIndex = routeOrder[uid] - 1;
     const fromIndex = props.route.indexOf(uid);
     setRoute(reOrder(props.route, fromIndex, toIndex));
   }
@@ -1598,8 +1616,6 @@ function RouteTable(props: {
             </thead>
             <tbody>
               {props.users.map((u: User, i) => {
-                const routeOrderNumber = i + 1;
-
                 let classTdDragging = dragging === u.uid ? "bg-grey/[.1]" : "";
                 if (dragTarget === u.uid) {
                   const orderTarget = props.route.indexOf(dragTarget);
@@ -1634,16 +1650,27 @@ function RouteTable(props: {
                   >
                     <td className={`${classTdDragging} text-center`}>
                       <span className="hidden lg:inline-block py-1 px-2 bg-base-200 rounded-lg font-semibold">
-                        {routeOrderNumber}
+                        {routeOrder[u.uid]}
                       </span>
                       <input
                         onClick={(e) => (e.target as any).select()}
-                        onChange={(e) => handleInputChangeRoute(e, u.uid)}
+                        onChange={(e) =>
+                          setRouteOrder({
+                            ...routeOrder,
+                            [u.uid]: e.target.valueAsNumber,
+                          })
+                        }
+                        onBlur={() => handleInputChangeRoute(u.uid)}
+                        onKeyUp={(e) => {
+                          if (e.key === "Enter") {
+                            handleInputChangeRoute(u.uid);
+                          }
+                        }}
                         max={props.route.length + 1}
                         min={1}
                         type="number"
                         className="inline-block lg:hidden input-reset w-14 py-1 px-2 bg-base-200 rounded-lg font-semibold text-center"
-                        value={routeOrderNumber}
+                        value={routeOrder[u.uid]}
                       />
 
                       <div

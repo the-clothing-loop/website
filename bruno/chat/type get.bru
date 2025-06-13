@@ -1,0 +1,15 @@
+meta {
+  name: type get
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/v2/chat/type?chain_uid={{chainUID}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  chain_uid: {{chainUID}}
+}

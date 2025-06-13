@@ -1,0 +1,19 @@
+meta {
+  name: message create
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base}}/v2/chat/channel/message/create
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "chat_channel_id": 1,
+    "message": "my mocha is cold",
+    "chain_uid": "{{chainUID}}"
+  }
+}

@@ -22,7 +22,7 @@ export default function ChatRoomActions({
   const { t } = useTranslation();
   return (
     <IonActionSheet
-      header={t("chatRoomOptions")}
+      header={t("chatChannelOptions")}
       key="actionSheet"
       isOpen={isChannelActionSheetOpen}
       onDidDismiss={() => setIsChannelActionSheetOpen(false)}

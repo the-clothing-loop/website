@@ -308,14 +308,7 @@ export default function TermsOfUse() {
               </li>
             </ol>
           </p>
-          <h2>Contact details</h2>
-
-          <p>Do you have any questions? Then contact us at:</p>
-          <p>
-            Email:{" "}
-            <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
-          </p>
-          <p>Or by post:</p>
+          <h2>Address</h2>
           <p>The Clothing Loop</p>
           <p>
             <address>
@@ -326,6 +319,13 @@ export default function TermsOfUse() {
               <br />
               The Netherlands
             </address>
+          </p>
+          <h2>Contact details</h2>
+
+          <p>Do you have any questions? Then contact us at:</p>
+          <p>
+            Email:{" "}
+            <a href="mailto:hello@clothingloop.org">hello@clothingloop.org</a>
           </p>
         </div>
       </div>
