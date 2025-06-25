@@ -5,6 +5,9 @@ import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { useTranslation } from "react-i18next";
 import { addToastError } from "../../../stores/toast";
+import { $authUser } from "../../../stores/auth";
+import { useStore } from "@nanostores/react";
+import { useRef } from "react";
 
 interface FormValues {
   name: string;
@@ -16,6 +19,10 @@ export const Newsletter = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const authUser = useStore($authUser);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,6 +44,53 @@ export const Newsletter = () => {
       setSubmitted(true);
     })();
   }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      addToastError("File too large (max 5MB)", 400);
+      return;
+    }
+
+    if (file.type !== 'application/pdf') {
+      addToastError("Only PDF files are allowed", 400);
+      return;
+    }
+
+    setSelectedFile(file);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('newsletter', selectedFile);
+
+      const response = await fetch('/newsletter/download', {
+        method: 'PATCH',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      addToastError("Newsletter uploaded successfully");
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      addToastError("Upload failed");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   return (
     <form
@@ -99,14 +153,43 @@ export const Newsletter = () => {
                 <span className="icon-arrow-right ml-3 rtl:hidden"></span>
                 <span className="icon-arrow-left mr-3 ltr:hidden"></span>
               </button>
-              <button
-                className="btn btn-ghost w-full sm:w-auto"
-                type="button"
-                onClick={() => window.open('/newsletter.pdf', '_blank')} //placeholder for newsletter URL, update once backend is ready
-              >
-                {t("downloadNewsletter")}
-                <span className="icon-download ml-3"></span>
-              </button>
+              {authUser?.is_root_admin ? (
+                <>
+                <label className="form-control w-full max-w-xs">
+                  <input 
+                    type="file" 
+                    className="file-input file-input-bordered w-full max-w-xs" 
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    accept=".pdf"
+                  />
+                  <div className="label">
+                    <span className="label-text">
+                      {selectedFile ? selectedFile.name : "Upload Latest Newsletter"}
+                    </span>
+                  </div>
+                </label>
+                {selectedFile && (
+                  <button
+                    className="btn btn-primary w-full sm:w-auto"
+                    type="button"
+                    onClick={handleUpload}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? "Uploading..." : "Upload"}
+                  </button>
+                )}
+                </>
+              ) : (
+                <button
+                  className="btn btn-ghost w-full sm:w-auto"
+                  type="button"
+                  onClick={() => window.open("/newsletter.pdf", "_blank")} //placeholder for newsletter URL, update once backend is ready
+                >
+                  {t("downloadNewsletter")}
+                  <span className="icon-download ml-3"></span>
+                </button>
+              )}
             </div>
           </div>
         </div>
