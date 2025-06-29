@@ -339,7 +339,7 @@
   "donation": "Donation",
   "perSwap": "Per swap",
   "selectLocation": "Select location",
-  "clickMap": "Click on map to select your location and drag slider to set radius.",
+  "clickMap": "Clique no mapa para selecionar a sua localização e arraste o controle para definir o raio.",
   "setLocationAndRadius": "Click on the map to set your general location and use the slider to set the maximum distance to filter by.",
   "eventLink": "Event Link",
   "shareLink": "Share Link",
