@@ -33,7 +33,7 @@ func ChatSendMessage(db *gorm.DB, o ChatSendMessageOptions) error {
 		return err
 	}
 
-	err = db.Exec(`UPDATE chat_channel SET last_message_at = NOW() WHERE id = ?`, o.ChatChannelID).Error
+	err = db.Exec(`UPDATE chat_channels SET last_message_at = NOW() WHERE id = ?`, o.ChatChannelID).Error
 	if err != nil {
 		return err
 	}
