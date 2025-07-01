@@ -188,7 +188,7 @@ func ChatChannelMessageList(c *gin.Context) {
 	err := db.Debug().Raw(`
 SELECT msg.* FROM chat_messages msg
 JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
-WHERE msg.created_at < ?
+WHERE msg.created_at <= ?
 ORDER BY msg.created_at DESC
 LIMIT ?, 20 
 `, body.ChatChannelID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatChannelMessageList).Error
