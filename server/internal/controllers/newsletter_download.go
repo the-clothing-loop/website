@@ -1,11 +1,8 @@
 package controllers
 
 import (
-	// "net/http"
-
 	"github.com/gin-gonic/gin"
-	// "github.com/the-clothing-loop/website/server/internal/app"
-	// "github.com/the-clothing-loop/website/server/internal/app/auth"
+	//"github.com/the-clothing-loop/website/server/internal/app/auth"
 	// "github.com/the-clothing-loop/website/server/internal/models"
 	// ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 )
@@ -20,8 +17,11 @@ func NewsletterDownloadGet(c *gin.Context) {
 }
 
 func NewsletterDownloadPatch(c *gin.Context) {
-	// Check if user is authenticated and authorized to upload a file. 
-	// replace the existing file with the new one. Or place it if empty
+	// TODO: Check if user is authenticated and authorized to upload a file. 
+	// TODO: replace the existing file with the new one. Or place it if empty
+
+	// check /var/home/koen/Projects/clothingloop/server/internal/controllers/images.go for how to upload files
+	// try to use same flow as bulky_item.go
 	c.Status(501) // HTTP 501 Not Implemented
 }
 

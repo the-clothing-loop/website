@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from "react";
 
-import { contactNewsletterSet } from "../../../api/contact";
+import { contactNewsletterSet, newsletterUpload } from "../../../api/contact";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { useTranslation } from "react-i18next";
@@ -67,17 +67,7 @@ export const Newsletter = () => {
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('newsletter', selectedFile);
-
-      const response = await fetch('/newsletter/download', {
-        method: 'PATCH',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
+      const response = await newsletterUpload(selectedFile);
 
       addToastError("Newsletter uploaded successfully");
       setSelectedFile(null);

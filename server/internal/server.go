@@ -184,7 +184,6 @@ func Routes() *gin.Engine {
 	v2.GET("/newsletter/download", controllers.NewsletterDownloadGet)
 	v2.PATCH("/newsletter/download", controllers.NewsletterDownloadPatch)
 	v2.DELETE("/newsletter/download", controllers.NewsletterDownloadDelete)
-	v2.GET("/newsletter/download/form", controllers.NewsletterDownloadForm)
 
 	// event
 	v2.GET("/event/:uid/ical", controllers.EventICal)

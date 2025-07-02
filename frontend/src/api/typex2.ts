@@ -204,6 +204,15 @@ export interface ContactNewsletterRequest {
 	subscribe: boolean
 }
 
+export interface NewsletterUploadRequest {
+	newsletter: File
+}
+
+export interface NewsletterUploadResponse {
+	message: string
+	filename?: string
+}
+
 export type ErrInvalidEventPriceType = Record<string, any>
 
 export interface Event {
