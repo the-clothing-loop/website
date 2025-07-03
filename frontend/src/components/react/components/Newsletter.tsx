@@ -4,7 +4,7 @@ import { contactNewsletterSet, newsletterUpload } from "../../../api/contact";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { useTranslation } from "react-i18next";
-import { addToastError } from "../../../stores/toast";
+import { addToast, addToastError } from "../../../stores/toast";
 import { $authUser } from "../../../stores/auth";
 import { useStore } from "@nanostores/react";
 import { useRef } from "react";
@@ -69,7 +69,7 @@ export const Newsletter = () => {
     try {
       const response = await newsletterUpload(selectedFile);
 
-      addToastError("Newsletter uploaded successfully");
+      addToast({type: "success", message: "Newsletter uploaded successfully"});
       setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';

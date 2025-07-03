@@ -1,8 +1,15 @@
 package controllers
 
 import (
+	"io"
+	"net/http"
+	"os"
+	"path"
+	"fmt"
+
 	"github.com/gin-gonic/gin"
-	//"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/internal/app/auth"
+	"github.com/the-clothing-loop/website/server/internal/app"
 	// "github.com/the-clothing-loop/website/server/internal/models"
 	// ginext "github.com/the-clothing-loop/website/server/pkg/gin_ext"
 )
@@ -17,11 +24,41 @@ func NewsletterDownloadGet(c *gin.Context) {
 }
 
 func NewsletterDownloadPatch(c *gin.Context) {
-	// TODO: Check if user is authenticated and authorized to upload a file. 
-	// TODO: replace the existing file with the new one. Or place it if empty
+	db := getDB(c)
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState4RootUser, "")
+	
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+	
+	pdfContents, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Unable to read file: %v", err)
+		return
+	}
 
-	// check /var/home/koen/Projects/clothingloop/server/internal/controllers/images.go for how to upload files
-	// try to use same flow as bulky_item.go
+	// Debug: log the directory path
+	fmt.Printf("Writing to directory: %s\n", app.Config.IMAGES_DIR)
+	
+	// Ensure the directory exists (TODO: this shouldn't be needed, talk to lucian about it)
+	err = os.MkdirAll(app.Config.IMAGES_DIR, 0755)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Unable to create directory: %v", err)
+		return
+	}
+
+	err = os.WriteFile(path.Join(app.Config.IMAGES_DIR, "newsletter.pdf"), pdfContents, 0644)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Unable to write file: %v", err)
+		return
+	}
+
+	c.Status(http.StatusCreated) // HTTP 201 Created
+}
+
+func fileRead(c *gin.Context) {
+	// TODO: Implement file reading logic
 	c.Status(501) // HTTP 501 Not Implemented
 }
 
