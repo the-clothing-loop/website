@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from "react";
 
-import { contactNewsletterSet, newsletterUpload } from "../../../api/contact";
+import { contactNewsletterSet, newsletterUpload, newsletterDelete } from "../../../api/contact";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,7 @@ export const Newsletter = () => {
   const [isError, setIsError] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const authUser = useStore($authUser);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -79,6 +80,19 @@ export const Newsletter = () => {
       addToastError("Upload failed");
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await newsletterDelete();
+      addToast({type: "success", message: "Newsletter deleted successfully"});
+    } catch (error) {
+      console.error('Delete error:', error);
+      addToastError("Delete failed");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -144,7 +158,7 @@ export const Newsletter = () => {
                 <span className="icon-arrow-left mr-3 ltr:hidden"></span>
               </button>
               {authUser?.is_root_admin ? (
-                <>
+                <div className="flex flex-col gap-2">
                 <label className="form-control w-full max-w-xs">
                   <input 
                     type="file" 
@@ -169,12 +183,20 @@ export const Newsletter = () => {
                     {isUploading ? "Uploading..." : "Upload"}
                   </button>
                 )}
-                </>
+                <button
+                  className="btn btn-error w-full sm:w-auto"
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? "Deleting..." : "Delete Current Newsletter"}
+                </button>
+                </div>
               ) : (
                 <button
                   className="btn btn-ghost w-full sm:w-auto"
                   type="button"
-                  onClick={() => window.open("/api/v2/newsletter/download")} //FIXME: this currently returns a 404. 
+                  onClick={() => window.open("/api/v2/newsletter/download")} 
                 >
                   {t("downloadNewsletter")}
                   <span className="icon-download ml-3"></span>

@@ -64,7 +64,28 @@ func NewsletterDownloadPatch(c *gin.Context) {
 }
 
 func NewsletterDownloadDelete(c *gin.Context) {
-	// Check if user is authenticated and authorized to delete a file.
-	// Delete the file.
-	c.Status(501) // HTTP 501 Not Implemented
+	db := getDB(c)
+	ok, _, _ := auth.Authenticate(c, db, auth.AuthState4RootUser, "")
+	
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
+	
+	filePath := path.Join(app.Config.IMAGES_DIR, "newsletter.pdf")
+	
+	// Check if file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		c.Status(http.StatusNotFound)
+		return
+	}
+	
+	// Delete the file
+	err := os.Remove(filePath)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Unable to delete file: %v", err)
+		return
+	}
+	
+	c.Status(http.StatusOK)
 }

@@ -28,6 +28,10 @@ export function newsletterUpload(file: File) {
   );
 }
 
+export function newsletterDelete() {
+  return axios.delete<never>("/v2/newsletter/download");
+}
+
 export function contactMailSend(name: string, email: string, message: string) {
   return axios.post<string>("/v2/contact/email", {
     name,
