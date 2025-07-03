@@ -174,7 +174,7 @@ export const Newsletter = () => {
                 <button
                   className="btn btn-ghost w-full sm:w-auto"
                   type="button"
-                  onClick={() => window.open("/newsletter.pdf", "_blank")} //placeholder for newsletter URL, update once backend is ready
+                  onClick={() => window.open("/api/v2/newsletter/download")} //FIXME: this currently returns a 404. 
                 >
                   {t("downloadNewsletter")}
                   <span className="icon-download ml-3"></span>
