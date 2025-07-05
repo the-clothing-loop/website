@@ -18,8 +18,9 @@ https://crowdin.com/project/the-clothing-loop
 
 ## Developers getting started
 
-Start with reading our [contribution guidlines](CONTRIBUTING.md)
-Then set up your computer to [run this website locally](DOCKER_DEV_SETUP.md)
+Start with reading our [contribution guidlines](CONTRIBUTING.md).
+
+Then set up your computer to [run this website locally](DOCKER_DEV_SETUP.md).
 
 
 Old: ~~If you want to setup this website on a linux development machine you can use the following documentation: [INSTALL_LINUX.md](/INSTALL_LINUX.md)~~
