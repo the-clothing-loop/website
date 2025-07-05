@@ -18,7 +18,8 @@ https://crowdin.com/project/the-clothing-loop
 
 ## Developers getting started
 
-Go here to setup your computer to run this website locally and create contributions: [docker/dev/README.md](/docker/dev/README.md)
+Start with reading our [contribution guidlines](CONTRIBUTING.md)
+Then set up your computer to [run this website locally](DOCKER_DEV_SETUP.md)
 
 
 Old: ~~If you want to setup this website on a linux development machine you can use the following documentation: [INSTALL_LINUX.md](/INSTALL_LINUX.md)~~
@@ -36,4 +37,4 @@ Here are some flow diagrams to demonstrate some complex logic [README.md](/serve
 
 ## License
 
-MIT
+[MIT](LICENSE)
