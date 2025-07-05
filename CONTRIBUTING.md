@@ -1,6 +1,6 @@
 # Steps to make a contribution
 
-If you haven'd set up your local environment please follow [the directions](DOCKER_DEV_SETUP.md)
+If you haven'd set up your local environment please follow [these directions](DOCKER_DEV_SETUP.md).
 
 1. Ensure that there is no one already assigned to the task you want to work on.
 2. Pull from the `CollActionteam:main` branch, then create a new branch from it written in [kebab-case](https://betterprogramming.pub/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841).
