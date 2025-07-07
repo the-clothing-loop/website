@@ -1,6 +1,11 @@
 import { type FormEvent, useState, useEffect } from "react";
 
-import { contactNewsletterSet, newsletterUpload, newsletterDelete, newsletterExists } from "../../../api/contact";
+import {
+  contactNewsletterSet,
+  newsletterUpload,
+  newsletterDelete,
+  newsletterExists,
+} from "../../../api/contact";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { useTranslation } from "react-i18next";
@@ -27,7 +32,6 @@ export const Newsletter = () => {
   const authUser = useStore($authUser);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Check if newsletter exists on component mount
   useEffect(() => {
     const checkNewsletterExists = async () => {
       try {
@@ -68,12 +72,12 @@ export const Newsletter = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+    if (file.size > 5 * 1024 * 1024) {
       addToastError("File too large (max 5MB)", 400);
       return;
     }
 
-    if (file.type !== 'application/pdf') {
+    if (file.type !== "application/pdf") {
       addToastError("Only PDF files are allowed", 400);
       return;
     }
@@ -88,14 +92,17 @@ export const Newsletter = () => {
     try {
       const response = await newsletterUpload(selectedFile);
 
-      addToast({type: "success", message: "Newsletter uploaded successfully"});
+      addToast({
+        type: "success",
+        message: "Newsletter uploaded successfully",
+      });
       setSelectedFile(null);
       setNewsletterAvailable(true);
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error("Upload error:", error);
       addToastError("Upload failed");
     } finally {
       setIsUploading(false);
@@ -106,10 +113,10 @@ export const Newsletter = () => {
     setIsDeleting(true);
     try {
       await newsletterDelete();
-      addToast({type: "success", message: "Newsletter deleted successfully"});
+      addToast({ type: "success", message: "Newsletter deleted successfully" });
       setNewsletterAvailable(false);
     } catch (error) {
-      console.error('Delete error:', error);
+      console.error("Delete error:", error);
       addToastError("Delete failed");
     } finally {
       setIsDeleting(false);
@@ -179,45 +186,50 @@ export const Newsletter = () => {
               </button>
               {authUser?.is_root_admin ? (
                 <div className="flex flex-col gap-2">
-                <label className="form-control w-full max-w-xs">
-                  <input 
-                    type="file" 
-                    className="file-input file-input-bordered w-full max-w-xs" 
-                    onChange={handleFileChange}
-                    ref={fileInputRef}
-                    accept=".pdf"
-                  />
-                  <div className="label">
-                    <span className="label-text">
-                      {selectedFile ? selectedFile.name : "Upload Latest Newsletter"}
-                    </span>
-                  </div>
-                </label>
-                {selectedFile && (
+                  <label className="form-control w-full max-w-xs">
+                    <input
+                      type="file"
+                      className="file-input file-input-bordered w-full max-w-xs"
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      accept=".pdf"
+                    />
+                    <div className="label">
+                      <span className="label-text">
+                        {selectedFile
+                          ? selectedFile.name
+                          : "Upload Latest Newsletter"}
+                      </span>
+                    </div>
+                  </label>
+                  {selectedFile && (
+                    <button
+                      className="btn btn-primary w-full sm:w-auto"
+                      type="button"
+                      onClick={handleUpload}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? "Uploading..." : "Upload"}
+                    </button>
+                  )}
                   <button
-                    className="btn btn-primary w-full sm:w-auto"
+                    className="btn btn-error w-full sm:w-auto"
                     type="button"
-                    onClick={handleUpload}
-                    disabled={isUploading}
+                    onClick={handleDelete}
+                    disabled={isDeleting}
                   >
-                    {isUploading ? "Uploading..." : "Upload"}
+                    {isDeleting ? "Deleting..." : "Delete Current Newsletter"}
                   </button>
-                )}
-                <button
-                  className="btn btn-error w-full sm:w-auto"
-                  type="button"
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                >
-                  {isDeleting ? "Deleting..." : "Delete Current Newsletter"}
-                </button>
                 </div>
               ) : (
-                !isCheckingNewsletter && newsletterAvailable && (
+                !isCheckingNewsletter &&
+                newsletterAvailable && (
                   <button
                     className="btn btn-ghost w-full sm:w-auto"
                     type="button"
-                    onClick={() => window.open("/api/v2/newsletter/download", "_blank")} 
+                    onClick={() =>
+                      window.open("/api/v2/newsletter/download", "_blank")
+                    }
                   >
                     {t("downloadNewsletter")}
                     <span className="icon-download ml-3"></span>

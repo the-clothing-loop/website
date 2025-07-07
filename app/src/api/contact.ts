@@ -1,6 +1,5 @@
 import axios from "./axios";
 import { ContactMailRequest, ContactNewsletterRequest } from "./typex2";
-
 export function contactNewsletterSet(
   name: string,
   email: string,
