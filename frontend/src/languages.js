@@ -32,7 +32,12 @@ export function getLanguageFlags(isProduction) {
   if (!isProduction) {
     flags = flags.concat([
       { lng: "pt", title: "Português", flag: "/images/flags/pt.svg" },
-      { lng: "ar", title: "العربية", flag: "/images/flags/ps.svg", rtl: true },
+      {
+        lng: "ar",
+        title: "العربية",
+        flag: "/images/flags/hejaz.svg",
+        rtl: true,
+      },
     ]);
   }
   return flags;
