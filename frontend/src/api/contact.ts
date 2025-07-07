@@ -1,6 +1,7 @@
 import type { Response } from "redaxios";
 import axios from "./axios";
 import type { NewsletterUploadResponse } from "./typex2";
+
 export function contactNewsletterSet(
   name: string,
   email: string,
@@ -30,6 +31,10 @@ export function newsletterUpload(file: File) {
 
 export function newsletterDelete() {
   return axios.delete<never>("/v2/newsletter/download");
+}
+
+export function newsletterExists() {
+  return axios.get<never>("/v2/newsletter/download");
 }
 
 export function contactMailSend(name: string, email: string, message: string) {

@@ -15,17 +15,14 @@ import (
 func NewsletterDownloadGet(c *gin.Context) {
 	filePath := path.Join(app.Config.IMAGES_DIR, "newsletter.pdf")
 	
-	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		c.Status(http.StatusNotFound)
+		c.String(http.StatusNotFound, "Newsletter file not found")
 		return
 	}
 	
-	// Set appropriate headers for PDF download
 	c.Header("Content-Type", "application/pdf")
 	c.Header("Content-Disposition", "attachment; filename=newsletter.pdf")
 	
-	// Serve the file
 	c.File(filePath)
 }
 

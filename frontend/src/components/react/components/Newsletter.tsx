@@ -1,6 +1,6 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useEffect } from "react";
 
-import { contactNewsletterSet, newsletterUpload, newsletterDelete } from "../../../api/contact";
+import { contactNewsletterSet, newsletterUpload, newsletterDelete, newsletterExists } from "../../../api/contact";
 import FormJup from "../util/form-jup";
 import { GinParseErrors } from "../util/gin-errors";
 import { useTranslation } from "react-i18next";
@@ -22,8 +22,26 @@ export const Newsletter = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [newsletterAvailable, setNewsletterAvailable] = useState(false);
+  const [isCheckingNewsletter, setIsCheckingNewsletter] = useState(true);
   const authUser = useStore($authUser);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check if newsletter exists on component mount
+  useEffect(() => {
+    const checkNewsletterExists = async () => {
+      try {
+        await newsletterExists();
+        setNewsletterAvailable(true);
+      } catch (error) {
+        setNewsletterAvailable(false);
+      } finally {
+        setIsCheckingNewsletter(false);
+      }
+    };
+
+    checkNewsletterExists();
+  }, []);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -72,6 +90,7 @@ export const Newsletter = () => {
 
       addToast({type: "success", message: "Newsletter uploaded successfully"});
       setSelectedFile(null);
+      setNewsletterAvailable(true);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -88,6 +107,7 @@ export const Newsletter = () => {
     try {
       await newsletterDelete();
       addToast({type: "success", message: "Newsletter deleted successfully"});
+      setNewsletterAvailable(false);
     } catch (error) {
       console.error('Delete error:', error);
       addToastError("Delete failed");
@@ -193,14 +213,16 @@ export const Newsletter = () => {
                 </button>
                 </div>
               ) : (
-                <button
-                  className="btn btn-ghost w-full sm:w-auto"
-                  type="button"
-                  onClick={() => window.open("/api/v2/newsletter/download")} 
-                >
-                  {t("downloadNewsletter")}
-                  <span className="icon-download ml-3"></span>
-                </button>
+                !isCheckingNewsletter && newsletterAvailable && (
+                  <button
+                    className="btn btn-ghost w-full sm:w-auto"
+                    type="button"
+                    onClick={() => window.open("/api/v2/newsletter/download", "_blank")} 
+                  >
+                    {t("downloadNewsletter")}
+                    <span className="icon-download ml-3"></span>
+                  </button>
+                )
               )}
             </div>
           </div>
