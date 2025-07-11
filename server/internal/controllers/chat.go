@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"slices"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -185,13 +186,25 @@ func ChatChannelMessageList(c *gin.Context) {
 	}
 
 	chatChannelMessageList := []sharedtypes.ChatMessage{}
-	err := db.Debug().Raw(`
+	var err error
+	if body.Page >= 0 {
+		err = db.Debug().Raw(`
 SELECT msg.* FROM chat_messages msg
 JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
 WHERE msg.created_at <= ?
 ORDER BY msg.created_at DESC
-LIMIT ?, 20 
-`, body.ChatChannelID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatChannelMessageList).Error
+LIMIT ?, 20
+		`, body.ChatChannelID, chain.ID, body.StartFrom, body.Page*20).Scan(&chatChannelMessageList).Error
+	} else {
+		err = db.Debug().Raw(`
+SELECT msg.* FROM chat_messages msg
+JOIN chat_channels channel ON channel.id = msg.chat_channel_id AND channel.id = ? AND channel.chain_id = ?
+WHERE msg.created_at > ?
+ORDER BY msg.created_at ASC
+LIMIT ?, 20
+		`, body.ChatChannelID, chain.ID, body.StartFrom, ((-body.Page)-1)*20).Scan(&chatChannelMessageList).Error
+		slices.Reverse(chatChannelMessageList)
+	}
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
