@@ -183,6 +183,11 @@ func Routes() *gin.Engine {
 	v2.POST("/contact/newsletter", controllers.ContactNewsletter)
 	v2.POST("/contact/email", controllers.ContactMail)
 
+	// newsletter manual download
+	v2.GET("/newsletter/download", controllers.NewsletterDownloadGet)
+	v2.PATCH("/newsletter/download", controllers.NewsletterDownloadPatch)
+	v2.DELETE("/newsletter/download", controllers.NewsletterDownloadDelete)
+
 	// event
 	v2.GET("/event/:uid/ical", controllers.EventICal)
 	v2.GET("/event/:uid", controllers.EventGet)
