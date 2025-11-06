@@ -1,17 +1,20 @@
 import { type FormEvent, useState } from "react";
 
 import { contactMailSend } from "../../../api/contact";
-
+import { CapWidget } from "@pitininja/cap-react-widget";
 import { GinParseErrors } from "../util/gin-errors";
 import useForm from "../util/form.hooks";
 import { useTranslation } from "react-i18next";
 import { addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 
+import "@pitininja/cap-react-widget/dist/index.css";
+
 const Contacts = () => {
   const { t, i18n } = useTranslation();
   const localizePath = useLocalizePath(i18n);
   const [submitted, setSubmitted] = useState(false);
+  const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [values, setValue] = useForm({
     name: "",
@@ -30,6 +33,7 @@ const Contacts = () => {
     (async () => {
       try {
         const res = await contactMailSend(
+          token,
           values.name,
           values.email,
           values.message,
@@ -45,6 +49,7 @@ const Contacts = () => {
 
         addToastError(GinParseErrors(t, err), err?.status);
       }
+      setToken("");
     })();
   }
 
@@ -93,15 +98,14 @@ const Contacts = () => {
             rows={10}
           />
 
-          <input
-            name="accept"
-            type="checkbox"
-            className="invisible absolute -z-10"
-            value={values.accept ? "checked" : "unchecked"}
-            autoComplete="off"
-            tabIndex={-1}
-            onChange={(e) => {
-              setValue("accept", e.target.value == "checked");
+          <CapWidget
+            endpoint="/api/v2/captcha/"
+            onSolve={(token) => {
+              setToken(token);
+              console.log(`Challenge succeeded, token : ${token}`);
+            }}
+            onError={() => {
+              console.log(`Challenge failed`);
             }}
           />
 
