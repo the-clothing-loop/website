@@ -17,6 +17,17 @@ export interface BulkyItem {
 	created_at: string
 }
 
+export interface CaptchaRedeemRequest {
+	token: string
+	solutions: number[]
+}
+
+export interface CaptchaRedeemResponse {
+	success: boolean
+	token?: (string | null | undefined)
+	expires?: (number | null | undefined)
+}
+
 export interface ChainAddUserRequest {
 	user_uid: string
 	chain_uid: string
@@ -182,6 +193,7 @@ export interface ChatPatchUserRequest {
 }
 
 export interface ContactMailRequest {
+	token: string
 	name: string
 	email: string
 	message: string

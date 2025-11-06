@@ -7,6 +7,7 @@ type ContactNewsletterRequest struct {
 }
 
 type ContactMailRequest struct {
+	Token   string `json:"token" binding:"required"`
 	Name    string `json:"name" binding:"required"`
 	Email   string `json:"email" binding:"required,email"`
 	Message string `json:"message" binding:"required"`
