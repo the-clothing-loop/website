@@ -3,7 +3,7 @@ package sharedtypes
 type CaptchaRedeemRequest struct {
 	Token string `json:"token" binding:"required"`
 	// Array of [salt, target, solution] tuples
-	Solutions [][]any `json:"solutions" binding:"required"`
+	Solutions []int64 `json:"solutions" binding:"required"`
 }
 
 type CaptchaRedeemResponse struct {

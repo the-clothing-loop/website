@@ -19,7 +19,7 @@ export interface BulkyItem {
 
 export interface CaptchaRedeemRequest {
 	token: string
-	solutions: unknown[][]
+	solutions: number[]
 }
 
 export interface CaptchaRedeemResponse {

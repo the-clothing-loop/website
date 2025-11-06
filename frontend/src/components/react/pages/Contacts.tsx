@@ -1,14 +1,12 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, Suspense, useState } from "react";
 
 import { contactMailSend } from "../../../api/contact";
-import { CapWidget } from "@pitininja/cap-react-widget";
+import { CapWidget } from "@better-captcha/react/provider/cap-widget";
 import { GinParseErrors } from "../util/gin-errors";
 import useForm from "../util/form.hooks";
 import { useTranslation } from "react-i18next";
 import { addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
-
-import "@pitininja/cap-react-widget/dist/index.css";
 
 const Contacts = () => {
   const { t, i18n } = useTranslation();
@@ -98,16 +96,20 @@ const Contacts = () => {
             rows={10}
           />
 
-          <CapWidget
-            endpoint="/api/v2/captcha/"
-            onSolve={(token) => {
-              setToken(token);
-              console.log(`Challenge succeeded, token : ${token}`);
-            }}
-            onError={() => {
-              console.log(`Challenge failed`);
-            }}
-          />
+          <div className="mb-5">
+            <Suspense>
+              <CapWidget
+                endpoint="/api/v2/captcha/"
+                onSolve={(token) => {
+                  setToken(token);
+                  console.log(`Challenge succeeded, token : ${token}`);
+                }}
+                onError={() => {
+                  console.log(`Challenge failed`);
+                }}
+              />
+            </Suspense>
+          </div>
 
           <button
             type="submit"

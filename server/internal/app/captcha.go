@@ -1,14 +1,11 @@
 package app
 
 import (
-	capserver "github.com/samwafgo/cap_go_server"
+	capserver "github.com/ackcoder/go-cap"
 )
 
 var CaptchaServer *capserver.Cap
 
 func CaptchaInit() {
-	config := &capserver.CapConfig{
-		NoFSState: true,
-	}
-	CaptchaServer = capserver.New(config)
+	CaptchaServer = capserver.New()
 }
