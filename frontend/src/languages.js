@@ -13,29 +13,29 @@ export default function getLanguages(isProduction) {
 
 /**
  * @param {boolean} isProduction
- * @returns {{lng:string; title:string; flag: string; rtl?: boolean}[]}
+ * @returns {{lng:string; title:string; code: string; rtl?: boolean}[]}
  */
 export function getLanguageFlags(isProduction) {
   /**
-   * @typedef {{lng:string; title:string; flag: string; rtl?: boolean; }[]}
+   * @typedef {{lng:string; title:string; code: string; rtl?: boolean; }[]}
    */
   let flags = [
-    { lng: "en", title: "English", flag: "/images/flags/gb.svg" },
-    { lng: "nl", title: "Nederlands", flag: "/images/flags/nl.svg" },
-    { lng: "de", title: "Deutsch", flag: "/images/flags/de.svg" },
-    { lng: "fr", title: "Français", flag: "/images/flags/fr.svg" },
-    { lng: "es", title: "Español", flag: "/images/flags/es.svg" },
-    { lng: "it", title: "Italiano", flag: "/images/flags/it.svg" },
-    { lng: "sv", title: "svenska", flag: "/images/flags/se.svg" },
-    { lng: "he", title: "עִברִית", flag: "/images/flags/il.svg", rtl: true },
+    { lng: "en", title: "English", code: "EN" },
+    { lng: "nl", title: "Nederlands", code: "NL" },
+    { lng: "de", title: "Deutsch", code: "DE" },
+    { lng: "fr", title: "Français", code: "FR" },
+    { lng: "es", title: "Español", code: "ES" },
+    { lng: "it", title: "Italiano", code: "IT" },
+    { lng: "sv", title: "svenska", code: "SV" },
+    { lng: "he", title: "עִברִית", code: "HE", rtl: true },
   ];
   if (!isProduction) {
     flags = flags.concat([
-      { lng: "pt", title: "Português", flag: "/images/flags/pt.svg" },
+      { lng: "pt", title: "Português", code: "PT" },
       {
         lng: "ar",
         title: "العربية",
-        flag: "/images/flags/hejaz.svg",
+        code: "AR",
         rtl: true,
       },
     ]);

@@ -399,12 +399,13 @@ export default function Contribute() {
 
                     return (
                       <li key={flag.lng}>
-                        <a href={crowdinUrl} target="_blank">
-                          <img
-                            src={flag.flag}
-                            alt={flag.lng}
-                            className="w-10 border-4 border-transparent hover:border-teal/40 transition-colors"
-                          />
+                        <a
+                          href={crowdinUrl}
+                          target="_blank"
+                          title={flag.lng}
+                          className="text-sm px-1.5 h-10 flex justify-center items-center border-4 border-teal/10 hover:border-teal/40 transition-colors"
+                        >
+                          <span>{flag.title}</span>
                         </a>
                       </li>
                     );
