@@ -84,6 +84,8 @@ const Contacts = () => {
             className="input input-secondary mb-4"
             required
           />
+
+          <p className="text-sm mb-2">{t("contactUsLanguage")}</p>
           <textarea
             placeholder={t("yourMessage")!}
             name="message"
