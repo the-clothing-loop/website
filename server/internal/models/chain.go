@@ -174,6 +174,16 @@ func (c *Chain) Delete(db *gorm.DB) error {
 		return err
 	}
 
+	err = tx.Exec(`DELETE FROM chat_messages WHERE chat_channel_id IN ?`, c.ChatRoomIDs).Error
+	if err != nil {
+		return err
+	}
+
+	err = tx.Exec(`DELETE FROM chat_channels WHERE id IN ?`, c.ChatRoomIDs).Error
+	if err != nil {
+		return err
+	}
+
 	err = tx.Exec(`DELETE FROM user_chains WHERE chain_id = ?`, c.ID).Error
 	if err != nil {
 		return err

@@ -129,6 +129,14 @@ DELETE FROM bulky_items WHERE user_chain_id IN (
 		return fmt.Errorf("Unable to delete bulky items from user: %v", err)
 	}
 
+	// delete user chat messages
+	err = db.Exec(`
+UPDATE chat_messages SET deleted_at = NOW(), message = "", is_pinned = FALSE, send_by_uid = "" WHERE send_by_uid = ?
+	`, u.UID).Error
+	if err != nil {
+		return fmt.Errorf("Unable to delete chat messages from user: %v", err)
+	}
+
 	return nil
 }
 
