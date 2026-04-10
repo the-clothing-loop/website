@@ -164,6 +164,7 @@
   "confirmation": "Confirmation",
   "contactUs": "Contact Us",
   "contactUsSubheading": "Questions? Funny stories? Tips? Press enquiries? We’d love to hear from you! (Please do check our FAQ first!)",
+  "contactUsLanguage": "You can reach us in English, Dutch (Nederlands), and German (Deutsch).",
   "clickToSetLoopLocation": "Click on the map to set the approximate location of your Loop. A dot will appear, you can manually change the radius in the field below.",
   "clickToChangeLoopLocation": "Click on the map to change the location of the Loop",
   "similarLoopNearby": "There is already another Loop existing in your area, are you sure you want to create a new Loop?",

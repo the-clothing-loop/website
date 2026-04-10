@@ -68,6 +68,10 @@ func ContactMail(c *gin.Context) {
 		return
 	}
 
+	if ok := captchaValidate(c, body.Token); !ok {
+		return
+	}
+
 	err := views.EmailContactReceived(db, body.Name, body.Email, body.Message)
 	if err != nil {
 		ginext.AbortWithErrorInBody(c, http.StatusInternalServerError, err, "Unable to send email")

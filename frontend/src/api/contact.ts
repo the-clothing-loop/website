@@ -12,8 +12,14 @@ export function contactNewsletterSet(
   });
 }
 
-export function contactMailSend(name: string, email: string, message: string) {
+export function contactMailSend(
+  token: string,
+  name: string,
+  email: string,
+  message: string,
+) {
   return axios.post<string>("/v2/contact/email", {
+    token,
     name,
     email,
     message,

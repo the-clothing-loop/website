@@ -18,6 +18,7 @@ func Routes() *gin.Engine {
 	// initialization
 	db := app.DatabaseInit()
 	app.MailInit()
+	app.CaptchaInit()
 
 	if app.Config.ENV == app.EnvEnumProduction || (app.Config.SENDINBLUE_API_KEY != "" && app.Config.ENV == app.EnvEnumDevelopment) {
 		app.BrevoInit()
@@ -94,6 +95,10 @@ func Routes() *gin.Engine {
 
 	// router groups
 	v2 := r.Group("/v2")
+
+	// captcha
+	v2.POST("/captcha/challenge", controllers.CaptchaChallenge)
+	v2.POST("/captcha/redeem", controllers.CaptchaRedeem)
 
 	// ping
 	r.GET("/ping", controllers.Ping)

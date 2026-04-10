@@ -73,11 +73,7 @@ export default function LanguageSwitcher(props: {
         >
           {btnLabelLanguage.title}
         </p>
-        <img
-          className="w-6 ml-2"
-          src={btnLabelLanguage.flag}
-          alt={btnLabelLanguage.title + " flag"}
-        />
+        <span className="uppercase font-bold">{btnLabelLanguage.code}</span>
       </label>
       <ul
         tabIndex={0}
@@ -96,7 +92,7 @@ export default function LanguageSwitcher(props: {
                 <span className={el.rtl ? "w-full text-right" : ""}>
                   {el.title}
                 </span>
-                <img className="w-6" src={el.flag} alt={el.title + " flag"} />
+                <span className="uppercase font-bold">{el.code}</span>
               </a>
             </li>
           );
