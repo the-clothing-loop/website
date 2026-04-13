@@ -7,6 +7,7 @@ import mapboxgl, { type MapboxGeoJSONFeature } from "mapbox-gl";
 import type { Chain, UID } from "../../../api/types";
 import { chainGetAll } from "../../../api/chain";
 import SearchBar, {
+  isLoopSearch,
   type SearchValues,
   toUrlSearchParams,
 } from "../components/FindChain/SearchBar";
@@ -15,11 +16,14 @@ import {
   GEOJSON_LATITUDE_INDEX,
   GEOJSON_LONGITUDE_INDEX,
   circleRadiusKm,
+  distanceKm,
   useMapZoom,
 } from "../util/maps";
 import { addToastError } from "../../../stores/toast";
 import { useStore } from "@nanostores/react";
 import { $chains } from "../../../stores/chains";
+import { useTranslation } from "react-i18next";
+import useLocalizePath from "../util/localize_path.hooks";
 
 const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY;
 
@@ -91,6 +95,19 @@ function createFilterFunc(
 
 export default function FindChain() {
   const urlParams = new URLSearchParams(location.search);
+  const { t, i18n } = useTranslation();
+  const localizePath = useLocalizePath(i18n);
+  const initialLongitude = Number.parseFloat(urlParams.get("lo") || "");
+  const initialLatitude = Number.parseFloat(urlParams.get("la") || "");
+  const initialCenter =
+    Number.isFinite(initialLongitude) && Number.isFinite(initialLatitude)
+      ? ([initialLongitude, initialLatitude] as GeoJSON.Position)
+      : undefined;
+  const initialSearchValues = {
+    searchTerm: urlParams.get("q") || "",
+    sizes: urlParams.getAll("s") || [],
+    genders: urlParams.getAll("g") || [],
+  };
 
   const chains = useStore($chains);
   const [map, setMap] = useState<mapboxgl.Map>();
@@ -102,6 +119,11 @@ export default function FindChain() {
   const [focusedChain, setFocusedChain] = useState<Chain | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchedCenter, setSearchedCenter] = useState<
+    GeoJSON.Position | undefined
+  >(initialCenter);
+  const [searchedValues, setSearchedValues] =
+    useState<SearchValues>(initialSearchValues);
 
   const mapRef = useRef<any>();
 
@@ -445,6 +467,8 @@ export default function FindChain() {
     longLat: GeoJSON.Position | undefined,
   ) {
     if (!chains || !map) return;
+    setSearchedValues(search);
+    setSearchedCenter(longLat);
 
     // filter map by gender or sizes
     (map.getSource("chains") as mapboxgl.GeoJSONSource).setData(
@@ -459,7 +483,7 @@ export default function FindChain() {
       map.setCenter(longLat as mapboxgl.LngLatLike);
       map.setZoom(10);
       marker?.setLngLat(longLat as mapboxgl.LngLatLike).addTo(map);
-      if (search.searchTerm.startsWith("Loop: ")) {
+      if (isLoopSearch(search.searchTerm)) {
         const name = search.searchTerm.slice(6);
         const foundChains = chains.filter(
           (c) =>
@@ -483,6 +507,16 @@ export default function FindChain() {
     setMapClickedChains([]);
   }
 
+  function handleViewOnMap(chain: Chain) {
+    if (!map) return;
+
+    map.setCenter([chain.longitude, chain.latitude]);
+    map.setZoom(11);
+    setFocusedChain(chain);
+    setMapClickedChains([chain]);
+    setSidebarOpen(true);
+  }
+
   function handleLocation() {
     setLocationLoading(true);
     window.navigator.geolocation.getCurrentPosition(
@@ -503,17 +537,116 @@ export default function FindChain() {
     return <div></div>;
   }
 
+  const hasAddressSearch =
+    !!searchedCenter &&
+    !!searchedValues?.searchTerm &&
+    !isLoopSearch(searchedValues.searchTerm);
+  const nearbyJoinableChains =
+    hasAddressSearch && searchedCenter && searchedValues
+      ? chains
+          .filter(
+            createFilterFunc(searchedValues.genders, searchedValues.sizes),
+          )
+          .filter((chain) => chain.published && chain.open_to_new_members)
+          .map((chain) => ({
+            chain,
+            distance: distanceKm(searchedCenter, chain),
+          }))
+          .filter(({ chain, distance }) => distance <= chain.radius)
+          .sort((a, b) => a.distance - b.distance)
+      : [];
+
   return (
     <>
       <main>
         <SearchBar
-          initialValues={{
-            searchTerm: urlParams.get("q") || "",
-            sizes: urlParams.getAll("s") || [],
-            genders: urlParams.getAll("g") || [],
-          }}
+          initialValues={initialSearchValues}
           onSearch={handleSearch}
         />
+
+        {hasAddressSearch ? (
+          <section className="container mx-auto px-4 md:px-20 py-6">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
+              <div>
+                <h1 className="font-serif text-secondary text-3xl font-bold mb-2">
+                  {t("nearbyLoopsYouCanJoin", {
+                    defaultValue: "Nearby Loops you can join",
+                  })}
+                </h1>
+                <p className="text-sm max-w-2xl">
+                  {t("nearbyLoopsYouCanJoinIntro", {
+                    defaultValue:
+                      "These published Loops are open to new members and include your address in their area.",
+                  })}
+                </p>
+              </div>
+              <a
+                href={localizePath("/loops/new/users/signup")}
+                className="btn btn-secondary btn-outline"
+              >
+                {t("startNewLoop")}
+              </a>
+            </div>
+
+            {nearbyJoinableChains.length ? (
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {nearbyJoinableChains.map(({ chain, distance }) => (
+                  <article
+                    key={chain.uid}
+                    className="border border-grey/20 p-4 bg-white"
+                  >
+                    <h2 className="font-semibold text-secondary text-xl mb-2 break-words">
+                      {chain.name}
+                    </h2>
+                    <p className="text-sm mb-4">
+                      {t("distanceAway", {
+                        defaultValue: "{{distance}} km away",
+                        distance: distance.toFixed(1),
+                      })}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <a
+                        href={localizePath(
+                          "/loops/users/signup/?chain=" + chain.uid,
+                        )}
+                        className="btn btn-sm btn-primary"
+                      >
+                        {t("join")}
+                      </a>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-secondary btn-outline"
+                        onClick={() => handleViewOnMap(chain)}
+                      >
+                        {t("viewOnMap", { defaultValue: "View on map" })}
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="border border-grey/20 bg-white p-5">
+                <h2 className="font-semibold text-secondary text-xl mb-2">
+                  {t("noJoinableLoopsNearby", {
+                    defaultValue: "No joinable Loops nearby yet",
+                  })}
+                </h2>
+                <p className="mb-4">
+                  {t("noJoinableLoopsNearbyBody", {
+                    defaultValue:
+                      "You can start a new Loop or scroll down to explore other published Loops on the map.",
+                  })}
+                </p>
+                <a
+                  href={localizePath("/loops/new/users/signup")}
+                  className="btn btn-primary"
+                >
+                  {t("startNewLoop")}
+                </a>
+              </div>
+            )}
+          </section>
+        ) : null}
 
         <div className="relative h-[80vh]">
           <div ref={mapRef} className="h-full"></div>

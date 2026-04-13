@@ -30,6 +30,7 @@ interface RequestChainGetAllParams {
   filter_sizes?: string[];
   filter_genders?: string[];
   filter_out_unpublished?: boolean;
+  filter_open_to_new_members?: boolean;
   add_rules?: boolean;
   add_headers?: boolean;
   add_totals?: boolean;
