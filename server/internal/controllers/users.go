@@ -214,12 +214,20 @@ func UserUpdate(c *gin.Context) {
 			} else {
 				userChanges["paused_until"] = null.Time{}
 				if authUser.ID == user.ID {
-					db.Exec(`UPDATE user_chains SET is_paused = FALSE WHERE user_id = ?`, user.ID)
+					db.Exec(`UPDATE user_chains SET is_paused = FALSE, paused_at = NULL WHERE user_id = ?`, user.ID)
 				}
 			}
 		}
 		if body.ChainPaused != nil && chain != nil {
-			db.Exec(`UPDATE user_chains SET is_paused = ? WHERE user_id = ? AND chain_id = ?`, *body.ChainPaused, user.ID, chain.ID)
+			if *body.ChainPaused {
+				db.Exec(`
+UPDATE user_chains
+SET is_paused = TRUE,
+	paused_at = IF(is_paused = FALSE OR paused_at IS NULL, NOW(), paused_at)
+WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID)
+			} else {
+				db.Exec(`UPDATE user_chains SET is_paused = FALSE, paused_at = NULL WHERE user_id = ? AND chain_id = ?`, user.ID, chain.ID)
+			}
 		}
 		if body.Sizes != nil {
 			j, _ := json.Marshal(body.Sizes)
