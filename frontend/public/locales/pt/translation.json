@@ -365,7 +365,7 @@
   "doYouHaveAnAccount": "Do you already have an account?",
   "clickHereToRegister": "<1>Click here</1> to register",
   "clickHereToLogin": "<1>Click here</1> to login",
-  "mustBeRegistered": "You must be registered to create an event",
+  "mustBeRegistered": "Tem de estar registado para criar um evento",
   "userExists": "User already exists",
   "chatRoomOptions": "Opções da sala de chat",
   "createRoom": "Criar Sala",
