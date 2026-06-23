@@ -4,6 +4,27 @@ export function circleRadiusKm(meters: number, latitude: number): number {
   return meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
 }
 
+export function distanceKm(
+  from: GeoJSON.Position,
+  to: { latitude: number; longitude: number },
+): number {
+  const earthRadiusKm = 6371;
+  const fromLat = (from[GEOJSON_LATITUDE_INDEX]! * Math.PI) / 180;
+  const toLat = (to.latitude * Math.PI) / 180;
+  const deltaLat = toLat - fromLat;
+  const deltaLng =
+    ((to.longitude - from[GEOJSON_LONGITUDE_INDEX]!) * Math.PI) / 180;
+
+  const a =
+    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+    Math.cos(fromLat) *
+      Math.cos(toLat) *
+      Math.sin(deltaLng / 2) *
+      Math.sin(deltaLng / 2);
+
+  return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 export function useMapZoom(initZoom: number, minZoom: number, maxZoom: number) {
   const [zoom, setZoom] = useState(initZoom);
 

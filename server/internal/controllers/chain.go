@@ -184,10 +184,11 @@ func ChainGetAll(c *gin.Context) {
 	db := getDB(c)
 
 	var query struct {
-		FilterSizes     []string `form:"filter_sizes"`
-		FilterGenders   []string `form:"filter_genders"`
-		FilterPublished bool     `form:"filter_out_unpublished"`
-		AddTotals       bool     `form:"add_totals"`
+		FilterSizes            []string `form:"filter_sizes"`
+		FilterGenders          []string `form:"filter_genders"`
+		FilterPublished        bool     `form:"filter_out_unpublished"`
+		FilterOpenToNewMembers bool     `form:"filter_open_to_new_members"`
+		AddTotals              bool     `form:"add_totals"`
 	}
 	if err := c.ShouldBindQuery(&query); err != nil && err != io.EOF {
 		c.String(http.StatusBadRequest, err.Error())
@@ -205,7 +206,7 @@ func ChainGetAll(c *gin.Context) {
 
 	chains := []sharedtypes.ChainResponse{}
 	sql := models.ChainResponseSQLSelect
-	whereOrSql := []string{}
+	whereSql := []string{"chains.deleted_at IS NULL"}
 	args := []any{}
 
 	if query.AddTotals {
@@ -241,14 +242,17 @@ func ChainGetAll(c *gin.Context) {
 			}
 		}
 
-		whereOrSql = append(whereOrSql, fmt.Sprintf("( %s )", strings.Join(whereAndSql, " AND ")))
+		whereSql = append(whereSql, fmt.Sprintf("( %s )", strings.Join(whereAndSql, " AND ")))
 	}
 
 	if query.FilterPublished {
-		whereOrSql = append(whereOrSql, "chains.published = TRUE")
+		whereSql = append(whereSql, "chains.published = TRUE")
 	}
-	if len(whereOrSql) > 0 {
-		sql = fmt.Sprintf("%s WHERE %s", sql, strings.Join(whereOrSql, " OR "))
+	if query.FilterOpenToNewMembers {
+		whereSql = append(whereSql, "chains.open_to_new_members = TRUE")
+	}
+	if len(whereSql) > 0 {
+		sql = fmt.Sprintf("%s WHERE %s", sql, strings.Join(whereSql, " AND "))
 	}
 	if err := db.Raw(sql, args...).Scan(&chains).Error; err != nil {
 		slog.Warn("Chain not found", "err", err)

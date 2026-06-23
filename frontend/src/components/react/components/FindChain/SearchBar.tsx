@@ -57,7 +57,12 @@ type MSearchChain = Pick<
   Chain,
   "uid" | "name" | "address" | "longitude" | "latitude"
 >;
-const LOOP_SEARCH_PREFIX = "Loop: ";
+export const LOOP_SEARCH_PREFIX = "Loop: ";
+
+export function isLoopSearch(searchTerm: string) {
+  return searchTerm.startsWith(LOOP_SEARCH_PREFIX);
+}
+
 export default function SearchBar(props: Props) {
   const { t } = useTranslation();
   const [longLat, setLongLat] = useState<GeoJSON.Position>();
@@ -153,7 +158,11 @@ export default function SearchBar(props: Props) {
           className="z-40 w-full"
           onResult={handleSearchChange}
           onSelectResult={handleSearchSelected}
-          placeholder={t("location")!}
+          placeholder={
+            t("fillInYourAddress", {
+              defaultValue: "Fill in your address",
+            })!
+          }
           externalGeocoder={externalGeocoder}
           types={[
             "country",
