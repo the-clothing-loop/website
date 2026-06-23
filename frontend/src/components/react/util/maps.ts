@@ -1,7 +1,14 @@
 import { useState } from "react";
 
+// Chain radii have historically been stored at four times the value hosts see.
+const LEGACY_CHAIN_RADIUS_SCALE = 4;
+
 export function circleRadiusKm(meters: number, latitude: number): number {
   return meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
+}
+
+export function chainRadiusKm(storedRadius: number): number {
+  return storedRadius / LEGACY_CHAIN_RADIUS_SCALE;
 }
 
 export function distanceKm(
