@@ -11,6 +11,7 @@ export interface Modal {
   content?: () => JSX.Element;
   actions: ModalAction[];
   forceOpen?: boolean;
+  onClose?: () => void;
 }
 export interface ModalAction {
   type: "ghost" | "default" | "primary" | "secondary" | "success" | "error";
@@ -58,5 +59,7 @@ export function closeToast(id: number) {
 }
 
 export function closeModal() {
+  const modal = openModal.get();
   openModal.set(undefined);
+  modal?.onClose?.();
 }
