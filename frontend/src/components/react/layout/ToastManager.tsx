@@ -118,7 +118,10 @@ function ModalComponent(props: { modal: Modal; closeFunc: () => void }) {
   function handleEsc(e: SyntheticEvent<Element>) {
     if (props.modal.forceOpen) {
       e.preventDefault();
+      return;
     }
+    e.preventDefault();
+    props.closeFunc();
   }
 
   return (
