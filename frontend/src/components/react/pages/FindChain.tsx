@@ -15,6 +15,7 @@ import Sidebar from "../components/FindChain/Sidebar";
 import {
   GEOJSON_LATITUDE_INDEX,
   GEOJSON_LONGITUDE_INDEX,
+  chainRadiusKm,
   circleRadiusKm,
   distanceKm,
   useMapZoom,
@@ -26,9 +27,12 @@ import { useTranslation } from "react-i18next";
 import useLocalizePath from "../util/localize_path.hooks";
 
 const MAPBOX_TOKEN = import.meta.env.PUBLIC_MAPBOX_KEY;
+const NEARBY_LOOP_RESULTS_ENABLED =
+  import.meta.env.PUBLIC_FEATURE_NEARBY_LOOP_RESULTS === "true";
 
 const MAX_ZOOM = 13;
 const MIN_ZOOM = 3;
+const NEARBY_LOOP_RESULTS_PAGE_SIZE = 3;
 
 export type ChainPredicate = (chain: Chain) => boolean;
 
@@ -124,6 +128,9 @@ export default function FindChain() {
   >(initialCenter);
   const [searchedValues, setSearchedValues] =
     useState<SearchValues>(initialSearchValues);
+  const [nearbyLoopResultLimit, setNearbyLoopResultLimit] = useState(
+    NEARBY_LOOP_RESULTS_PAGE_SIZE,
+  );
 
   const mapRef = useRef<any>();
 
@@ -469,6 +476,7 @@ export default function FindChain() {
     if (!chains || !map) return;
     setSearchedValues(search);
     setSearchedCenter(longLat);
+    setNearbyLoopResultLimit(NEARBY_LOOP_RESULTS_PAGE_SIZE);
 
     // filter map by gender or sizes
     (map.getSource("chains") as mapboxgl.GeoJSONSource).setData(
@@ -542,7 +550,10 @@ export default function FindChain() {
     !!searchedValues?.searchTerm &&
     !isLoopSearch(searchedValues.searchTerm);
   const nearbyJoinableChains =
-    hasAddressSearch && searchedCenter && searchedValues
+    NEARBY_LOOP_RESULTS_ENABLED &&
+    hasAddressSearch &&
+    searchedCenter &&
+    searchedValues
       ? chains
           .filter(
             createFilterFunc(searchedValues.genders, searchedValues.sizes),
@@ -552,9 +563,15 @@ export default function FindChain() {
             chain,
             distance: distanceKm(searchedCenter, chain),
           }))
-          .filter(({ chain, distance }) => distance <= chain.radius)
+          .filter(
+            ({ chain, distance }) => distance <= chainRadiusKm(chain.radius),
+          )
           .sort((a, b) => a.distance - b.distance)
       : [];
+  const visibleNearbyJoinableChains = nearbyJoinableChains.slice(
+    0,
+    nearbyLoopResultLimit,
+  );
 
   return (
     <>
@@ -564,7 +581,7 @@ export default function FindChain() {
           onSearch={handleSearch}
         />
 
-        {hasAddressSearch ? (
+        {NEARBY_LOOP_RESULTS_ENABLED && hasAddressSearch ? (
           <section className="container mx-auto px-4 md:px-20 py-6">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
               <div>
@@ -589,41 +606,62 @@ export default function FindChain() {
             </div>
 
             {nearbyJoinableChains.length ? (
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {nearbyJoinableChains.map(({ chain, distance }) => (
-                  <article
-                    key={chain.uid}
-                    className="border border-grey/20 p-4 bg-white"
-                  >
-                    <h2 className="font-semibold text-secondary text-xl mb-2 break-words">
-                      {chain.name}
-                    </h2>
-                    <p className="text-sm mb-4">
-                      {t("distanceAway", {
-                        defaultValue: "{{distance}} km away",
-                        distance: distance.toFixed(1),
-                      })}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <a
-                        href={localizePath(
-                          "/loops/users/signup/?chain=" + chain.uid,
-                        )}
-                        className="btn btn-sm btn-primary"
-                      >
-                        {t("join")}
-                      </a>
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-secondary btn-outline"
-                        onClick={() => handleViewOnMap(chain)}
-                      >
-                        {t("viewOnMap", { defaultValue: "View on map" })}
-                      </button>
-                    </div>
-                  </article>
-                ))}
-              </div>
+              <>
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {visibleNearbyJoinableChains.map(({ chain, distance }) => (
+                    <article
+                      key={chain.uid}
+                      className="border border-grey/20 p-4 bg-white"
+                    >
+                      <h2 className="font-semibold text-secondary text-xl mb-2 break-words">
+                        {chain.name}
+                      </h2>
+                      <p className="text-sm mb-4">
+                        {t("distanceAway", {
+                          defaultValue: "{{distance}} km away",
+                          distance: distance.toFixed(1),
+                        })}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <a
+                          href={localizePath(
+                            "/loops/users/signup/?chain=" + chain.uid,
+                          )}
+                          className="btn btn-sm btn-primary"
+                        >
+                          {t("join")}
+                        </a>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-secondary btn-outline"
+                          onClick={() => handleViewOnMap(chain)}
+                        >
+                          {t("viewOnMap", { defaultValue: "View on map" })}
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+                {nearbyLoopResultLimit < nearbyJoinableChains.length ? (
+                  <div className="mt-5 flex justify-center">
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-outline"
+                      onClick={() =>
+                        setNearbyLoopResultLimit(
+                          (limit) => limit + NEARBY_LOOP_RESULTS_PAGE_SIZE,
+                        )
+                      }
+                    >
+                      {t("loadMore", { defaultValue: "Load more" })}
+                      <span
+                        className="icon-chevron-down ms-2"
+                        aria-hidden="true"
+                      ></span>
+                    </button>
+                  </div>
+                ) : null}
+              </>
             ) : (
               <div className="border border-grey/20 bg-white p-5">
                 <h2 className="font-semibold text-secondary text-xl mb-2">
