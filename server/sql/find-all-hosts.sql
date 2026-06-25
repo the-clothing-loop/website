@@ -8,3 +8,11 @@ FROM users AS u
         AND uc.is_chain_admin = TRUE
 GROUP BY u.id
 HAVING u.email is not NULL
+
+
+
+-- Hosts active in YEAR
+SELECT COUNT(DISTINCT uc.user_id) AS active_hosts_2024
+FROM user_chains AS uc
+WHERE uc.is_chain_admin = TRUE
+  AND uc.created_at < DATE('2025-01-01');
