@@ -242,8 +242,6 @@ export default function FindChain() {
           source: "chains",
           filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
-            // Border-only style: keep the fill transparent (features stay
-            // clickable) and carry the color on the stroke instead.
             "circle-color": ["rgba", 0, 0, 0, 0],
             "circle-radius": [
               "interpolate",
