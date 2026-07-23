@@ -78,10 +78,15 @@ function mapToGeoJSONChains(
 function createFilterFunc(
   genders: string[],
   sizes: string[],
+  openToNewMembers: boolean = false,
 ): (c: Chain) => boolean {
-  if (!sizes?.length && !genders?.length) return (_: Chain) => true;
+  if (!sizes?.length && !genders?.length && !openToNewMembers)
+    return (_: Chain) => true;
 
   return (c: Chain) => {
+    if (openToNewMembers && !c.open_to_new_members) {
+      return false;
+    }
     for (let g of genders) {
       if (!c.genders?.includes(g)) {
         return false;
@@ -111,6 +116,7 @@ export default function FindChain() {
     searchTerm: urlParams.get("q") || "",
     sizes: urlParams.getAll("s") || [],
     genders: urlParams.getAll("g") || [],
+    openToNewMembers: urlParams.get("otnm") === "1",
   };
 
   const chains = useStore($chains);
@@ -180,6 +186,7 @@ export default function FindChain() {
       const filterFunc = createFilterFunc(
         urlParams.getAll("g"),
         urlParams.getAll("s"),
+        urlParams.get("otnm") === "1",
       );
 
       const addChainLayers = () => {
@@ -242,17 +249,7 @@ export default function FindChain() {
           source: "chains",
           filter: [">", ["zoom"], clusterMaxZoom],
           paint: {
-            "circle-color": [
-              "case",
-              ["==", ["feature-state", "clicked"], true],
-              ["rgba", 81, 141, 126, 0.4],
-              [
-                "case",
-                ["get", "open_to_new_members"],
-                ["rgba", 240, 196, 73, 0.4], // #f0c449
-                ["rgba", 0, 0, 0, 0.1],
-              ],
-            ],
+            "circle-color": ["rgba", 0, 0, 0, 0],
             "circle-radius": [
               "interpolate",
               ["exponential", 2],
@@ -266,12 +263,12 @@ export default function FindChain() {
             "circle-stroke-color": [
               "case",
               ["==", ["feature-state", "clicked"], true],
-              ["rgba", 72, 128, 139, 0.4],
+              ["rgba", 72, 128, 139, 1],
               [
                 "case",
                 ["get", "open_to_new_members"],
-                ["rgba", 240, 196, 73, 0.4], // #f0c449
-                ["rgba", 0, 0, 0, 0.1],
+                ["rgba", 240, 196, 73, 1], // #f0c449
+                ["rgba", 0, 0, 0, 0.3],
               ],
             ],
           },
@@ -455,6 +452,7 @@ export default function FindChain() {
     const filterFunc = createFilterFunc(
       urlParams.getAll("g"),
       urlParams.getAll("s"),
+      urlParams.get("otnm") === "1",
     );
     let ans = visibleFeatures
       .sort((a, b) => {
@@ -491,7 +489,7 @@ export default function FindChain() {
     (map.getSource("chains") as mapboxgl.GeoJSONSource).setData(
       mapToGeoJSONChains(
         chains,
-        createFilterFunc(search.genders, search.sizes),
+        createFilterFunc(search.genders, search.sizes, search.openToNewMembers),
       ),
     );
 
@@ -565,7 +563,11 @@ export default function FindChain() {
     searchedValues
       ? chains
           .filter(
-            createFilterFunc(searchedValues.genders, searchedValues.sizes),
+            createFilterFunc(
+              searchedValues.genders,
+              searchedValues.sizes,
+              searchedValues.openToNewMembers,
+            ),
           )
           .filter((chain) => chain.published && chain.open_to_new_members)
           .map((chain) => ({

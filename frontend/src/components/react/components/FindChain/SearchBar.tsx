@@ -1,4 +1,4 @@
-import { type FormEvent, useMemo, useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 
 import Geocoding, { type Estimate } from "../../pages/Geocoding";
 
@@ -25,6 +25,7 @@ export interface SearchValues {
   searchTerm: string;
   sizes: string[];
   genders: string[];
+  openToNewMembers: boolean;
 }
 
 interface Props {
@@ -51,6 +52,9 @@ export function toUrlSearchParams(
   for (const gender of search.genders) {
     queryParams.append("g", gender);
   }
+  if (search.openToNewMembers) {
+    queryParams.append("otnm", "1");
+  }
   return "?" + queryParams.toString();
 }
 type MSearchChain = Pick<
@@ -70,6 +74,7 @@ export default function SearchBar(props: Props) {
     searchTerm: "",
     sizes: [],
     genders: [],
+    openToNewMembers: false,
     ...props.initialValues,
   });
   let refSubmit = useRef<any>();
@@ -136,14 +141,6 @@ export default function SearchBar(props: Props) {
     props.onSearch(values, longLat);
   }
 
-  const emptyValues = useMemo(
-    () =>
-      Object.values(values).reduce((isEmpty, v) => {
-        return isEmpty ? v.length === 0 : false;
-      }, true),
-    [values],
-  );
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -177,11 +174,7 @@ export default function SearchBar(props: Props) {
         />
       </label>
 
-      <div
-        className={`flex group-focus-within:flex ${
-          !emptyValues ? "" : "hidden md:flex"
-        }`}
-      >
+      <div className="flex flex-wrap items-center">
         <div className="flex">
           <div className="w-36 sm:w-48 pr-0 sm:pr-4">
             <CategoriesDropdown
@@ -201,6 +194,16 @@ export default function SearchBar(props: Props) {
             />
           </div>
         </div>
+
+        <label className="flex items-center cursor-pointer whitespace-nowrap px-2 py-2 sm:py-0 ltr:sm:mr-4 rtl:sm:ml-4">
+          <input
+            type="checkbox"
+            className="checkbox checkbox-sm ltr:mr-2 rtl:ml-2"
+            checked={values.openToNewMembers}
+            onChange={(e) => setValue("openToNewMembers", e.target.checked)}
+          />
+          <span className="text-sm">{t("hideClosedLoops")}</span>
+        </label>
 
         <button type="submit" className="grow btn btn-primary" ref={refSubmit}>
           <span className="hidden sm:inline">{t("search")}</span>
