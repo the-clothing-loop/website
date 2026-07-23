@@ -141,6 +141,7 @@
   "submit": "Bestätigen",
   "create": "Create",
   "search": "Suche",
+  "hideClosedLoops": "Verstecke geschlossene Schleifen",
   "noResultsFound": "Keine Ergebnisse gefunden",
   "noLoopsFoundIn": "Keine Loops gefunden in",
   "close": "Schließen",
