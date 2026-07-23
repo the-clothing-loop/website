@@ -135,7 +135,6 @@ export default function FindChain() {
   const mapRef = useRef<any>();
 
   useEffect(() => {
-    console.log("MAPBOX_TOKEN", MAPBOX_TOKEN);
     if (!mapRef.current) return;
     const _center = [
       Number.parseFloat(urlParams.get("lo") || ""),
@@ -163,8 +162,16 @@ export default function FindChain() {
     setZoom(4);
 
     const clusterMaxZoom = 8;
-    chainGetAll({ filter_out_unpublished: true }).then((res) => {
-      const _chains = res.data;
+    const chainsReq = chainGetAll({ filter_out_unpublished: true });
+    _map.on("load", async () => {
+      let _chains: Chain[];
+      try {
+        _chains = (await chainsReq).data;
+      } catch (err) {
+        console.error("Failed to load loops for the map", err);
+        addToastError(t("genericError"), 500);
+        return;
+      }
 
       _map.on("zoomend", (e) => {
         setZoom(e.target.getZoom());
@@ -175,7 +182,7 @@ export default function FindChain() {
         urlParams.getAll("s"),
       );
 
-      _map.on("load", () => {
+      const addChainLayers = () => {
         _map.addSource("chains", {
           type: "geojson",
           data: mapToGeoJSONChains(_chains, filterFunc),
@@ -373,7 +380,9 @@ export default function FindChain() {
             }
           }
         });
-      });
+      };
+
+      addChainLayers();
       $chains.set(_chains);
     });
 
