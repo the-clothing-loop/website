@@ -141,6 +141,7 @@
   "submit": "إرسال",
   "create": "إنشاء",
   "search": "البحث",
+  "hideClosedLoops": "إخفاء الحلقات المغلقة",
   "noResultsFound": "لم يتم العثور على نتائج",
   "noLoopsFoundIn": "لا توجد حلقات في",
   "close": "أغلق",
