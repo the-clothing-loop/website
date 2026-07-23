@@ -141,6 +141,7 @@
   "submit": "Send",
   "create": "Opprett",
   "search": "Søk",
+  "hideClosedLoops": "Skjul lukkede løkker",
   "noResultsFound": "Ingen resultater funnet",
   "noLoopsFoundIn": "Ingen løkker funnet i",
   "close": "Lukk",
