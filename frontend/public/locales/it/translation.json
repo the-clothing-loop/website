@@ -141,6 +141,7 @@
   "submit": "Invia",
   "create": "Create",
   "search": "Cerca",
+  "hideClosedLoops": "Nascondi cicli chiusi",
   "noResultsFound": "Nessun risultato trovato",
   "noLoopsFoundIn": "Nessun Loop trovato in",
   "close": "Chiudi",
