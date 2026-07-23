@@ -15,6 +15,7 @@ type UserChain struct {
 	LastNotifiedIsUnapprovedAt *time.Time  `json:"-"`
 	RouteOrder                 int         `json:"-"`
 	IsPaused                   bool        `json:"is_paused"`
+	PausedAt                   *time.Time  `json:"paused_at,omitempty"`
 	Note                       *string     `json:"-" gorm:"->:false;<-:create"`
 	Bags                       []Bag       `json:"-"`
 	Bulky                      []BulkyItem `json:"-"`
