@@ -141,6 +141,7 @@
   "submit": "Enviar",
   "create": "Create",
   "search": "Buscar",
+  "hideClosedLoops": "Ocultar bucles cerrados",
   "noResultsFound": "No se encontraron resultados.",
   "noLoopsFoundIn": "No se encontraron Loops en",
   "close": "Cerrar",
