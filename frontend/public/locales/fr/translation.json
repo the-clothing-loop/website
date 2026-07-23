@@ -141,6 +141,7 @@
   "submit": "Soumettre",
   "create": "Create",
   "search": "Chercher",
+  "hideClosedLoops": "Masquer les boucles fermées",
   "noResultsFound": "Aucun résultat trouvé",
   "noLoopsFoundIn": "Aucun Loop trouvé à",
   "close": "Fermer",
