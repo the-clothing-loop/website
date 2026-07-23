@@ -165,6 +165,8 @@ export default function SideBar({
             />
           ))}
         </div>
+        {/* Bottom shadow to hint that the list is scrollable */}
+        <div className="sticky bottom-0 h-5 -mt-5 pointer-events-none bg-gradient-to-t from-black/25 to-transparent" />
       </form>
     </div>
   );
