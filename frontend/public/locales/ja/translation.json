@@ -141,6 +141,7 @@
   "submit": "Submit",
   "create": "Create",
   "search": "Search",
+  "hideClosedLoops": "閉じたループを隠す",
   "noResultsFound": "No results found",
   "noLoopsFoundIn": "No Loops found in",
   "close": "Close",
