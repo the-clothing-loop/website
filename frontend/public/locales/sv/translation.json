@@ -141,6 +141,7 @@
   "submit": "Skicka in",
   "create": "Create",
   "search": "Sök",
+  "hideClosedLoops": "Dölj stängda slingor",
   "noResultsFound": "Inga resultat hittades",
   "noLoopsFoundIn": "Inga loopar hittades i",
   "close": "Stäng",
