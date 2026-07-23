@@ -141,6 +141,7 @@
   "submit": "Submit",
   "create": "Create",
   "search": "Search",
+  "hideClosedLoops": "Hide closed Loops",
   "noResultsFound": "No results found",
   "noLoopsFoundIn": "No Loops found in",
   "close": "Close",
