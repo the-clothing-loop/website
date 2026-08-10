@@ -8,10 +8,7 @@ import { userUpdate } from "../../../api/user";
 import { $authUser } from "../../../stores/auth";
 import useLocalizePath from "../util/localize_path.hooks";
 
-const IS_PRODUCTION =
-  import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
-
-const languageFlags = getLanguageFlags(IS_PRODUCTION);
+const languageFlags = getLanguageFlags();
 
 export default function LanguageSwitcher(props: {
   className?: string;

@@ -13,10 +13,7 @@ import { addToastError } from "../../../stores/toast";
 import useLocalizePath from "../util/localize_path.hooks";
 import useHydrated from "../util/hydrated.hooks";
 
-const IS_PRODUCTION =
-  import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
-
-const translationFlags = getLanguageFlags(IS_PRODUCTION);
+const translationFlags = getLanguageFlags();
 
 // Media
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";

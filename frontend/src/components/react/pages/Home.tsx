@@ -12,9 +12,6 @@ import getLanguages from "../../../languages";
 import { infoTopTenGet } from "../../../api/info";
 import type { InfoTopLoop } from "../../../api/typex2";
 
-const IS_PRODUCTION =
-  import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
-
 const CirclesFrame = "https://images.clothingloop.org/0x0/circles.png";
 
 interface Supporter {
@@ -42,7 +39,7 @@ export default function Home() {
       //@ts-ignore
       var browserLang = navigator.language || navigator.userLanguage;
       let lang = $authUser.get()?.i18n || browserLang || "en";
-      if (!getLanguages(IS_PRODUCTION).find((l) => l === lang)) lang = "en";
+      if (!getLanguages().find((l) => l === lang)) lang = "en";
 
       window.location.href = localizePath("/", lang);
     }

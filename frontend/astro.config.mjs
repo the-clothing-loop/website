@@ -15,7 +15,7 @@ export default defineConfig({
   integrations: [
     reactI18next({
       defaultLocale: "en",
-      locales: getLanguages(false),
+      locales: getLanguages(),
       defaultNamespace: "translation",
       namespaces: [
         "about",
@@ -35,7 +35,7 @@ export default defineConfig({
   outDir: "build",
   // i18n: {
   //   defaultLocale: "en",
-  //   locales: getLanguages(false),
+  //   locales: getLanguages(),
   //   routing: {
   //     prefixDefaultLocale: true,
   //   },
