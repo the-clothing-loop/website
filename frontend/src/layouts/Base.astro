@@ -15,11 +15,8 @@ interface Props {
 
 const { title} = Astro.props;
 
-const IS_PRODUCTION =
-  import.meta.env.PUBLIC_BASE_URL === "https://www.clothingloop.org";
-
 const isRtl =
-  getLanguageFlags(IS_PRODUCTION).find((f) => f.lng === i18n.language)
+  getLanguageFlags().find((f) => f.lng === i18n.language)
     ?.rtl || false;
 
 

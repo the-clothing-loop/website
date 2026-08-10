@@ -1,21 +1,19 @@
 /**
- * @param {boolean} isProduction
  * @returns {string[]}
  */
-export default function getLanguages(isProduction) {
+export default function getLanguages() {
   /**
    * @typedef {string[]}
    */
-  let languages = getLanguageFlags(isProduction).map((f) => f.lng);
+  let languages = getLanguageFlags().map((f) => f.lng);
 
   return languages;
 }
 
 /**
- * @param {boolean} isProduction
  * @returns {{lng:string; title:string; code: string; rtl?: boolean}[]}
  */
-export function getLanguageFlags(isProduction) {
+export function getLanguageFlags() {
   /**
    * @typedef {{lng:string; title:string; code: string; rtl?: boolean; }[]}
    */
@@ -28,18 +26,14 @@ export function getLanguageFlags(isProduction) {
     { lng: "it", title: "Italiano", code: "IT" },
     { lng: "sv", title: "svenska", code: "SV" },
     { lng: "he", title: "עִברִית", code: "HE", rtl: true },
+    { lng: "pt", title: "Português", code: "PT" },
+    {
+      lng: "ar",
+      title: "العربية",
+      code: "AR",
+      rtl: true,
+    },
   ];
-  if (!isProduction) {
-    flags = flags.concat([
-      { lng: "pt", title: "Português", code: "PT" },
-      {
-        lng: "ar",
-        title: "العربية",
-        code: "AR",
-        rtl: true,
-      },
-    ]);
-  }
   return flags;
 }
 
