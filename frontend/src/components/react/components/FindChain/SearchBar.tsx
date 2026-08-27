@@ -155,11 +155,9 @@ export default function SearchBar(props: Props) {
           className="z-40 w-full"
           onResult={handleSearchChange}
           onSelectResult={handleSearchSelected}
-          placeholder={
-            t("fillInYourAddress", {
-              defaultValue: "Fill in your address",
-            })!
-          }
+          placeholder={t("fillInYourAddress", {
+            defaultValue: "Fill in your address",
+          })!}
           externalGeocoder={externalGeocoder}
           types={[
             "country",
