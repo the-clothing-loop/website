@@ -55,9 +55,7 @@ export default function DeleteModal({
     for (let n in Object.keys(ReasonsForLeavingI18nKeys)) {
       //@ts-expect-error e.target should be a form element with the name of each checkbox as a index
       const elCheckbox = e.target[NAME_PREFIX + n] as
-        | null
-        | undefined
-        | HTMLInputElement;
+        null | undefined | HTMLInputElement;
       if (!elCheckbox) continue;
       if (elCheckbox.checked) {
         selectedReasons.push(n);

@@ -1,3 +1,5 @@
+import { expect, test } from "vitest";
+
 import OriginalImageToProxy from "./image_proxy";
 
 test("should replace the original url with the proxied url", () => {
