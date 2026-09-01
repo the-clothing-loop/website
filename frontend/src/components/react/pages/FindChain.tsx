@@ -142,28 +142,23 @@ export default function FindChain() {
 
   useEffect(() => {
     if (!mapRef.current) return;
-    const _center = [
-      Number.parseFloat(urlParams.get("lo") || ""),
-      Number.parseFloat(urlParams.get("la") || ""),
-    ];
-    const hasCenter = !!(
-      _center[GEOJSON_LONGITUDE_INDEX] && _center[GEOJSON_LATITUDE_INDEX]
-    );
+    const _center = initialCenter;
     const _map = new mapboxgl.Map({
       accessToken: MAPBOX_TOKEN,
       container: mapRef.current,
       projection: { name: "mercator" },
-      zoom: hasCenter ? 10 : 4,
+      zoom: _center ? 10 : 4,
       minZoom: 1,
       maxZoom: 13,
-      center: (hasCenter
-        ? _center
-        : [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
+      center: (_center ?? [4.8998197, 52.3673008]) as mapboxgl.LngLatLike,
       style: "mapbox://styles/mapbox/light-v11",
     });
     const _marker = new mapboxgl.Marker({
       color: "#518d7e",
     });
+    if (_center) {
+      _marker.setLngLat(_center as mapboxgl.LngLatLike).addTo(_map);
+    }
 
     setZoom(4);
 
