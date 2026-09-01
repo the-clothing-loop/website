@@ -32,6 +32,10 @@
     "7": {
       "question": "קיבלנו הודעת שגיאה \"החשבון שלכם כבר קיים\".",
       "answer": "יצרתם בעבר חשבון ב- Clothing Loop. על מנת להירשם ללולאה חדשה, ראשית אתם צריכים להתחבר:<ol><li> הקליקו בפינה הימנית העליונה על התחברות.</li><li>הזינו את כתובת המייל איתה נרשמתם ללולאה שלכם.</li><li>בדקו את תיבת המייל שלכם (גם את תיבת הספאם!) וחפשו את לינק האימות שלנו. אנו משתמשים בלינק ולא בסיסמה!</li><li>ואז תוכלו להירשם ללולאה חדשה.</li></ol>"
+    },
+    "8": {
+      "question": "How do I change the email address in my account?",
+      "answer": "Unfortunately, it is not possible to change your email address yourself. You can request a change by sending a message to <a href='mailto:hello@clothingloop.org'>hello@clothingloop.org</a> from one of the email addresses associated with your account, specifying your old and new email address. For additional verification, please include your phone number and house address. We will then change it for you."
     }
   },
   "faqForApp": "FAQ for the App",

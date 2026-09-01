@@ -32,6 +32,10 @@
     "7": {
       "question": "Recibo el error: “tu cuenta ya existe”.",
       "answer": "Ya has creado una cuenta en el The Clothing Loop. Para registrarte en un Loop nuevo, primero tienes que iniciar sesión:<ol><li>Haz clic en la esquina superior derecha en el inicio de sesión.</li><li>Introduce la dirección de correo electrónico que utilizaste para registrarte en tu Loop.</li><li>Busca en tu correo electrónico, incluso en tu carpeta de spam, nuestro enlace de verificación (utilizamos un enlace en lugar de una contraseña).</li><li>Podrás registrarte en un nuevo Loop.</li></ol>"
+    },
+    "8": {
+      "question": "¿Cómo cambio la dirección de correo electrónico de mi cuenta?",
+      "answer": "Desafortunadamente, no es posible cambiar tu dirección de correo electrónico. Puedes solicitar un cambio enviando un mensaje a <a href='mailto:hello@clothingloop.org'>hello@clothingloop. rg</a> desde una de las direcciones de correo electrónico asociadas a tu cuenta, especificando tu antigua y nueva dirección de correo electrónico. Para verificación adicional, por favor incluya su número de teléfono y dirección de la casa. Luego lo cambiaremos por usted."
     }
   },
   "faqForApp": "FAQ para la aplicación",
