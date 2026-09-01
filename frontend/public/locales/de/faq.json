@@ -32,6 +32,10 @@
     "7": {
       "question": "Ich bekomme den Fehler: „Dein Konto existiert bereits“.",
       "answer": "Du hast bereits ein Konto bei Clothing Loop erstellt. Um Dich für einen neuen Loop anzumelden, musst Du Dich zuerst einloggen:<ol><li>Klicke in der rechten oberen Ecke auf login.</li><li>Gib die E-Mail-Adresse ein, mit der Du Dich beim Loop registriert hast.</li><li>Überprüfe Deine E-Mail (und den Spam-Ordner!) auf unseren Bestätigungslink. Wir verwenden einen Link anstelle eines Passworts!</li><li>Dann kannst Du Dich für einen neuen Loop anmelden.</li></ol>"
+    },
+    "8": {
+      "question": "Wie ändere ich die E-Mail-Adresse in meinem Konto?",
+      "answer": "Leider ist es nicht möglich, Ihre E-Mail-Adresse selbst zu ändern. Sie können eine Änderung anfordern, indem Sie eine Nachricht an <a href='mailto:hello@clothingloop.org'>hello@clothingloop. rg</a> von einer der mit Ihrem Konto verknüpften E-Mail-Adressen mit Angabe Ihrer alten und neuen E-Mail-Adresse. Zur weiteren Verifizierung geben Sie bitte Ihre Telefonnummer und Hausadresse ein. Wir werden sie dann für Sie ändern."
     }
   },
   "faqForApp": "FAQ for the App",
