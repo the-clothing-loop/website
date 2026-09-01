@@ -32,6 +32,10 @@
     "7": {
       "question": "Ho l'errore: “il tuo account esiste già”.",
       "answer": "Hai già creato un account al Loop Abbigliamento. Per iscriverti a un nuovo ciclo, dovrai prima effettuare il login:<ol><li>Clicca nell'angolo in alto a destra al momento dell'accesso.</li><li>Inserisci l'indirizzo email utilizzato per registrare il tuo Loop.</li><li>Controlla la tua email (e la cartella spam!) per il nostro link di verifica. Utilizziamo un link invece di una password!</li><li>Allora potrai iscriverti a un nuovo Loop.</li></ol>"
+    },
+    "8": {
+      "question": "Come faccio a cambiare l'indirizzo email nel mio account?",
+      "answer": "Sfortunatamente, non è possibile cambiare il tuo indirizzo email. Puoi richiedere una modifica inviando un messaggio a <a href='mailto:hello@clothingloop.org'>hello@clothingloop. rg</a> di uno degli indirizzi email associati al tuo account, specificando il tuo vecchio e nuovo indirizzo email. Per ulteriori verifiche, si prega di includere il numero di telefono e l'indirizzo della casa. Poi lo cambieremo per voi."
     }
   },
   "faqForApp": "FAQ for the App",
