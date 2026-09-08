@@ -32,6 +32,10 @@
     "7": {
       "question": "Ik krijg de fout: “Je account bestaat al.”",
       "answer": "Je hebt eerder al een account aangemaakt bij de Clothing Loop. Om je bij een nieuwe Loop aan te melden, moet je eerst inloggen:<ol><li>Klik in de rechterbovenhoek om in te loggen.</li><li>Voer het e-mailadres in dat je hebt gebruikt om je te registreren.</li><li>Controleer je e-mail (en spamfolder) voor onze verificatielink. We gebruiken een link in plaats van een wachtwoord!</li><li>Daarna kun jij je aanmelden bij een nieuwe Loop.</li></ol>"
+    },
+    "8": {
+      "question": "Hoe wijzig ik het e-mailadres in mijn account?",
+      "answer": "Helaas is het niet mogelijk om je e-mailadres zelf te wijzigen. Je kunt een wijziging aanvragen door een bericht te sturen naar <a href='mailto:hello@clothingloop.org'>hello@clothingloop. rg</a> van een van de e-mailadressen die aan uw account zijn gekoppeld, door uw oude en nieuwe e-mailadres op te geven. Voeg je telefoonnummer en huisadres toe voor meer verificatie. We zullen dit vervolgens voor je wijzigen."
     }
   },
   "faqForApp": "Veelgestelde vragen over de app",

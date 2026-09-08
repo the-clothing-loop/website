@@ -32,6 +32,10 @@
     "7": {
       "question": "Jeg får feilen: \"Din konto eksisterer allerede\".",
       "answer": "Previously, <strong>you have created an account at the Clothing Loop already.</strong> To sign up for a new Loop, you will need to log in first. Click in the top right corner on login, Enter the email address you used to register your Loop.<br/>Check your email (and spam folder!) for our verification link. We use a link instead of a password! Then you will be able to sign up for a new Loop."
+    },
+    "8": {
+      "question": "Hvordan endrer jeg e-postadressen i min konto?",
+      "answer": "Dessverre er det ikke mulig å endre e-postadressen din selv. Du kan be om en endring ved å sende melding til <a href='mailto:hello@clothingloop.org'>hello@clothingloop. rg</a> fra en av e-postadressene knyttet til kontoen din, med å spesifisere din gamle og nye e-postadresse. For ekstra bekreftelse, inkludert ditt telefonnummer og husadresse. Vi endrer det deretter for deg."
     }
   },
   "faqForApp": "FAQ for appen",
