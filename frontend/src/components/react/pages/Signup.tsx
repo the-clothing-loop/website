@@ -144,9 +144,9 @@ export default function Signup() {
             credit: "",
           }
         : {
-            src: "https://images.clothingloop.org/x600/join_loop.jpg",
-            alt: "Nichon giving a large bag of clothes to another woman",
-            credit: "Anke Teunissen",
+            src: "https://images.clothingloop.org/x600/clothing-loop-sign-up-page.jpeg",
+            alt: "Paloeka walking down a tree lined country road",
+            credit: "(c) Steve Bulbes/Nichon Glerum",
           };
 
     return (
