@@ -115,15 +115,21 @@ export default function Home() {
       class: "pt-4 md:pt-0 w-full md:w-5/12 lg:w-4/12",
     },
     {
+      logo: "https://images.clothingloop.org/208x/provincie-zuid-holland-logo.jpg",
+      url: "https://www.zuid-holland.nl/",
+      alt: "Provincie Zuid-Holland",
+      class: "pt-4 md:pt-0 w-full md:w-5/12 lg:w-4/12",
+    },
+    {
       logo: "https://images.clothingloop.org/x74/logo_collaction.png",
       url: "https://www.collaction.org/",
       alt: "CollAction",
       class: "w-1/2 md:w-4/12 lg:w-4/12",
     },
     {
-      logo: "https://images.clothingloop.org/208x/meax_logo.png",
+      logo: "/images/social-handprint-logo-by-maex.svg",
       url: "https://maex.nl/#/initiative/8be552d9-8b8a-4b9e-ac00-9d425e627696",
-      alt: "MEAX",
+      alt: "Social Handprint by MAEX",
       class: "w-1/2 md:w-4/12 lg:w-4/12",
     },
     {
@@ -185,11 +191,11 @@ export default function Home() {
             <div className="md:pt-16 md:pe-20 lg:pe-40 md:w-1/2">
               <img
                 className="w-full lg:max-w-[600px] sm:h-96 md:h-auto object-cover object-top"
-                src="https://images.clothingloop.org/900x/kirsten_en_rosan.jpg"
-                alt="Bringing a bag full clothes to another's doorstep"
+                src="https://images.clothingloop.org/900x/clothing-loop-swap-dont-shop.jpg"
+                alt="Wearing wonderful swapped clothes in front of a graffiti wall."
               />
               <p className="text-sm my-1">
-                {t("photo")}: Martijn van den Dobbelsteen/de Brug
+                {t("photo")}: (c) Steve Bulbes/Nichon Glerum
               </p>
             </div>
           </div>
@@ -280,9 +286,9 @@ export default function Home() {
           <div className="flex flex-col-reverse md:flex-row items-center mb-8 md:mb-40">
             <div className="relative w-full md:w-1/2 md:pr-20 flex justify-end">
               <img
-                src="https://images.clothingloop.org/900x/numbered_bag_outdoors.jpg"
-                className="w-full md:max-w-[600px] object-cover object-bottom h-96"
-                alt="A numbered bag in front of a door and another in front of some letterboxes"
+                className="w-full md:max-w-[600px] h-96 object-cover object-top"
+                src="https://images.clothingloop.org/900x/clothing-loop-get-ready-to-swap-image.jpg"
+                alt="Two people exchanging a clothing loop bag at the front door."
               />
 
               <div className="hidden md:block absolute -z-10 bg-yellow/30 w-[600px] h-5/6 bottom-[-4rem] right-[2rem]">
@@ -382,9 +388,9 @@ export default function Home() {
         <section className="flex flex-col-reverse md:flex-row items-center mb-12 md:mb-20">
           <div className="md:w-1/2">
             <img
-              src="https://images.clothingloop.org/768x/nichon_zelfportret.jpg"
+              src="https://images.next.clothingloop.org/768x/lockdown-initiative-international-success.jpeg"
               className="object-cover object-top w-full max-h-[600px]"
-              alt="Nichon taking clothes out of a Clothing Loop bag"
+              alt="Clothing Loop bag at the metro station"
             />
           </div>
           <div className="md:w-1/2 px-6 md:px-10 text-secondary mb-6 md:mb-0">
@@ -407,16 +413,16 @@ export default function Home() {
 
         <Testimonials />
 
-        <section className="flex flex-col md:flex-row items-center md:items-end mb-8 md:mb-20">
-          <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+        <section className="flex flex-col md:flex-row items-center md:items-stretch mb-8 md:mb-20">
+          <div className="relative w-full md:w-[35%]">
             <img
-              src="https://images.clothingloop.org/900x/selfies.jpg"
-              alt="selfies of different people wearing clothes shared via their local Loop"
-              className="w-full md:max-w-[500px] max-md:object-cover object-top h-60 md:h-auto"
+              src="https://images.clothingloop.org/x725/clothing-loop-selfies-left.jpg"
+              alt="Selfies of different people wearing clothes shared via their local Loop"
+              className="h-60 w-full object-cover object-top md:absolute md:inset-0 md:h-full"
             />
           </div>
 
-          <div className="md:w-1/2 flex">
+          <div className="md:w-[30%] flex">
             <div className="relative p-10 md:max-w-[400px] bg-yellow/10 md:bg-transparent">
               <div className="hidden md:block -z-10 absolute w-full h-[300px] bg-yellow/10 ltr:-left-5 rtl:-right-5 bottom-0"></div>
               <h2
@@ -435,6 +441,13 @@ export default function Home() {
                 {t("donate")}
               </a>
             </div>
+          </div>
+          <div className="relative w-full md:w-[35%]">
+            <img
+              src="https://images.clothingloop.org/300x/clothing-loop-selfies-right.jpg"
+              alt="Selfies of different people wearing clothes shared via their local Loop"
+              className="h-60 w-full object-cover object-top md:absolute md:inset-0 md:h-full"
+            />
           </div>
         </section>
 
