@@ -115,8 +115,7 @@ export default function Home() {
       class: "pt-4 md:pt-0 w-full md:w-5/12 lg:w-4/12",
     },
     {
-      logo:
-        "https://images.clothingloop.org/208x/provincie-zuid-holland-logo.jpg",
+      logo: "https://images.clothingloop.org/208x/provincie-zuid-holland-logo.jpg",
       url: "https://www.zuid-holland.nl/",
       alt: "Provincie Zuid-Holland",
       class: "pt-4 md:pt-0 w-full md:w-5/12 lg:w-4/12",
