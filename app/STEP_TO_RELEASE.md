@@ -28,8 +28,9 @@ This project targets API 36 to meet the 2026 Google Play update requirement.
 
 For the Android 3.0.1 compatibility release:
 
-- `versionCode` is 36. Check Play Console's highest uploaded version code across
-  all tracks and increase it if 36 has already been used.
+- `versionCode` is 53 because Google Play has already used version code 52 for
+  the unfinished 4.0.0 test build. Check every track again before building and
+  increase it if a higher code has since been uploaded.
 - Run `npm ci` and `npm run build:android:production`. The build synchronizes
   native plugins as well as web assets.
 - Run `cd android && ./gradlew :app:assembleDebug :app:bundleRelease :app:lintDebug`
