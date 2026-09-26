@@ -1,12 +1,10 @@
 import { useMemo } from "react";
 import type { User, Chain } from "../../../../api/types";
-import { $authUser, authUserRefresh } from "../../../../stores/auth";
+import { $authUser } from "../../../../stores/auth";
 
-import { addModal, addToastError } from "../../../../stores/toast";
-import { chainAddUser } from "../../../../api/chain";
+import { requestJoinLoop } from "../../util/join-loop";
 
 // import sanitizeHtml from "sanitize-html";
-import { GinParseErrors } from "../../util/gin-errors";
 import { SizeBadges } from "../Badges";
 import { useStore } from "@nanostores/react";
 import { useTranslation } from "react-i18next";
@@ -61,29 +59,14 @@ export default function SideBar({
 
   function handleClickJoin(chain: Chain) {
     if (authUser && chain.uid) {
-      addModal({
-        message: t("AreYouSureJoinLoop", {
-          chainName: chain.name,
-          interpolation: {
-            escapeValue: false,
-          },
-        }),
-        actions: [
-          {
-            text: t("join"),
-            type: "secondary",
-            fn: () => {
-              chainAddUser(chain.uid, authUser.uid, false)
-                .then(() => {
-                  authUserRefresh(true);
-                  window.location.href = localizePath("/thankyou");
-                })
-                .catch((err) => {
-                  addToastError(GinParseErrors(t, err), err?.status);
-                });
-            },
-          },
-        ],
+      requestJoinLoop({
+        chain,
+        user: authUser,
+        t,
+        confirm: true,
+        onJoined: () => {
+          window.location.href = localizePath("/thankyou");
+        },
       });
     } else {
       window.location.href = localizePath(
