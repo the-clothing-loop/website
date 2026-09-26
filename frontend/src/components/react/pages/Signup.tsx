@@ -1,21 +1,22 @@
 // React / plugins
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { TwoColumnLayout } from "../components/Layouts";
 import AddressForm, { type ValuesForm } from "../components/AddressForm";
 import type { Chain, User } from "../../../api/types";
-import { chainAddUser, chainGet } from "../../../api/chain";
+import { chainGet } from "../../../api/chain";
 import { registerBasicUser, registerOrphanedUser } from "../../../api/login";
 
 import { GinParseErrors } from "../util/gin-errors";
 import type { TFunction } from "i18next";
 import { Categories } from "../../../api/enums";
 import { useStore } from "@nanostores/react";
-import { $authUser, authUserRefresh } from "../../../stores/auth";
+import { $authUser } from "../../../stores/auth";
 import { addModal, addToastError } from "../../../stores/toast";
 import getQuery from "../util/query";
 import useLocalizePath from "../util/localize_path.hooks";
+import { requestJoinLoop } from "../util/join-loop";
 import OriginalImageToProxy from "../util/image_proxy";
 
 export default function Signup() {
@@ -40,15 +41,10 @@ export default function Signup() {
     })();
   }, [chainUID]);
 
-  function onSubmitCurrentUser() {
-    if (authUser && chainUID) {
-      chainAddUser(chainUID, authUser.uid, false)
-        .then(() => {
-          authUserRefresh(true);
-        })
-        .catch((err) => {
-          addToastError(GinParseErrors(t, err), err?.status);
-        });
+  function onSubmitCurrentUser(event: FormEvent) {
+    event.preventDefault();
+    if (authUser && chain) {
+      requestJoinLoop({ chain, user: authUser, t });
     }
   }
 
