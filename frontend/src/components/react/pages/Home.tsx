@@ -18,7 +18,7 @@ interface Supporter {
   logo: string;
   url: string;
   alt: string;
-  class: string;
+  logoClass: string;
 }
 
 export default function Home() {
@@ -88,67 +88,67 @@ export default function Home() {
       logo: "https://images.clothingloop.org/160x/sfm_logo.png",
       url: "https://slowfashion.global/",
       alt: "Slow Fashion Movement",
-      class: "ps-[8.333333%] w-3/12 md:ps-0 md:w-3/12 lg:w-2/12",
+      logoClass: "max-w-[160px]",
     },
     {
       logo: "https://images.clothingloop.org/x100/npl_buurtfonds_logo_2023.png",
       url: "https://www.doen.nl/en",
       alt: "Stichting Doen",
-      class: "w-8/12 md:w-5/12 lg:w-4/12",
+      logoClass: "max-w-[240px]",
     },
     {
       logo: "https://images.clothingloop.org/160x,jpeg/logo_wdcd.png",
       url: "https://www.whatdesigncando.com/",
       alt: "What Design Can Do",
-      class: "w-1/2 md:w-4/12 lg:w-2/12",
+      logoClass: "max-w-[160px]",
     },
     {
       logo: "https://images.clothingloop.org/160x/logo_impact_hub.png",
       url: "https://impacthub.net/",
       alt: "Impact Hub",
-      class: "w-1/2 md:w-3/12 lg:w-2/12",
+      logoClass: "max-w-[160px]",
     },
     {
       logo: "https://images.clothingloop.org/208x/pnh_logo.png",
       url: "https://www.noord-holland.nl/",
       alt: "Provincie Noord-Holland",
-      class: "pt-4 md:pt-0 w-full md:w-5/12 lg:w-4/12",
+      logoClass: "max-w-[208px]",
     },
     {
-      logo: "https://images.clothingloop.org/208x/provincie-zuid-holland-logo.jpg",
+      logo: "https://images.clothingloop.org/260x/provincie-zuid-holland-logo.jpg",
       url: "https://www.zuid-holland.nl/",
       alt: "Provincie Zuid-Holland",
-      class: "pt-4 md:pt-0 w-full md:w-5/12 lg:w-4/12",
+      logoClass: "max-w-[230px]",
     },
     {
       logo: "https://images.clothingloop.org/x74/logo_collaction.png",
       url: "https://www.collaction.org/",
       alt: "CollAction",
-      class: "w-1/2 md:w-4/12 lg:w-4/12",
+      logoClass: "max-w-[208px]",
     },
     {
       logo: "/images/social-handprint-logo-by-maex.svg",
       url: "https://maex.nl/#/initiative/8be552d9-8b8a-4b9e-ac00-9d425e627696",
       alt: "Social Handprint by MAEX",
-      class: "w-1/2 md:w-4/12 lg:w-4/12",
+      logoClass: "max-w-[140px]",
     },
     {
       logo: "https://images.clothingloop.org/x120/de_duurzame_100.jpg",
       url: "https://verhalen.trouw.nl/duurzame100/",
       alt: "Trouw - Duurzame 100",
-      class: "w-1/2 md:w-4/12 lg:w-2/6",
+      logoClass: "max-w-[120px]",
     },
     {
       logo: "https://images.clothingloop.org/120x/duurzame_dinsdag.jpg",
       url: "https://www.duurzamedinsdag.nl/",
       alt: "Duurzame dinsdag",
-      class: "w-1/2 md:w-1/2 lg:w-2/6",
+      logoClass: "max-w-[120px]",
     },
     {
       logo: "https://images.clothingloop.org/140x/zerowastelogo.png",
       url: "https://zerowastenederland.nl/",
       alt: "Zero Waste Nederland",
-      class: "pt-4 md:pt-0 w-full md:w-1/2 lg:w-2/6",
+      logoClass: "max-w-[140px]",
     },
   ];
 
@@ -191,7 +191,7 @@ export default function Home() {
             <div className="md:pt-16 md:pe-20 lg:pe-40 md:w-1/2">
               <img
                 className="w-full lg:max-w-[600px] sm:h-96 md:h-auto object-cover object-top"
-                src="https://images.clothingloop.org/900x/clothing-loop-swap-dont-shop.jpg"
+                src="https://images.clothingloop.org/900x/clothing-loop-swap-dont-shop-new.jpg"
                 alt="Wearing wonderful swapped clothes in front of a graffiti wall."
               />
               <p className="text-sm my-1">
@@ -444,7 +444,7 @@ export default function Home() {
           </div>
           <div className="relative w-full md:w-[35%]">
             <img
-              src="https://images.clothingloop.org/300x/clothing-loop-selfies-right.jpg"
+              src="https://images.clothingloop.org/900x/clothing-loop-selfies-right-new.jpg"
               alt="Selfies of different people wearing clothes shared via their local Loop"
               className="h-60 w-full object-cover object-top md:absolute md:inset-0 md:h-full"
             />
@@ -466,14 +466,24 @@ export default function Home() {
               </a>{" "}
             </p>
           </div>
-          <ul className="max-w-screen-md mx-auto flex flex-wrap items-center justify-evenly mb-2 sm:mb-20">
+          <ul className="max-w-screen-lg mx-auto flex flex-wrap items-center justify-center px-2 mb-2 sm:mb-20">
             {supporters.map((el, i) => {
               return (
                 <li
-                  className={el.class + " flex justify-center mb-4 md:mb-8"}
+                  className={
+                    "flex justify-center px-4 mb-4 md:mb-8 " +
+                    (i < 8 ? "w-1/2 md:w-1/4" : "w-1/2 md:w-1/3")
+                  }
                   key={i}
                 >
-                  <a href={el.url} target="_blank" rel="noreferrer">
+                  <a
+                    className={
+                      "flex w-full items-center justify-center " + el.logoClass
+                    }
+                    href={el.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <img className="w-full" src={el.logo} alt={el.alt} />
                   </a>
                 </li>
