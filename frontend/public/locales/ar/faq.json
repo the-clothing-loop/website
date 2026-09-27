@@ -32,6 +32,10 @@
     "7": {
       "question": "أنا أحصل على الخطأ: \"حسابك موجود بالفعل\".",
       "answer": "Previously, <strong>you have created an account at the Clothing Loop already.</strong> To sign up for a new Loop, you will need to log in first. Click in the top right corner on login, Enter the email address you used to register your Loop.<br/>Check your email (and spam folder!) for our verification link. We use a link instead of a password! Then you will be able to sign up for a new Loop."
+    },
+    "8": {
+      "question": "كيف يمكنني تغيير عنوان البريد الإلكتروني في حسابي؟",
+      "answer": "للأسف، لا يمكن تغيير عنوان البريد الإلكتروني الخاص بك بنفسك. يمكنك طلب تغيير بإرسال رسالة إلى <a href='mailto:hello@clothingloop.org'>hello@clothingloop. rg</a> من أحد عناوين البريد الإلكتروني المرتبطة بحسابك، يحدد عنوان بريدك الإلكتروني القديم والجديد. لمزيد من التحقق، يرجى تضمين رقم هاتفك وعنوان المنزل. ثم نقوم بتغييره لك."
     }
   },
   "faqForApp": "أسئلة متكررة للتطبيق",

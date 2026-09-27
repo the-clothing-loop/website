@@ -76,7 +76,7 @@ export default function Counters() {
           <div className="h-20 text-4xl font-serif flex items-center">
             <span>
               <span className="text-stroke-base-100 tracking-wide">
-                {new Intl.NumberFormat().format(1197375)}
+                {new Intl.NumberFormat().format(2147217)}
               </span>
 
               <span className="text-lg ms-1">&nbsp;{t("lKg")}</span>
@@ -89,7 +89,7 @@ export default function Counters() {
           <div className="h-20 text-4xl font-serif flex items-center">
             <span>
               <span className="text-stroke-base-100 tracking-wide">
-                {new Intl.NumberFormat().format(580544000)}
+                {new Intl.NumberFormat().format(1041076000)}
               </span>
               <span className="text-lg ms-1">&nbsp;{t("nLiters")}</span>
             </span>

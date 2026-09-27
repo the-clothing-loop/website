@@ -142,9 +142,9 @@ export default function About() {
                   p: <p></p>,
                   imgTeam: (
                     <img
-                      src="https://images.clothingloop.org/426x/paloeka_nichon_landscape.jpg"
-                      alt="Paloeka and Nichon"
-                      className="w-2/3 mx-auto object-contain object-center mb-6 md:mb-0"
+                      src="https://images.clothingloop.org/600x/paloeka_and_nichon.jpeg"
+                      alt="Paloeka and Nichon on a field of flowers"
+                      className="w-full mx-auto object-contain object-center mb-6 md:mb-0"
                     />
                   ),
                   aNichonInstagram: (

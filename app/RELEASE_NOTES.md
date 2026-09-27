@@ -1,5 +1,11 @@
 # Release Notes
 
+## 3.0.1 (Android)
+
+- Target Android 16 (API 36) for Google Play availability on newer devices.
+- Keep content clear of system bars, display cutouts and the keyboard on Android 15 and 16.
+- Preserve existing Back button navigation on Android 16.
+
 ## v1.0
 
 - This is the first beta release!
