@@ -254,11 +254,16 @@ export default function FindChain() {
               20,
               ["get", "radius"],
             ],
-            "circle-stroke-width": 2,
+            "circle-stroke-width": [
+              "case",
+              ["==", ["feature-state", "clicked"], true],
+              4,
+              2,
+            ],
             "circle-stroke-color": [
               "case",
               ["==", ["feature-state", "clicked"], true],
-              ["rgba", 72, 128, 139, 1],
+              "#513484", // theme purple
               [
                 "case",
                 ["get", "open_to_new_members"],
