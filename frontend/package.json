@@ -55,7 +55,7 @@
     "react-i18next": "^12.0.5",
     "react-phone-number-input": "^3.3.9",
     "redaxios": "^0.5.1",
-    "sanitize-html": "^2.12.1",
+    "sanitize-html": "^2.18.0",
     "sitemap": "^7.1.1",
     "use-debounce": "^10.0.0",
     "use-query-params": "^2.2.1"
