@@ -14,6 +14,7 @@ import {
 
 import dayjs from "../util/dayjs";
 import simplifyDays from "../util/simplify-days";
+import isUserPaused from "../util/is-user-paused";
 
 import { UserDataExport } from "../components/DataExport";
 import {
@@ -54,6 +55,7 @@ import ChainDescription from "../components/FindChain/ChainDescription";
 import { useLegal } from "../util/user.hooks";
 import QrCode from "../components/LoopMembers/QrCode";
 import ChainMemberListLoading from "../components/LoopMembers/LoopMembersLoading";
+import PausedSince from "../components/LoopMembers/PausedSince";
 import { uploadImageFile } from "../../../api/imgbb";
 import { EVENT_IMAGE_EXPIRATION } from "../../../api/event";
 import OriginalImageToProxy from "../util/image_proxy";
@@ -68,7 +70,7 @@ enum LoadingState {
   success,
 }
 
-type SelectedTable = "route" | "participants" | "unapproved";
+type SelectedTable = "route" | "participants" | "paused" | "unapproved";
 
 const PUBLIC_BASE_URL = import.meta.env.PUBLIC_BASE_URL;
 
@@ -132,6 +134,10 @@ export default function ChainMemberList() {
   }, [users, route]);
 
   useLegal(t, authUser);
+
+  const pausedUsers = participantsSortUsers.filter((u) =>
+    isUserPaused(u, chainUID),
+  );
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
     let isChecked = e.target.checked;
@@ -732,7 +738,7 @@ export default function ChainMemberList() {
               })}
             </h2>
 
-            <div className="order-3 sm:order-2 lg:col-span-1 lg:justify-self-center flex border border-secondary bg-teal-light">
+            <div className="order-3 sm:order-2 lg:col-span-1 lg:justify-self-center flex flex-wrap gap-1 p-1 border border-secondary bg-teal-light">
               <label>
                 <input
                   type="radio"
@@ -742,9 +748,8 @@ export default function ChainMemberList() {
                   onChange={() => setSelectedTable("route")}
                   className="hidden peer"
                 />
-                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black pe-3 me-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-3 rounded-none border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("route")}
-                  <span className="skew-x-6 rtl:-skew-x-6 w-4 h-12 bg-[inherit] absolute -right-2 rtl:right-auto rtl:-left-2"></span>
                 </div>
               </label>
               <label>
@@ -756,10 +761,8 @@ export default function ChainMemberList() {
                   onChange={() => setSelectedTable("participants")}
                   className="hidden peer"
                 />
-                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-2 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
-                  <span className="-skew-x-6 w-4 h-12 bg-[inherit] absolute -left-3"></span>
+                <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-3 rounded-none border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
                   {t("edit")}
-                  <span className="skew-x-6 w-4 h-12 bg-[inherit] absolute -right-3"></span>
                 </div>
               </label>
               <label>
@@ -775,16 +778,15 @@ export default function ChainMemberList() {
                   className="hidden peer"
                 />
                 <div
-                  className={`relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none ps-3 ms-3 border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
+                  className={`relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none px-3 rounded-none border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary ${
                     unapprovedUsers.length
                       ? "text-black"
                       : "text-base-300 cursor-not-allowed"
                   }`}
                 >
-                  <span className="-skew-x-6 rtl:skew-x-6 w-4 h-12 bg-[inherit] absolute -left-2 rtl:left-0 rtl:-right-2"></span>
                   {t("new")}
                   <span
-                    className={`absolute -top-3 -right-3 rtl:right-auto rtl:-left-3 block py-1 px-2 rounded-lg ${
+                    className={`ms-2 px-1 rounded text-xs ${
                       unapprovedUsers.length
                         ? isAnyTooOld
                           ? "bg-error text-black"
@@ -796,6 +798,22 @@ export default function ChainMemberList() {
                   </span>
                 </div>
               </label>
+              {(isUserAdmin || authUser.is_root_admin) && (
+                <label>
+                  <input
+                    type="radio"
+                    name="table-type"
+                    value="paused"
+                    checked={selectedTable === "paused"}
+                    onChange={() => setSelectedTable("paused")}
+                    className="hidden peer"
+                  />
+                  <div className="relative btn no-animation bg-transparent hover:bg-black hover:text-secondary-content transition-none text-black px-3 rounded-none border-0 peer-checked:btn-secondary peer-checked:hover:bg-secondary">
+                    {t("pausedMembers")}
+                    <span className="ms-2 text-xs">{pausedUsers.length}</span>
+                  </div>
+                </label>
+              )}
             </div>
             <div className="order-2 md:justify-self-end lg:order-3 sm:-ms-8 flex flex-col xs:flex-row items-center">
               {selectedTable === "route" ? (
@@ -821,9 +839,11 @@ export default function ChainMemberList() {
                 <UserDataExport
                   chainName={chain.name}
                   chainUsers={
-                    selectedTable === "participants"
-                      ? participantsSortUsers
-                      : routeSortUsers
+                    selectedTable === "paused"
+                      ? pausedUsers
+                      : selectedTable === "participants"
+                        ? participantsSortUsers
+                        : routeSortUsers
                   }
                   route={route}
                   key="export"
@@ -841,15 +861,22 @@ export default function ChainMemberList() {
               refresh={refresh}
               onReasonLoopNotActive={handleReasonLoopNotActive}
             />
-          ) : selectedTable === "participants" ? (
+          ) : selectedTable === "paused" && !pausedUsers.length ? (
+            <p role="status" className="py-8 text-center">
+              {t("noPausedMembers")}
+            </p>
+          ) : selectedTable === "participants" || selectedTable === "paused" ? (
             <ParticipantsTable
               key="participants"
               authUser={authUser}
-              users={participantsSortUsers}
+              users={
+                selectedTable === "paused" ? pausedUsers : participantsSortUsers
+              }
               sortBy={participantsSortBy}
               setSortBy={setParticipantsSortBy}
               chain={chain}
               hostChains={hostChains}
+              showPausedSince={isUserAdmin || authUser.is_root_admin}
               refresh={refresh}
             />
           ) : (
@@ -863,6 +890,7 @@ export default function ChainMemberList() {
               setRoute={setRoute}
               refresh={refresh}
               onGoToEditTableItem={goToEditTableItem}
+              showPausedSince={isUserAdmin || authUser.is_root_admin}
             />
           )}
         </div>
@@ -1175,6 +1203,7 @@ function ApproveTable(props: {
 
 type ParticipantsSortBy = "name" | "email" | "date";
 function ParticipantsTable(props: {
+  showPausedSince: boolean;
   authUser: User | undefined | null;
   users: User[];
   sortBy: ParticipantsSortBy;
@@ -1499,7 +1528,15 @@ function ParticipantsTable(props: {
                         items={dropdownItems}
                       />
                     </td>
-                    <td>{u.name}</td>
+                    <td>
+                      {u.name}
+                      {props.showPausedSince ? (
+                        <PausedSince
+                          userChain={userChain}
+                          pausedUntil={u.paused_until}
+                        />
+                      ) : null}
+                    </td>
                     <td>
                       <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
@@ -1537,6 +1574,7 @@ function ParticipantsTable(props: {
 }
 
 function RouteTable(props: {
+  showPausedSince: boolean;
   authUser: User | undefined | null;
   users: User[];
   chain: Chain;
@@ -1684,7 +1722,15 @@ function RouteTable(props: {
                     >
                       <BagsColumn bags={userBags} />
                     </td>
-                    <td className={classTdDragging}>{u.name}</td>
+                    <td className={classTdDragging}>
+                      {u.name}
+                      {props.showPausedSince ? (
+                        <PausedSince
+                          userChain={getUserChain(u, props.chain.uid)}
+                          pausedUntil={u.paused_until}
+                        />
+                      ) : null}
+                    </td>
                     <td className={classTdDragging}>
                       <span className="block w-48 text-sm whitespace-normal">
                         {u.address}
