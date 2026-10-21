@@ -3,3 +3,4 @@ node_modules
 /database
 .DS_Store
 *.bak
+/.playwright-mcp/
