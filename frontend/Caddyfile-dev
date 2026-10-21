@@ -1,4 +1,7 @@
 (astro_url) {
+	@flyers path /flyers /flyers/
+	redir @flyers https://www.schonekleren.nl/the-clothing-loop/ 302
+
 	# /contact -> /contact-us/
 	@oldcontactseo path_regexp contactseo ^/(\w{2}/)?contact/?$
 	redir @oldcontactseo /{re.contactseo.1}contact-us/ 302

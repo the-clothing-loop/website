@@ -140,6 +140,40 @@ export default function FindChain() {
 
   const mapRef = useRef<any>();
 
+  // Match the sidebar's selected area, including a Loop focused from its list.
+  const highlightedChainUIDs = JSON.stringify(
+    sidebarOpen
+      ? [
+          ...new Set([
+            ...mapClickedChains.map((chain) => chain.uid),
+            ...visibleChains.map((chain) => chain.uid),
+            ...(focusedChain ? [focusedChain.uid] : []),
+          ]),
+        ].sort()
+      : [],
+  );
+
+  useEffect(() => {
+    if (!map?.getLayer("chain-single")) return;
+
+    map.setPaintProperty(
+      "chain-single",
+      "circle-stroke-opacity",
+      sidebarOpen
+        ? [
+            "case",
+            [
+              "in",
+              ["get", "uid"],
+              ["literal", JSON.parse(highlightedChainUIDs)],
+            ],
+            1,
+            0.25,
+          ]
+        : 1,
+    );
+  }, [map, sidebarOpen, highlightedChainUIDs, chains]);
+
   useEffect(() => {
     if (!mapRef.current) return;
     const _center = initialCenter;
@@ -254,11 +288,16 @@ export default function FindChain() {
               20,
               ["get", "radius"],
             ],
-            "circle-stroke-width": 2,
+            "circle-stroke-width": [
+              "case",
+              ["==", ["feature-state", "clicked"], true],
+              4,
+              2,
+            ],
             "circle-stroke-color": [
               "case",
               ["==", ["feature-state", "clicked"], true],
-              ["rgba", 72, 128, 139, 1],
+              "#513484", // theme purple
               [
                 "case",
                 ["get", "open_to_new_members"],
