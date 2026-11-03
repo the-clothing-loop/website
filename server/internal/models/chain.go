@@ -153,6 +153,9 @@ func (c *Chain) ClearAllLastNotifiedIsUnapprovedAt(db *gorm.DB) error {
 
 func (c *Chain) Delete(db *gorm.DB) error {
 	tx := db.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
 	var err error
 	defer func() {
 		if err != nil {
@@ -174,12 +177,14 @@ func (c *Chain) Delete(db *gorm.DB) error {
 		return err
 	}
 
-	err = tx.Exec(`DELETE FROM chat_messages WHERE chat_channel_id IN ?`, c.ChatRoomIDs).Error
+	err = tx.Exec(`DELETE FROM chat_messages WHERE chat_channel_id IN (
+		SELECT id FROM chat_channels WHERE chain_id = ?
+	)`, c.ID).Error
 	if err != nil {
 		return err
 	}
 
-	err = tx.Exec(`DELETE FROM chat_channels WHERE id IN ?`, c.ChatRoomIDs).Error
+	err = tx.Exec(`DELETE FROM chat_channels WHERE chain_id = ?`, c.ID).Error
 	if err != nil {
 		return err
 	}
@@ -194,8 +199,8 @@ func (c *Chain) Delete(db *gorm.DB) error {
 		return err
 	}
 
-	tx.Commit()
-	return nil
+	err = tx.Commit().Error
+	return err
 }
 
 func ChainGetNamesByIDs(db *gorm.DB, chainIDs ...uint) ([]string, error) {
