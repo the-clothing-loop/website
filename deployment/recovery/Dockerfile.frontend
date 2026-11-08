@@ -1,0 +1,12 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN rm -f .env .env.local .env.production .env.production.local .env-production .env-acceptance
+COPY deployment/recovery/frontend.env .env
+RUN NODE_OPTIONS=--max-old-space-size=1536 npm run build
+
+FROM caddy:alpine
+COPY --from=build /app/build/ /srv/
+COPY deployment/recovery/Caddyfile.frontend /etc/caddy/Caddyfile

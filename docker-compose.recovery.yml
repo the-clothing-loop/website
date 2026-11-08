@@ -1,0 +1,82 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: deployment/recovery/Dockerfile.frontend
+    ports:
+      - "127.0.0.1:8090:80"
+    volumes:
+      - recovery_images:/images:ro
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/en/"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  app:
+    build:
+      context: .
+      dockerfile: deployment/recovery/Dockerfile.app
+    ports:
+      - "127.0.0.1:8091:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  server:
+    build: ./server
+    volumes:
+      - ./deployment/recovery/config.test.yml:/app/config.test.yml:ro
+      - recovery_images:/images
+    environment:
+      ENV: testing
+      SERVER_NO_MIGRATE: "true"
+      HOST: 0.0.0.0
+      PORT: "80"
+      SITE_BASE_URL_API: http://localhost:8090/api
+      SITE_BASE_URL_FE: http://localhost:8090
+      COOKIE_DOMAIN: localhost
+      COOKIE_HTTPS_ONLY: "false"
+      JWT_SECRET: ${RECOVERY_JWT_SECRET:?Set a fresh base64 JWT secret}
+      DB_HOST: ${RECOVERY_DB_HOST:?Set the recovery database hostname}
+      DB_PORT: "3306"
+      DB_NAME: production
+      DB_USER: recovery
+      DB_PASS: ${RECOVERY_DB_PASSWORD:?Set the recovery database password}
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      SMTP_SENDER: recovery@example.invalid
+      SMTP_USER: ""
+      SMTP_PASS: ""
+      STRIPE_SECRET_KEY: ""
+      STRIPE_WEBHOOK: ""
+      SENDINBLUE_API_KEY: ""
+      ONESIGNAL_APP_ID: ""
+      ONESIGNAL_REST_API_KEY: ""
+      GOSCOPE2_USER: ""
+      GOSCOPE2_PASS: ""
+      IMGBB_KEY: ""
+      APPSTORE_REVIEWER_EMAIL: ""
+      IMAGES_DIR: /images
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+  mailpit:
+    image: axllent/mailpit:v1.27.10
+    ports:
+      - "127.0.0.1:8092:8025"
+    environment:
+      MP_MAX_MESSAGES: "100"
+volumes:
+  recovery_images:
+    external: true
+    name: tcl-recovery-images
