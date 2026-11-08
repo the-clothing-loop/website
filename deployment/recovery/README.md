@@ -12,7 +12,9 @@ Before deploying:
 2. Set `RECOVERY_DB_HOST`, `RECOVERY_DB_PASSWORD`, and `RECOVERY_JWT_SECRET` in
    Coolify. Use the `recovery` database user and a fresh base64 signing secret.
 3. Create the external volume `tcl-recovery-images` and restore uploaded files.
-4. Build services sequentially with `COMPOSE_PARALLEL_LIMIT=1` to limit memory use.
+4. Use custom build command `sh deployment/recovery/build.sh` to build services
+   one at a time. The Compose parallelism variable alone didn't prevent
+   concurrent builds in the first rehearsal.
 5. Check the generated Compose file before starting containers. Only localhost
    ports 8090, 8091, and 8092 should be published. Don't assign public domains.
 
