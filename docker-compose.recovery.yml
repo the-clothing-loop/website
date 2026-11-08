@@ -30,9 +30,10 @@ services:
       timeout: 5s
       retries: 5
   server:
-    build: ./server
+    build:
+      context: .
+      dockerfile: deployment/recovery/Dockerfile.server
     volumes:
-      - ./deployment/recovery/config.test.yml:/app/config.test.yml:ro
       - recovery_images:/images
     environment:
       ENV: testing
