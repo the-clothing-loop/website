@@ -15,6 +15,8 @@ Before deploying:
 4. Use custom build command `sh deployment/recovery/build.sh` to build services
    one at a time. The Compose parallelism variable alone didn't prevent
    concurrent builds in the first rehearsal.
+   The API build also sets `GOMAXPROCS=1`, `GOMEMLIMIT=512MiB`, and `go build -p 1`
+   to limit compiler concurrency. Node build processes use a 1,024 MiB heap limit.
 5. Check the generated Compose file before starting containers. Only localhost
    ports 8090, 8091, and 8092 should be published. Don't assign public domains.
 

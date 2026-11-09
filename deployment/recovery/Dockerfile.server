@@ -4,5 +4,5 @@ COPY server/go.mod server/go.sum ./
 RUN go mod download
 COPY server/ ./
 COPY deployment/recovery/config.test.yml /app/config.test.yml
-RUN go build -o server cmd/server/main.go
+RUN --mount=type=cache,target=/root/.cache/go-build GOMAXPROCS=1 GOMEMLIMIT=512MiB go build -p 1 -o server cmd/server/main.go
 ENTRYPOINT ["./server"]

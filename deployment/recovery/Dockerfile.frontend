@@ -7,7 +7,7 @@ COPY deployment/recovery/prepare-images.mjs /tmp/prepare-images.mjs
 RUN node /tmp/prepare-images.mjs src
 RUN rm -f .env .env.local .env.production .env.production.local .env-production .env-acceptance
 COPY deployment/recovery/frontend.env .env
-RUN NODE_OPTIONS=--max-old-space-size=1536 npm run build
+RUN NODE_OPTIONS=--max-old-space-size=1024 npm run build
 
 FROM caddy:alpine
 COPY --from=build /app/build/ /srv/
