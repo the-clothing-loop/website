@@ -32,6 +32,13 @@ including the production analytics script. Fonts, maps, external images, and
 other external content can therefore appear incomplete during this rehearsal.
 This is a functional recovery check, not a visual comparison with production.
 
+Deploy the recovery image service from `the-clothing-loop/images` first. Enable
+the shared managed-resource network on both applications. The web servers proxy
+`/images/` to `recovery-image-source:80`. During image builds,
+`prepare-images.mjs` rewrites static production image addresses to `/images/` and
+adapts the image helper to recognize restored database addresses. These changes
+apply only to the recovery build, not the production source files.
+
 The mobile web build uses `VITE_APP_VERSION=development` to select the `_dev`
 cookie names used by the testing API. The original production build command
 would overwrite that variable, so the recovery Dockerfile runs the underlying

@@ -5,6 +5,9 @@
   handle_path /api/* {
     reverse_proxy server:80
   }
+  handle_path /images/* {
+    reverse_proxy recovery-image-source:80
+  }
   handle {
     root * /srv
     try_files {path} /index.html

@@ -6,8 +6,7 @@
     reverse_proxy server:80
   }
   handle_path /images/* {
-    root * /images
-    file_server
+    reverse_proxy recovery-image-source:80
   }
   redir / /en/ 302
   handle {
