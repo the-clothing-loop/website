@@ -9,6 +9,8 @@
     reverse_proxy recovery-image-source:80
   }
   redir / /en/ 302
+  @unlocalized path /about/* /admin/* /events/* /contact-us/* /contribute/* /data-processing-agreement/* /donate/* /faq/* /loops/* /message-submitted/* /privacy-policy/* /terms-of-hosts/* /terms-of-use/* /thankyou/* /users/*
+  redir @unlocalized /en{uri} 302
   handle {
     root * /srv
     try_files {path} {path}/ =404
