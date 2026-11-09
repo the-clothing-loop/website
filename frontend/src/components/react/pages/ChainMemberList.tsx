@@ -1,3 +1,4 @@
+import { sortPausedMembers } from "../util/pausedMembers";
 import {
   useState,
   useEffect,
@@ -93,6 +94,8 @@ export default function ChainMemberList() {
 
   const [participantsSortBy, setParticipantsSortBy] =
     useState<ParticipantsSortBy>("date");
+  const [pausedSortBy, setPausedSortBy] =
+    useState<ParticipantsSortBy>("paused");
   const [unapprovedUsers, setUnapprovedUsers] = useState<User[] | null>(null);
   const [published, setPublished] = useState(true);
   const [openToNewMembers, setOpenToNewMembers] = useState(true);
@@ -135,8 +138,10 @@ export default function ChainMemberList() {
 
   useLegal(t, authUser);
 
-  const pausedUsers = participantsSortUsers.filter((u) =>
-    isUserPaused(u, chainUID),
+  const pausedUsers = sortPausedMembers(
+    participantsSortUsers.filter((u) => isUserPaused(u, chainUID)),
+    chainUID,
+    pausedSortBy,
   );
 
   async function handleChangePublished(e: ChangeEvent<HTMLInputElement>) {
@@ -837,6 +842,7 @@ export default function ChainMemberList() {
 
               {selectedTable !== "unapproved" ? (
                 <UserDataExport
+                  chainUID={chain.uid}
                   chainName={chain.name}
                   chainUsers={
                     selectedTable === "paused"
@@ -845,7 +851,7 @@ export default function ChainMemberList() {
                         ? participantsSortUsers
                         : routeSortUsers
                   }
-                  route={route}
+                  route={selectedTable === "route" ? route : undefined}
                   key="export"
                 />
               ) : null}
@@ -872,8 +878,15 @@ export default function ChainMemberList() {
               users={
                 selectedTable === "paused" ? pausedUsers : participantsSortUsers
               }
-              sortBy={participantsSortBy}
-              setSortBy={setParticipantsSortBy}
+              pausedTable={selectedTable === "paused"}
+              sortBy={
+                selectedTable === "paused" ? pausedSortBy : participantsSortBy
+              }
+              setSortBy={
+                selectedTable === "paused"
+                  ? setPausedSortBy
+                  : setParticipantsSortBy
+              }
               chain={chain}
               hostChains={hostChains}
               showPausedSince={isUserAdmin || authUser.is_root_admin}
@@ -1201,8 +1214,9 @@ function ApproveTable(props: {
   );
 }
 
-type ParticipantsSortBy = "name" | "email" | "date";
+type ParticipantsSortBy = "name" | "email" | "date" | "paused";
 function ParticipantsTable(props: {
+  pausedTable: boolean;
   showPausedSince: boolean;
   authUser: User | undefined | null;
   users: User[];
@@ -1341,7 +1355,13 @@ function ParticipantsTable(props: {
   }
 
   function toggleSortBy(_sortBy: ParticipantsSortBy) {
-    props.setSortBy(props.sortBy !== _sortBy ? _sortBy : "date");
+    props.setSortBy(
+      props.sortBy !== _sortBy
+        ? _sortBy
+        : props.pausedTable
+          ? "paused"
+          : "date",
+    );
   }
 
   async function loginAsUser(u: User) {
@@ -1426,6 +1446,16 @@ function ParticipantsTable(props: {
             <thead>
               <tr>
                 <th className="w-[0.1%]"></th>
+                {props.pausedTable ? (
+                  <th>
+                    <span>{t("pausedSince")}</span>
+                    <SortButton
+                      isSelected={props.sortBy === "paused"}
+                      className="ms-1"
+                      onClick={() => toggleSortBy("paused")}
+                    />
+                  </th>
+                ) : null}
                 <th>
                   <span>{t("name")}</span>
                   <SortButton
@@ -1434,9 +1464,7 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("name")}
                   />
                 </th>
-                <th>
-                  <span>{t("address")}</span>
-                </th>
+                <th>{t("phone")}</th>
                 <th>
                   <span>{t("email")}</span>
                   <SortButton
@@ -1445,7 +1473,9 @@ function ParticipantsTable(props: {
                     onClick={() => toggleSortBy("email")}
                   />
                 </th>
-                <th>{t("phone")}</th>
+                <th>
+                  <span>{t("address")}</span>
+                </th>
                 <th>{t("interestedSizes")}</th>
                 <th>
                   <span>{t("signedUpOn")}</span>
@@ -1528,25 +1558,21 @@ function ParticipantsTable(props: {
                         items={dropdownItems}
                       />
                     </td>
-                    <td>
-                      {u.name}
-                      {props.showPausedSince ? (
+                    {props.pausedTable ? (
+                      <td>
                         <PausedSince
                           userChain={userChain}
                           pausedUntil={u.paused_until}
                         />
-                      ) : null}
-                    </td>
+                      </td>
+                    ) : null}
                     <td>
-                      <span className="block w-48 text-sm whitespace-normal">
-                        {u.address}
-                      </span>
-                    </td>
-                    <td className="text-sm leading-relaxed">
-                      {u.email ? (
-                        <a className="link" href={"mailto:" + u.email}>
-                          {u.email}
-                        </a>
+                      {u.name}
+                      {props.showPausedSince && !props.pausedTable ? (
+                        <PausedSince
+                          userChain={userChain}
+                          pausedUntil={u.paused_until}
+                        />
                       ) : null}
                     </td>
                     <td className="text-sm leading-relaxed">
@@ -1555,6 +1581,18 @@ function ParticipantsTable(props: {
                           {u.phone_number}
                         </a>
                       ) : null}
+                    </td>
+                    <td className="text-sm leading-relaxed">
+                      {u.email ? (
+                        <a className="link" href={"mailto:" + u.email}>
+                          {u.email}
+                        </a>
+                      ) : null}
+                    </td>
+                    <td>
+                      <span className="block w-48 text-sm whitespace-normal">
+                        {u.address}
+                      </span>
                     </td>
                     <td>
                       <SizeBadges s={u.sizes} />

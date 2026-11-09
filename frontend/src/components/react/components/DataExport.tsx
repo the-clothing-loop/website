@@ -1,3 +1,4 @@
+import { getPausedDate } from "../util/pausedMembers";
 import { useMemo } from "react";
 import { CSVLink } from "react-csv";
 
@@ -23,6 +24,7 @@ export const SizeNames: Record<Sizes | string, string> = {
 };
 
 const usersHeaders: Array<{ label: string; key: keyof UserData }> = [
+  { label: "Paused since", key: "pausedSince" },
   { label: "Name", key: "name" },
   { label: "Address", key: "address" },
   { label: "Email", key: "email" },
@@ -31,6 +33,7 @@ const usersHeaders: Array<{ label: string; key: keyof UserData }> = [
 ];
 
 interface UserData {
+  pausedSince: string;
   name: string;
   address: string;
   email: string;
@@ -40,24 +43,27 @@ interface UserData {
 
 export function UserDataExport(props: {
   chainName: string;
+  chainUID: UID;
   chainUsers: User[];
-  route: UID[];
+  route?: UID[];
 }) {
   const { t } = useTranslation();
 
   const data = useMemo(() => {
-    return (
-      props.route
-        .map((r) => props.chainUsers.find((u) => u.uid === r))
-        .filter((u) => !!u) as User[]
-    ).map<UserData>((u) => ({
+    const users = props.route
+      ? props.route
+          .map((r) => props.chainUsers.find((u) => u.uid === r))
+          .filter((u): u is User => !!u)
+      : props.chainUsers;
+    return users.map<UserData>((u) => ({
+      pausedSince: getPausedDate(u, props.chainUID),
       name: u.name,
       address: u.address,
       email: u.email!,
       phoneNumber: u.phone_number,
       interestedSizes: u.sizes.map((s) => SizeNames[s]).join(","),
     }));
-  }, [props.chainUsers]);
+  }, [props.chainUsers, props.route, props.chainUID]);
 
   return (
     <CSVLink
