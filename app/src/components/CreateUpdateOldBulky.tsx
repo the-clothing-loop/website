@@ -168,7 +168,7 @@ export default function CreateUpdateOldBulky({
 
   async function handleNativeUpload() {
     const photo = await Camera.getPhoto({
-      resultType: CameraResultType.Base64,
+      resultType: CameraResultType.DataUrl,
     });
 
     // https://stackoverflow.com/a/38935990/19100899
