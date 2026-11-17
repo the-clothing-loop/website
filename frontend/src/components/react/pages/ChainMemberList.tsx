@@ -1622,7 +1622,7 @@ function ParticipantsTable(props: {
                           type="button"
                           aria-label={t("edit")!}
                           title={t("edit")!}
-                          className="btn btn-circle btn-sm btn-ghost bg-base-100 icon-pencil-2"
+                          className="btn btn-circle btn-sm btn-ghost bg-base-100 icon-pencil"
                           onClick={() => props.onGoToEditTableItem(u.uid)}
                         />
                       </td>
