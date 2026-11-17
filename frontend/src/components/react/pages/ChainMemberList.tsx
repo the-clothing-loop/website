@@ -1445,7 +1445,7 @@ function ParticipantsTable(props: {
           >
             <thead>
               <tr>
-                <th className="w-[0.1%]"></th>
+                {!props.pausedTable ? <th className="w-[0.1%]"></th> : null}
                 {props.pausedTable ? (
                   <th>
                     <span>{t("pausedSince")}</span>
@@ -1476,15 +1476,19 @@ function ParticipantsTable(props: {
                 <th>
                   <span>{t("address")}</span>
                 </th>
-                <th>{t("interestedSizes")}</th>
-                <th>
-                  <span>{t("signedUpOn")}</span>
-                  <SortButton
-                    isSelected={props.sortBy === "date"}
-                    className="ms-1"
-                    onClick={() => toggleSortBy("date")}
-                  />
-                </th>
+                {!props.pausedTable ? (
+                  <>
+                    <th>{t("interestedSizes")}</th>
+                    <th>
+                      <span>{t("signedUpOn")}</span>
+                      <SortButton
+                        isSelected={props.sortBy === "date"}
+                        className="ms-1"
+                        onClick={() => toggleSortBy("date")}
+                      />
+                    </th>
+                  </>
+                ) : null}
               </tr>
             </thead>
             <tbody>
@@ -1552,18 +1556,23 @@ function ParticipantsTable(props: {
                     tabIndex={-1}
                     className="[&>td]:hover:bg-base-200/[0.6] [&>td]:focus:bg-primary/[0.3] group"
                   >
-                    <td className="!px-0">
-                      <DropdownMenu
-                        classes={dropdownClasses}
-                        items={dropdownItems}
-                      />
-                    </td>
+                    {!props.pausedTable ? (
+                      <td className="!px-0">
+                        <DropdownMenu
+                          classes={dropdownClasses}
+                          items={dropdownItems}
+                        />
+                      </td>
+                    ) : null}
                     {props.pausedTable ? (
                       <td>
-                        <PausedSince
-                          userChain={userChain}
-                          pausedUntil={u.paused_until}
-                        />
+                        {userChain.paused_at
+                          ? new Date(userChain.paused_at).toLocaleDateString(
+                              i18n.language === "en"
+                                ? "default"
+                                : i18n.language,
+                            )
+                          : ""}
                       </td>
                     ) : null}
                     <td>
@@ -1594,12 +1603,16 @@ function ParticipantsTable(props: {
                         {u.address}
                       </span>
                     </td>
-                    <td>
-                      <SizeBadges s={u.sizes} />
-                    </td>
-                    <td className="text-center">
-                      {simplifyDays(t, i18n, userChain.created_at)}
-                    </td>
+                    {!props.pausedTable ? (
+                      <>
+                        <td>
+                          <SizeBadges s={u.sizes} />
+                        </td>
+                        <td className="text-center">
+                          {simplifyDays(t, i18n, userChain.created_at)}
+                        </td>
+                      </>
+                    ) : null}
                   </tr>
                 );
               })}
