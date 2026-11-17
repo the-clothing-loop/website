@@ -154,6 +154,7 @@ func UserChainGetIndirectByChain(db *gorm.DB, chainID uint) ([]sharedtypes.UserC
 		user_chains.is_chain_warden AS is_chain_warden,
 		user_chains.created_at     AS created_at,
 		user_chains.is_paused      AS is_paused,
+		user_chains.paused_at      AS paused_at,
 		user_chains.is_approved    AS is_approved
 	FROM user_chains
 	LEFT JOIN chains ON user_chains.chain_id = chains.id

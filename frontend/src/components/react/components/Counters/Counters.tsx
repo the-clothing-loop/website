@@ -100,7 +100,7 @@ export default function Counters() {
         <div className="col-span-2 xl:col-span-1">
           <a
             className="inline-flex items-center gap-4 my-6 group"
-            href="https://heyzine.com/flip-book/a8c1962269.html"
+            href="https://heyzine.com/flip-book/d1069fdddd.html"
             target="_blank"
             rel="noreferrer"
             aria-label="our impact"

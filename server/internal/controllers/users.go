@@ -129,6 +129,10 @@ func UserGetAllOfChain(c *gin.Context) {
 		for ii := range allUserChains {
 			userChain := (allUserChains)[ii]
 			if userChain.UserID == user.ID {
+				// Pause start dates are only visible to hosts of this loop.
+				if !isAuthState3AdminChainUser || userChain.ChainID != chain.ID {
+					userChain.PausedAt = nil
+				}
 				// goscope.Log.Infof("userchain is added (userChain.ID: %d -> user.ID: %d)\n", userChain.ID, user.ID)
 				thisUserChains = append(thisUserChains, userChain)
 			}

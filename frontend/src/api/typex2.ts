@@ -376,6 +376,7 @@ export interface UserChain {
 	created_at: string
 	is_approved: boolean
 	is_paused: boolean
+	paused_at?: (string | null)
 }
 
 export interface UserCreateRequest {
