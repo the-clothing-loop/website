@@ -879,6 +879,7 @@ export default function ChainMemberList() {
                 selectedTable === "paused" ? pausedUsers : participantsSortUsers
               }
               pausedTable={selectedTable === "paused"}
+              onGoToEditTableItem={goToEditTableItem}
               sortBy={
                 selectedTable === "paused" ? pausedSortBy : participantsSortBy
               }
@@ -1217,6 +1218,7 @@ function ApproveTable(props: {
 type ParticipantsSortBy = "name" | "email" | "date" | "paused";
 function ParticipantsTable(props: {
   pausedTable: boolean;
+  onGoToEditTableItem: (uid: UID) => void;
   showPausedSince: boolean;
   authUser: User | undefined | null;
   users: User[];
@@ -1489,6 +1491,7 @@ function ParticipantsTable(props: {
                     </th>
                   </>
                 ) : null}
+                {props.pausedTable ? <th className="w-[0.1%]"></th> : null}
               </tr>
             </thead>
             <tbody>
@@ -1612,6 +1615,17 @@ function ParticipantsTable(props: {
                           {simplifyDays(t, i18n, userChain.created_at)}
                         </td>
                       </>
+                    ) : null}
+                    {props.pausedTable ? (
+                      <td className="text-right">
+                        <button
+                          type="button"
+                          aria-label={t("edit")!}
+                          title={t("edit")!}
+                          className="btn btn-circle btn-sm btn-ghost bg-base-100 icon-pencil-2"
+                          onClick={() => props.onGoToEditTableItem(u.uid)}
+                        />
+                      </td>
                     ) : null}
                   </tr>
                 );
