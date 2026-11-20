@@ -4,7 +4,7 @@ import { getPauseDetails } from "./pause-details";
 import isUserPaused from "./is-user-paused";
 import { getPausedDate } from "./pausedMembers";
 afterEach(() => vi.useRealTimers());
-test("example-loop records exclude expired pauses and retain current timed, indefinite and loop pauses", () => {
+test("example-loop list includes only loop pauses while general status has no dates", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-11-20T12:00:00Z"));
   const member = (
@@ -22,14 +22,14 @@ test("example-loop records exclude expired pauses and retain current timed, inde
     expect(getPausedDate(u, "example")).toBe("");
   }
   const indefinite = member("2125-08-05T13:12:43Z");
-  expect(isUserPaused(indefinite, "example")).toBe(true);
-  expect(getPausedDate(indefinite, "example")).toBe("2025-08-05");
-  expect(isUserPaused(member("2026-11-21T21:08:00Z"), "example")).toBe(true);
+  expect(isUserPaused(indefinite, "example")).toBe(false);
+  expect(getPausedDate(indefinite, "example")).toBe("");
+  expect(isUserPaused(member("2026-11-21T21:08:00Z"), "example")).toBe(false);
   expect(getPauseDetails(undefined, "2026-12-31T09:14:00Z")?.kind).toBe(
-    "until",
+    "general",
   );
   expect(getPauseDetails(undefined, "2028-01-01T00:00:00Z")).toEqual({
-    kind: "unknown",
+    kind: "general",
   });
   expect(
     getPausedDate(member(null, true, "2026-09-28T11:23:17Z"), "example"),

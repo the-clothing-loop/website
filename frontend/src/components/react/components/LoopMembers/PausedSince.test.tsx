@@ -9,7 +9,11 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     i18n: { language: language.current },
     t: (key: string, options?: { count: number }) =>
-      key === "nDays" ? `${options?.count} days` : "Paused since",
+      key === "nDays"
+        ? `${options?.count} days`
+        : key === "pausedInAllLoops"
+          ? "Paused in all loops"
+          : "Paused since",
   }),
 }));
 
@@ -41,12 +45,12 @@ test("uses a compact localized date and exposes the duration on focus", () => {
 
 test("hides active participants and does not invent unknown start dates", () => {
   expect(render({ is_paused: false })).toBe("");
-  expect(render({ paused_at: undefined })).toContain("<span>");
-  expect(render({ paused_at: null })).toContain("<span>");
-  expect(render({ paused_at: "invalid" })).toContain("<span>");
+  expect(render({ paused_at: undefined })).toContain("<span");
+  expect(render({ paused_at: null })).toContain("<span");
+  expect(render({ paused_at: "invalid" })).toContain("<span");
 });
 
-test("shows an overall pause end date without inventing a start date", () => {
+test("shows general pause status without an end date", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-21T12:00:00Z"));
   language.current = "nl";
@@ -55,12 +59,13 @@ test("shows an overall pause end date without inventing a start date", () => {
       createElement(PausedSince, { userChain: undefined, pausedUntil }),
     );
   const html = renderUntil("2026-11-12T12:00:00Z");
-  expect(html).toContain(">12-11-2026</time>");
+  expect(html).toContain("Paused in all loops");
+  expect(html).not.toContain("<time");
   expect(html).not.toContain("data-tip");
   expect(renderUntil("2026-10-20T12:00:00Z")).toBe("");
 });
 
-test("renders indefinite account pauses as since, never as a misleading century-ahead until date", () => {
+test("does not infer a start date for indefinite account pauses", () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-11-20T12:00:00Z"));
   language.current = "nl";
@@ -70,8 +75,9 @@ test("renders indefinite account pauses as since, never as a misleading century-
       pausedUntil: "2125-08-05T13:12:43Z",
     }),
   );
-  expect(html).toContain(">05-08-2025</time>");
-  expect(html).toContain("data-tip");
+  expect(html).toContain("Paused in all loops");
+  expect(html).not.toContain("<time");
+  expect(html).not.toContain("data-tip");
   expect(html).not.toContain("2125");
 });
 test("hides expired account pauses even when a historical loop date remains", () => {

@@ -15,14 +15,7 @@ export default function PausedSince({
   const { t, i18n } = useTranslation();
   const pause = getPauseDetails(userChain, pausedUntil);
   if (!pause) return null;
-  if (!pause.date) return <span>{t("pausedMembers")}</span>;
-  const date = dayjs(pause.date);
-  const shortDate = date.toDate().toLocaleDateString(i18n.language, {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-  if (plain || pause.kind === "until")
+  if (!pause.date)
     return (
       <span
         className={
@@ -31,7 +24,24 @@ export default function PausedSince({
             : "block whitespace-nowrap text-xs font-normal text-grey mt-1"
         }
       >
-        {pause.kind === "until" ? `${t("pausedUntil")} ` : ""}
+        {t(pause.kind === "general" ? "pausedInAllLoops" : "pausedMembers")}
+      </span>
+    );
+  const date = dayjs(pause.date);
+  const shortDate = date.toDate().toLocaleDateString(i18n.language, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  if (plain)
+    return (
+      <span
+        className={
+          plain
+            ? undefined
+            : "block whitespace-nowrap text-xs font-normal text-grey mt-1"
+        }
+      >
         <time dateTime={pause.date}>{shortDate}</time>
       </span>
     );
