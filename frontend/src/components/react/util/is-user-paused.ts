@@ -1,8 +1,11 @@
 import type { User } from "../../../api/types";
+import { getPauseDetails } from "./pause-details";
 
 export default function isUserPaused(user: User, chainUID: string): boolean {
   return (
-    user.chains.some((uc) => uc.chain_uid === chainUID && uc.is_paused) ||
-    (!!user.paused_until && Date.parse(user.paused_until) > Date.now())
+    getPauseDetails(
+      user.chains.find((c) => c.chain_uid === chainUID),
+      user.paused_until,
+    ) !== null
   );
 }

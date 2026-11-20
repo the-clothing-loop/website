@@ -1569,13 +1569,11 @@ function ParticipantsTable(props: {
                     ) : null}
                     {props.pausedTable ? (
                       <td>
-                        {userChain.paused_at
-                          ? new Date(userChain.paused_at).toLocaleDateString(
-                              i18n.language === "en"
-                                ? "default"
-                                : i18n.language,
-                            )
-                          : ""}
+                        <PausedSince
+                          userChain={userChain}
+                          pausedUntil={u.paused_until}
+                          plain
+                        />
                       </td>
                     ) : null}
                     <td>

@@ -32,18 +32,18 @@ test("uses a compact localized date and exposes the duration on focus", () => {
   vi.setSystemTime(new Date("2026-10-21T12:00:00Z"));
   language.current = "nl";
   const html = render();
-  expect(html).toContain(">12-09-26</time>");
+  expect(html).toContain(">12-09-2026</time>");
   expect(html).toContain('data-tip="39 days"');
   expect(html).toContain("focus:tooltip-open");
   language.current = "en";
-  expect(render()).toContain(">09/12/26</time>");
+  expect(render()).toContain(">09/12/2026</time>");
 });
 
-test("leaves active participants and unknown start dates blank", () => {
+test("hides active participants and does not invent unknown start dates", () => {
   expect(render({ is_paused: false })).toBe("");
-  expect(render({ paused_at: undefined })).toBe("");
-  expect(render({ paused_at: null })).toBe("");
-  expect(render({ paused_at: "invalid" })).toBe("");
+  expect(render({ paused_at: undefined })).toContain("<span>");
+  expect(render({ paused_at: null })).toContain("<span>");
+  expect(render({ paused_at: "invalid" })).toContain("<span>");
 });
 
 test("shows an overall pause end date without inventing a start date", () => {
@@ -55,7 +55,34 @@ test("shows an overall pause end date without inventing a start date", () => {
       createElement(PausedSince, { userChain: undefined, pausedUntil }),
     );
   const html = renderUntil("2026-11-12T12:00:00Z");
-  expect(html).toContain(">12-11-26</time>");
+  expect(html).toContain(">12-11-2026</time>");
   expect(html).not.toContain("data-tip");
   expect(renderUntil("2026-10-20T12:00:00Z")).toBe("");
+});
+
+test("renders indefinite account pauses as since, never as a misleading century-ahead until date", () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-11-20T12:00:00Z"));
+  language.current = "nl";
+  const html = renderToStaticMarkup(
+    createElement(PausedSince, {
+      userChain: { is_paused: false, paused_at: "2025-01-01" } as UserChain,
+      pausedUntil: "2125-08-05T13:12:43Z",
+    }),
+  );
+  expect(html).toContain(">05-08-2025</time>");
+  expect(html).toContain("data-tip");
+  expect(html).not.toContain("2125");
+});
+test("hides expired account pauses even when a historical loop date remains", () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-11-20T12:00:00Z"));
+  expect(
+    renderToStaticMarkup(
+      createElement(PausedSince, {
+        userChain: { is_paused: false, paused_at: "2025-01-01" } as UserChain,
+        pausedUntil: "2026-11-09T14:49:00Z",
+      }),
+    ),
+  ).toBe("");
 });
