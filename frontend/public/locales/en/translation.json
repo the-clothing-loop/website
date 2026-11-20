@@ -273,6 +273,7 @@
   "anErrorOccurredDuringCheckout": "An error occurred during checkout...",
   "pleaseEnterYourEmail": "Please enter your e-mail address",
   "signedUpOn": "Signed up on",
+  "pausedInAllLoops": "Paused in all loops",
   "pausedSince": "Paused since",
   "pausedMembers": "Paused",
   "noPausedMembers": "No paused participants in this Loop.",
