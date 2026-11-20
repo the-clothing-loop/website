@@ -1,8 +1,6 @@
 import type { User } from "../../../api/types";
 
+// The host's Paused table contains only pauses in the selected loop.
 export default function isUserPaused(user: User, chainUID: string): boolean {
-  return (
-    user.chains.some((uc) => uc.chain_uid === chainUID && uc.is_paused) ||
-    (!!user.paused_until && Date.parse(user.paused_until) > Date.now())
-  );
+  return user.chains.some((c) => c.chain_uid === chainUID && c.is_paused);
 }
