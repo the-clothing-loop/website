@@ -36,7 +36,7 @@
     "dompurify": "^3.4.14",
     "events": "^3.3.0",
     "goscope2-sdk-js": "github:lil5/goscope2#v1.4.2",
-    "i18next": "^24.0.2",
+    "i18next": "^26.3.4",
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-chained-backend": "^4.6.2",
     "i18next-fs-backend": "^2.6.7",
